@@ -44,7 +44,7 @@ class DocumentController extends Controller
             $query->where('document_type', $request->input('document_type'));
         }
 
-        $documents = $query->with(['course:id,title,code', 'assessment:id,title,type'])
+        $documents = $query->with(['course:id,course_name,course_code', 'assessment:id,title,type'])
             ->latest()
             ->get();
 
@@ -125,7 +125,7 @@ class DocumentController extends Controller
             ]);
         }
 
-        $document->load(['course:id,title,code', 'assessment:id,title,type']);
+        $document->load(['course:id,course_name,course_code', 'assessment:id,title,type']);
 
         return response()->json([
             'data' => $document,

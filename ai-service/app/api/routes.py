@@ -5,6 +5,7 @@ from app.config import get_settings, Settings
 from app.services.huggingface_service import HuggingFaceService, get_hf_service
 from app.services.text_cleaner import TextCleaner
 from app.services.analyzer import AcademicTextAnalyzer
+from app.services.question_analyzer import QuestionAnalyzer
 from app.utils.text_utils import split_paragraphs, split_sentences
 from app.schemas.analysis import (
     HealthResponse,
@@ -14,6 +15,10 @@ from app.schemas.analysis import (
     AnalyzeResponse,
     EmbeddingRequest,
     EmbeddingResponse,
+    AnalyzeSingleQuestionRequest,
+    AnalyzeSingleQuestionResponse,
+    AnalyzeBatchQuestionsRequest,
+    AnalyzeBatchQuestionsResponse,
 )
 
 logger = logging.getLogger("facultylens.ai")
@@ -137,4 +142,74 @@ def generate_embedding(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to generate embedding: {str(e)}",
         )
+
+
+@router.post(
+    "/api/v1/analyze-question",
+    response_model=AnalyzeSingleQuestionResponse,
+    dependencies=[Depends(verify_api_key)],
+)
+def analyze_single_question(
+    payload: AnalyzeSingleQuestionRequest,
+    hf_service: HuggingFaceService = Depends(get_hf_service),
+) -> AnalyzeSingleQuestionResponse:
+    """
+    Analyze a single academic question across classification, topics, difficulty, and Bloom's cognitive level.
+    """
+    try:
+        analyzer = QuestionAnalyzer(hf_service=hf_service)
+        result = analyzer.analyze_single(
+            question_text=payload.question,
+            course_topics=payload.course_topics,
+        )
+
+        return AnalyzeSingleQuestionResponse(
+            status="success",
+            question=result["question"],
+            classification=result["classification"],
+            topics=result["topics"],
+            difficulty=result["difficulty"],
+            cognitive_level=result["cognitive_level"],
+        )
+    except Exception as e:
+        logger.error(f"Error analyzing single question: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to analyze question.",
+        )
+
+
+@router.post(
+    "/api/v1/analyze-questions",
+    response_model=AnalyzeBatchQuestionsResponse,
+    dependencies=[Depends(verify_api_key)],
+)
+def analyze_batch_questions(
+    payload: AnalyzeBatchQuestionsRequest,
+    hf_service: HuggingFaceService = Depends(get_hf_service),
+) -> AnalyzeBatchQuestionsResponse:
+    """
+    Analyze multiple academic questions in batch mode with summary distributions.
+    """
+    try:
+        analyzer = QuestionAnalyzer(hf_service=hf_service)
+        q_dicts = [{"number": q.number, "text": q.text} for q in payload.questions]
+        result = analyzer.analyze_batch(
+            questions=q_dicts,
+            course_topics=payload.course_topics,
+        )
+
+        return AnalyzeBatchQuestionsResponse(
+            status="success",
+            total_questions=result["total_questions"],
+            questions=result["questions"],
+            summary=result["summary"],
+        )
+    except Exception as e:
+        logger.error(f"Error analyzing batch questions: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to analyze question batch.",
+        )
+
 

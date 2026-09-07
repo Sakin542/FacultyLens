@@ -13,6 +13,7 @@ import { Badge } from '@/components/common/Badge';
 import { Input } from '@/components/common/Input';
 import { PreviousQuestionModal } from '@/components/assessments/PreviousQuestionModal';
 import { PreviousQuestionUploadModal } from '@/components/assessments/PreviousQuestionUploadModal';
+import { QuestionAnalysisModal } from '@/components/assessments/QuestionAnalysisModal';
 import {
   HelpCircle,
   Plus,
@@ -28,6 +29,7 @@ import {
   ChevronLeft,
   ChevronRight,
   BookOpen,
+  Sparkles,
 } from 'lucide-react';
 
 export const QuestionBank: React.FC = () => {
@@ -62,6 +64,7 @@ export const QuestionBank: React.FC = () => {
   // Modals
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [isAiAnalysisOpen, setIsAiAnalysisOpen] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState<PreviousQuestion | null>(null);
   const [deletingId, setDeletingId] = useState<number | string | null>(null);
 
@@ -207,6 +210,14 @@ export const QuestionBank: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            leftIcon={<Sparkles className="w-3.5 h-3.5" />}
+            onClick={() => setIsAiAnalysisOpen(true)}
+          >
+            AI Question Sandbox
+          </Button>
           <Button
             variant="outline"
             size="sm"
@@ -563,6 +574,12 @@ export const QuestionBank: React.FC = () => {
         isOpen={isUploadModalOpen}
         onClose={() => setIsUploadModalOpen(false)}
         onSubmit={handleUploadDocument}
+      />
+
+      {/* AI Question Analysis Sandbox (Step 10) */}
+      <QuestionAnalysisModal
+        isOpen={isAiAnalysisOpen}
+        onClose={() => setIsAiAnalysisOpen(false)}
       />
     </div>
   );

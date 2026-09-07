@@ -20,6 +20,12 @@ class Question extends Model
         'cognitive_level',
         'learning_outcome_id',
         'expected_answer',
+        'ai_question_type',
+        'ai_difficulty_level',
+        'ai_cognitive_level',
+        'ai_topics',
+        'ai_analysis_status',
+        'ai_analyzed_at',
     ];
 
     protected function casts(): array
@@ -27,6 +33,8 @@ class Question extends Model
         return [
             'question_number' => 'integer',
             'marks' => 'decimal:2',
+            'ai_topics' => 'array',
+            'ai_analyzed_at' => 'datetime',
         ];
     }
 

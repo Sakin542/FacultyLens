@@ -79,9 +79,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/documents/{document}/reprocess', [DocumentController::class, 'reprocess']);
     Route::delete('/documents/{document}', [DocumentController::class, 'destroy']);
 
-    // Hugging Face AI Service Integration (STEP 09)
+    // Hugging Face AI Service Integration (STEP 09 & STEP 10)
     Route::prefix('ai')->group(function () {
         Route::get('/health', [AiAnalysisController::class, 'health']);
         Route::post('/analyze', [AiAnalysisController::class, 'analyze']);
+        Route::post('/analyze-question', [AiAnalysisController::class, 'analyzeQuestion']);
+        Route::post('/analyze-questions', [AiAnalysisController::class, 'analyzeQuestions']);
+        Route::post('/assessments/{assessment}/analyze-questions', [AiAnalysisController::class, 'analyzeAssessmentQuestions']);
     });
 });

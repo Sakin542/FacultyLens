@@ -352,6 +352,12 @@ React Frontend
 * Hugging Face `transformers`, `sentence-transformers`, `torch`
 * Model: `sentence-transformers/all-MiniLM-L6-v2` (CPU-optimized, 384 dimensions)
 * NLP Pipeline: Text cleaning, paragraph/sentence splitting, question detection, semantic embedding generation
+* **Question Analysis (STEP 10)**:
+  * Structural & NLP Question Classification (MCQ, True/False, Short Answer, Descriptive, Problem Solving, Conceptual, Analytical)
+  * Semantic Topic Matching (Cosine similarity against course syllabus topics)
+  * Difficulty Balance Analysis (Easy, Medium, Hard baseline estimation)
+  * Bloom's Revised Taxonomy Cognitive Analysis (Remember, Understand, Apply, Analyze, Evaluate, Create)
+  * Single & Batch Question Evaluation with Database Persistence (`ai_*` columns)
 
 ### Infrastructure
 
