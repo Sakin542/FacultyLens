@@ -87,18 +87,70 @@ export interface Course {
   updatedAt?: string;
 }
 
-export type AssessmentType = 'Midterm' | 'Final' | 'Quiz' | 'Assignment' | 'Project';
-export type AssessmentStatus = 'Analyzed' | 'Pending' | 'Draft' | 'Needs Review';
+export type AssessmentType = 'midterm' | 'final' | 'quiz' | 'assignment' | 'class_test' | 'project' | 'other' | 'Midterm' | 'Final' | 'Quiz' | 'Assignment' | 'Project' | string;
+export type AssessmentStatus = 'draft' | 'published' | 'completed' | 'Analyzed' | 'Pending' | 'Draft' | 'Needs Review' | string;
+
+export interface AssessmentQuestionPaper {
+  id: number | string;
+  assessment_id: number | string;
+  uploaded_by: number | string;
+  file_name: string;
+  file_path?: string;
+  file_type?: string;
+  file_size?: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface PreviousQuestion {
+  id: number | string;
+  user_id?: number | string;
+  course_id: number | string;
+  course?: Course;
+  question_text: string;
+  question_type?: 'mcq' | 'short_answer' | 'descriptive' | 'problem_solving' | 'true_false' | 'other' | string;
+  marks?: number | null;
+  difficulty_level?: 'easy' | 'medium' | 'hard' | string;
+  cognitive_level?: CognitiveLevel | string;
+  source?: 'previous_exam' | 'question_bank' | 'uploaded_document' | 'manual' | 'other' | string;
+  source_year?: string | null;
+  source_assessment?: string | null;
+  file_name?: string | null;
+  file_path?: string | null;
+  file_type?: string | null;
+  file_size?: number | null;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  current_page: number;
+  last_page: number;
+  per_page: number;
+  total: number;
+  from: number | null;
+  to: number | null;
+}
 
 export interface QuestionDetail {
-  id: string;
-  questionNumber: number;
-  text: string;
-  maxMarks: number;
-  topic: string;
-  learningOutcomeCode: string;
-  cognitiveLevel: 'Remember' | 'Understand' | 'Apply' | 'Analyze' | 'Evaluate' | 'Create';
-  difficulty: 'Easy' | 'Medium' | 'Hard';
+  id: string | number;
+  questionNumber?: number;
+  question_number?: number;
+  text?: string;
+  question_text?: string;
+  maxMarks?: number;
+  marks?: number;
+  topic?: string;
+  learningOutcomeCode?: string;
+  learning_outcome_id?: number | string;
+  learningOutcome?: LearningOutcome;
+  learning_outcome?: LearningOutcome;
+  cognitiveLevel?: CognitiveLevel | string;
+  cognitive_level?: CognitiveLevel | string;
+  difficulty?: 'Easy' | 'Medium' | 'Hard' | 'easy' | 'medium' | 'hard' | string;
+  difficulty_level?: 'Easy' | 'Medium' | 'Hard' | 'easy' | 'medium' | 'hard' | string;
+  expected_answer?: string;
   similarityFlag?: {
     isSimilar: boolean;
     matchedAssessment: string;
@@ -174,19 +226,34 @@ export interface AssessmentAnalysis {
 }
 
 export interface Assessment {
-  id: string;
-  courseId: string;
-  courseCode: string;
-  courseTitle: string;
+  id: number | string;
+  course_id?: number | string;
   title: string;
   type: AssessmentType;
-  semester: string;
+  description?: string | null;
+  assessment_date?: string | null;
+  total_marks?: number;
+  duration_minutes?: number | null;
   status: AssessmentStatus;
+
+  course?: Course;
+  courseId?: string | number;
+  courseCode?: string;
+  courseTitle?: string;
+  semester?: string;
+
+  questionPaper?: AssessmentQuestionPaper | null;
+  question_paper?: AssessmentQuestionPaper | null;
+  questions?: QuestionDetail[];
+  questions_count?: number;
+  totalQuestions?: number;
+  totalMarks?: number;
+
   qualityScore?: number;
-  totalQuestions: number;
-  totalMarks: number;
-  uploadedAt: string;
+  uploadedAt?: string;
   lastAnalyzedAt?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface HistoryRecord {

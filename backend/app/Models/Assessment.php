@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Assessment extends Model
 {
@@ -45,6 +46,14 @@ class Assessment extends Model
     public function questions(): HasMany
     {
         return $this->hasMany(Question::class)->orderBy('question_number');
+    }
+
+    /**
+     * The uploaded question paper file for this assessment.
+     */
+    public function questionPaper(): HasOne
+    {
+        return $this->hasOne(AssessmentQuestionPaper::class);
     }
 
     /**

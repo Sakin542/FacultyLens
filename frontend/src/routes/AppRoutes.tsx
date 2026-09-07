@@ -12,8 +12,10 @@ import { Dashboard } from '@/pages/Dashboard';
 import { Courses } from '@/pages/Courses';
 import { CourseDetails } from '@/pages/CourseDetails';
 import { Assessments } from '@/pages/Assessments';
+import { AssessmentDetails } from '@/pages/AssessmentDetails';
+import { QuestionBank } from '@/pages/QuestionBank';
 import { Analysis } from '@/pages/Analysis';
-import { History } from '@/pages/History';
+import { History, AssessmentHistory } from '@/pages/AssessmentHistory';
 import { Settings } from '@/pages/Settings';
 import { NotFound } from '@/pages/NotFound';
 
@@ -34,9 +36,13 @@ export const AppRoutes: React.FC = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/courses/:id" element={<CourseDetails />} />
+          <Route path="/courses/:courseId/question-bank" element={<QuestionBank />} />
+          <Route path="/question-bank" element={<QuestionBank />} />
           <Route path="/assessments" element={<Assessments />} />
-          <Route path="/analysis" element={<Analysis />} />
+          <Route path="/assessments/:id" element={<AssessmentDetails />} />
+          <Route path="/assessment-history" element={<AssessmentHistory />} />
           <Route path="/history" element={<History />} />
+          <Route path="/analysis" element={<Analysis />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
       </Route>
