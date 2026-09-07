@@ -6,6 +6,7 @@ from app.services.huggingface_service import HuggingFaceService, get_hf_service
 from app.services.text_cleaner import TextCleaner
 from app.services.analyzer import AcademicTextAnalyzer
 from app.services.question_analyzer import QuestionAnalyzer
+from app.services.alignment_analyzer import AlignmentAnalyzer
 from app.utils.text_utils import split_paragraphs, split_sentences
 from app.schemas.analysis import (
     HealthResponse,
@@ -19,6 +20,10 @@ from app.schemas.analysis import (
     AnalyzeSingleQuestionResponse,
     AnalyzeBatchQuestionsRequest,
     AnalyzeBatchQuestionsResponse,
+)
+from app.schemas.alignment import (
+    AnalyzeAlignmentRequest,
+    AnalyzeAlignmentResponse,
 )
 
 logger = logging.getLogger("facultylens.ai")
@@ -211,5 +216,38 @@ def analyze_batch_questions(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to analyze question batch.",
         )
+
+
+@router.post(
+    "/api/v1/analyze-alignment",
+    response_model=AnalyzeAlignmentResponse,
+    dependencies=[Depends(verify_api_key)],
+)
+def analyze_learning_outcome_alignment(
+    payload: AnalyzeAlignmentRequest,
+    hf_service: HuggingFaceService = Depends(get_hf_service),
+) -> AnalyzeAlignmentResponse:
+    """
+    Analyze Learning Outcome alignment for a set of examination questions against course LOs.
+    Computes dense semantic embeddings, pairwise cosine similarity matrix, LO coverage,
+    overall alignment score, and actionable findings.
+    """
+    try:
+        analyzer = AlignmentAnalyzer(hf_service=hf_service)
+        result = analyzer.analyze(
+            questions=payload.questions,
+            learning_outcomes=payload.learning_outcomes,
+            thresholds=payload.thresholds,
+            course_id=payload.course_id,
+        )
+
+        return AnalyzeAlignmentResponse(**result)
+    except Exception as e:
+        logger.error(f"Error analyzing LO alignment: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to analyze learning outcome alignment.",
+        )
+
 
 

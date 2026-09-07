@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\AnalysisReport;
+use App\Models\Assessment;
 use App\Services\AiService;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -207,5 +209,159 @@ class AiAnalysisController extends Controller
             ], 502);
         }
     }
+
+    /**
+     * Analyze Learning Outcome Alignment directly for provided questions and LOs.
+     */
+    public function analyzeAlignment(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'course_id' => ['nullable', 'integer'],
+            'learning_outcomes' => ['required', 'array', 'min:1'],
+            'learning_outcomes.*.description' => ['required_without:learning_outcomes.*', 'nullable', 'string', 'min:3'],
+            'learning_outcomes.*.code' => ['nullable', 'string', 'max:50'],
+            'questions' => ['required', 'array', 'min:1'],
+            'questions.*.text' => ['required_without:questions.*.question_text', 'nullable', 'string', 'min:3'],
+            'questions.*.question_text' => ['nullable', 'string'],
+            'questions.*.number' => ['nullable'],
+            'thresholds' => ['nullable', 'array'],
+            'thresholds.strong' => ['nullable', 'numeric', 'between:0,1'],
+            'thresholds.weak' => ['nullable', 'numeric', 'between:0,1'],
+        ]);
+
+        try {
+            $result = $this->aiService->analyzeAlignment(
+                $validated['learning_outcomes'],
+                $validated['questions'],
+                $validated['thresholds'] ?? null,
+                $validated['course_id'] ?? null
+            );
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Learning outcome alignment analyzed successfully.',
+                'data' => $result,
+            ]);
+        } catch (Exception $e) {
+            Log::error('AI LO alignment analysis failed: ' . $e->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 502);
+        }
+    }
+
+    /**
+     * Analyze and persist Learning Outcome Alignment for a specific assessment.
+     */
+    public function analyzeAssessmentAlignment(Request $request, Assessment $assessment): JsonResponse
+    {
+        $user = $request->user();
+
+        // Check faculty authorization
+        if ($assessment->course->user_id !== $user->id) {
+            return response()->json([
+                'message' => 'Unauthorized access to assessment.',
+            ], 403);
+        }
+
+        $assessment->load(['course.learningOutcomes', 'questions', 'latestAnalysisReport']);
+        $course = $assessment->course;
+
+        $learningOutcomes = $course->learningOutcomes;
+        if ($learningOutcomes->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'The course has no defined learning outcomes. Please add learning outcomes before running alignment analysis.',
+            ], 422);
+        }
+
+        $questions = $assessment->questions;
+        if ($questions->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No questions found for this assessment to analyze.',
+            ], 422);
+        }
+
+        $formattedLos = $learningOutcomes->map(function ($lo) {
+            return [
+                'id' => $lo->id,
+                'code' => $lo->code,
+                'description' => $lo->description,
+            ];
+        })->toArray();
+
+        $formattedQuestions = $questions->map(function ($q) {
+            return [
+                'id' => $q->id,
+                'number' => $q->question_number,
+                'text' => $q->question_text,
+                'topics' => $q->ai_topics ?? [],
+            ];
+        })->toArray();
+
+        $thresholds = $request->input('thresholds');
+
+        try {
+            $aiResult = $this->aiService->analyzeAlignment(
+                $formattedLos,
+                $formattedQuestions,
+                $thresholds,
+                $course->id
+            );
+
+            // Update question -> learning_outcome_id mapping for strong/weak matches if question matches an LO
+            $qaList = $aiResult['question_alignment'] ?? [];
+            foreach ($qaList as $qa) {
+                $qId = $qa['question_id'] ?? null;
+                $matchedLo = $qa['matched_learning_outcome'] ?? null;
+                $status = $qa['alignment_status'] ?? 'NOT_ALIGNED';
+
+                if ($qId && $matchedLo && !empty($matchedLo['id']) && in_array($status, ['STRONG', 'WEAK'])) {
+                    $questionModel = $questions->firstWhere('id', $qId);
+                    if ($questionModel && empty($questionModel->learning_outcome_id)) {
+                        $questionModel->update([
+                            'learning_outcome_id' => $matchedLo['id'],
+                        ]);
+                    }
+                }
+            }
+
+            // Merge findings into AnalysisReport
+            $existingFindings = $assessment->latestAnalysisReport?->findings ?? [];
+            $updatedFindings = array_merge($existingFindings, [
+                'alignment_findings' => $aiResult['findings'] ?? [],
+                'learning_outcome_coverage' => $aiResult['learning_outcome_coverage'] ?? [],
+            ]);
+
+            $report = AnalysisReport::updateOrCreate(
+                ['assessment_id' => $assessment->id],
+                [
+                    'learning_outcome_alignment_score' => $aiResult['overall_alignment_score'] ?? 0.0,
+                    'total_questions' => $aiResult['total_questions'] ?? count($questions),
+                    'findings' => $updatedFindings,
+                    'analysis_status' => 'completed',
+                    'analyzed_at' => now(),
+                ]
+            );
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Assessment learning outcome alignment analyzed successfully.',
+                'data' => [
+                    'alignment' => $aiResult,
+                    'report' => $report,
+                ],
+            ]);
+        } catch (Exception $e) {
+            Log::error('Assessment LO alignment analysis failed: ' . $e->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 502);
+        }
+    }
 }
+
 
