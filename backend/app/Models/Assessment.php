@@ -71,5 +71,21 @@ class Assessment extends Model
     {
         return $this->hasOne(AnalysisReport::class)->latestOfMany();
     }
+
+    /**
+     * Generated assessment PDF/export reports for this assessment.
+     */
+    public function reports(): HasMany
+    {
+        return $this->hasMany(AssessmentReport::class)->orderByDesc('created_at');
+    }
+
+    /**
+     * Get the latest generated assessment report.
+     */
+    public function latestReport()
+    {
+        return $this->hasOne(AssessmentReport::class)->latestOfMany();
+    }
 }
 

@@ -18,6 +18,8 @@ import { Analysis } from '@/pages/Analysis';
 import { DocumentDetails } from '@/pages/DocumentDetails';
 import { History, AssessmentHistory } from '@/pages/AssessmentHistory';
 import { Settings } from '@/pages/Settings';
+import { AssessmentReport } from '@/pages/AssessmentReport';
+import { SharedReport } from '@/pages/SharedReport';
 import { NotFound } from '@/pages/NotFound';
 
 export const AppRoutes: React.FC = () => {
@@ -31,6 +33,9 @@ export const AppRoutes: React.FC = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
       </Route>
 
+      {/* Public Shared Report Access (STEP 18) */}
+      <Route path="/shared/reports/:token" element={<SharedReport />} />
+
       {/* Protected Dashboard Routes (Only Authenticated / Registered Faculty) */}
       <Route element={<ProtectedRoute />}>
         <Route element={<DashboardLayout />}>
@@ -42,6 +47,8 @@ export const AppRoutes: React.FC = () => {
           <Route path="/assessments" element={<Assessments />} />
           <Route path="/assessments/:id" element={<AssessmentDetails />} />
           <Route path="/assessments/:id/analysis" element={<Analysis />} />
+          <Route path="/assessments/:assessmentId/report" element={<AssessmentReport />} />
+          <Route path="/assessments/:id/report" element={<AssessmentReport />} />
           <Route path="/documents/:id" element={<DocumentDetails />} />
           <Route path="/assessment-history" element={<AssessmentHistory />} />
           <Route path="/history" element={<History />} />
