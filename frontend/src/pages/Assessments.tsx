@@ -21,6 +21,7 @@ import {
   AlertCircle,
   CheckCircle2,
   FileText,
+  BrainCircuit,
 } from 'lucide-react';
 
 export const Assessments: React.FC = () => {
@@ -333,7 +334,17 @@ export const Assessments: React.FC = () => {
                     leftIcon={<ExternalLink className="w-3.5 h-3.5" />}
                     onClick={() => navigate(`/assessments/${asm.id}`)}
                   >
-                    View Details
+                    Details
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="justify-center bg-[#111111] text-white hover:bg-black dark:bg-white dark:text-[#111111] dark:hover:bg-neutral-200"
+                    leftIcon={<BrainCircuit className="w-3.5 h-3.5 text-amber-400" />}
+                    onClick={() => navigate(`/assessments/${asm.id}/analysis`)}
+                    title="AI Analysis Dashboard"
+                  >
+                    Analysis
                   </Button>
                   <Button
                     variant="ghost"

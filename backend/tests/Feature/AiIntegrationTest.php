@@ -439,5 +439,78 @@ class AiIntegrationTest extends TestCase
         $this->assertEquals('failed', $report->analysis_status);
         $this->assertStringContainsString('Expected range is 0 to 100', $report->processing_error);
     }
+
+    public function test_get_assessment_analysis_returns_empty_state_when_not_analyzed()
+    {
+        Sanctum::actingAs($this->facultyA);
+
+        $response = $this->getJson("/api/ai/assessments/{$this->assessmentA->id}/analysis");
+
+        $response->assertStatus(200)
+            ->assertJsonPath('status', 'success')
+            ->assertJsonPath('data.analysis_status', 'not_analyzed')
+            ->assertJsonPath('data.report', null)
+            ->assertJsonPath('data.assessment.id', $this->assessmentA->id);
+    }
+
+    public function test_get_assessment_analysis_blocks_unauthorized_faculty()
+    {
+        Sanctum::actingAs($this->facultyB);
+
+        $response = $this->getJson("/api/ai/assessments/{$this->assessmentA->id}/analysis");
+
+        $response->assertStatus(403)
+            ->assertJsonPath('status', 'error');
+    }
+
+    public function test_get_assessment_analysis_returns_full_data_when_analyzed()
+    {
+        Sanctum::actingAs($this->facultyA);
+
+        $report = AnalysisReport::create([
+            'assessment_id' => $this->assessmentA->id,
+            'overall_score' => 86.5,
+            'topic_coverage_score' => 89.0,
+            'learning_outcome_alignment_score' => 84.0,
+            'difficulty_balance_score' => 82.0,
+            'cognitive_level_balance_score' => 80.0,
+            'similarity_score' => 15.0,
+            'total_questions' => 2,
+            'similar_questions_count' => 0,
+            'analysis_status' => 'completed',
+            'findings' => [
+                'quality' => [
+                    'overall_quality_score' => 86.5,
+                    'rating' => 'GOOD',
+                    'findings' => ['Balanced exam design across topics.'],
+                ],
+            ],
+            'analyzed_at' => now(),
+        ]);
+
+        Recommendation::create([
+            'analysis_report_id' => $report->id,
+            'category' => 'difficulty',
+            'problem' => 'Slight difficulty skew',
+            'title' => 'Slight difficulty skew',
+            'description' => 'Consider adjusting easy questions',
+            'explanation' => 'Too few easy questions',
+            'recommendation' => 'Add 1 easy question',
+            'source_metric' => 'Difficulty',
+            'priority' => 'medium',
+            'status' => 'pending',
+        ]);
+
+        $response = $this->getJson("/api/ai/assessments/{$this->assessmentA->id}/analysis");
+
+        $response->assertStatus(200)
+            ->assertJsonPath('status', 'success')
+            ->assertJsonPath('data.analysis_status', 'completed')
+            ->assertJsonPath('data.report.overall_score', 86.5)
+            ->assertJsonPath('data.report.rating', 'GOOD')
+            ->assertJsonPath('data.recommendation_summary.total_recommendations', 1)
+            ->assertJsonPath('data.recommendations.0.title', 'Slight difficulty skew');
+    }
 }
+
 
