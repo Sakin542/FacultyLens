@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Input';
 import { Card } from '@/components/common/Card';
-import { authenticateUser } from '@/utils/auth';
+import { useAuth } from '@/context/AuthContext';
 import {
   Mail,
   Lock,
@@ -17,6 +17,8 @@ import {
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
+  const { login, isAuthenticated, loading } = useAuth();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -25,6 +27,13 @@ export const Login: React.FC = () => {
   const [authError, setAuthError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
+
+  // If already authenticated, redirect to dashboard
+  useEffect(() => {
+    if (!loading && isAuthenticated) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [isAuthenticated, loading, navigate]);
 
   const validate = () => {
     const newErrors: { email?: string; password?: string } = {};
@@ -42,32 +51,29 @@ export const Login: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError(null);
     if (!validate()) return;
 
     setIsLoading(true);
 
-    setTimeout(() => {
-      const result = authenticateUser(email, password);
+    try {
+      await login({
+        email: email.trim(),
+        password,
+        remember: rememberMe,
+      });
 
-      if (!result.success) {
-        setIsLoading(false);
-        setAuthError(result.message || 'Authentication failed. Please check your credentials.');
-        return;
-      }
-
-      if (rememberMe) {
-        localStorage.setItem('facultylens_remember_me', 'true');
-      }
-
-      setIsLoading(false);
       setLoginSuccess(true);
       setTimeout(() => {
         navigate('/dashboard');
-      }, 500);
-    }, 600);
+      }, 400);
+    } catch (err: unknown) {
+      setIsLoading(false);
+      const errorMessage = err instanceof Error ? err.message : 'Invalid email or password.';
+      setAuthError(errorMessage);
+    }
   };
 
   return (
@@ -90,7 +96,7 @@ export const Login: React.FC = () => {
           <div className="p-3.5 rounded-xl bg-[#FEF2F2] border border-[#FECACA] flex items-start gap-2.5 text-xs text-[#991B1B] animate-in fade-in duration-200">
             <AlertCircle className="w-4 h-4 shrink-0 text-[#DC2626] mt-0.5" />
             <div className="space-y-1">
-              <span className="font-semibold block">Access Restricted</span>
+              <span className="font-semibold block">Authentication Failed</span>
               <span className="text-[11px] leading-relaxed block">{authError}</span>
             </div>
           </div>
@@ -106,7 +112,7 @@ export const Login: React.FC = () => {
             <Input
               label="University Email"
               type="email"
-              placeholder="faculty@university.edu"
+              placeholder="faculty@example.com"
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -172,9 +178,10 @@ export const Login: React.FC = () => {
                 size="md"
                 className="w-full justify-center text-sm font-semibold tracking-wide"
                 isLoading={isLoading}
+                disabled={isLoading}
                 rightIcon={<ArrowRight className="w-4 h-4" />}
               >
-                Sign In
+                {isLoading ? 'Signing In...' : 'Sign In'}
               </Button>
             </div>
           </form>

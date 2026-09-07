@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Input';
 import { Card } from '@/components/common/Card';
-import { registerUser, authenticateUser } from '@/utils/auth';
+import { useAuth } from '@/context/AuthContext';
 import {
   Mail,
   Lock,
-  User,
+  User as UserIcon,
   Building,
   Award,
   ArrowRight,
@@ -20,6 +20,8 @@ import {
 
 export const Register: React.FC = () => {
   const navigate = useNavigate();
+  const { register, isAuthenticated, loading } = useAuth();
+
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -36,6 +38,13 @@ export const Register: React.FC = () => {
   const [registerError, setRegisterError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [registerSuccess, setRegisterSuccess] = useState(false);
+
+  // If already authenticated, redirect to dashboard
+  useEffect(() => {
+    if (!loading && isAuthenticated) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [isAuthenticated, loading, navigate]);
 
   const calculatePasswordStrength = (pass: string): { label: string; percent: number; color: string } => {
     if (!pass) return { label: '', percent: 0, color: 'bg-[#E5E5E5]' };
@@ -90,38 +99,32 @@ export const Register: React.FC = () => {
     return Object.keys(errs).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setRegisterError(null);
     if (!validate()) return;
 
     setIsLoading(true);
 
-    setTimeout(() => {
-      const regResult = registerUser({
-        id: `faculty-${Date.now()}`,
-        fullName: formData.fullName.trim(),
+    try {
+      await register({
+        name: formData.fullName.trim(),
         email: formData.email.trim(),
         department: formData.department.trim(),
         designation: formData.designation.trim(),
         password: formData.password,
+        password_confirmation: formData.confirmPassword,
       });
 
-      if (!regResult.success) {
-        setIsLoading(false);
-        setRegisterError(regResult.message || 'Registration failed. Email may already be registered.');
-        return;
-      }
-
-      // Auto login the newly registered user
-      authenticateUser(formData.email, formData.password);
-
-      setIsLoading(false);
       setRegisterSuccess(true);
       setTimeout(() => {
         navigate('/dashboard');
-      }, 600);
-    }, 700);
+      }, 500);
+    } catch (err: unknown) {
+      setIsLoading(false);
+      const errorMessage = err instanceof Error ? err.message : 'Registration failed. Please check your details.';
+      setRegisterError(errorMessage);
+    }
   };
 
   return (
@@ -164,7 +167,7 @@ export const Register: React.FC = () => {
               value={formData.fullName}
               onChange={handleChange}
               error={errors.fullName}
-              leftIcon={<User className="w-4 h-4" />}
+              leftIcon={<UserIcon className="w-4 h-4" />}
               required
             />
 
@@ -294,9 +297,10 @@ export const Register: React.FC = () => {
                 size="md"
                 className="w-full justify-center text-sm font-semibold tracking-wide"
                 isLoading={isLoading}
+                disabled={isLoading}
                 rightIcon={<ArrowRight className="w-4 h-4" />}
               >
-                Create Account
+                {isLoading ? 'Creating Account...' : 'Create Account'}
               </Button>
             </div>
           </form>

@@ -5,8 +5,8 @@ import { ProgressBar } from '@/components/dashboard/ProgressBar';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/common/Card';
 import { Badge } from '@/components/common/Badge';
 import { Button } from '@/components/common/Button';
+import { useAuth } from '@/context/AuthContext';
 import {
-  mockCurrentUser,
   mockDashboardStats,
   mockAssessments,
 } from '@/utils/mockData';
@@ -24,6 +24,9 @@ import {
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const displayName = user?.name || user?.fullName || 'Faculty Member';
+  const displayDept = user?.department || 'Academic Department';
 
   return (
     <div className="space-y-8">
@@ -32,10 +35,10 @@ export const Dashboard: React.FC = () => {
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <h2 className="text-xl font-bold text-[#111111] tracking-tight">
-              Welcome back, {mockCurrentUser.fullName}
+              Welcome back, {displayName}
             </h2>
             <Badge variant="neutral" className="font-mono text-[10px]">
-              {mockCurrentUser.department}
+              {displayDept}
             </Badge>
           </div>
           <p className="text-xs text-[#737373]">

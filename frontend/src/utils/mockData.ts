@@ -9,6 +9,7 @@ import {
 
 export const mockCurrentUser: User = {
   id: 'usr-001',
+  name: 'Dr. Tariqul Islam',
   fullName: 'Dr. Tariqul Islam',
   email: 'tariqul.islam@university.edu',
   department: 'Computer Science and Engineering',
