@@ -1,0 +1,71 @@
+﻿services:
+  app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: facultylens-app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./backend:/var/www/html
+    ports:
+      - 8080:8000
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=facultylens
+      - DB_USERNAME=root
+      - DB_PASSWORD=root123
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - facultylens-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: facultylens-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: facultylens
+      MYSQL_ROOT_PASSWORD: root123
+    ports:
+      - 3307:3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: [CMD, mysqladmin, ping, -h, localhost, -u, root, -proot123]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - facultylens-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: facultylens-phpmyadmin
+    restart: unless-stopped
+    ports:
+      - 8081:80
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: root123
+      UPLOAD_LIMIT: 64M
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - facultylens-network
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  facultylens-network:
+    driver: bridge

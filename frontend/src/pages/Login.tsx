@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Input';
 import { Card } from '@/components/common/Card';
+import { authenticateUser } from '@/utils/auth';
 import {
   Mail,
   Lock,
@@ -10,15 +11,18 @@ import {
   Eye,
   EyeOff,
   CheckCircle2,
+  AlertCircle,
+  ShieldCheck,
 } from 'lucide-react';
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('tariqul.islam@university.edu');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [authError, setAuthError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
 
@@ -40,16 +44,24 @@ export const Login: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setAuthError(null);
     if (!validate()) return;
 
     setIsLoading(true);
-    // Simulate login delay and state storage
+
     setTimeout(() => {
-      localStorage.setItem('facultylens_token', 'mock-faculty-session-token');
-      localStorage.setItem('facultylens_user_email', email);
+      const result = authenticateUser(email, password);
+
+      if (!result.success) {
+        setIsLoading(false);
+        setAuthError(result.message || 'Authentication failed. Please check your credentials.');
+        return;
+      }
+
       if (rememberMe) {
         localStorage.setItem('facultylens_remember_me', 'true');
       }
+
       setIsLoading(false);
       setLoginSuccess(true);
       setTimeout(() => {
@@ -63,11 +75,26 @@ export const Login: React.FC = () => {
       <Card className="w-full max-w-md bg-white rounded-2xl border border-[#E5E5E5] shadow-card p-8 sm:p-10 space-y-6">
         {/* Header without internal logo/name */}
         <div className="space-y-1 text-left">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-semibold uppercase tracking-wider bg-[#F7F7F5] text-[#737373] border border-[#E5E5E5]">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#111111]" /> Institutional Access
+            </span>
+          </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-[#111111] tracking-tight">Sign In</h2>
           <p className="text-xs text-[#737373]">
-            Enter your university credentials to access your faculty portal
+            Enter your registered university email to access your faculty portal
           </p>
         </div>
+
+        {authError && (
+          <div className="p-3.5 rounded-xl bg-[#FEF2F2] border border-[#FECACA] flex items-start gap-2.5 text-xs text-[#991B1B] animate-in fade-in duration-200">
+            <AlertCircle className="w-4 h-4 shrink-0 text-[#DC2626] mt-0.5" />
+            <div className="space-y-1">
+              <span className="font-semibold block">Access Restricted</span>
+              <span className="text-[11px] leading-relaxed block">{authError}</span>
+            </div>
+          </div>
+        )}
 
         {loginSuccess ? (
           <div className="p-4 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] flex items-center gap-3 text-xs text-[#166534] font-medium animate-pulse">
@@ -84,6 +111,7 @@ export const Login: React.FC = () => {
               onChange={(e) => {
                 setEmail(e.target.value);
                 if (errors.email) setErrors({ ...errors, email: '' });
+                if (authError) setAuthError(null);
               }}
               error={errors.email}
               leftIcon={<Mail className="w-4 h-4" />}
@@ -99,6 +127,7 @@ export const Login: React.FC = () => {
                 onChange={(e) => {
                   setPassword(e.target.value);
                   if (errors.password) setErrors({ ...errors, password: '' });
+                  if (authError) setAuthError(null);
                 }}
                 error={errors.password}
                 leftIcon={<Lock className="w-4 h-4" />}

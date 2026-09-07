@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { cn } from '@/utils/cn';
 import { mockCurrentUser } from '@/utils/mockData';
+import { getCurrentUser, logoutUser } from '@/utils/auth';
 import { Logo } from '@/components/common/Logo';
 import {
   LayoutDashboard,
@@ -22,6 +23,7 @@ export interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) => {
   const navigate = useNavigate();
+  const currentUser = getCurrentUser() || mockCurrentUser;
 
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
@@ -33,7 +35,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
   ];
 
   const handleLogout = () => {
-    localStorage.removeItem('facultylens_token');
+    logoutUser();
     if (onCloseMobile) onCloseMobile();
     navigate('/login');
   };
@@ -105,10 +107,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-xs font-bold text-white truncate tracking-tight">
-              {mockCurrentUser.fullName}
+              {currentUser.fullName}
             </p>
             <p className="text-[10px] text-[#A3A3A3] truncate font-medium">
-              {mockCurrentUser.designation}
+              {currentUser.designation}
             </p>
           </div>
         </div>
