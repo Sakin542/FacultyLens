@@ -11,6 +11,7 @@ import { QuestionPaperUploadModal } from '@/components/assessments/QuestionPaper
 import { QuestionAnalysisModal } from '@/components/assessments/QuestionAnalysisModal';
 import { LearningOutcomeAlignmentModal } from '@/components/assessments/LearningOutcomeAlignmentModal';
 import { SemanticSimilarityModal } from '@/components/assessments/SemanticSimilarityModal';
+import { AssessmentQualityModal } from '@/components/assessments/AssessmentQualityModal';
 import {
   ArrowLeft,
   Edit,
@@ -30,6 +31,7 @@ import {
   Sparkles,
   Target,
   CopyCheck,
+  BarChart3,
 } from 'lucide-react';
 
 export const AssessmentDetails: React.FC = () => {
@@ -47,6 +49,7 @@ export const AssessmentDetails: React.FC = () => {
   const [isAiAnalysisOpen, setIsAiAnalysisOpen] = useState(false);
   const [isAlignmentModalOpen, setIsAlignmentModalOpen] = useState(false);
   const [isSimilarityModalOpen, setIsSimilarityModalOpen] = useState(false);
+  const [isQualityModalOpen, setIsQualityModalOpen] = useState(false);
 
   // Action states
   const [isDeletingAssessment, setIsDeletingAssessment] = useState(false);
@@ -231,6 +234,14 @@ export const AssessmentDetails: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            leftIcon={<BarChart3 className="w-3.5 h-3.5" />}
+            onClick={() => setIsQualityModalOpen(true)}
+          >
+            Quality Audit
+          </Button>
           <Button
             variant="outline"
             size="sm"
@@ -575,6 +586,17 @@ export const AssessmentDetails: React.FC = () => {
         assessment={assessment}
         onSimilarityCompleted={() => {
           showNotification('Semantic Similarity check completed successfully!');
+          loadAssessment();
+        }}
+      />
+
+      {/* Assessment Quality Engine Modal (Step 13) */}
+      <AssessmentQualityModal
+        isOpen={isQualityModalOpen}
+        onClose={() => setIsQualityModalOpen(false)}
+        assessment={assessment}
+        onQualityCompleted={() => {
+          showNotification('Assessment Quality evaluation completed successfully!');
           loadAssessment();
         }}
       />

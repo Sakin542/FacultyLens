@@ -6,7 +6,8 @@ import { ProgressBar } from '@/components/dashboard/ProgressBar';
 import { mockDetailedAnalysis } from '@/utils/mockData';
 import { LearningOutcomeAlignmentSection } from '@/components/analysis/LearningOutcomeAlignmentSection';
 import { SemanticSimilaritySection } from '@/components/analysis/SemanticSimilaritySection';
-import { AlignmentAnalysisResult, SimilarityAnalysisResult } from '@/types';
+import { AssessmentQualitySection } from '@/components/analysis/AssessmentQualitySection';
+import { AlignmentAnalysisResult, SimilarityAnalysisResult, AssessmentQualityResult } from '@/types';
 import {
   Sparkles,
   AlertTriangle,
@@ -292,9 +293,128 @@ const mockSimilarityData: SimilarityAnalysisResult = {
   ],
 };
 
+const mockQualityData: AssessmentQualityResult = {
+  status: 'success',
+  method: 'assessment_quality_engine',
+  overall_quality_score: 84.5,
+  rating: 'GOOD',
+  weights_applied: {
+    topic: 20,
+    learning_outcome: 20,
+    difficulty: 15,
+    cognitive: 15,
+    question_diversity: 15,
+    marks: 15,
+  },
+  excluded_components: [],
+  components: {
+    topic_coverage: 87.5,
+    learning_outcome_coverage: 80.0,
+    difficulty_balance: 88.0,
+    cognitive_diversity: 82.5,
+    question_diversity: 85.0,
+    marks_distribution: 84.0,
+  },
+  topic_analysis: {
+    status: 'AVAILABLE',
+    score: 87.5,
+    methodology: 'Unweighted syllabus topic representation across 4 modules.',
+    total_topics_defined: 4,
+    covered_topics_count: 4,
+    topics: [
+      { topic: 'Relational Model & ER Design', question_count: 1, marks: 15, coverage_percentage: 15.0, coverage_status: 'ADEQUATE' },
+      { topic: 'SQL & Relational Algebra', question_count: 2, marks: 35, coverage_percentage: 35.0, coverage_status: 'COVERED' },
+      { topic: 'Schema Normalization (1NF-BCNF)', question_count: 1, marks: 20, coverage_percentage: 20.0, coverage_status: 'ADEQUATE' },
+      { topic: 'Storage & Indexing Optimization', question_count: 2, marks: 30, coverage_percentage: 30.0, coverage_status: 'COVERED' },
+    ],
+  },
+  learning_outcome_analysis: {
+    status: 'AVAILABLE',
+    score: 80.0,
+    methodology: 'Equal-weight learning outcome representation.',
+    total_los_defined: 5,
+    covered_los_count: 4,
+    learning_outcomes: [
+      { code: 'CLO-1', description: 'Design conceptual and logical relational data models using ER diagrams.', question_count: 1, marks: 15, strongly_aligned_questions: 1, weakly_aligned_questions: 0, coverage_percentage: 15.0, coverage_status: 'ADEQUATE' },
+      { code: 'CLO-2', description: 'Formulate complex queries using Relational Algebra and structured SQL.', question_count: 2, marks: 35, strongly_aligned_questions: 2, weakly_aligned_questions: 0, coverage_percentage: 35.0, coverage_status: 'COVERED' },
+      { code: 'CLO-3', description: 'Evaluate schema designs and apply normalization rules (1NF to BCNF).', question_count: 1, marks: 20, strongly_aligned_questions: 1, weakly_aligned_questions: 0, coverage_percentage: 20.0, coverage_status: 'ADEQUATE' },
+      { code: 'CLO-4', description: 'Analyze concurrency control protocols and crash recovery algorithms.', question_count: 0, marks: 0, strongly_aligned_questions: 0, weakly_aligned_questions: 0, coverage_percentage: 0.0, coverage_status: 'NOT_COVERED' },
+      { code: 'CLO-5', description: 'Implement indexing and query optimization strategies for performance tuning.', question_count: 2, marks: 30, strongly_aligned_questions: 2, weakly_aligned_questions: 0, coverage_percentage: 30.0, coverage_status: 'COVERED' },
+    ],
+  },
+  difficulty_analysis: {
+    status: 'AVAILABLE',
+    score: 88.0,
+    methodology: 'Marks-weighted deviation from targets (Easy 30%, Med 50%, Hard 20%).',
+    total_deviation: 24.0,
+    distribution: [
+      { level: 'Easy', question_count: 2, question_percentage: 33.3, marks: 25.0, marks_percentage: 25.0, target_percentage: 30.0, deviation: 5.0 },
+      { level: 'Medium', question_count: 3, question_percentage: 50.0, marks: 55.0, marks_percentage: 55.0, target_percentage: 50.0, deviation: 5.0 },
+      { level: 'Hard', question_count: 1, question_percentage: 16.7, marks: 20.0, marks_percentage: 20.0, target_percentage: 20.0, deviation: 0.0 },
+    ],
+  },
+  cognitive_analysis: {
+    status: 'AVAILABLE',
+    score: 82.5,
+    methodology: 'Normalized Shannon entropy H / ln(6) across Bloom taxonomy tiers.',
+    shannon_entropy: 1.478,
+    max_possible_entropy: 1.7918,
+    dominant_level: 'Apply',
+    dominant_percentage: 35.0,
+    distribution: [
+      { level: 'Remember', question_count: 1, question_percentage: 16.7, marks: 10.0, marks_percentage: 10.0 },
+      { level: 'Understand', question_count: 1, question_percentage: 16.7, marks: 15.0, marks_percentage: 15.0 },
+      { level: 'Apply', question_count: 2, question_percentage: 33.3, marks: 35.0, marks_percentage: 35.0 },
+      { level: 'Analyze', question_count: 1, question_percentage: 16.7, marks: 20.0, marks_percentage: 20.0 },
+      { level: 'Evaluate', question_count: 1, question_percentage: 16.7, marks: 20.0, marks_percentage: 20.0 },
+      { level: 'Create', question_count: 0, question_percentage: 0.0, marks: 0.0, marks_percentage: 0.0 },
+    ],
+  },
+  question_diversity_analysis: {
+    status: 'AVAILABLE',
+    score: 85.0,
+    methodology: 'Normalized Shannon entropy over 4 distinct question formats.',
+    unique_types_count: 4,
+    shannon_entropy: 1.18,
+    dominant_type: 'Problem Solving',
+    dominant_percentage: 35.0,
+    distribution: [
+      { question_type: 'Descriptive', question_count: 2, question_percentage: 33.3, marks: 30.0, marks_percentage: 30.0 },
+      { question_type: 'Problem Solving', question_count: 2, question_percentage: 33.3, marks: 35.0, marks_percentage: 35.0 },
+      { question_type: 'Analytical', question_count: 1, question_percentage: 16.7, marks: 20.0, marks_percentage: 20.0 },
+      { question_type: 'Conceptual', question_count: 1, question_percentage: 16.7, marks: 15.0, marks_percentage: 15.0 },
+    ],
+  },
+  marks_analysis: {
+    status: 'AVAILABLE',
+    score: 84.0,
+    methodology: 'Assessment marks summation and single-question concentration checks.',
+    total_question_marks: 100.0,
+    assessment_expected_marks: 100.0,
+    marks_match_assessment: true,
+    average_marks: 16.67,
+    min_marks: 10.0,
+    max_marks: 25.0,
+    median_marks: 17.5,
+    high_concentration_detected: false,
+    highest_single_question_share: 25.0,
+    highest_single_question_number: 3,
+    marks_by_topic: {},
+    marks_by_lo: {},
+    marks_by_difficulty: {},
+    marks_by_cognitive: {},
+  },
+  findings: [
+    'Assessment Rigor: Overall quality score is 84.5% (GOOD), reflecting strong topic coverage and balanced difficulty spread.',
+    'LO Coverage: CLO-4 (Concurrency Control) is not evaluated in the current assessment paper.',
+    'Cognitive Spread: Well-balanced higher-order evaluation (40% of marks in Analyze and Evaluate tiers).',
+    'Question Types: Diverse composition featuring Descriptive, Problem Solving, Analytical, and Conceptual items.',
+  ],
+};
+
 export const Analysis: React.FC = () => {
   const [analysis] = useState(mockDetailedAnalysis);
-  const [selectedTab, setSelectedTab] = useState<'overview' | 'alignment' | 'similarity' | 'findings' | 'recommendations' | 'questions'>('overview');
+  const [selectedTab, setSelectedTab] = useState<'overview' | 'quality' | 'alignment' | 'similarity' | 'findings' | 'recommendations' | 'questions'>('overview');
   const [acceptedRecs, setAcceptedRecs] = useState<Record<string, boolean>>({});
 
   const toggleAcceptRec = (id: string) => {
@@ -399,6 +519,7 @@ export const Analysis: React.FC = () => {
       <div className="flex items-center gap-2 border-b border-[#E5E5E5] pb-2 text-xs overflow-x-auto">
         {[
           { id: 'overview', label: 'Executive Summary' },
+          { id: 'quality', label: `Quality Engine (${mockQualityData.overall_quality_score}%)` },
           { id: 'alignment', label: `LO Alignment (${mockAlignmentData.covered_learning_outcomes_count}/${mockAlignmentData.total_learning_outcomes})` },
           { id: 'similarity', label: `Semantic Similarity (${mockSimilarityData.potential_duplicates_count + mockSimilarityData.highly_similar_count} flags)` },
           { id: 'findings', label: `AI Findings (${analysis.findings.length})` },
@@ -544,6 +665,11 @@ export const Analysis: React.FC = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Tab: Quality Engine (Step 13) */}
+      {selectedTab === 'quality' && (
+        <AssessmentQualitySection qualityData={mockQualityData} />
       )}
 
       {/* Tab: LO Alignment (Step 11) */}

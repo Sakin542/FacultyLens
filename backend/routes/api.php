@@ -87,8 +87,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/analyze-questions', [AiAnalysisController::class, 'analyzeQuestions']);
         Route::post('/analyze-alignment', [AiAnalysisController::class, 'analyzeAlignment']);
         Route::post('/analyze-similarity', [AiAnalysisController::class, 'analyzeSimilarity']);
+        Route::post('/analyze-assessment-quality', [AiAnalysisController::class, 'analyzeQuality']);
         Route::post('/assessments/{assessment}/analyze-questions', [AiAnalysisController::class, 'analyzeAssessmentQuestions']);
         Route::post('/assessments/{assessment}/analyze-alignment', [AiAnalysisController::class, 'analyzeAssessmentAlignment']);
         Route::post('/assessments/{assessment}/analyze-similarity', [AiAnalysisController::class, 'analyzeAssessmentSimilarity']);
+        Route::post('/assessments/{assessment}/analyze-quality', [AiAnalysisController::class, 'analyzeAssessmentQuality']);
     });
 });

@@ -4,6 +4,8 @@ import {
   AssessmentAlignmentResponseData,
   SimilarityAnalysisResult,
   AssessmentSimilarityResponseData,
+  AssessmentQualityResult,
+  AssessmentQualityResponseData,
 } from '../types';
 
 export interface SingleQuestionAnalysisPayload {
@@ -212,6 +214,42 @@ export const aiService = {
   ) => {
     return apiClient<ApiResponseWrapper<AssessmentSimilarityResponseData>>(
       `/ai/assessments/${assessmentId}/analyze-similarity`,
+      {
+        method: 'POST',
+        body: JSON.stringify(payload || {}),
+      }
+    );
+  },
+
+  /**
+   * Evaluate overall Assessment Quality across 6 dimensions directly
+   */
+  analyzeQuality: async (payload: {
+    assessment?: { id?: number | string; title?: string; total_marks?: number };
+    questions: Array<{ text: string; marks?: number; question_type?: string; difficulty?: string; cognitive_level?: string; topics?: string[]; learning_outcome_code?: string }>;
+    topics?: Array<{ name: string; weight?: number }>;
+    learning_outcomes?: Array<{ code: string; description?: string; weight?: number }>;
+    weights?: Record<string, number>;
+    difficulty_targets?: Record<string, number>;
+  }) => {
+    return apiClient<ApiResponseWrapper<AssessmentQualityResult>>('/ai/analyze-assessment-quality', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+
+  /**
+   * Evaluate and persist holistic Assessment Quality on an assessment
+   */
+  analyzeAssessmentQuality: async (
+    assessmentId: number | string,
+    payload?: {
+      weights?: Record<string, number>;
+      difficulty_targets?: Record<string, number>;
+    }
+  ) => {
+    return apiClient<ApiResponseWrapper<AssessmentQualityResponseData>>(
+      `/ai/assessments/${assessmentId}/analyze-quality`,
       {
         method: 'POST',
         body: JSON.stringify(payload || {}),

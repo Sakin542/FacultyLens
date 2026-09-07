@@ -8,6 +8,7 @@ from app.services.analyzer import AcademicTextAnalyzer
 from app.services.question_analyzer import QuestionAnalyzer
 from app.services.alignment_analyzer import AlignmentAnalyzer
 from app.services.semantic_similarity_analyzer import SemanticSimilarityAnalyzer
+from app.services.assessment_quality_engine import AssessmentQualityEngine
 from app.utils.text_utils import split_paragraphs, split_sentences
 from app.schemas.analysis import (
     HealthResponse,
@@ -29,6 +30,10 @@ from app.schemas.alignment import (
 from app.schemas.similarity import (
     AnalyzeSimilarityRequest,
     AnalyzeSimilarityResponse,
+)
+from app.schemas.quality import (
+    QualityAnalysisRequest,
+    QualityAnalysisResponse,
 )
 
 logger = logging.getLogger("facultylens.ai")
@@ -286,6 +291,37 @@ def analyze_semantic_similarity(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to analyze question semantic similarity.",
         )
+
+
+@router.post(
+    "/api/v1/analyze-assessment-quality",
+    response_model=QualityAnalysisResponse,
+    dependencies=[Depends(verify_api_key)],
+)
+def analyze_assessment_quality(
+    payload: QualityAnalysisRequest,
+) -> QualityAnalysisResponse:
+    """
+    Evaluate examination quality across 6 core pedagogical dimensions:
+    1. Topic Coverage
+    2. Learning Outcome Coverage
+    3. Difficulty Balance
+    4. Cognitive Diversity (Bloom's Taxonomy)
+    5. Question Diversity
+    6. Marks Distribution & Assessment Integrity
+
+    Produces transparent sub-scores, explainable findings, and weighted overall assessment quality rating.
+    """
+    try:
+        engine = AssessmentQualityEngine()
+        return engine.analyze(payload)
+    except Exception as e:
+        logger.error(f"Error evaluating assessment quality: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to evaluate assessment quality: {str(e)}",
+        )
+
 
 
 

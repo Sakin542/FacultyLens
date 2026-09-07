@@ -529,6 +529,209 @@ class AiAnalysisController extends Controller
             ], 502);
         }
     }
+
+    /**
+     * Stateless direct assessment quality evaluation across 6 pedagogical dimensions.
+     */
+    public function analyzeQuality(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'questions' => ['required', 'array', 'min:1'],
+            'questions.*.text' => ['required', 'string', 'min:3'],
+            'questions.*.marks' => ['nullable', 'numeric', 'min:0'],
+            'questions.*.question_type' => ['nullable', 'string', 'max:100'],
+            'questions.*.difficulty' => ['nullable', 'string', 'max:50'],
+            'questions.*.cognitive_level' => ['nullable', 'string', 'max:50'],
+            'questions.*.topics' => ['nullable', 'array'],
+            'questions.*.learning_outcome_code' => ['nullable', 'string', 'max:50'],
+            'topics' => ['nullable', 'array'],
+            'topics.*.name' => ['required_with:topics', 'string', 'max:255'],
+            'learning_outcomes' => ['nullable', 'array'],
+            'learning_outcomes.*.code' => ['required_with:learning_outcomes', 'string', 'max:50'],
+            'assessment' => ['nullable', 'array'],
+            'weights' => ['nullable', 'array'],
+            'difficulty_targets' => ['nullable', 'array'],
+        ]);
+
+        try {
+            $result = $this->aiService->analyzeAssessmentQuality(
+                $validated['assessment'] ?? [],
+                $validated['questions'],
+                $validated['topics'] ?? [],
+                $validated['learning_outcomes'] ?? [],
+                $validated['weights'] ?? null,
+                $validated['difficulty_targets'] ?? null
+            );
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Assessment quality evaluated successfully.',
+                'data' => $result,
+            ]);
+        } catch (Exception $e) {
+            Log::error('Direct quality analysis failed: ' . $e->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 502);
+        }
+    }
+
+    /**
+     * Evaluate and persist holistic Assessment Quality for a specific assessment.
+     */
+    public function analyzeAssessmentQuality(Request $request, Assessment $assessment): JsonResponse
+    {
+        $user = $request->user();
+
+        // Check faculty authorization
+        if ($assessment->course->user_id !== $user->id) {
+            return response()->json([
+                'message' => 'Unauthorized access to assessment.',
+            ], 403);
+        }
+
+        $assessment->load([
+            'course.learningOutcomes',
+            'course.materials',
+            'questions.learningOutcome',
+            'latestAnalysisReport.similarityMatches',
+        ]);
+        $course = $assessment->course;
+
+        $questions = $assessment->questions;
+        if ($questions->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No questions found in this assessment to evaluate quality.',
+            ], 422);
+        }
+
+        // Build questions payload
+        $similarityMatches = $assessment->latestAnalysisReport?->similarityMatches ?? collect();
+        $formattedQuestions = $questions->map(function ($q) use ($similarityMatches) {
+            $highestMatch = $similarityMatches->where('current_question_id', $q->id)->sortByDesc('similarity_score')->first();
+            $simScore = $highestMatch ? (float) $highestMatch->similarity_score : null;
+            $isDup = $highestMatch && in_array($highestMatch->similarity_status, ['POTENTIAL_DUPLICATE', 'HIGHLY_SIMILAR']);
+
+            return [
+                'id' => $q->id,
+                'number' => $q->question_number,
+                'text' => $q->question_text,
+                'marks' => (float) ($q->marks ?? 1.0),
+                'question_type' => $q->ai_question_type ?? $q->question_type,
+                'difficulty' => $q->ai_difficulty_level ?? $q->difficulty_level,
+                'cognitive_level' => $q->ai_cognitive_level ?? $q->cognitive_level,
+                'topics' => $q->ai_topics ?? [],
+                'learning_outcome_code' => $q->learningOutcome?->code,
+                'similarity_score' => $simScore,
+                'is_duplicate' => $isDup,
+            ];
+        })->toArray();
+
+        // Gather topics from syllabus materials or unique detected topics
+        $courseTopics = [];
+        $topicNamesSeen = [];
+
+        foreach ($course->materials as $mat) {
+            if (!empty($mat->title) && !isset($topicNamesSeen[strtolower($mat->title)])) {
+                $courseTopics[] = ['name' => $mat->title];
+                $topicNamesSeen[strtolower($mat->title)] = true;
+            }
+        }
+
+        // Also add unique topics detected in questions if not in materials
+        foreach ($questions as $q) {
+            if (!empty($q->ai_topics) && is_array($q->ai_topics)) {
+                foreach ($q->ai_topics as $tName) {
+                    $clean = trim((string) $tName);
+                    if ($clean && !isset($topicNamesSeen[strtolower($clean)])) {
+                        $courseTopics[] = ['name' => $clean];
+                        $topicNamesSeen[strtolower($clean)] = true;
+                    }
+                }
+            }
+        }
+
+        // Format LOs
+        $formattedLos = $course->learningOutcomes->map(function ($lo) {
+            return [
+                'code' => $lo->code,
+                'description' => $lo->description,
+            ];
+        })->toArray();
+
+        $assessmentData = [
+            'id' => $assessment->id,
+            'title' => $assessment->title,
+            'total_marks' => $assessment->total_marks,
+        ];
+
+        $weights = $request->input('weights');
+        $targets = $request->input('difficulty_targets');
+
+        try {
+            $aiResult = $this->aiService->analyzeAssessmentQuality(
+                $assessmentData,
+                $formattedQuestions,
+                $courseTopics,
+                $formattedLos,
+                $weights,
+                $targets
+            );
+
+            // Merge findings into AnalysisReport
+            $existingFindings = $assessment->latestAnalysisReport?->findings ?? [];
+            $updatedFindings = array_merge($existingFindings, [
+                'quality_engine' => [
+                    'rating' => $aiResult['rating'] ?? 'NEEDS_REVIEW',
+                    'weights_applied' => $aiResult['weights_applied'] ?? [],
+                    'excluded_components' => $aiResult['excluded_components'] ?? [],
+                    'components' => $aiResult['components'] ?? [],
+                    'findings' => $aiResult['findings'] ?? [],
+                    'topic_analysis' => $aiResult['topic_analysis'] ?? null,
+                    'learning_outcome_analysis' => $aiResult['learning_outcome_analysis'] ?? null,
+                    'difficulty_analysis' => $aiResult['difficulty_analysis'] ?? null,
+                    'cognitive_analysis' => $aiResult['cognitive_analysis'] ?? null,
+                    'question_diversity_analysis' => $aiResult['question_diversity_analysis'] ?? null,
+                    'marks_analysis' => $aiResult['marks_analysis'] ?? null,
+                ],
+                'quality_findings' => $aiResult['findings'] ?? [],
+            ]);
+
+            $components = $aiResult['components'] ?? [];
+
+            $report = AnalysisReport::updateOrCreate(
+                ['assessment_id' => $assessment->id],
+                [
+                    'overall_score' => $aiResult['overall_quality_score'] ?? 0.0,
+                    'topic_coverage_score' => $components['topic_coverage'] ?? null,
+                    'learning_outcome_alignment_score' => $components['learning_outcome_coverage'] ?? null,
+                    'difficulty_balance_score' => $components['difficulty_balance'] ?? null,
+                    'cognitive_level_balance_score' => $components['cognitive_diversity'] ?? null,
+                    'total_questions' => count($questions),
+                    'findings' => $updatedFindings,
+                    'analysis_status' => 'completed',
+                    'analyzed_at' => now(),
+                ]
+            );
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Assessment quality evaluated successfully.',
+                'data' => [
+                    'quality' => $aiResult,
+                    'report' => $report,
+                ],
+            ]);
+        } catch (Exception $e) {
+            Log::error('Assessment quality analysis failed: ' . $e->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 502);
+        }
+    }
 }
 
 
