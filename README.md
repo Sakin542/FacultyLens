@@ -308,36 +308,55 @@ This makes FacultyLens a **decision-support tool rather than a simple content ge
 
 ---
 
-#  Technology Stack
+#  Technology Stack & Architecture
+
+### Application Architecture
+
+```text
+React Frontend (Port 5173)
+       ↓
+Laravel Backend (Port 8080)
+       ↓ HTTP / JSON
+Python FastAPI AI Service (Port 8001)
+       ↓
+Hugging Face NLP Models (all-MiniLM-L6-v2)
+       ↓
+NLP Processing Pipeline (Segmentation, Questions, Embeddings)
+       ↓
+Structured JSON Result
+       ↓
+Laravel Backend
+       ↓
+React Frontend
+```
 
 ### Frontend
 
-* React
-* TypeScript
+* React 18 + TypeScript
 * Vite
-* Tailwind CSS / Material UI
-* Recharts / Chart.js
+* Tailwind CSS + Lucide Icons
+* Axios + TanStack Query
 
 ### Backend
 
-* Laravel / Node.js
-* REST API
-* MySQL
+* Laravel 12 (PHP 8.2+)
+* Laravel Sanctum (Token Authentication)
+* MySQL 8.0
+* Smalot PDF Parser & PHPWord
 
-### AI Layer
+### AI Layer (Hugging Face Microservice)
 
-* Python
-* Natural Language Processing
-* Large Language Models
-* Sentence Embeddings
-* Semantic Similarity
-* Document Processing
+* Python 3.11+
+* FastAPI & Uvicorn
+* Pydantic v2
+* Hugging Face `transformers`, `sentence-transformers`, `torch`
+* Model: `sentence-transformers/all-MiniLM-L6-v2` (CPU-optimized, 384 dimensions)
+* NLP Pipeline: Text cleaning, paragraph/sentence splitting, question detection, semantic embedding generation
 
 ### Infrastructure
 
-* Docker
-* Redis
-* REST APIs
+* Docker & Docker Compose
+* Multi-container setup (`frontend`, `facultylens-app`, `facultylens-mysql`, `facultylens-phpmyadmin`, `facultylens-ai-service`)
 
 ---
 
@@ -357,22 +376,34 @@ FacultyLens/
 │
 ├── backend/
 │   ├── app/
-│   ├── routes/
+│   │   ├── Http/Controllers/Api/
+│   │   ├── Models/
+│   │   └── Services/
+│   │       ├── AiService.php
+│   │       ├── DocumentTextCleaner.php
+│   │       └── DocumentTextExtractor.php
+│   ├── routes/api.php
 │   ├── database/
 │   └── composer.json
 │
 ├── ai-service/
-│   ├── models/
-│   ├── services/
-│   ├── embeddings/
-│   ├── document_processor/
-│   ├── main.py
-│   └── requirements.txt
-│
-├── storage/
+│   ├── app/
+│   │   ├── main.py
+│   │   ├── config.py
+│   │   ├── api/routes.py
+│   │   ├── schemas/analysis.py
+│   │   ├── services/
+│   │   │   ├── huggingface_service.py
+│   │   │   ├── nlp_pipeline.py
+│   │   │   ├── text_cleaner.py
+│   │   │   └── analyzer.py
+│   │   └── utils/text_utils.py
+│   ├── tests/
+│   ├── requirements.txt
+│   ├── Dockerfile
+│   └── README.md
 │
 ├── docker-compose.yml
-│
 └── README.md
 ```
 

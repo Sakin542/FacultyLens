@@ -1,4 +1,9 @@
 {
-  "css.lint.unknownAtRules": "ignore"
+  "css.lint.unknownAtRules": "ignore",
+  "python.defaultInterpreterPath": "${workspaceFolder}/ai-service/.venv/Scripts/python.exe",
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/ai-service",
+    "${workspaceFolder}/ai-service/app"
+  ],
+  "python.analysis.autoSearchPaths": true
 }
-
