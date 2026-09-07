@@ -1074,6 +1074,313 @@ class AiAnalysisController extends Controller
             'data' => $recommendation,
         ]);
     }
+
+    /**
+     * STEP 15: Unified AI Assessment Analysis endpoint.
+     * Evaluates Questions, LO Alignment, Past Similarity, Quality Engine, and Recommendations in one consolidated run.
+     */
+    public function analyzeAssessment(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'assessment_id' => ['nullable', 'integer', 'exists:assessments,id'],
+            'course_id' => ['nullable', 'integer', 'exists:courses,id'],
+            'questions' => ['nullable', 'array'],
+            'questions.*.text' => ['required_with:questions', 'string'],
+            'questions.*.marks' => ['nullable', 'numeric'],
+            'learning_outcomes' => ['nullable', 'array'],
+            'course_topics' => ['nullable', 'array'],
+            'previous_questions' => ['nullable', 'array'],
+            'weights' => ['nullable', 'array'],
+            'difficulty_targets' => ['nullable', 'array'],
+            'custom_rules' => ['nullable', 'array'],
+        ]);
+
+        $user = $request->user();
+        $assessmentId = $validated['assessment_id'] ?? null;
+        $assessment = null;
+        $questions = collect();
+        $prevQuestions = collect();
+
+        if ($assessmentId) {
+            $assessment = Assessment::with([
+                'course.learningOutcomes',
+                'course.materials',
+                'questions.learningOutcome',
+                'latestAnalysisReport.similarityMatches',
+            ])->find($assessmentId);
+
+            if (!$assessment || $assessment->course->user_id !== $user->id) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Unauthorized access to assessment.',
+                ], 403);
+            }
+        }
+
+        // If running for a persisted assessment:
+        if ($assessment) {
+            $questions = $assessment->questions()->orderBy('question_number')->get();
+            if ($questions->isEmpty()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Assessment has no questions to analyze.',
+                ], 422);
+            }
+
+            $course = $assessment->course;
+            $topics = [];
+            $topicNamesSeen = [];
+            foreach ($course->materials as $mat) {
+                if (!empty($mat->title) && !isset($topicNamesSeen[strtolower($mat->title)])) {
+                    $topics[] = $mat->title;
+                    $topicNamesSeen[strtolower($mat->title)] = true;
+                }
+            }
+            foreach ($questions as $q) {
+                if (!empty($q->ai_topics) && is_array($q->ai_topics)) {
+                    foreach ($q->ai_topics as $tName) {
+                        $clean = trim((string) $tName);
+                        if ($clean && !isset($topicNamesSeen[strtolower($clean)])) {
+                            $topics[] = $clean;
+                            $topicNamesSeen[strtolower($clean)] = true;
+                        }
+                    }
+                }
+            }
+
+            $prevQuestions = PreviousQuestion::where('course_id', $course->id)->get();
+
+            $formattedQuestions = $questions->map(function ($q, $idx) {
+                return [
+                    'id' => $q->id,
+                    'number' => $q->question_number ?? ($idx + 1),
+                    'text' => $q->question_text,
+                    'marks' => (float) ($q->marks ?? 1.0),
+                    'question_type' => $q->ai_question_type ?? $q->question_type,
+                    'difficulty' => $q->ai_difficulty_level ?? $q->difficulty_level,
+                    'cognitive_level' => $q->ai_cognitive_level ?? $q->cognitive_level,
+                    'topics' => is_array($q->ai_topics) ? $q->ai_topics : [],
+                    'learning_outcome_code' => $q->learningOutcome?->code,
+                ];
+            })->toArray();
+
+            $formattedLos = $course->learningOutcomes->map(function ($lo, $idx) {
+                return [
+                    'id' => $lo->id,
+                    'code' => $lo->code ?? ('LO' . ($idx + 1)),
+                    'description' => $lo->description,
+                ];
+            })->toArray();
+
+            $formattedPrev = $prevQuestions->map(function ($pq, $idx) {
+                return [
+                    'id' => $pq->id,
+                    'number' => $pq->question_number ?? ($idx + 1),
+                    'text' => $pq->question_text,
+                    'assessment_title' => $pq->source_exam_name,
+                    'term' => $pq->term,
+                    'year' => $pq->academic_year,
+                ];
+            })->toArray();
+
+            $payload = [
+                'course_id' => $course->id,
+                'course_name' => $course->course_name,
+                'assessment' => [
+                    'id' => $assessment->id,
+                    'title' => $assessment->title,
+                    'total_marks' => (float) $assessment->total_marks,
+                    'course_code' => $course->course_code,
+                    'course_title' => $course->course_name,
+                ],
+                'questions' => $formattedQuestions,
+                'learning_outcomes' => $formattedLos,
+                'course_topics' => $topics,
+                'previous_questions' => $formattedPrev,
+                'weights' => $validated['weights'] ?? null,
+                'difficulty_targets' => $validated['difficulty_targets'] ?? null,
+                'custom_rules' => $validated['custom_rules'] ?? null,
+            ];
+        } else {
+            // Direct payload mode
+            $payload = [
+                'course_id' => $validated['course_id'] ?? null,
+                'questions' => $validated['questions'] ?? [],
+                'learning_outcomes' => $validated['learning_outcomes'] ?? [],
+                'course_topics' => $validated['course_topics'] ?? [],
+                'previous_questions' => $validated['previous_questions'] ?? [],
+                'weights' => $validated['weights'] ?? null,
+                'difficulty_targets' => $validated['difficulty_targets'] ?? null,
+                'custom_rules' => $validated['custom_rules'] ?? null,
+            ];
+        }
+
+        try {
+            $aiResult = $this->aiService->analyzeAssessment($payload);
+
+            // Persist to database if assessment exists
+            if ($assessment) {
+                $qualityAnalysis = $aiResult['quality_analysis'] ?? [];
+                $recommendationsData = $aiResult['recommendations'] ?? [];
+                $alignmentAnalysis = $aiResult['alignment_analysis'] ?? [];
+                $similarityAnalysis = $aiResult['similarity_analysis'] ?? [];
+
+                // 1. Update/create AnalysisReport
+                $report = AnalysisReport::updateOrCreate(
+                    ['assessment_id' => $assessment->id],
+                    [
+                        'overall_score' => $qualityAnalysis['overall_quality_score'] ?? 0.0,
+                        'total_questions' => count($questions),
+                        'analysis_status' => 'completed',
+                        'findings' => [
+                            'summary' => $aiResult['summary'] ?? [],
+                            'quality' => $qualityAnalysis,
+                            'alignment' => $alignmentAnalysis,
+                            'similarity' => $similarityAnalysis,
+                        ],
+                        'analyzed_at' => now(),
+                    ]
+                );
+
+                // 2. Update question AI fields
+                $qAnalysisList = $aiResult['questions_analysis']['questions'] ?? [];
+                $qAnalysisMap = [];
+                foreach ($qAnalysisList as $qa) {
+                    $qAnalysisMap[$qa['number']] = $qa;
+                }
+
+                foreach ($questions as $q) {
+                    $qa = $qAnalysisMap[$q->question_number] ?? null;
+                    if ($qa) {
+                        $q->ai_cognitive_level = $qa['cognitive_level']['level'] ?? $q->ai_cognitive_level;
+                        $q->ai_difficulty_level = $qa['difficulty']['level'] ?? $q->ai_difficulty_level;
+                        $q->ai_question_type = $qa['classification']['type'] ?? $q->ai_question_type;
+                        $q->ai_topics = array_map(function ($t) {
+                            return is_array($t) ? ($t['name'] ?? '') : (string) $t;
+                        }, $qa['topics'] ?? []);
+                        $q->ai_analysis_status = 'completed';
+                        $q->ai_analyzed_at = now();
+                        $q->save();
+                    }
+                }
+
+                // 3. Persist similarity matches if available
+                if (!empty($similarityAnalysis['matches'])) {
+                    QuestionSimilarityMatch::where('analysis_report_id', $report->id)->delete();
+                    $qByNumber = $questions->keyBy('question_number');
+                    $pqById = $prevQuestions->keyBy('id');
+
+                    foreach ($similarityAnalysis['matches'] as $matchGroup) {
+                        $cNum = $matchGroup['current_question_number'] ?? null;
+                        $cQuestion = $qByNumber->get($cNum);
+
+                        if ($cQuestion && !empty($matchGroup['matches'])) {
+                            foreach ($matchGroup['matches'] as $m) {
+                                $pId = $m['previous_question_id'] ?? null;
+                                if ($pId && $pqById->has($pId)) {
+                                    QuestionSimilarityMatch::create([
+                                        'analysis_report_id' => $report->id,
+                                        'current_question_id' => $cQuestion->id,
+                                        'previous_question_id' => $pId,
+                                        'similarity_score' => $m['similarity_score'] ?? 0.0,
+                                        'similarity_status' => $m['similarity_status'] ?? 'NOT_SIMILAR',
+                                        'reasoning' => $matchGroup['reasoning'] ?? null,
+                                    ]);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // 4. Persist recommendations
+                $newRecList = $recommendationsData['recommendations'] ?? [];
+                if (!empty($newRecList)) {
+                    $existingRecs = Recommendation::where('analysis_report_id', $report->id)->get()->keyBy('title');
+                    $persistedIds = [];
+
+                    foreach ($newRecList as $rec) {
+                        $title = $rec['problem'] ?? 'Assessment Recommendation';
+                        $existing = $existingRecs->get($title);
+
+                        $status = $existing ? $existing->status : 'pending';
+                        $facultyNotes = $existing ? $existing->faculty_notes : null;
+
+                        $saved = Recommendation::updateOrCreate(
+                            [
+                                'analysis_report_id' => $report->id,
+                                'title' => $title,
+                            ],
+                            [
+                                'category' => $rec['category'] ?? 'general',
+                                'problem' => $rec['problem'] ?? $title,
+                                'description' => $rec['recommendation'] ?? '',
+                                'explanation' => $rec['explanation'] ?? '',
+                                'recommendation' => $rec['recommendation'] ?? '',
+                                'evidence' => $rec['evidence'] ?? null,
+                                'source_metric' => $rec['source_metric'] ?? '',
+                                'priority' => strtolower($rec['priority'] ?? 'medium'),
+                                'status' => $status,
+                                'faculty_notes' => $facultyNotes,
+                            ]
+                        );
+
+                        $persistedIds[] = $saved->id;
+                    }
+
+                    // Clean up stale pending recommendations
+                    Recommendation::where('analysis_report_id', $report->id)
+                        ->where('status', 'pending')
+                        ->whereNotIn('id', $persistedIds)
+                        ->delete();
+                }
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Assessment analyzed successfully.',
+                'data' => $aiResult,
+            ]);
+        } catch (Exception $e) {
+            Log::error('Unified assessment analysis failed: ' . $e->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 502);
+        }
+    }
+
+    /**
+     * Route-model bound endpoint for analyzing a specific assessment.
+     */
+    public function analyzeAssessmentByRoute(Request $request, Assessment $assessment): JsonResponse
+    {
+        $request->merge(['assessment_id' => $assessment->id]);
+        return $this->analyzeAssessment($request);
+    }
+
+    /**
+     * Alias for batch question analysis.
+     */
+    public function questionAnalysis(Request $request): JsonResponse
+    {
+        return $this->analyzeQuestions($request);
+    }
+
+    /**
+     * Alias for semantic similarity analysis.
+     */
+    public function similarityAnalysis(Request $request): JsonResponse
+    {
+        return $this->analyzeSimilarity($request);
+    }
+
+    /**
+     * Alias for learning outcome alignment analysis.
+     */
+    public function alignmentAnalysis(Request $request): JsonResponse
+    {
+        return $this->analyzeAlignment($request);
+    }
 }
 
 

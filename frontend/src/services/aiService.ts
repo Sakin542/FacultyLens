@@ -310,7 +310,23 @@ export const aiService = {
       }
     );
   },
+
+  /**
+   * STEP 15: Run unified assessment analysis pipeline across all AI modules
+   */
+  analyzeAssessment: async (assessmentId: number | string) => {
+    return apiClient<ApiResponseWrapper<any>>(
+      `/ai/assessments/${assessmentId}/analyze`,
+      {
+        method: 'POST',
+        body: JSON.stringify({}),
+      }
+    );
+  },
 };
+
+export { aiAnalysisService } from './aiAnalysisService';
+
 
 
 

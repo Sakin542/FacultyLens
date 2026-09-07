@@ -10,6 +10,7 @@ from app.services.alignment_analyzer import AlignmentAnalyzer
 from app.services.semantic_similarity_analyzer import SemanticSimilarityAnalyzer
 from app.services.assessment_quality_engine import AssessmentQualityEngine
 from app.services.recommendation_engine import RecommendationEngine
+from app.services.assessment_analysis_service import AssessmentAnalysisService
 from app.utils.text_utils import split_paragraphs, split_sentences
 from app.schemas.analysis import (
     HealthResponse,
@@ -39,6 +40,10 @@ from app.schemas.quality import (
 from app.schemas.recommendation import (
     RecommendationRequest,
     RecommendationResponse,
+)
+from app.schemas.assessment_analysis import (
+    UnifiedAssessmentAnalysisRequest,
+    UnifiedAssessmentAnalysisResponse,
 )
 
 logger = logging.getLogger("facultylens.ai")
@@ -350,6 +355,73 @@ def generate_recommendations(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to generate recommendations: {str(e)}",
         )
+
+
+@router.post(
+    "/api/v1/analyze-assessment",
+    response_model=UnifiedAssessmentAnalysisResponse,
+    dependencies=[Depends(verify_api_key)],
+)
+def analyze_assessment_unified(
+    payload: UnifiedAssessmentAnalysisRequest,
+    hf_service: HuggingFaceService = Depends(get_hf_service),
+) -> UnifiedAssessmentAnalysisResponse:
+    """
+    STEP 15: Unified AI Assessment Analysis endpoint.
+    Orchestrates Question Analysis, Learning Outcome Alignment, Semantic Similarity,
+    Assessment Quality Engine, and AI Recommendation Engine in a single consolidated workflow.
+    """
+    try:
+        service = AssessmentAnalysisService(hf_service=hf_service)
+        result = service.analyze_assessment(payload)
+        return UnifiedAssessmentAnalysisResponse(**result)
+    except Exception as e:
+        logger.error(f"Error in unified assessment analysis: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to perform unified assessment analysis: {str(e)}",
+        )
+
+
+# API aliases for consistent naming convention across STEP 15 specification
+@router.post(
+    "/api/v1/question-analysis",
+    response_model=AnalyzeBatchQuestionsResponse,
+    dependencies=[Depends(verify_api_key)],
+)
+def question_analysis_alias(
+    payload: AnalyzeBatchQuestionsRequest,
+    hf_service: HuggingFaceService = Depends(get_hf_service),
+) -> AnalyzeBatchQuestionsResponse:
+    """Alias for /api/v1/analyze-questions."""
+    return analyze_batch_questions(payload, hf_service)
+
+
+@router.post(
+    "/api/v1/similarity-analysis",
+    response_model=AnalyzeSimilarityResponse,
+    dependencies=[Depends(verify_api_key)],
+)
+def similarity_analysis_alias(
+    payload: AnalyzeSimilarityRequest,
+    hf_service: HuggingFaceService = Depends(get_hf_service),
+) -> AnalyzeSimilarityResponse:
+    """Alias for /api/v1/analyze-similarity."""
+    return analyze_semantic_similarity(payload, hf_service)
+
+
+@router.post(
+    "/api/v1/alignment-analysis",
+    response_model=AnalyzeAlignmentResponse,
+    dependencies=[Depends(verify_api_key)],
+)
+def alignment_analysis_alias(
+    payload: AnalyzeAlignmentRequest,
+    hf_service: HuggingFaceService = Depends(get_hf_service),
+) -> AnalyzeAlignmentResponse:
+    """Alias for /api/v1/analyze-alignment."""
+    return analyze_learning_outcome_alignment(payload, hf_service)
+
 
 
 
