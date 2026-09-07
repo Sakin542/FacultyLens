@@ -483,6 +483,132 @@ class AiService
             throw new Exception('AI Service request timed out or encountered an error.');
         }
     }
+
+    /**
+     * Evaluate overall examination quality across 6 pedagogical dimensions via FastAPI Assessment Quality Engine.
+     *
+     * @param array $assessmentData
+     * @param array $questions
+     * @param array $topics
+     * @param array $learningOutcomes
+     * @param array|null $weights
+     * @param array|null $targets
+     * @return array
+     * @throws Exception
+     */
+    public function analyzeAssessmentQuality(
+        array $assessmentData,
+        array $questions,
+        array $topics = [],
+        array $learningOutcomes = [],
+        ?array $weights = null,
+        ?array $targets = null
+    ): array {
+        if (empty($questions)) {
+            throw new Exception('At least one examination question is required for quality evaluation.');
+        }
+
+        $formattedQuestions = [];
+        foreach ($questions as $idx => $q) {
+            if (is_string($q)) {
+                $formattedQuestions[] = [
+                    'number' => $idx + 1,
+                    'text' => trim($q),
+                    'marks' => 1.0,
+                ];
+            } elseif (is_array($q)) {
+                $formattedQuestions[] = [
+                    'id' => $q['id'] ?? ($idx + 1),
+                    'number' => $q['number'] ?? $q['question_number'] ?? ($idx + 1),
+                    'text' => trim($q['text'] ?? $q['question_text'] ?? ''),
+                    'marks' => (float) ($q['marks'] ?? 1.0),
+                    'question_type' => $q['question_type'] ?? $q['ai_question_type'] ?? null,
+                    'difficulty' => $q['difficulty'] ?? $q['difficulty_level'] ?? $q['ai_difficulty_level'] ?? null,
+                    'cognitive_level' => $q['cognitive_level'] ?? $q['ai_cognitive_level'] ?? null,
+                    'topics' => $q['topics'] ?? $q['ai_topics'] ?? [],
+                    'learning_outcome_code' => $q['learning_outcome_code'] ?? $q['lo_code'] ?? null,
+                    'similarity_score' => isset($q['similarity_score']) ? (float) $q['similarity_score'] : null,
+                    'is_duplicate' => (bool) ($q['is_duplicate'] ?? false),
+                ];
+            }
+        }
+
+        $formattedTopics = [];
+        foreach ($topics as $t) {
+            if (is_string($t)) {
+                $formattedTopics[] = ['name' => trim($t)];
+            } elseif (is_array($t) && !empty($t['name'])) {
+                $formattedTopics[] = [
+                    'name' => trim($t['name']),
+                    'weight' => isset($t['weight']) ? (float) $t['weight'] : null,
+                ];
+            }
+        }
+
+        $formattedLos = [];
+        foreach ($learningOutcomes as $lo) {
+            if (is_array($lo) && !empty($lo['code'])) {
+                $formattedLos[] = [
+                    'code' => trim($lo['code']),
+                    'description' => trim($lo['description'] ?? ''),
+                    'weight' => isset($lo['weight']) ? (float) $lo['weight'] : null,
+                ];
+            }
+        }
+
+        try {
+            $payload = [
+                'assessment' => [
+                    'id' => $assessmentData['id'] ?? null,
+                    'title' => $assessmentData['title'] ?? null,
+                    'total_marks' => isset($assessmentData['total_marks']) ? (float) $assessmentData['total_marks'] : null,
+                ],
+                'questions' => $formattedQuestions,
+                'topics' => $formattedTopics,
+                'learning_outcomes' => $formattedLos,
+            ];
+
+            if (!empty($weights)) {
+                $payload['weights'] = [
+                    'topic' => (float) ($weights['topic'] ?? 20.0),
+                    'lo' => (float) ($weights['lo'] ?? 20.0),
+                    'difficulty' => (float) ($weights['difficulty'] ?? 15.0),
+                    'cognitive' => (float) ($weights['cognitive'] ?? 15.0),
+                    'question_diversity' => (float) ($weights['question_diversity'] ?? 15.0),
+                    'marks' => (float) ($weights['marks'] ?? 15.0),
+                ];
+            }
+
+            if (!empty($targets)) {
+                $payload['difficulty_targets'] = [
+                    'easy' => (float) ($targets['easy'] ?? 30.0),
+                    'medium' => (float) ($targets['medium'] ?? 50.0),
+                    'hard' => (float) ($targets['hard'] ?? 20.0),
+                ];
+            }
+
+            $response = $this->client()->post("{$this->baseUrl}/api/v1/analyze-assessment-quality", $payload);
+
+            if ($response->successful()) {
+                return $response->json();
+            }
+
+            if ($response->status() === 422) {
+                $errorData = $response->json();
+                $message = $errorData['message'] ?? 'Validation failed in AI service.';
+                throw new Exception($message);
+            }
+
+            Log::error('AI Service analyze-assessment-quality error: ' . $response->status() . ' - ' . $response->body());
+            throw new Exception('AI Service failed to evaluate assessment quality.');
+        } catch (ConnectionException $e) {
+            Log::error('AI Service connection error: ' . $e->getMessage());
+            throw new Exception('AI Service is currently unavailable.');
+        } catch (RequestException $e) {
+            Log::error('AI Service request exception: ' . $e->getMessage());
+            throw new Exception('AI Service request timed out or encountered an error.');
+        }
+    }
 }
 
 

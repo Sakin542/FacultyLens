@@ -43,6 +43,18 @@ class Settings(BaseSettings):
     similarity_moderate_threshold: float = 0.50
     similarity_top_k: int = 5
 
+    # Assessment Quality Engine Settings (Step 13)
+    quality_weight_topic: float = 20.0
+    quality_weight_lo: float = 20.0
+    quality_weight_difficulty: float = 15.0
+    quality_weight_cognitive: float = 15.0
+    quality_weight_question_diversity: float = 15.0
+    quality_weight_marks: float = 15.0
+
+    target_easy_percent: float = 30.0
+    target_medium_percent: float = 50.0
+    target_hard_percent: float = 20.0
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

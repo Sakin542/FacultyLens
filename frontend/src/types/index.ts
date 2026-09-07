@@ -489,6 +489,165 @@ export interface AssessmentSimilarityResponseData {
   };
 }
 
+// STEP 13: Assessment Quality Engine Types
+
+export type QualityRating = 'EXCELLENT' | 'GOOD' | 'FAIR' | 'NEEDS_REVIEW' | 'REQUIRES_ATTENTION' | 'UNAVAILABLE';
+
+export interface TopicCoverageItemData {
+  topic: string;
+  question_count: number;
+  marks: number;
+  coverage_percentage: number;
+  coverage_status: 'COVERED' | 'ADEQUATE' | 'LOW' | 'NOT_COVERED' | string;
+}
+
+export interface TopicAnalysisData {
+  status: 'AVAILABLE' | 'UNAVAILABLE' | string;
+  score: number | null;
+  methodology: string;
+  total_topics_defined: number;
+  covered_topics_count: number;
+  topics: TopicCoverageItemData[];
+}
+
+export interface LoCoverageItemData {
+  code: string;
+  description?: string;
+  question_count: number;
+  marks: number;
+  strongly_aligned_questions: number;
+  weakly_aligned_questions: number;
+  coverage_percentage: number;
+  coverage_status: 'COVERED' | 'ADEQUATE' | 'WEAK' | 'NOT_COVERED' | string;
+}
+
+export interface LoAnalysisData {
+  status: 'AVAILABLE' | 'UNAVAILABLE' | string;
+  score: number | null;
+  methodology: string;
+  total_los_defined: number;
+  covered_los_count: number;
+  learning_outcomes: LoCoverageItemData[];
+}
+
+export interface DifficultyDistributionItemData {
+  level: string;
+  question_count: number;
+  question_percentage: number;
+  marks: number;
+  marks_percentage: number;
+  target_percentage: number;
+  deviation: number;
+}
+
+export interface DifficultyAnalysisData {
+  status: 'AVAILABLE' | 'UNAVAILABLE' | string;
+  score: number | null;
+  methodology: string;
+  total_deviation: number;
+  distribution: DifficultyDistributionItemData[];
+}
+
+export interface CognitiveLevelItemData {
+  level: string;
+  question_count: number;
+  question_percentage: number;
+  marks: number;
+  marks_percentage: number;
+}
+
+export interface CognitiveAnalysisData {
+  status: 'AVAILABLE' | 'UNAVAILABLE' | string;
+  score: number | null;
+  methodology: string;
+  shannon_entropy: number;
+  max_possible_entropy: number;
+  dominant_level?: string | null;
+  dominant_percentage: number;
+  distribution: CognitiveLevelItemData[];
+}
+
+export interface QuestionTypeItemData {
+  question_type: string;
+  question_count: number;
+  question_percentage: number;
+  marks: number;
+  marks_percentage: number;
+}
+
+export interface QuestionDiversityData {
+  status: 'AVAILABLE' | 'UNAVAILABLE' | string;
+  score: number | null;
+  methodology: string;
+  unique_types_count: number;
+  shannon_entropy: number;
+  dominant_type?: string | null;
+  dominant_percentage: number;
+  distribution: QuestionTypeItemData[];
+}
+
+export interface MarksAnalysisData {
+  status: 'AVAILABLE' | 'UNAVAILABLE' | string;
+  score: number | null;
+  methodology: string;
+  total_question_marks: number;
+  assessment_expected_marks?: number | null;
+  marks_match_assessment: boolean;
+  average_marks: number;
+  min_marks: number;
+  max_marks: number;
+  median_marks: number;
+  high_concentration_detected: boolean;
+  highest_single_question_share: number;
+  highest_single_question_number?: number | null;
+  marks_by_topic?: Record<string, number>;
+  marks_by_lo?: Record<string, number>;
+  marks_by_difficulty?: Record<string, number>;
+  marks_by_cognitive?: Record<string, number>;
+}
+
+export interface QualityComponentScores {
+  topic_coverage?: number | null;
+  learning_outcome_coverage?: number | null;
+  difficulty_balance?: number | null;
+  cognitive_diversity?: number | null;
+  question_diversity?: number | null;
+  marks_distribution?: number | null;
+}
+
+export interface AssessmentQualityResult {
+  status: string;
+  method: string;
+  overall_quality_score: number | null;
+  rating: QualityRating;
+  weights_applied: Record<string, number>;
+  excluded_components: string[];
+  components: QualityComponentScores;
+  topic_analysis: TopicAnalysisData;
+  learning_outcome_analysis: LoAnalysisData;
+  difficulty_analysis: DifficultyAnalysisData;
+  cognitive_analysis: CognitiveAnalysisData;
+  question_diversity_analysis: QuestionDiversityData;
+  marks_analysis: MarksAnalysisData;
+  findings: string[];
+}
+
+export interface AssessmentQualityResponseData {
+  quality: AssessmentQualityResult;
+  report?: {
+    id: number | string;
+    assessment_id: number | string;
+    overall_score?: number;
+    topic_coverage_score?: number;
+    learning_outcome_alignment_score?: number;
+    difficulty_balance_score?: number;
+    cognitive_level_balance_score?: number;
+    findings?: Record<string, unknown>;
+    analysis_status?: string;
+  };
+}
+
+
 
 
 
