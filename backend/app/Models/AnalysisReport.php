@@ -57,5 +57,13 @@ class AnalysisReport extends Model
     {
         return $this->hasMany(Recommendation::class);
     }
+
+    /**
+     * The question similarity matches recorded for this analysis report.
+     */
+    public function similarityMatches(): HasMany
+    {
+        return $this->hasMany(QuestionSimilarityMatch::class);
+    }
 }
 

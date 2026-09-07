@@ -376,7 +376,115 @@ class AiService
             throw new Exception('AI Service request timed out or encountered an error.');
         }
     }
+
+    /**
+     * Analyze Semantic Similarity & Potential Duplicates between current questions and historical exam questions.
+     *
+     * @param array $currentQuestions
+     * @param array $previousQuestions
+     * @param array|null $thresholds
+     * @param int|null $topK
+     * @param int|null $courseId
+     * @return array
+     * @throws Exception
+     */
+    public function analyzeSimilarity(
+        array $currentQuestions,
+        array $previousQuestions = [],
+        ?array $thresholds = null,
+        ?int $topK = null,
+        ?int $courseId = null
+    ): array {
+        if (empty($currentQuestions)) {
+            throw new Exception('At least one current question is required for similarity analysis.');
+        }
+
+        $formattedCurrent = [];
+        foreach ($currentQuestions as $idx => $q) {
+            if (is_string($q)) {
+                $formattedCurrent[] = [
+                    'id' => $idx + 1,
+                    'question_number' => $idx + 1,
+                    'text' => trim($q),
+                ];
+            } elseif (is_array($q)) {
+                $formattedCurrent[] = [
+                    'id' => $q['id'] ?? ($idx + 1),
+                    'question_number' => $q['question_number'] ?? $q['number'] ?? ($idx + 1),
+                    'text' => trim($q['text'] ?? $q['question_text'] ?? ''),
+                    'question_type' => $q['question_type'] ?? $q['ai_question_type'] ?? null,
+                    'cognitive_level' => $q['cognitive_level'] ?? $q['ai_cognitive_level'] ?? null,
+                    'topics' => $q['topics'] ?? $q['ai_topics'] ?? [],
+                ];
+            }
+        }
+
+        $formattedPrevious = [];
+        foreach ($previousQuestions as $idx => $pq) {
+            if (is_string($pq)) {
+                $formattedPrevious[] = [
+                    'id' => $idx + 1,
+                    'text' => trim($pq),
+                ];
+            } elseif (is_array($pq)) {
+                $formattedPrevious[] = [
+                    'id' => $pq['id'] ?? ($idx + 1),
+                    'text' => trim($pq['text'] ?? $pq['question_text'] ?? ''),
+                    'source_year' => $pq['source_year'] ?? null,
+                    'source_assessment' => $pq['source_assessment'] ?? null,
+                    'question_type' => $pq['question_type'] ?? null,
+                    'cognitive_level' => $pq['cognitive_level'] ?? null,
+                ];
+            }
+        }
+
+        try {
+            $payload = [
+                'current_questions' => $formattedCurrent,
+                'previous_questions' => $formattedPrevious,
+            ];
+
+            if ($courseId) {
+                $payload['course_id'] = $courseId;
+            }
+
+            if (!empty($thresholds)) {
+                $payload['thresholds'] = [
+                    'duplicate' => (float) ($thresholds['duplicate'] ?? 0.85),
+                    'high' => (float) ($thresholds['high'] ?? 0.70),
+                    'moderate' => (float) ($thresholds['moderate'] ?? 0.50),
+                    'top_k' => (int) ($thresholds['top_k'] ?? 5),
+                ];
+            }
+
+            if ($topK) {
+                $payload['top_k'] = $topK;
+            }
+
+            $response = $this->client()->post("{$this->baseUrl}/api/v1/analyze-similarity", $payload);
+
+            if ($response->successful()) {
+                return $response->json();
+            }
+
+            if ($response->status() === 422) {
+                $errorData = $response->json();
+                $message = $errorData['message'] ?? 'Validation failed in AI service.';
+                throw new Exception($message);
+            }
+
+            Log::error('AI Service analyze-similarity error: ' . $response->status() . ' - ' . $response->body());
+            throw new Exception('AI Service failed to analyze question semantic similarity.');
+        } catch (ConnectionException $e) {
+            Log::error('AI Service connection error: ' . $e->getMessage());
+            throw new Exception('AI Service is currently unavailable.');
+        } catch (RequestException $e) {
+            Log::error('AI Service request exception: ' . $e->getMessage());
+            throw new Exception('AI Service request timed out or encountered an error.');
+        }
+    }
 }
+
 
 
 

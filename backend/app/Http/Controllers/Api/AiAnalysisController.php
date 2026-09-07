@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\AnalysisReport;
 use App\Models\Assessment;
+use App\Models\PreviousQuestion;
+use App\Models\QuestionSimilarityMatch;
 use App\Services\AiService;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -362,6 +364,172 @@ class AiAnalysisController extends Controller
             ], 502);
         }
     }
+
+    /**
+     * Analyze Semantic Similarity & Potential Duplicates directly for provided question sets.
+     */
+    public function analyzeSimilarity(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'course_id' => ['nullable', 'integer'],
+            'current_questions' => ['required', 'array', 'min:1'],
+            'current_questions.*.text' => ['required_without:current_questions.*.question_text', 'nullable', 'string', 'min:3'],
+            'current_questions.*.question_text' => ['nullable', 'string'],
+            'current_questions.*.number' => ['nullable'],
+            'previous_questions' => ['nullable', 'array'],
+            'previous_questions.*.text' => ['required_without:previous_questions.*.question_text', 'nullable', 'string', 'min:3'],
+            'previous_questions.*.question_text' => ['nullable', 'string'],
+            'thresholds' => ['nullable', 'array'],
+            'thresholds.duplicate' => ['nullable', 'numeric', 'between:0,1'],
+            'thresholds.high' => ['nullable', 'numeric', 'between:0,1'],
+            'thresholds.moderate' => ['nullable', 'numeric', 'between:0,1'],
+            'top_k' => ['nullable', 'integer', 'min:1', 'max:20'],
+        ]);
+
+        try {
+            $result = $this->aiService->analyzeSimilarity(
+                $validated['current_questions'],
+                $validated['previous_questions'] ?? [],
+                $validated['thresholds'] ?? null,
+                $validated['top_k'] ?? null,
+                $validated['course_id'] ?? null
+            );
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Semantic similarity analyzed successfully.',
+                'data' => $result,
+            ]);
+        } catch (Exception $e) {
+            Log::error('AI Similarity analysis failed: ' . $e->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 502);
+        }
+    }
+
+    /**
+     * Analyze and persist Semantic Similarity for a specific assessment against historical course questions.
+     */
+    public function analyzeAssessmentSimilarity(Request $request, Assessment $assessment): JsonResponse
+    {
+        $user = $request->user();
+
+        // Check faculty authorization
+        if ($assessment->course->user_id !== $user->id) {
+            return response()->json([
+                'message' => 'Unauthorized access to assessment.',
+            ], 403);
+        }
+
+        $assessment->load(['course.previousQuestions', 'questions', 'latestAnalysisReport']);
+        $course = $assessment->course;
+
+        $questions = $assessment->questions;
+        if ($questions->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No questions found in this assessment to analyze for similarity.',
+            ], 422);
+        }
+
+        $previousQuestions = $course->previousQuestions;
+
+        $formattedCurrent = $questions->map(function ($q) {
+            return [
+                'id' => $q->id,
+                'number' => $q->question_number,
+                'text' => $q->question_text,
+                'question_type' => $q->ai_question_type ?? $q->question_type,
+                'cognitive_level' => $q->ai_cognitive_level ?? $q->cognitive_level,
+                'topics' => $q->ai_topics ?? [],
+            ];
+        })->toArray();
+
+        $formattedPrevious = $previousQuestions->map(function ($pq) {
+            return [
+                'id' => $pq->id,
+                'text' => $pq->question_text,
+                'source_year' => $pq->source_year,
+                'source_assessment' => $pq->source_assessment,
+                'question_type' => $pq->question_type,
+                'cognitive_level' => $pq->cognitive_level,
+            ];
+        })->toArray();
+
+        $thresholds = $request->input('thresholds');
+        $topK = $request->input('top_k');
+
+        try {
+            $aiResult = $this->aiService->analyzeSimilarity(
+                $formattedCurrent,
+                $formattedPrevious,
+                $thresholds,
+                $topK,
+                $course->id
+            );
+
+            // Merge findings into AnalysisReport
+            $existingFindings = $assessment->latestAnalysisReport?->findings ?? [];
+            $updatedFindings = array_merge($existingFindings, [
+                'similarity_findings' => $aiResult['findings'] ?? [],
+            ]);
+
+            $similarQuestionsCount = ($aiResult['potential_duplicates_count'] ?? 0) + ($aiResult['highly_similar_count'] ?? 0);
+
+            $report = AnalysisReport::updateOrCreate(
+                ['assessment_id' => $assessment->id],
+                [
+                    'similarity_score' => $aiResult['average_similarity_score'] ?? 0.0,
+                    'similar_questions_count' => $similarQuestionsCount,
+                    'total_questions' => $aiResult['total_current_questions'] ?? count($questions),
+                    'findings' => $updatedFindings,
+                    'analysis_status' => 'completed',
+                    'analyzed_at' => now(),
+                ]
+            );
+
+            // Persist granular question similarity matches
+            QuestionSimilarityMatch::where('analysis_report_id', $report->id)->delete();
+
+            $resultsList = $aiResult['results'] ?? [];
+            foreach ($resultsList as $qRes) {
+                $cId = $qRes['current_question_id'] ?? null;
+                $matchesList = $qRes['matches'] ?? [];
+
+                foreach ($matchesList as $matchItem) {
+                    $pId = $matchItem['previous_question_id'] ?? null;
+                    if ($cId && $pId) {
+                        QuestionSimilarityMatch::create([
+                            'analysis_report_id' => $report->id,
+                            'current_question_id' => $cId,
+                            'previous_question_id' => $pId,
+                            'similarity_score' => $matchItem['similarity_score'] ?? 0.0,
+                            'similarity_status' => $matchItem['similarity_status'] ?? 'NOT_SIMILAR',
+                            'reasoning' => $qRes['reasoning'] ?? null,
+                        ]);
+                    }
+                }
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Assessment semantic similarity analyzed successfully.',
+                'data' => [
+                    'similarity' => $aiResult,
+                    'report' => $report->load('similarityMatches'),
+                ],
+            ]);
+        } catch (Exception $e) {
+            Log::error('Assessment similarity analysis failed: ' . $e->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 502);
+        }
+    }
 }
+
 
 

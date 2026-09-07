@@ -5,7 +5,8 @@ import { Badge } from '@/components/common/Badge';
 import { ProgressBar } from '@/components/dashboard/ProgressBar';
 import { mockDetailedAnalysis } from '@/utils/mockData';
 import { LearningOutcomeAlignmentSection } from '@/components/analysis/LearningOutcomeAlignmentSection';
-import { AlignmentAnalysisResult } from '@/types';
+import { SemanticSimilaritySection } from '@/components/analysis/SemanticSimilaritySection';
+import { AlignmentAnalysisResult, SimilarityAnalysisResult } from '@/types';
 import {
   Sparkles,
   AlertTriangle,
@@ -164,9 +165,136 @@ const mockAlignmentData: AlignmentAnalysisResult = {
   ],
 };
 
+const mockSimilarityData: SimilarityAnalysisResult = {
+  status: 'success',
+  method: 'sentence-transformers/all-MiniLM-L6-v2 + cosine_similarity',
+  model: 'sentence-transformers/all-MiniLM-L6-v2',
+  thresholds: {
+    potential_duplicate: 0.85,
+    high_similarity: 0.70,
+    moderate_similarity: 0.50,
+  },
+  total_current_questions: 6,
+  total_previous_questions: 24,
+  potential_duplicates_count: 1,
+  highly_similar_count: 1,
+  somewhat_similar_count: 2,
+  average_similarity_score: 61.6,
+  findings: [
+    'Potential Duplicate Flagged: Question Q2 shows 92.4% semantic overlap with Midterm Spring 2025 Q3. Recommend faculty review to avoid verbatim reuse.',
+    'High Similarity Detected: Question Q4 shares 78.1% cosine similarity with Final Fall 2024 Q5 on Normalization algorithms.',
+    '4 out of 6 questions exhibit distinct or novel formulation (< 70% similarity with previous assessment bank).',
+  ],
+  results: [
+    {
+      current_question_number: 1,
+      current_question_text: 'Draw an Entity-Relationship (ER) diagram for a hospital management database system.',
+      current_question_id: 101,
+      max_similarity_score: 0.64,
+      max_similarity_status: 'SOMEWHAT_SIMILAR',
+      matches: [
+        {
+          previous_question_id: 201,
+          previous_question_text: 'Construct an ER model for an airline reservation database system identifying all entities and relationships.',
+          source_assessment: 'Spring 2024 Midterm',
+          similarity_score: 0.64,
+          similarity_status: 'SOMEWHAT_SIMILAR',
+          cognitive_level: 'Apply',
+          question_type: 'Design',
+        },
+      ],
+      reasoning: 'Conceptual domain varies (hospital vs airline). Good variation of ER modeling skills.',
+    },
+    {
+      current_question_number: 2,
+      current_question_text: 'Write SQL statements to retrieve top 5 departments with highest student enrollments.',
+      current_question_id: 102,
+      max_similarity_score: 0.924,
+      max_similarity_status: 'POTENTIAL_DUPLICATE',
+      matches: [
+        {
+          previous_question_id: 205,
+          previous_question_text: 'Write an SQL query to find the top 5 departments with the highest total student enrollments.',
+          source_assessment: 'Spring 2025 Midterm Exam',
+          similarity_score: 0.924,
+          similarity_status: 'POTENTIAL_DUPLICATE',
+          cognitive_level: 'Apply',
+          question_type: 'SQL',
+        },
+        {
+          previous_question_id: 206,
+          previous_question_text: 'Retrieve the top 3 highest paid instructors using SQL group by and order by clauses.',
+          source_assessment: 'Fall 2024 Quiz 2',
+          similarity_score: 0.68,
+          similarity_status: 'SOMEWHAT_SIMILAR',
+          cognitive_level: 'Apply',
+          question_type: 'SQL',
+        },
+      ],
+      reasoning: 'Near-verbatim match with Spring 2025 Midterm Exam Q3. Consider adjusting schema attributes or aggregation filters.',
+    },
+    {
+      current_question_number: 3,
+      current_question_text: 'Translate the following SQL query into equivalent relational algebra expression.',
+      current_question_id: 103,
+      max_similarity_score: 0.58,
+      max_similarity_status: 'SOMEWHAT_SIMILAR',
+      matches: [
+        {
+          previous_question_id: 210,
+          previous_question_text: 'Convert relational algebra projection and selection into an equivalent SQL select query.',
+          source_assessment: 'Fall 2024 Midterm Exam',
+          similarity_score: 0.58,
+          similarity_status: 'SOMEWHAT_SIMILAR',
+          cognitive_level: 'Analyze',
+          question_type: 'Theoretical',
+        },
+      ],
+      reasoning: 'Moderate similarity due to shared topic (Relational Algebra/SQL conversion). Question phrasing is sufficiently unique.',
+    },
+    {
+      current_question_number: 4,
+      current_question_text: 'Decompose the given table into Third Normal Form (3NF) and identify candidate keys.',
+      current_question_id: 104,
+      max_similarity_score: 0.781,
+      max_similarity_status: 'HIGHLY_SIMILAR',
+      matches: [
+        {
+          previous_question_id: 215,
+          previous_question_text: 'Given the relation R(A, B, C, D, E) and functional dependencies, decompose R into 3NF and verify lossless join.',
+          source_assessment: 'Final Fall 2024 Exam',
+          similarity_score: 0.781,
+          similarity_status: 'HIGHLY_SIMILAR',
+          cognitive_level: 'Analyze',
+          question_type: 'Problem Solving',
+        },
+      ],
+      reasoning: 'Similar normalization decomposition problem. Ensure candidate key sets and functional dependencies are distinct.',
+    },
+    {
+      current_question_number: 5,
+      current_question_text: 'Explain the difference between RAID 0, RAID 1, and RAID 5 storage configurations.',
+      current_question_id: 105,
+      max_similarity_score: 0.35,
+      max_similarity_status: 'NOT_SIMILAR',
+      matches: [],
+      reasoning: 'Distinct question with no significant overlap found in the past question bank.',
+    },
+    {
+      current_question_number: 6,
+      current_question_text: 'Explain B+ tree indexing and how clustered indexes improve range query performance.',
+      current_question_id: 106,
+      max_similarity_score: 0.42,
+      max_similarity_status: 'NOT_SIMILAR',
+      matches: [],
+      reasoning: 'Novel question formulation for storage indexing.',
+    },
+  ],
+};
+
 export const Analysis: React.FC = () => {
   const [analysis] = useState(mockDetailedAnalysis);
-  const [selectedTab, setSelectedTab] = useState<'overview' | 'alignment' | 'findings' | 'recommendations' | 'questions'>('overview');
+  const [selectedTab, setSelectedTab] = useState<'overview' | 'alignment' | 'similarity' | 'findings' | 'recommendations' | 'questions'>('overview');
   const [acceptedRecs, setAcceptedRecs] = useState<Record<string, boolean>>({});
 
   const toggleAcceptRec = (id: string) => {
@@ -272,6 +400,7 @@ export const Analysis: React.FC = () => {
         {[
           { id: 'overview', label: 'Executive Summary' },
           { id: 'alignment', label: `LO Alignment (${mockAlignmentData.covered_learning_outcomes_count}/${mockAlignmentData.total_learning_outcomes})` },
+          { id: 'similarity', label: `Semantic Similarity (${mockSimilarityData.potential_duplicates_count + mockSimilarityData.highly_similar_count} flags)` },
           { id: 'findings', label: `AI Findings (${analysis.findings.length})` },
           { id: 'recommendations', label: `Recommendations (${analysis.recommendations.length})` },
           { id: 'questions', label: `Question Breakdown (${analysis.questions.length})` },
@@ -420,6 +549,11 @@ export const Analysis: React.FC = () => {
       {/* Tab: LO Alignment (Step 11) */}
       {selectedTab === 'alignment' && (
         <LearningOutcomeAlignmentSection alignmentData={mockAlignmentData} />
+      )}
+
+      {/* Tab: Semantic Similarity (Step 12) */}
+      {selectedTab === 'similarity' && (
+        <SemanticSimilaritySection similarityData={mockSimilarityData} />
       )}
 
       {/* Tab: Findings */}

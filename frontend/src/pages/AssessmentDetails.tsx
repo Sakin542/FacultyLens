@@ -10,6 +10,7 @@ import { AssessmentModal } from '@/components/assessments/AssessmentModal';
 import { QuestionPaperUploadModal } from '@/components/assessments/QuestionPaperUploadModal';
 import { QuestionAnalysisModal } from '@/components/assessments/QuestionAnalysisModal';
 import { LearningOutcomeAlignmentModal } from '@/components/assessments/LearningOutcomeAlignmentModal';
+import { SemanticSimilarityModal } from '@/components/assessments/SemanticSimilarityModal';
 import {
   ArrowLeft,
   Edit,
@@ -28,6 +29,7 @@ import {
   ExternalLink,
   Sparkles,
   Target,
+  CopyCheck,
 } from 'lucide-react';
 
 export const AssessmentDetails: React.FC = () => {
@@ -44,6 +46,7 @@ export const AssessmentDetails: React.FC = () => {
   const [isPaperUploadOpen, setIsPaperUploadOpen] = useState(false);
   const [isAiAnalysisOpen, setIsAiAnalysisOpen] = useState(false);
   const [isAlignmentModalOpen, setIsAlignmentModalOpen] = useState(false);
+  const [isSimilarityModalOpen, setIsSimilarityModalOpen] = useState(false);
 
   // Action states
   const [isDeletingAssessment, setIsDeletingAssessment] = useState(false);
@@ -228,6 +231,14 @@ export const AssessmentDetails: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            leftIcon={<CopyCheck className="w-3.5 h-3.5" />}
+            onClick={() => setIsSimilarityModalOpen(true)}
+          >
+            Duplicate Check
+          </Button>
           <Button
             variant="outline"
             size="sm"
@@ -553,6 +564,17 @@ export const AssessmentDetails: React.FC = () => {
         assessment={assessment}
         onAlignmentCompleted={() => {
           showNotification('Learning Outcome Alignment completed successfully!');
+          loadAssessment();
+        }}
+      />
+
+      {/* Semantic Similarity & Duplicate Detection Modal (Step 12) */}
+      <SemanticSimilarityModal
+        isOpen={isSimilarityModalOpen}
+        onClose={() => setIsSimilarityModalOpen(false)}
+        assessment={assessment}
+        onSimilarityCompleted={() => {
+          showNotification('Semantic Similarity check completed successfully!');
           loadAssessment();
         }}
       />

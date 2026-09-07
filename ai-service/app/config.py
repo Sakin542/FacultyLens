@@ -37,6 +37,12 @@ class Settings(BaseSettings):
     # Model settings
     max_text_length: int = 50000
 
+    # Semantic Similarity & Duplicate Detection Settings (Step 12)
+    similarity_duplicate_threshold: float = 0.85
+    similarity_high_threshold: float = 0.70
+    similarity_moderate_threshold: float = 0.50
+    similarity_top_k: int = 5
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
