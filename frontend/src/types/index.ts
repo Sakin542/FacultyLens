@@ -151,11 +151,59 @@ export interface QuestionDetail {
   difficulty?: 'Easy' | 'Medium' | 'Hard' | 'easy' | 'medium' | 'hard' | string;
   difficulty_level?: 'Easy' | 'Medium' | 'Hard' | 'easy' | 'medium' | 'hard' | string;
   expected_answer?: string;
+  
+  // AI Question Analysis Fields (Step 10)
+  ai_question_type?: string;
+  ai_difficulty_level?: 'easy' | 'medium' | 'hard' | string;
+  ai_cognitive_level?: CognitiveLevel | string;
+  ai_topics?: Array<{ topic: string; confidence: number }> | string[];
+  ai_analysis_status?: 'pending' | 'completed' | 'failed' | string;
+  ai_analyzed_at?: string;
+
   similarityFlag?: {
     isSimilar: boolean;
     matchedAssessment: string;
     similarityScore: number;
     notes: string;
+  };
+}
+
+export interface AiTopicPrediction {
+  topic: string;
+  confidence: number;
+}
+
+export interface AiQuestionAnalysisResult {
+  question_id?: string | number;
+  question_text: string;
+  question_type: string;
+  difficulty_level: string;
+  cognitive_level: string;
+  matched_topics: AiTopicPrediction[];
+  confidence_scores: {
+    type?: number;
+    difficulty?: number;
+    cognitive?: number;
+    topics?: number;
+  };
+  explanation?: string;
+  features?: {
+    word_count?: number;
+    has_options?: boolean;
+    has_math?: boolean;
+    has_code?: boolean;
+    detected_verbs?: string[];
+  };
+}
+
+export interface AiBatchQuestionAnalysisResult {
+  total_questions: number;
+  results: AiQuestionAnalysisResult[];
+  summary?: {
+    type_distribution?: Record<string, number>;
+    difficulty_distribution?: Record<string, number>;
+    cognitive_distribution?: Record<string, number>;
+    top_topics?: string[];
   };
 }
 

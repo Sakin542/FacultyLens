@@ -8,6 +8,7 @@ import { Button } from '@/components/common/Button';
 import { Badge } from '@/components/common/Badge';
 import { AssessmentModal } from '@/components/assessments/AssessmentModal';
 import { QuestionPaperUploadModal } from '@/components/assessments/QuestionPaperUploadModal';
+import { QuestionAnalysisModal } from '@/components/assessments/QuestionAnalysisModal';
 import {
   ArrowLeft,
   Edit,
@@ -24,6 +25,7 @@ import {
   CheckCircle2,
   HelpCircle,
   ExternalLink,
+  Sparkles,
 } from 'lucide-react';
 
 export const AssessmentDetails: React.FC = () => {
@@ -38,6 +40,7 @@ export const AssessmentDetails: React.FC = () => {
   // Modals
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isPaperUploadOpen, setIsPaperUploadOpen] = useState(false);
+  const [isAiAnalysisOpen, setIsAiAnalysisOpen] = useState(false);
 
   // Action states
   const [isDeletingAssessment, setIsDeletingAssessment] = useState(false);
@@ -222,6 +225,14 @@ export const AssessmentDetails: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
+          <Button
+            variant="primary"
+            size="sm"
+            leftIcon={<Sparkles className="w-3.5 h-3.5" />}
+            onClick={() => setIsAiAnalysisOpen(true)}
+          >
+            AI Question Analysis
+          </Button>
           <Button
             variant="outline"
             size="sm"
@@ -429,25 +440,66 @@ export const AssessmentDetails: React.FC = () => {
           ) : (
             <div className="space-y-3">
               {questions.map((q, idx) => (
-                <Card key={q.id || idx} variant="default" className="p-4 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-[#111111] dark:text-white font-mono">
-                      Q{q.question_number || q.questionNumber || idx + 1}
-                    </span>
-                    <div className="flex items-center gap-2">
+                <Card key={q.id || idx} variant="default" className="p-4 space-y-2.5">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-xs font-bold text-[#111111] dark:text-white font-mono">
+                        Q{q.question_number || q.questionNumber || idx + 1}
+                      </span>
                       {q.difficulty_level && (
                         <Badge variant="neutral" className="text-[10px] capitalize">
                           {q.difficulty_level}
                         </Badge>
                       )}
-                      <span className="text-xs font-mono font-bold text-[#111111] dark:text-white">
-                        {q.marks || q.maxMarks} Marks
-                      </span>
+                      {q.ai_question_type && (
+                        <Badge variant="neutral" className="text-[10px] uppercase font-mono">
+                          AI: {q.ai_question_type}
+                        </Badge>
+                      )}
+                      {q.ai_cognitive_level && (
+                        <Badge variant="outline" className="text-[10px]">
+                          Bloom: {q.ai_cognitive_level}
+                        </Badge>
+                      )}
+                      {q.ai_difficulty_level && (
+                        <Badge
+                          variant={
+                            q.ai_difficulty_level.toUpperCase() === 'EASY'
+                              ? 'Good'
+                              : q.ai_difficulty_level.toUpperCase() === 'HARD'
+                              ? 'Critical'
+                              : 'Attention'
+                          }
+                          className="text-[10px]"
+                        >
+                          AI: {q.ai_difficulty_level}
+                        </Badge>
+                      )}
                     </div>
+
+                    <span className="text-xs font-mono font-bold text-[#111111] dark:text-white">
+                      {q.marks || q.maxMarks} Marks
+                    </span>
                   </div>
+
                   <p className="text-xs text-[#262626] dark:text-[#E5E5E5] leading-relaxed">
                     {q.question_text || q.text}
                   </p>
+
+                  {q.ai_topics && q.ai_topics.length > 0 && (
+                    <div className="flex items-center gap-1.5 pt-1 text-[11px] text-[#737373]">
+                      <span className="font-semibold text-[#111111] dark:text-white">AI Topics:</span>
+                      {Array.isArray(q.ai_topics) &&
+                        q.ai_topics.map((t, tIdx) => {
+                          const topicName = typeof t === 'string' ? t : t.topic || (t as any).name;
+                          return (
+                            <span key={tIdx} className="px-2 py-0.5 rounded bg-[#F7F7F5] dark:bg-[#2C2C2E] border border-[#E5E5E5] dark:border-[#3A3A3C] font-medium">
+                              {topicName}
+                            </span>
+                          );
+                        })}
+                    </div>
+                  )}
                 </Card>
               ))}
             </div>
@@ -469,6 +521,18 @@ export const AssessmentDetails: React.FC = () => {
         onClose={() => setIsPaperUploadOpen(false)}
         onSubmit={handleUploadPaper}
         currentFileName={paper?.file_name}
+      />
+
+      {/* AI Question Analysis Modal (Step 10) */}
+      <QuestionAnalysisModal
+        isOpen={isAiAnalysisOpen}
+        onClose={() => setIsAiAnalysisOpen(false)}
+        assessmentId={assessment.id}
+        assessmentTitle={assessment.title}
+        onAnalysisCompleted={() => {
+          showNotification('AI Question Analysis completed successfully!');
+          loadAssessment();
+        }}
       />
     </div>
   );

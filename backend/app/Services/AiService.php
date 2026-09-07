@@ -170,5 +170,112 @@ class AiService
             throw new Exception('AI Service is unreachable.');
         }
     }
+
+    /**
+     * Analyze a single academic question across classification, topics, difficulty, and Bloom's level.
+     *
+     * @param string $question
+     * @param array $courseTopics
+     * @return array
+     * @throws Exception
+     */
+    public function analyzeQuestion(string $question, array $courseTopics = []): array
+    {
+        $trimmed = trim($question);
+        if (empty($trimmed)) {
+            throw new Exception('Question text cannot be empty.');
+        }
+
+        try {
+            $payload = [
+                'question' => $trimmed,
+            ];
+            if (!empty($courseTopics)) {
+                $payload['course_topics'] = array_values(array_filter($courseTopics));
+            }
+
+            $response = $this->client()->post("{$this->baseUrl}/api/v1/analyze-question", $payload);
+
+            if ($response->successful()) {
+                return $response->json();
+            }
+
+            if ($response->status() === 422) {
+                $errorData = $response->json();
+                $message = $errorData['message'] ?? 'Validation failed in AI service.';
+                throw new Exception($message);
+            }
+
+            Log::error('AI Service analyze-question error: ' . $response->status() . ' - ' . $response->body());
+            throw new Exception('AI Service failed to analyze question.');
+        } catch (ConnectionException $e) {
+            Log::error('AI Service connection error: ' . $e->getMessage());
+            throw new Exception('AI Service is currently unavailable.');
+        } catch (RequestException $e) {
+            Log::error('AI Service request exception: ' . $e->getMessage());
+            throw new Exception('AI Service request timed out or encountered an error.');
+        }
+    }
+
+    /**
+     * Analyze a batch of academic questions.
+     *
+     * @param array $questions Array of ['number' => int|null, 'text' => string] or strings
+     * @param array $courseTopics
+     * @return array
+     * @throws Exception
+     */
+    public function analyzeQuestions(array $questions, array $courseTopics = []): array
+    {
+        if (empty($questions)) {
+            throw new Exception('Questions array cannot be empty.');
+        }
+
+        $formattedQuestions = [];
+        foreach ($questions as $idx => $q) {
+            if (is_string($q)) {
+                $formattedQuestions[] = [
+                    'number' => $idx + 1,
+                    'text' => trim($q),
+                ];
+            } elseif (is_array($q)) {
+                $formattedQuestions[] = [
+                    'number' => $q['number'] ?? ($idx + 1),
+                    'text' => trim($q['text'] ?? $q['question_text'] ?? ''),
+                ];
+            }
+        }
+
+        try {
+            $payload = [
+                'questions' => $formattedQuestions,
+            ];
+            if (!empty($courseTopics)) {
+                $payload['course_topics'] = array_values(array_filter($courseTopics));
+            }
+
+            $response = $this->client()->post("{$this->baseUrl}/api/v1/analyze-questions", $payload);
+
+            if ($response->successful()) {
+                return $response->json();
+            }
+
+            if ($response->status() === 422) {
+                $errorData = $response->json();
+                $message = $errorData['message'] ?? 'Validation failed in AI service.';
+                throw new Exception($message);
+            }
+
+            Log::error('AI Service analyze-questions error: ' . $response->status() . ' - ' . $response->body());
+            throw new Exception('AI Service failed to analyze questions batch.');
+        } catch (ConnectionException $e) {
+            Log::error('AI Service connection error: ' . $e->getMessage());
+            throw new Exception('AI Service is currently unavailable.');
+        } catch (RequestException $e) {
+            Log::error('AI Service request exception: ' . $e->getMessage());
+            throw new Exception('AI Service request timed out or encountered an error.');
+        }
+    }
 }
+
 

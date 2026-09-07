@@ -237,6 +237,101 @@ docker compose logs -f ai-service
 }
 ```
 
+### 7.5 Single Question Analysis (STEP 10)
+`POST /api/v1/analyze-question`
+
+**Request:**
+```json
+{
+  "question": "Explain the differences between 3NF and BCNF in relational database design with suitable examples.",
+  "course_topics": ["Normalization", "Relational Design", "SQL", "Transactions"]
+}
+```
+
+**Response:**
+```json
+{
+  "status": "success",
+  "question": "Explain the differences between 3NF and BCNF in relational database design with suitable examples.",
+  "classification": {
+    "question_type": "DESCRIPTIVE",
+    "confidence": 0.85
+  },
+  "topics": [
+    {
+      "name": "Normalization",
+      "confidence": 0.7241
+    },
+    {
+      "name": "Relational Design",
+      "confidence": 0.6892
+    }
+  ],
+  "difficulty": {
+    "level": "MEDIUM",
+    "method": "baseline",
+    "keywords": ["explain", "difference", "example"]
+  },
+  "cognitive_level": {
+    "level": "UNDERSTAND",
+    "method": "baseline",
+    "detected_action_verbs": ["explain"]
+  }
+}
+```
+
+### 7.6 Batch Questions Analysis (STEP 10)
+`POST /api/v1/analyze-questions`
+
+**Request:**
+```json
+{
+  "questions": [
+    {
+      "number": 1,
+      "text": "Define database normalization."
+    },
+    {
+      "number": 2,
+      "text": "Design a normalized relational schema for a university management system."
+    }
+  ],
+  "course_topics": ["Normalization", "Relational Design", "SQL"]
+}
+```
+
+**Response:**
+```json
+{
+  "status": "success",
+  "total_questions": 2,
+  "questions": [
+    {
+      "number": 1,
+      "question": "Define database normalization.",
+      "classification": { "question_type": "CONCEPTUAL", "confidence": 0.85 },
+      "topics": [{ "name": "Normalization", "confidence": 0.88 }],
+      "difficulty": { "level": "EASY", "method": "baseline" },
+      "cognitive_level": { "level": "REMEMBER", "method": "baseline" }
+    },
+    {
+      "number": 2,
+      "question": "Design a normalized relational schema for a university management system.",
+      "classification": { "question_type": "DESCRIPTIVE", "confidence": 0.8 },
+      "topics": [{ "name": "Relational Design", "confidence": 0.89 }],
+      "difficulty": { "level": "HARD", "method": "baseline" },
+      "cognitive_level": { "level": "CREATE", "method": "baseline" }
+    }
+  ],
+  "summary": {
+    "question_types": { "CONCEPTUAL": 1, "DESCRIPTIVE": 1 },
+    "difficulty_distribution": { "EASY": 1, "HARD": 1 },
+    "cognitive_distribution": { "REMEMBER": 1, "CREATE": 1 },
+    "topics_detected": ["Normalization", "Relational Design"]
+  }
+}
+```
+
 ---
 
 ## 8. Laravel Integration
@@ -246,7 +341,11 @@ The Laravel backend communicates with this service through `App\Services\AiServi
 * **Local dev**: `AI_SERVICE_URL=http://127.0.0.1:8001`
 * **Docker container**: `AI_SERVICE_URL=http://ai-service:8001`
 
-Faculty members authenticate with Laravel Sanctum, and make requests to `POST /api/ai/analyze`, which delegates to the FastAPI microservice.
+Faculty members authenticate with Laravel Sanctum, and make requests to:
+* `POST /api/ai/analyze` (Document and academic text segmentation)
+* `POST /api/ai/analyze-question` (Single question analysis)
+* `POST /api/ai/analyze-questions` (Batch questions analysis)
+* `POST /api/ai/assessments/{assessment}/analyze-questions` (Analyze and update assessment questions in database)
 
 ---
 
@@ -255,13 +354,15 @@ Faculty members authenticate with Laravel Sanctum, and make requests to `POST /a
 Run pytest:
 
 ```bash
-pytest
+docker compose exec ai-service pytest
 ```
 
 ---
 
-## 10. Known Limitations (STEP 09 Scope)
+## 10. Question Analysis Architecture (STEP 10)
 
-* Question detection currently uses structural/regex pattern recognition.
-* High-level semantic categorization (Bloom's taxonomy, cognitive level, difficulty rating) and similarity matrices will be added in subsequent steps (STEP 10+).
+* **Question Classification**: Pattern and keyword matching for MCQ, TRUE_FALSE, SHORT_ANSWER, DESCRIPTIVE, PROBLEM_SOLVING, CONCEPTUAL, ANALYTICAL types.
+* **Topic Detection**: Uses Hugging Face `sentence-transformers/all-MiniLM-L6-v2` dense vectors and cosine similarity against course syllabus modules/topics.
+* **Difficulty Analysis**: Baseline estimation evaluating linguistic complexity, cognitive depth, and question structure into EASY, MEDIUM, or HARD.
+* **Cognitive Level Analysis**: Bloom's Revised Taxonomy mapping (`REMEMBER`, `UNDERSTAND`, `APPLY`, `ANALYZE`, `EVALUATE`, `CREATE`) prioritizing leading action verbs.
 

@@ -19,14 +19,17 @@ class AssessmentRequest extends FormRequest
      */
     public function rules(): array
     {
+        $isUpdate = $this->isMethod('PUT') || $this->isMethod('PATCH');
+        $rule = $isUpdate ? 'sometimes|required' : 'required';
+
         return [
-            'title' => 'required|string|max:255',
-            'type' => 'required|string|in:quiz,midterm,final,assignment,class_test,project,other',
+            'title' => "$rule|string|max:255",
+            'type' => "$rule|string|in:quiz,midterm,final,assignment,class_test,project,other,Quiz,Midterm,Final,Assignment,Class Test,Project,Other",
             'description' => 'nullable|string',
             'assessment_date' => 'nullable|date',
-            'total_marks' => 'required|numeric|min:0',
+            'total_marks' => "$rule|numeric|min:0",
             'duration_minutes' => 'nullable|integer|min:1|max:1440',
-            'status' => 'required|string|in:draft,published,completed',
+            'status' => "$rule|string|in:draft,published,completed,Draft,Published,Completed,Analyzed",
         ];
     }
 }

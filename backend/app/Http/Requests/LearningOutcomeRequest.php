@@ -22,9 +22,12 @@ class LearningOutcomeRequest extends FormRequest
      */
     public function rules(): array
     {
+        $isUpdate = $this->isMethod('PUT') || $this->isMethod('PATCH');
+        $rule = $isUpdate ? ['sometimes', 'required'] : ['required'];
+
         return [
-            'code' => ['required', 'string', 'max:50'],
-            'description' => ['required', 'string'],
+            'code' => array_merge($rule, ['string', 'max:50']),
+            'description' => array_merge($rule, ['string']),
             'cognitive_level' => [
                 'nullable',
                 'string',

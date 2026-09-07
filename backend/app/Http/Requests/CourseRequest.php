@@ -22,14 +22,17 @@ class CourseRequest extends FormRequest
      */
     public function rules(): array
     {
+        $isUpdate = $this->isMethod('PUT') || $this->isMethod('PATCH');
+        $rule = $isUpdate ? ['sometimes', 'required'] : ['required'];
+
         return [
-            'course_code' => ['required', 'string', 'max:50'],
-            'course_name' => ['required', 'string', 'max:255'],
+            'course_code' => array_merge($rule, ['string', 'max:50']),
+            'course_name' => array_merge($rule, ['string', 'max:255']),
             'description' => ['nullable', 'string'],
-            'semester' => ['required', 'string', 'max:50'],
-            'academic_year' => ['required', 'string', 'max:20'],
-            'credits' => ['required', 'integer', 'min:1', 'max:30'],
-            'status' => ['required', Rule::in(['active', 'archived'])],
+            'semester' => array_merge($rule, ['string', 'max:50']),
+            'academic_year' => array_merge($rule, ['string', 'max:20']),
+            'credits' => array_merge($rule, ['integer', 'min:1', 'max:30']),
+            'status' => array_merge($isUpdate ? ['sometimes'] : ['required'], [Rule::in(['active', 'archived'])]),
         ];
     }
 

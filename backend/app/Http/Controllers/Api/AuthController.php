@@ -28,7 +28,9 @@ class AuthController extends Controller
 
         // Authenticate the registered user using Sanctum session
         Auth::login($user);
-        $request->session()->regenerate();
+        if ($request->hasSession()) {
+            $request->session()->regenerate();
+        }
 
         return response()->json([
             'status' => 'success',
@@ -60,7 +62,9 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $request->session()->regenerate();
+        if ($request->hasSession()) {
+            $request->session()->regenerate();
+        }
         $user = Auth::user();
 
         return response()->json([
@@ -102,8 +106,10 @@ class AuthController extends Controller
     {
         Auth::guard('web')->logout();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        if ($request->hasSession()) {
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
 
         return response()->json([
             'status' => 'success',
