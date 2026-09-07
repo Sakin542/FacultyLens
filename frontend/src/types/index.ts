@@ -698,6 +698,7 @@ export interface RecommendationResponseData {
 }
 
 export * from './analysisHistory';
+export * from './feedback';
 
 
 

@@ -74,4 +74,28 @@ class User extends Authenticatable
     {
         return $this->hasMany(CourseMaterial::class, 'uploaded_by');
     }
+
+    /**
+     * Feedback submitted by this faculty member on AI recommendations.
+     */
+    public function recommendationFeedbacks(): HasMany
+    {
+        return $this->hasMany(RecommendationFeedback::class);
+    }
+
+    /**
+     * Decisions logged by this faculty member on AI recommendations.
+     */
+    public function recommendationDecisions(): HasMany
+    {
+        return $this->hasMany(RecommendationDecision::class);
+    }
+
+    /**
+     * AI improvement signals derived from this faculty member's feedback.
+     */
+    public function aiImprovementSignals(): HasMany
+    {
+        return $this->hasMany(AiImprovementSignal::class);
+    }
 }
