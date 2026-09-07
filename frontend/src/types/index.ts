@@ -12,12 +12,33 @@ export interface User {
   createdAt?: string;
 }
 
+export type CognitiveLevel = 'Remember' | 'Understand' | 'Apply' | 'Analyze' | 'Evaluate' | 'Create';
+
 export interface LearningOutcome {
-  id: string;
+  id: number | string;
+  course_id?: number | string;
   code: string; // e.g. "CLO-1", "CLO-2"
   description: string;
-  bloomLevel: 'Remember' | 'Understand' | 'Apply' | 'Analyze' | 'Evaluate' | 'Create';
+  cognitive_level?: CognitiveLevel;
+  bloomLevel?: CognitiveLevel;
+  sort_order?: number;
   targetScorePercent?: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface CourseMaterial {
+  id: number | string;
+  course_id: number | string;
+  title: string;
+  description?: string | null;
+  file_name: string;
+  file_path?: string;
+  file_type?: string;
+  file_size?: number;
+  uploaded_by?: number | string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface TopicCoverage {
@@ -29,20 +50,41 @@ export interface TopicCoverage {
 }
 
 export interface Course {
-  id: string;
-  code: string;
-  title: string;
+  id: number | string;
+  user_id?: number | string;
+  course_code?: string;
+  course_name?: string;
+  description?: string | null;
   semester: string;
-  year: number;
+  academic_year?: string;
+  credits?: number;
+  status?: 'active' | 'archived' | 'draft' | string;
+  
+  // Legacy / convenience mappings
+  code?: string;
+  title?: string;
+  year?: number;
   section?: string;
-  creditHours: number;
-  department: string;
-  studentsCount: number;
-  assessmentCount: number;
-  learningOutcomesCount: number;
-  learningOutcomes: LearningOutcome[];
-  createdAt: string;
-  updatedAt: string;
+  creditHours?: number;
+  department?: string;
+  studentsCount?: number;
+  assessmentCount?: number;
+  learningOutcomesCount?: number;
+  
+  learning_outcomes?: LearningOutcome[];
+  learning_outcomes_count?: number;
+  learningOutcomes?: LearningOutcome[];
+  
+  materials?: CourseMaterial[];
+  materials_count?: number;
+  
+  assessments?: any[];
+  assessments_count?: number;
+  
+  created_at?: string;
+  updated_at?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export type AssessmentType = 'Midterm' | 'Final' | 'Quiz' | 'Assignment' | 'Project';
