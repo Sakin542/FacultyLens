@@ -1621,6 +1621,200 @@ class AiAnalysisController extends Controller
     }
 
     /**
+     * Retrieve complete assessment analysis dashboard data from database.
+     * Consolidates report, metrics, quality dimensions, LO alignment, similarity matches,
+     * findings, and recommendations for high-performance single-request dashboard rendering.
+     */
+    public function getAssessmentAnalysis(Request $request, Assessment $assessment): JsonResponse
+    {
+        $user = $request->user();
+
+        // Check ownership
+        if ($assessment->course->user_id !== $user->id) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized access to assessment analysis.',
+            ], 403);
+        }
+
+        // Load assessment relations
+        $assessment->load([
+            'course.learningOutcomes',
+            'questions.learningOutcome',
+            'questionPaper',
+            'latestAnalysisReport.recommendations',
+            'latestAnalysisReport.similarityMatches.previousQuestion',
+            'latestAnalysisReport.learningOutcomeAlignments.learningOutcome',
+        ])->loadCount('questions');
+
+        $report = $assessment->latestAnalysisReport;
+
+        // If no analysis report exists yet, return empty state data
+        if (!$report) {
+            return response()->json([
+                'status' => 'success',
+                'data' => [
+                    'assessment' => [
+                        'id' => $assessment->id,
+                        'title' => $assessment->title,
+                        'type' => $assessment->type,
+                        'total_marks' => (float) $assessment->total_marks,
+                        'total_questions' => $assessment->questions_count,
+                        'duration_minutes' => $assessment->duration_minutes,
+                        'assessment_date' => $assessment->assessment_date?->toDateString(),
+                        'course_id' => $assessment->course->id,
+                        'course_code' => $assessment->course->course_code,
+                        'course_name' => $assessment->course->course_name,
+                    ],
+                    'report' => null,
+                    'analysis_status' => 'not_analyzed',
+                    'quality_analysis' => null,
+                    'alignment_analysis' => null,
+                    'similarity_analysis' => null,
+                    'recommendations' => [],
+                    'recommendation_summary' => [
+                        'total_recommendations' => 0,
+                        'high_priority_count' => 0,
+                        'medium_priority_count' => 0,
+                        'low_priority_count' => 0,
+                        'accepted_count' => 0,
+                        'dismissed_count' => 0,
+                        'pending_count' => 0,
+                    ],
+                    'findings' => [],
+                    'questions' => $assessment->questions,
+                ],
+            ]);
+        }
+
+        $findingsPayload = $report->findings ?? [];
+        $qualityAnalysis = $findingsPayload['quality'] ?? $findingsPayload['quality_engine'] ?? null;
+        $alignmentAnalysis = $findingsPayload['alignment'] ?? null;
+        $similarityAnalysis = $findingsPayload['similarity'] ?? null;
+        $summary = $findingsPayload['summary'] ?? [];
+
+        // Build recommendations list with proper sorting
+        $recommendations = $report->recommendations()
+            ->orderByRaw("FIELD(priority, 'high', 'medium', 'low')")
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $recommendationSummary = [
+            'total_recommendations' => $recommendations->count(),
+            'high_priority_count' => $recommendations->where('priority', 'high')->count(),
+            'medium_priority_count' => $recommendations->where('priority', 'medium')->count(),
+            'low_priority_count' => $recommendations->where('priority', 'low')->count(),
+            'accepted_count' => $recommendations->where('status', 'accepted')->count(),
+            'dismissed_count' => $recommendations->where('status', 'dismissed')->count(),
+            'reviewed_count' => $recommendations->where('status', 'reviewed')->count(),
+            'pending_count' => $recommendations->where('status', 'pending')->count(),
+        ];
+
+        // Format findings
+        $rawFindings = [];
+        if (!empty($qualityAnalysis['findings'])) {
+            $rawFindings = array_merge($rawFindings, $qualityAnalysis['findings']);
+        }
+        if (!empty($alignmentAnalysis['findings'])) {
+            $rawFindings = array_merge($rawFindings, $alignmentAnalysis['findings']);
+        }
+        if (!empty($similarityAnalysis['findings'])) {
+            $rawFindings = array_merge($rawFindings, $similarityAnalysis['findings']);
+        }
+        $uniqueFindings = array_values(array_unique($rawFindings));
+
+        // Format LO alignments mapping
+        $loAlignments = $report->learningOutcomeAlignments->map(function ($loa) {
+            return [
+                'id' => $loa->id,
+                'question_id' => $loa->question_id,
+                'learning_outcome_id' => $loa->learning_outcome_id,
+                'learning_outcome_code' => $loa->learningOutcome?->code,
+                'learning_outcome_description' => $loa->learningOutcome?->description,
+                'similarity_score' => (float) $loa->similarity_score,
+                'alignment' => $loa->alignment,
+                'reasoning' => $loa->reasoning,
+            ];
+        });
+
+        // Format similarity matches
+        $similarityMatches = $report->similarityMatches->map(function ($sm) {
+            return [
+                'id' => $sm->id,
+                'current_question_id' => $sm->current_question_id,
+                'previous_question_id' => $sm->previous_question_id,
+                'previous_question_text' => $sm->previousQuestion?->question_text,
+                'previous_assessment_title' => $sm->previousQuestion?->source_assessment,
+                'previous_year' => $sm->previousQuestion?->source_year,
+                'similarity_score' => (float) $sm->similarity_score,
+                'similarity_status' => $sm->similarity_status,
+                'reasoning' => $sm->reasoning,
+            ];
+        });
+
+        // Rating calculation helper if not in qualityAnalysis
+        $overallScore = $report->overall_score !== null ? (float) $report->overall_score : null;
+        $rating = 'UNAVAILABLE';
+        if ($overallScore !== null) {
+            if ($overallScore >= 90) {
+                $rating = 'EXCELLENT';
+            } elseif ($overallScore >= 80) {
+                $rating = 'GOOD';
+            } elseif ($overallScore >= 70) {
+                $rating = 'FAIR';
+            } elseif ($overallScore >= 60) {
+                $rating = 'NEEDS_REVIEW';
+            } else {
+                $rating = 'REQUIRES_ATTENTION';
+            }
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'assessment' => [
+                    'id' => $assessment->id,
+                    'title' => $assessment->title,
+                    'type' => $assessment->type,
+                    'total_marks' => (float) $assessment->total_marks,
+                    'total_questions' => $assessment->questions_count,
+                    'duration_minutes' => $assessment->duration_minutes,
+                    'assessment_date' => $assessment->assessment_date?->toDateString(),
+                    'course_id' => $assessment->course->id,
+                    'course_code' => $assessment->course->course_code,
+                    'course_name' => $assessment->course->course_name,
+                ],
+                'report' => [
+                    'id' => $report->id,
+                    'overall_score' => $overallScore,
+                    'rating' => $qualityAnalysis['rating'] ?? $rating,
+                    'topic_coverage_score' => $report->topic_coverage_score !== null ? (float) $report->topic_coverage_score : null,
+                    'learning_outcome_alignment_score' => $report->learning_outcome_alignment_score !== null ? (float) $report->learning_outcome_alignment_score : null,
+                    'difficulty_balance_score' => $report->difficulty_balance_score !== null ? (float) $report->difficulty_balance_score : null,
+                    'cognitive_level_balance_score' => $report->cognitive_level_balance_score !== null ? (float) $report->cognitive_level_balance_score : null,
+                    'similarity_score' => $report->similarity_score !== null ? (float) $report->similarity_score : null,
+                    'total_questions' => $report->total_questions,
+                    'similar_questions_count' => $report->similar_questions_count,
+                    'analysis_status' => $report->analysis_status,
+                    'processing_error' => $report->processing_error,
+                    'analyzed_at' => $report->analyzed_at?->toIso8601String(),
+                ],
+                'analysis_status' => $report->analysis_status,
+                'quality_analysis' => $qualityAnalysis,
+                'alignment_analysis' => $alignmentAnalysis,
+                'similarity_analysis' => $similarityAnalysis,
+                'learning_outcome_alignments' => $loAlignments,
+                'similarity_matches' => $similarityMatches,
+                'recommendations' => $recommendations,
+                'recommendation_summary' => $recommendationSummary,
+                'findings' => $uniqueFindings,
+                'summary' => $summary,
+                'questions' => $assessment->questions,
+            ],
+        ]);
+    }
+
+    /**
      * Alias for learning outcome alignment analysis.
      */
     public function alignmentAnalysis(Request $request): JsonResponse
@@ -1628,6 +1822,7 @@ class AiAnalysisController extends Controller
         return $this->analyzeAlignment($request);
     }
 }
+
 
 
 

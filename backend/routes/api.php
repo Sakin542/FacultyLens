@@ -100,7 +100,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/assessments/{assessment}/recommendations', [AiAnalysisController::class, 'getAssessmentRecommendations']);
         Route::patch('/recommendations/{recommendation}/status', [AiAnalysisController::class, 'updateRecommendationStatus']);
 
-        // STEP 15 Unified AI Analysis API & Canonical Aliases
+        // STEP 15 & 17 Unified AI Analysis API & Canonical Aliases
+        Route::get('/assessments/{assessment}/analysis', [AiAnalysisController::class, 'getAssessmentAnalysis']);
         Route::post('/analyze-assessment', [AiAnalysisController::class, 'analyzeAssessment']);
         Route::post('/assessments/{assessment}/analyze', [AiAnalysisController::class, 'analyzeAssessmentByRoute']);
         Route::post('/question-analysis', [AiAnalysisController::class, 'questionAnalysis']);

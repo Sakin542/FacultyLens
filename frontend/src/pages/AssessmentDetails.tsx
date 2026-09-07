@@ -34,6 +34,7 @@ import {
   Target,
   CopyCheck,
   BarChart3,
+  BrainCircuit,
 } from 'lucide-react';
 
 export const AssessmentDetails: React.FC = () => {
@@ -265,6 +266,15 @@ export const AssessmentDetails: React.FC = () => {
             variant="primary"
             size="sm"
             className="bg-[#111111] text-white hover:bg-black dark:bg-white dark:text-[#111111] dark:hover:bg-neutral-200 shadow-sm"
+            leftIcon={<BrainCircuit className="w-3.5 h-3.5 text-amber-400" />}
+            onClick={() => navigate(`/assessments/${id}/analysis`)}
+          >
+            AI Dashboard
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="border-[#E5E5E5] text-[#111111] dark:text-white"
             leftIcon={
               isRunningFullAnalysis ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />

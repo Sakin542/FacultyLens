@@ -41,6 +41,7 @@ export const AppRoutes: React.FC = () => {
           <Route path="/question-bank" element={<QuestionBank />} />
           <Route path="/assessments" element={<Assessments />} />
           <Route path="/assessments/:id" element={<AssessmentDetails />} />
+          <Route path="/assessments/:id/analysis" element={<Analysis />} />
           <Route path="/documents/:id" element={<DocumentDetails />} />
           <Route path="/assessment-history" element={<AssessmentHistory />} />
           <Route path="/history" element={<History />} />

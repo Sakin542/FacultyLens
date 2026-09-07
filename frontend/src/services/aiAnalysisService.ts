@@ -25,6 +25,75 @@ export interface UnifiedAnalysisSummary {
   potential_duplicates_count?: number;
 }
 
+export interface FullAssessmentAnalysisData {
+  assessment: {
+    id: number | string;
+    title: string;
+    type: string;
+    total_marks: number;
+    total_questions: number;
+    duration_minutes?: number;
+    assessment_date?: string | null;
+    course_id: number | string;
+    course_code: string;
+    course_name: string;
+  };
+  report: {
+    id: number | string;
+    overall_score: number | null;
+    rating: string;
+    topic_coverage_score: number | null;
+    learning_outcome_alignment_score: number | null;
+    difficulty_balance_score: number | null;
+    cognitive_level_balance_score: number | null;
+    similarity_score: number | null;
+    total_questions: number;
+    similar_questions_count: number;
+    analysis_status: string;
+    processing_error?: string | null;
+    analyzed_at?: string | null;
+  } | null;
+  analysis_status: 'not_analyzed' | 'pending' | 'processing' | 'completed' | 'failed' | string;
+  quality_analysis?: AssessmentQualityResult | null;
+  alignment_analysis?: AlignmentAnalysisResult | null;
+  similarity_analysis?: SimilarityAnalysisResult | null;
+  learning_outcome_alignments?: Array<{
+    id: number | string;
+    question_id: number | string;
+    learning_outcome_id: number | string;
+    learning_outcome_code?: string;
+    learning_outcome_description?: string;
+    similarity_score: number;
+    alignment: string;
+    reasoning?: string;
+  }>;
+  similarity_matches?: Array<{
+    id: number | string;
+    current_question_id: number | string;
+    previous_question_id: number | string;
+    previous_question_text?: string;
+    previous_assessment_title?: string;
+    previous_year?: string | number;
+    similarity_score: number;
+    similarity_status: string;
+    reasoning?: string;
+  }>;
+  recommendations: EvidenceBasedRecommendation[];
+  recommendation_summary: {
+    total_recommendations: number;
+    high_priority_count: number;
+    medium_priority_count: number;
+    low_priority_count: number;
+    accepted_count: number;
+    dismissed_count: number;
+    reviewed_count?: number;
+    pending_count: number;
+  };
+  findings: string[];
+  summary?: Record<string, any>;
+  questions: any[];
+}
+
 export interface UnifiedAssessmentAnalysisData {
   status: string;
   method: string;
@@ -171,6 +240,18 @@ export const aiAnalysisService = {
   },
 
   /**
+   * Get complete assessment analysis dashboard data from database.
+   */
+  async getAssessmentAnalysis(assessmentId: number | string): Promise<ApiResponseWrapper<FullAssessmentAnalysisData>> {
+    return apiClient<ApiResponseWrapper<FullAssessmentAnalysisData>>(
+      `/ai/assessments/${assessmentId}/analysis`,
+      {
+        method: 'GET',
+      }
+    );
+  },
+
+  /**
    * Update recommendation status (accepted, dismissed, reviewed, pending).
    */
   async updateRecommendationStatus(recommendationId: number | string, status: string, notes?: string) {
@@ -180,4 +261,5 @@ export const aiAnalysisService = {
     });
   },
 };
+
 
