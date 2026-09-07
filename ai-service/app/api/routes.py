@@ -53,17 +53,30 @@ router = APIRouter()
 
 def verify_api_key(
     x_ai_service_key: Optional[str] = Header(None, alias="X-AI-Service-Key"),
+    authorization: Optional[str] = Header(None, alias="Authorization"),
     settings: Settings = Depends(get_settings),
 ) -> None:
     """
     Verify internal service API key if configured in settings.
+    Accepts either X-AI-Service-Key or Authorization: Bearer <key>.
     """
-    if settings.ai_service_api_key and settings.ai_service_api_key.strip():
-        if not x_ai_service_key or x_ai_service_key.strip() != settings.ai_service_api_key.strip():
-            logger.warning("Unauthorized access attempt: Invalid X-AI-Service-Key provided.")
+    expected_key = (settings.ai_service_api_key or "").strip()
+    if expected_key:
+        provided_key = None
+        if x_ai_service_key and x_ai_service_key.strip():
+            provided_key = x_ai_service_key.strip()
+        elif authorization and authorization.strip():
+            parts = authorization.strip().split()
+            if len(parts) == 2 and parts[0].lower() == "bearer":
+                provided_key = parts[1].strip()
+            else:
+                provided_key = authorization.strip()
+
+        if not provided_key or provided_key != expected_key:
+            logger.warning("Unauthorized access attempt: Invalid or missing internal service key.")
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid or missing X-AI-Service-Key header.",
+                detail="Invalid or missing service authentication credentials.",
             )
 
 

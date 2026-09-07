@@ -25,15 +25,20 @@ Route::get('/health', [HealthController::class, 'check']);
  * Faculty Authentication Endpoints
  */
 Route::prefix('auth')->group(function () {
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::middleware('throttle:auth')->group(function () {
+        Route::post('/register', [AuthController::class, 'register']);
+        Route::post('/login', [AuthController::class, 'login']);
+    });
 
     // Protected auth routes
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user', [AuthController::class, 'user']);
+        Route::patch('/user', [AuthController::class, 'updateProfile']);
         Route::post('/logout', [AuthController::class, 'logout']);
     });
 });
+
+Route::middleware('auth:sanctum')->patch('/users/me', [AuthController::class, 'updateProfile']);
 
 /**
  * Protected Faculty, Course & Assessment Management Endpoints
@@ -65,7 +70,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Assessment Question Paper File Management
     Route::get('/assessments/{assessment}/question-paper', [AssessmentQuestionPaperController::class, 'show']);
-    Route::post('/assessments/{assessment}/question-paper', [AssessmentQuestionPaperController::class, 'store']);
+    Route::post('/assessments/{assessment}/question-paper', [AssessmentQuestionPaperController::class, 'store'])->middleware('throttle:uploads');
     Route::delete('/assessments/{assessment}/question-paper', [AssessmentQuestionPaperController::class, 'destroy']);
 
     // Previous Questions / Question Bank
@@ -77,14 +82,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Document Processing & Extraction (STEP 08)
     Route::get('/documents', [DocumentController::class, 'index']);
-    Route::post('/documents', [DocumentController::class, 'store']);
+    Route::post('/documents', [DocumentController::class, 'store'])->middleware('throttle:uploads');
     Route::get('/documents/{document}', [DocumentController::class, 'show']);
     Route::get('/documents/{document}/download', [DocumentController::class, 'download']);
     Route::post('/documents/{document}/reprocess', [DocumentController::class, 'reprocess']);
     Route::delete('/documents/{document}', [DocumentController::class, 'destroy']);
 
     // Hugging Face AI Service Integration (STEP 09, STEP 10, STEP 11, STEP 12)
-    Route::prefix('ai')->group(function () {
+    Route::prefix('ai')->middleware('throttle:ai-analysis')->group(function () {
         Route::get('/health', [AiAnalysisController::class, 'health']);
         Route::post('/analyze', [AiAnalysisController::class, 'analyze']);
         Route::post('/analyze-document', [AiAnalysisController::class, 'analyzeDocument']);

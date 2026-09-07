@@ -6,12 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AssessmentRequest;
 use App\Models\Assessment;
 use App\Models\Course;
+use App\Services\AuditLogService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class AssessmentController extends Controller
 {
+    protected AuditLogService $auditLogService;
+
+    public function __construct(AuditLogService $auditLogService)
+    {
+        $this->auditLogService = $auditLogService;
+    }
+
     /**
      * Display a listing of assessments for a specific course or for all courses of the faculty.
      */
@@ -83,6 +91,20 @@ class AssessmentController extends Controller
         $assessment = $course->assessments()->create($validated);
         $assessment->load(['course', 'questionPaper'])->loadCount('questions');
 
+        // Audit log assessment creation event
+        $this->auditLogService->log(
+            'ASSESSMENT_CREATED',
+            $assessment,
+            $assessment->id,
+            [
+                'title' => $assessment->title,
+                'course_id' => $course->id,
+                'type' => $assessment->type,
+                'total_marks' => $assessment->total_marks,
+            ],
+            $request->user()
+        );
+
         return response()->json([
             'data' => $assessment,
             'message' => 'Assessment created successfully',
@@ -150,7 +172,23 @@ class AssessmentController extends Controller
             }
         }
 
+        $assessmentId = $assessment->id;
+        $meta = [
+            'title' => $assessment->title,
+            'course_id' => $assessment->course_id,
+            'type' => $assessment->type,
+        ];
+
         $assessment->delete();
+
+        // Audit log assessment deletion event
+        $this->auditLogService->log(
+            'ASSESSMENT_DELETED',
+            'Assessment',
+            $assessmentId,
+            $meta,
+            $request->user()
+        );
 
         return response()->json([
             'message' => 'Assessment deleted successfully',

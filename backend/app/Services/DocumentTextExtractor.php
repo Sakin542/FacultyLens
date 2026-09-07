@@ -55,6 +55,10 @@ class DocumentTextExtractor
                 throw new Exception("Unsupported file extension: .{$extension}. Allowed types: pdf, docx, txt.");
         }
 
+        if (trim($rawText) === '') {
+            throw new Exception("Document is empty or contains no readable text.");
+        }
+
         $cleanedText = $this->cleaner->clean($rawText);
 
         return [

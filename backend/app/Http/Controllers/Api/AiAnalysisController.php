@@ -11,6 +11,7 @@ use App\Models\QuestionLearningOutcomeAlignment;
 use App\Models\QuestionSimilarityMatch;
 use App\Models\Recommendation;
 use App\Services\AiService;
+use App\Services\AuditLogService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -20,10 +21,12 @@ use Illuminate\Support\Facades\Log;
 class AiAnalysisController extends Controller
 {
     protected AiService $aiService;
+    protected AuditLogService $auditLogService;
 
-    public function __construct(AiService $aiService)
+    public function __construct(AiService $aiService, AuditLogService $auditLogService)
     {
         $this->aiService = $aiService;
+        $this->auditLogService = $auditLogService;
     }
 
     /**
@@ -1302,6 +1305,15 @@ class AiAnalysisController extends Controller
                 ], 422);
             }
 
+            // Prevent duplicate simultaneous AI analysis on the same assessment
+            $activeReport = $assessment->latestAnalysisReport;
+            if ($activeReport && $activeReport->analysis_status === 'processing' && $activeReport->updated_at && $activeReport->updated_at->diffInMinutes(now()) < 3) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Analysis is currently processing for this assessment. Please wait for completion.',
+                ], 409);
+            }
+
             // Set analysis report status to processing
             AnalysisReport::updateOrCreate(
                 ['assessment_id' => $assessment->id],
@@ -1309,6 +1321,19 @@ class AiAnalysisController extends Controller
                     'analysis_status' => 'processing',
                     'processing_error' => null,
                 ]
+            );
+
+            // Audit log analysis start event
+            $this->auditLogService->log(
+                'AI_ANALYSIS_STARTED',
+                $assessment,
+                $assessment->id,
+                [
+                    'assessment_title' => $assessment->title,
+                    'course_id' => $assessment->course_id,
+                    'questions_count' => count($questions),
+                ],
+                $user
             );
 
             $course = $assessment->course;
@@ -1607,6 +1632,20 @@ class AiAnalysisController extends Controller
                             ->delete();
                     }
                 });
+            }
+
+            if ($assessment) {
+                $this->auditLogService->log(
+                    'AI_ANALYSIS_COMPLETED',
+                    $assessment,
+                    $assessment->id,
+                    [
+                        'assessment_title' => $assessment->title,
+                        'overall_score' => $aiResult['quality_analysis']['overall_quality_score'] ?? null,
+                        'questions_analyzed' => count($questions),
+                    ],
+                    $user
+                );
             }
 
             return response()->json([

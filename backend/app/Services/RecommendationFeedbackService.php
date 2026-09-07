@@ -7,12 +7,20 @@ use App\Models\Recommendation;
 use App\Models\RecommendationDecision;
 use App\Models\RecommendationFeedback;
 use App\Models\User;
+use App\Services\AuditLogService;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 class RecommendationFeedbackService
 {
+    protected AuditLogService $auditLogService;
+
+    public function __construct(AuditLogService $auditLogService)
+    {
+        $this->auditLogService = $auditLogService;
+    }
+
     /**
      * Authorize that the authenticated user owns the assessment this recommendation belongs to.
      */
@@ -97,6 +105,20 @@ class RecommendationFeedbackService
                 $usefulnessRating,
                 $reason,
                 $comment
+            );
+
+            // 5. Record academic audit log
+            $this->auditLogService->log(
+                "RECOMMENDATION_{$decisionUpper}",
+                $recommendation,
+                $recommendation->id,
+                [
+                    'decision' => $decisionUpper,
+                    'usefulness_rating' => $usefulnessRating,
+                    'reason' => $reason,
+                    'recommendation_problem' => $recommendation->problem,
+                ],
+                $user
             );
 
             return [

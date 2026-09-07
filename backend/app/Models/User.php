@@ -98,4 +98,36 @@ class User extends Authenticatable
     {
         return $this->hasMany(AiImprovementSignal::class);
     }
+
+    /**
+     * Audit log events associated with this user.
+     */
+    public function auditLogs(): HasMany
+    {
+        return $this->hasMany(AuditLog::class);
+    }
+
+    /**
+     * Check if user is an administrator.
+     */
+    public function isAdmin(): bool
+    {
+        return strtoupper($this->role ?? 'FACULTY') === 'ADMIN';
+    }
+
+    /**
+     * Check if user is a faculty member.
+     */
+    public function isFaculty(): bool
+    {
+        return strtoupper($this->role ?? 'FACULTY') === 'FACULTY';
+    }
+
+    /**
+     * Check if user matches a specific role.
+     */
+    public function hasRole(string $role): bool
+    {
+        return strtoupper($this->role ?? 'FACULTY') === strtoupper($role);
+    }
 }
