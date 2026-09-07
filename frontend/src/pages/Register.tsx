@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Input';
 import { Card } from '@/components/common/Card';
+import { registerUser, authenticateUser } from '@/utils/auth';
 import {
   Mail,
   Lock,
@@ -13,6 +14,8 @@ import {
   Eye,
   EyeOff,
   CheckCircle2,
+  AlertCircle,
+  ShieldCheck,
 } from 'lucide-react';
 
 export const Register: React.FC = () => {
@@ -30,6 +33,7 @@ export const Register: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [registerError, setRegisterError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [registerSuccess, setRegisterSuccess] = useState(false);
 
@@ -55,6 +59,9 @@ export const Register: React.FC = () => {
     setFormData({ ...formData, [name]: val });
     if (errors[name]) {
       setErrors({ ...errors, [name]: '' });
+    }
+    if (registerError) {
+      setRegisterError(null);
     }
   };
 
@@ -85,14 +92,30 @@ export const Register: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setRegisterError(null);
     if (!validate()) return;
 
     setIsLoading(true);
-    // Simulate account provisioning
+
     setTimeout(() => {
-      localStorage.setItem('facultylens_token', 'mock-new-faculty-session-token');
-      localStorage.setItem('facultylens_user_name', formData.fullName);
-      localStorage.setItem('facultylens_user_email', formData.email);
+      const regResult = registerUser({
+        id: `faculty-${Date.now()}`,
+        fullName: formData.fullName.trim(),
+        email: formData.email.trim(),
+        department: formData.department.trim(),
+        designation: formData.designation.trim(),
+        password: formData.password,
+      });
+
+      if (!regResult.success) {
+        setIsLoading(false);
+        setRegisterError(regResult.message || 'Registration failed. Email may already be registered.');
+        return;
+      }
+
+      // Auto login the newly registered user
+      authenticateUser(formData.email, formData.password);
+
       setIsLoading(false);
       setRegisterSuccess(true);
       setTimeout(() => {
@@ -106,16 +129,31 @@ export const Register: React.FC = () => {
       <Card className="w-full max-w-xl bg-white rounded-2xl border border-[#E5E5E5] shadow-card p-8 sm:p-10 space-y-6">
         {/* Header without internal logo/name */}
         <div className="space-y-1 text-left">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-semibold uppercase tracking-wider bg-[#F7F7F5] text-[#737373] border border-[#E5E5E5]">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#111111]" /> Faculty Registration
+            </span>
+          </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-[#111111] tracking-tight">Create Faculty Account</h2>
           <p className="text-xs text-[#737373]">
-            Fill in your university department details to register
+            Fill in your university department details to provision your academic dashboard
           </p>
         </div>
+
+        {registerError && (
+          <div className="p-3.5 rounded-xl bg-[#FEF2F2] border border-[#FECACA] flex items-start gap-2.5 text-xs text-[#991B1B] animate-in fade-in duration-200">
+            <AlertCircle className="w-4 h-4 shrink-0 text-[#DC2626] mt-0.5" />
+            <div className="space-y-1">
+              <span className="font-semibold block">Registration Issue</span>
+              <span className="text-[11px] leading-relaxed block">{registerError}</span>
+            </div>
+          </div>
+        )}
 
         {registerSuccess ? (
           <div className="p-4 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] flex items-center gap-3 text-xs text-[#166534] font-medium animate-pulse">
             <CheckCircle2 className="w-5 h-5 shrink-0 text-[#16A34A]" />
-            <span>Account created successfully! Redirecting to your dashboard...</span>
+            <span>Account created successfully! Authorizing and redirecting to your dashboard...</span>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>

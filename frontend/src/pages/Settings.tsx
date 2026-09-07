@@ -4,7 +4,9 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/com
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Input';
 import { Badge } from '@/components/common/Badge';
+import { useTheme } from '@/context/ThemeContext';
 import { mockCurrentUser } from '@/utils/mockData';
+import { getCurrentUser, logoutUser } from '@/utils/auth';
 import {
   User,
   LogOut,
@@ -14,15 +16,20 @@ import {
   Mail,
   Building,
   Award,
+  Sun,
+  Moon,
 } from 'lucide-react';
 
 export const Settings: React.FC = () => {
   const navigate = useNavigate();
+  const { theme, setTheme } = useTheme();
+  const currentUser = getCurrentUser() || mockCurrentUser;
+
   const [profile, setProfile] = useState({
-    fullName: mockCurrentUser.fullName,
-    email: mockCurrentUser.email,
-    department: mockCurrentUser.department,
-    designation: mockCurrentUser.designation,
+    fullName: currentUser.fullName,
+    email: currentUser.email,
+    department: currentUser.department,
+    designation: currentUser.designation,
   });
 
   const [passwords, setPasswords] = useState({
@@ -52,12 +59,59 @@ export const Settings: React.FC = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('facultylens_token');
+    logoutUser();
     navigate('/login');
   };
 
   return (
     <div className="space-y-8 max-w-4xl">
+      {/* Appearance Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Appearance & Theme</CardTitle>
+          <CardDescription>Customize the interface look and feel for optimal academic workflow comfort</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <button
+              type="button"
+              onClick={() => setTheme('light')}
+              className={`p-4 rounded-xl border flex items-center gap-4 transition-all text-left ${
+                theme === 'light'
+                  ? 'border-[#111111] dark:border-white bg-[#F7F7F5] dark:bg-[#262626] ring-2 ring-[#111111] dark:ring-white'
+                  : 'border-[#E5E5E5] dark:border-[#262626] bg-white dark:bg-[#1A1A1A] hover:border-[#111111] dark:hover:border-white'
+              }`}
+            >
+              <div className="w-10 h-10 rounded-lg bg-white border border-[#E5E5E5] flex items-center justify-center text-[#111111] shrink-0 shadow-xs">
+                <Sun className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-[#111111] dark:text-white">Academic Light</h4>
+                <p className="text-xs text-[#737373] dark:text-[#A3A3A3]">Crisp high-contrast black on off-white</p>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setTheme('dark')}
+              className={`p-4 rounded-xl border flex items-center gap-4 transition-all text-left ${
+                theme === 'dark'
+                  ? 'border-white dark:border-white bg-[#F7F7F5] dark:bg-[#262626] ring-2 ring-[#111111] dark:ring-white'
+                  : 'border-[#E5E5E5] dark:border-[#262626] bg-white dark:bg-[#1A1A1A] hover:border-[#111111] dark:hover:border-white'
+              }`}
+            >
+              <div className="w-10 h-10 rounded-lg bg-[#111111] border border-[#262626] flex items-center justify-center text-white shrink-0 shadow-xs">
+                <Moon className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-[#111111] dark:text-white">Obsidian Dark</h4>
+                <p className="text-xs text-[#737373] dark:text-[#A3A3A3]">Deep carbon background with white typography</p>
+              </div>
+            </button>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Profile Section */}
       <Card>
         <CardHeader>
@@ -66,7 +120,7 @@ export const Settings: React.FC = () => {
               <CardTitle>Faculty Profile</CardTitle>
               <CardDescription>Manage your institutional identification and department details</CardDescription>
             </div>
-            <Badge variant="outline" className="font-mono">Faculty ID: {mockCurrentUser.id}</Badge>
+            <Badge variant="outline" className="font-mono">Faculty ID: {currentUser.id || mockCurrentUser.id}</Badge>
           </div>
         </CardHeader>
         <CardContent>

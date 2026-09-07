@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { ProtectedRoute } from '@/components/common/ProtectedRoute';
 
 import { Home } from '@/pages/Home';
 import { Login } from '@/pages/Login';
@@ -26,14 +27,16 @@ export const AppRoutes: React.FC = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
       </Route>
 
-      {/* Dashboard Protected Application Pages */}
-      <Route element={<DashboardLayout />}>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/courses" element={<Courses />} />
-        <Route path="/assessments" element={<Assessments />} />
-        <Route path="/analysis" element={<Analysis />} />
-        <Route path="/history" element={<History />} />
-        <Route path="/settings" element={<Settings />} />
+      {/* Protected Dashboard Routes (Only Authenticated / Registered Faculty) */}
+      <Route element={<ProtectedRoute />}>
+        <Route element={<DashboardLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/courses" element={<Courses />} />
+          <Route path="/assessments" element={<Assessments />} />
+          <Route path="/analysis" element={<Analysis />} />
+          <Route path="/history" element={<History />} />
+          <Route path="/settings" element={<Settings />} />
+        </Route>
       </Route>
 
       {/* 404 Fallback */}
