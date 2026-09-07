@@ -10,6 +10,7 @@ import {
   HelpCircle,
   BrainCircuit,
   History,
+  MessageSquare,
   Settings,
   LogOut,
   X,
@@ -32,6 +33,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
     { name: 'Question Bank', path: '/question-bank', icon: HelpCircle },
     { name: 'Analysis', path: '/analysis', icon: BrainCircuit, badge: 'AI' },
     { name: 'History', path: '/history', icon: History },
+    { name: 'Feedback', path: '/feedback', icon: MessageSquare },
     { name: 'Settings', path: '/settings', icon: Settings },
   ];
 

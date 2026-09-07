@@ -11,6 +11,8 @@ import {
   ChevronUp,
 } from 'lucide-react';
 import { EvidenceBasedRecommendation, RecommendationStatus } from '@/types';
+import { DecisionType } from '@/types/feedback';
+import { FeedbackModal } from '@/components/feedback/FeedbackModal';
 
 interface RecommendationsSectionProps {
   recommendations: EvidenceBasedRecommendation[];
@@ -29,6 +31,16 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
   const [activeNoteId, setActiveNoteId] = useState<number | string | null>(null);
   const [noteText, setNoteText] = useState<string>('');
   const [expandedEvidenceId, setExpandedEvidenceId] = useState<number | string | null>(null);
+
+  const [modalConfig, setModalConfig] = useState<{
+    isOpen: boolean;
+    recommendation: EvidenceBasedRecommendation | null;
+    decision: DecisionType;
+  }>({
+    isOpen: false,
+    recommendation: null,
+    decision: 'ACCEPTED',
+  });
 
   // Extract unique categories
   const categories = Array.from(
@@ -273,14 +285,13 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
                       size="sm"
                       leftIcon={<Eye className="w-3.5 h-3.5" />}
                       disabled={isUpdatingStatus}
-                      onClick={() => {
-                        if (activeNoteId === rec.id) {
-                          setActiveNoteId(null);
-                        } else {
-                          setActiveNoteId(rec.id);
-                          setNoteText(rec.faculty_notes || '');
-                        }
-                      }}
+                      onClick={() =>
+                        setModalConfig({
+                          isOpen: true,
+                          recommendation: rec,
+                          decision: 'REVIEWED',
+                        })
+                      }
                     >
                       Review
                     </Button>
@@ -291,7 +302,13 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
                       className={currentStatus === 'accepted' ? 'bg-[#16A34A] hover:bg-[#15803D] text-white' : ''}
                       leftIcon={<CheckCircle2 className="w-3.5 h-3.5" />}
                       disabled={isUpdatingStatus}
-                      onClick={() => onStatusUpdate(rec.id, 'accepted')}
+                      onClick={() =>
+                        setModalConfig({
+                          isOpen: true,
+                          recommendation: rec,
+                          decision: 'ACCEPTED',
+                        })
+                      }
                     >
                       Accept
                     </Button>
@@ -301,7 +318,13 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
                       size="sm"
                       leftIcon={<XCircle className="w-3.5 h-3.5" />}
                       disabled={isUpdatingStatus}
-                      onClick={() => onStatusUpdate(rec.id, 'dismissed')}
+                      onClick={() =>
+                        setModalConfig({
+                          isOpen: true,
+                          recommendation: rec,
+                          decision: 'DISMISSED',
+                        })
+                      }
                     >
                       Dismiss
                     </Button>
@@ -312,6 +335,21 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
           })}
         </div>
       )}
+
+      {/* Feedback Modal for Decision & Rating */}
+      <FeedbackModal
+        isOpen={modalConfig.isOpen}
+        recommendation={modalConfig.recommendation}
+        decision={modalConfig.decision}
+        onClose={() => setModalConfig((prev) => ({ ...prev, isOpen: false }))}
+        onSuccess={(updatedRec) => {
+          onStatusUpdate(
+            updatedRec.id,
+            updatedRec.status.toLowerCase() as RecommendationStatus,
+            updatedRec.faculty_notes || undefined
+          );
+        }}
+      />
     </Card>
   );
 };

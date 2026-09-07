@@ -9,9 +9,11 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\CourseMaterialController;
 use App\Http\Controllers\Api\DocumentController;
+use App\Http\Controllers\Api\FeedbackController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\LearningOutcomeController;
 use App\Http\Controllers\Api\PreviousQuestionController;
+use App\Http\Controllers\Api\RecommendationFeedbackController;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -125,6 +127,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/analysis/improvement-summary', [AnalysisHistoryController::class, 'improvementSummary']);
     Route::get('/analysis/{id}', [AnalysisHistoryController::class, 'show']);
     Route::get('/assessments/{assessment}/analysis-history', [AnalysisHistoryController::class, 'assessmentHistory']);
+
+    // STEP 20: Faculty Feedback & Recommendation Decisions
+    Route::post('/recommendations/{recommendation}/feedback', [RecommendationFeedbackController::class, 'submit']);
+    Route::get('/recommendations/{recommendation}/feedback', [RecommendationFeedbackController::class, 'show']);
+    Route::patch('/recommendations/{recommendation}/status', [RecommendationFeedbackController::class, 'updateStatus']);
+    Route::get('/feedback', [FeedbackController::class, 'index']);
+    Route::get('/feedback/summary', [FeedbackController::class, 'summary']);
+    Route::get('/ai/improvement-signals', [FeedbackController::class, 'improvementSignals']);
 });
 
 // Public Shared Report Endpoints (STEP 18)
