@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AiAnalysisController;
 use App\Http\Controllers\Api\AssessmentController;
 use App\Http\Controllers\Api\AssessmentQuestionPaperController;
+use App\Http\Controllers\Api\AssessmentReportController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\CourseMaterialController;
@@ -108,4 +109,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/similarity-analysis', [AiAnalysisController::class, 'similarityAnalysis']);
         Route::post('/alignment-analysis', [AiAnalysisController::class, 'alignmentAnalysis']);
     });
+
+    // STEP 18: Assessment Report Generation & Export
+    Route::get('/assessments/{assessment}/report', [AssessmentReportController::class, 'show']);
+    Route::post('/assessments/{assessment}/report/generate', [AssessmentReportController::class, 'generate']);
+    Route::get('/assessment-reports/{report}/download', [AssessmentReportController::class, 'download']);
+    Route::post('/assessment-reports/{report}/share', [AssessmentReportController::class, 'share']);
+    Route::post('/assessment-reports/{report}/revoke-share', [AssessmentReportController::class, 'revokeShare']);
 });
+
+// Public Shared Report Endpoints (STEP 18)
+Route::get('/shared/reports/{token}', [AssessmentReportController::class, 'viewShared']);
+Route::get('/shared/reports/{token}/download', [AssessmentReportController::class, 'downloadShared']);
+

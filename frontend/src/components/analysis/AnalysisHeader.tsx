@@ -9,6 +9,7 @@ import {
   Layers,
   Award,
   Loader2,
+  FileText,
 } from 'lucide-react';
 
 interface AnalysisHeaderProps {
@@ -117,6 +118,17 @@ export const AnalysisHeader: React.FC<AnalysisHeaderProps> = ({
 
         {/* Header Actions */}
         <div className="flex items-center gap-2.5 shrink-0">
+          {analysisStatus === 'completed' && (
+            <Button
+              variant="outline"
+              size="sm"
+              leftIcon={<FileText className="w-3.5 h-3.5" />}
+              onClick={() => navigate(`/assessments/${assessment.id}/report`)}
+            >
+              Assessment Report
+            </Button>
+          )}
+
           <Button
             variant="outline"
             size="sm"

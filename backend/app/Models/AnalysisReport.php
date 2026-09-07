@@ -74,5 +74,13 @@ class AnalysisReport extends Model
     {
         return $this->hasMany(QuestionLearningOutcomeAlignment::class);
     }
+
+    /**
+     * The generated assessment reports (PDF/exports) for this analysis.
+     */
+    public function assessmentReports(): HasMany
+    {
+        return $this->hasMany(AssessmentReport::class);
+    }
 }
 
