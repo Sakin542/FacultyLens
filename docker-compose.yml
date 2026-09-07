@@ -1,4 +1,4 @@
-﻿services:
+services:
   app:
     build:
       context: ./backend
@@ -19,6 +19,8 @@
       - DB_DATABASE=facultylens
       - DB_USERNAME=root
       - DB_PASSWORD=root123
+      - AI_SERVICE_URL=http://ai-service:8001
+      - AI_SERVICE_API_KEY=
     depends_on:
       mysql:
         condition: service_healthy
@@ -62,8 +64,33 @@
     networks:
       - facultylens-network
 
+  ai-service:
+    build:
+      context: ./ai-service
+      dockerfile: Dockerfile
+    container_name: facultylens-ai-service
+    restart: unless-stopped
+    ports:
+      - 8001:8001
+    environment:
+      - APP_NAME=FacultyLens AI Service
+      - APP_ENV=local
+      - DEBUG=true
+      - AI_SERVICE_HOST=0.0.0.0
+      - AI_SERVICE_PORT=8001
+      - HF_MODEL_NAME=sentence-transformers/all-MiniLM-L6-v2
+      - HF_HOME=/app/cache/huggingface
+      - AI_SERVICE_API_KEY=
+    volumes:
+      - ./ai-service:/app
+      - ai_models_cache:/app/cache/huggingface
+    networks:
+      - facultylens-network
+
 volumes:
   mysql_data:
+    driver: local
+  ai_models_cache:
     driver: local
 
 networks:

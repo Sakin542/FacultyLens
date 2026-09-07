@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AiAnalysisController;
 use App\Http\Controllers\Api\AssessmentController;
 use App\Http\Controllers\Api\AssessmentQuestionPaperController;
 use App\Http\Controllers\Api\AuthController;
@@ -77,4 +78,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/documents/{document}/download', [DocumentController::class, 'download']);
     Route::post('/documents/{document}/reprocess', [DocumentController::class, 'reprocess']);
     Route::delete('/documents/{document}', [DocumentController::class, 'destroy']);
+
+    // Hugging Face AI Service Integration (STEP 09)
+    Route::prefix('ai')->group(function () {
+        Route::get('/health', [AiAnalysisController::class, 'health']);
+        Route::post('/analyze', [AiAnalysisController::class, 'analyze']);
+    });
 });
