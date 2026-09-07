@@ -697,6 +697,8 @@ export interface RecommendationResponseData {
   recommendations: EvidenceBasedRecommendation[];
 }
 
+export * from './analysisHistory';
+
 
 
 
