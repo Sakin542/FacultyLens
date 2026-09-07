@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Assessment } from '@/types';
 import { assessmentService, AssessmentPayload } from '@/services/assessmentService';
 import { questionPaperService } from '@/services/questionPaperService';
+import { aiAnalysisService } from '@/services/aiAnalysisService';
 import { Card } from '@/components/common/Card';
 import { Button } from '@/components/common/Button';
 import { Badge } from '@/components/common/Badge';
@@ -57,10 +58,34 @@ export const AssessmentDetails: React.FC = () => {
   const [isDeletingAssessment, setIsDeletingAssessment] = useState(false);
   const [isDeletingPaper, setIsDeletingPaper] = useState(false);
   const [isDownloadingPaper, setIsDownloadingPaper] = useState(false);
+  const [isRunningFullAnalysis, setIsRunningFullAnalysis] = useState(false);
 
   const showNotification = (msg: string) => {
     setSuccessMessage(msg);
     setTimeout(() => setSuccessMessage(null), 4000);
+  };
+
+  const handleRunFullAiAnalysis = async () => {
+    if (!id) return;
+    try {
+      setIsRunningFullAnalysis(true);
+      setError(null);
+      const res = await aiAnalysisService.analyzeAssessment(id);
+      await loadAssessment();
+      const score = res.data?.summary?.overall_quality_score;
+      const recs = res.data?.summary?.total_recommendations ?? 0;
+      showNotification(
+        `Full AI Analysis completed successfully! Overall Quality: ${score !== undefined && score !== null ? `${score}%` : 'N/A'} • ${recs} recommendations generated.`
+      );
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Failed to run unified AI analysis.');
+      }
+    } finally {
+      setIsRunningFullAnalysis(false);
+    }
   };
 
   const loadAssessment = useCallback(async () => {
@@ -235,7 +260,23 @@ export const AssessmentDetails: React.FC = () => {
           <h1 className="text-2xl font-bold text-[#111111] dark:text-white">{assessment.title}</h1>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            variant="primary"
+            size="sm"
+            className="bg-[#111111] text-white hover:bg-black dark:bg-white dark:text-[#111111] dark:hover:bg-neutral-200 shadow-sm"
+            leftIcon={
+              isRunningFullAnalysis ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              )
+            }
+            onClick={handleRunFullAiAnalysis}
+            disabled={isRunningFullAnalysis || qCount === 0}
+          >
+            {isRunningFullAnalysis ? 'Analyzing Complete Assessment...' : 'Run Full AI Analysis'}
+          </Button>
           <Button
             variant="outline"
             size="sm"
@@ -269,12 +310,12 @@ export const AssessmentDetails: React.FC = () => {
             LO Alignment
           </Button>
           <Button
-            variant="primary"
+            variant="outline"
             size="sm"
             leftIcon={<Sparkles className="w-3.5 h-3.5" />}
             onClick={() => setIsAiAnalysisOpen(true)}
           >
-            AI Question Analysis
+            Question Analysis
           </Button>
           <Button
             variant="outline"

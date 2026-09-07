@@ -642,6 +642,43 @@ class AiService
             throw new Exception('AI Service request timed out or encountered an error.');
         }
     }
+
+    /**
+     * Run unified AI Assessment Analysis across all modules.
+     *
+     * @param array $payload
+     * @return array
+     * @throws Exception
+     */
+    public function analyzeAssessment(array $payload): array
+    {
+        if (empty($payload['questions'])) {
+            throw new Exception('At least one question is required for unified assessment analysis.');
+        }
+
+        try {
+            $response = $this->client()->post("{$this->baseUrl}/api/v1/analyze-assessment", $payload);
+
+            if ($response->successful()) {
+                return $response->json();
+            }
+
+            if ($response->status() === 422) {
+                $errorData = $response->json();
+                $message = $errorData['message'] ?? 'Validation failed in AI service.';
+                throw new Exception($message);
+            }
+
+            Log::error('AI Service analyze-assessment error: ' . $response->status() . ' - ' . $response->body());
+            throw new Exception('AI Service failed to perform unified assessment analysis.');
+        } catch (ConnectionException $e) {
+            Log::error('AI Service connection error: ' . $e->getMessage());
+            throw new Exception('AI Service is currently unavailable.');
+        } catch (RequestException $e) {
+            Log::error('AI Service request exception: ' . $e->getMessage());
+            throw new Exception('AI Service request timed out or encountered an error.');
+        }
+    }
 }
 
 
