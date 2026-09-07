@@ -13,11 +13,24 @@ class Recommendation extends Model
     protected $fillable = [
         'analysis_report_id',
         'category',
+        'problem',
         'title',
         'description',
+        'explanation',
+        'recommendation',
+        'evidence',
+        'source_metric',
         'priority',
         'status',
+        'faculty_notes',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'evidence' => 'array',
+        ];
+    }
 
     /**
      * The analysis report this recommendation belongs to.
@@ -27,4 +40,3 @@ class Recommendation extends Model
         return $this->belongsTo(AnalysisReport::class);
     }
 }
-

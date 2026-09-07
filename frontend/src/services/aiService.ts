@@ -6,6 +6,8 @@ import {
   AssessmentSimilarityResponseData,
   AssessmentQualityResult,
   AssessmentQualityResponseData,
+  EvidenceBasedRecommendation,
+  RecommendationResponseData,
 } from '../types';
 
 export interface SingleQuestionAnalysisPayload {
@@ -256,6 +258,59 @@ export const aiService = {
       }
     );
   },
+
+  /**
+   * Direct stateless recommendation generation
+   */
+  generateRecommendations: async (payload: Record<string, unknown>) => {
+    return apiClient<ApiResponseWrapper<RecommendationResponseData>>('/ai/generate-recommendations', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+
+  /**
+   * Generate and persist prioritized recommendations for an assessment
+   */
+  generateAssessmentRecommendations: async (assessmentId: number | string) => {
+    return apiClient<ApiResponseWrapper<RecommendationResponseData>>(
+      `/ai/assessments/${assessmentId}/generate-recommendations`,
+      {
+        method: 'POST',
+        body: JSON.stringify({}),
+      }
+    );
+  },
+
+  /**
+   * Fetch persisted recommendations for an assessment
+   */
+  getAssessmentRecommendations: async (assessmentId: number | string) => {
+    return apiClient<ApiResponseWrapper<RecommendationResponseData>>(
+      `/ai/assessments/${assessmentId}/recommendations`,
+      {
+        method: 'GET',
+      }
+    );
+  },
+
+  /**
+   * Update recommendation status (accepted, dismissed, reviewed, pending)
+   */
+  updateRecommendationStatus: async (
+    recommendationId: number | string,
+    status: string,
+    facultyNotes?: string
+  ) => {
+    return apiClient<ApiResponseWrapper<EvidenceBasedRecommendation>>(
+      `/ai/recommendations/${recommendationId}/status`,
+      {
+        method: 'PATCH',
+        body: JSON.stringify({ status, faculty_notes: facultyNotes }),
+      }
+    );
+  },
 };
+
 
 

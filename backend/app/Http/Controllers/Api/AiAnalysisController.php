@@ -7,6 +7,7 @@ use App\Models\AnalysisReport;
 use App\Models\Assessment;
 use App\Models\PreviousQuestion;
 use App\Models\QuestionSimilarityMatch;
+use App\Models\Recommendation;
 use App\Services\AiService;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -732,7 +733,349 @@ class AiAnalysisController extends Controller
             ], 502);
         }
     }
+
+    /**
+     * Direct stateless recommendation generation.
+     */
+    public function generateRecommendations(Request $request): JsonResponse
+    {
+        $payload = $request->all();
+
+        try {
+            $result = $this->aiService->generateRecommendations($payload);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Recommendations generated successfully.',
+                'data' => $result,
+            ]);
+        } catch (Exception $e) {
+            Log::error('Direct recommendation generation failed: ' . $e->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 502);
+        }
+    }
+
+    /**
+     * Generate and persist prioritized recommendations for a specific assessment.
+     */
+    public function generateAssessmentRecommendations(Request $request, Assessment $assessment): JsonResponse
+    {
+        // Multi-tenant check
+        if ($assessment->course->user_id !== $request->user()->id) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized access to this assessment.',
+            ], 403);
+        }
+
+        $course = $assessment->course;
+        $questions = $assessment->questions;
+        $report = $assessment->latestAnalysisReport;
+
+        $findings = $report?->findings ?? [];
+        $qualityFindings = $findings['quality_engine'] ?? [];
+
+        // Build Payload from available analyses or calculate on the fly
+        $assessmentData = [
+            'id' => $assessment->id,
+            'title' => $assessment->title,
+            'total_marks' => $assessment->total_marks,
+            'course_code' => $course->course_code,
+            'course_title' => $course->course_name,
+        ];
+
+        // 1. Topic analysis
+        $topicAnalysis = $qualityFindings['topic_analysis'] ?? null;
+        if (!$topicAnalysis) {
+            $topicsSeen = [];
+            $topicItems = [];
+            foreach ($course->materials as $mat) {
+                if (!empty($mat->title) && !isset($topicsSeen[strtolower($mat->title)])) {
+                    $topicsSeen[strtolower($mat->title)] = true;
+                    $topicItems[] = [
+                        'name' => $mat->title,
+                        'status' => 'NOT_COVERED',
+                        'question_count' => 0,
+                        'coverage_percentage' => 0.0,
+                    ];
+                }
+            }
+            if (!empty($topicItems)) {
+                $topicAnalysis = [
+                    'status' => 'EVALUATED',
+                    'total_topics' => count($topicItems),
+                    'covered_topics' => 0,
+                    'uncovered_topics' => count($topicItems),
+                    'coverage_percentage' => 0.0,
+                    'topics' => $topicItems,
+                ];
+            }
+        }
+
+        // 2. LO analysis
+        $loAnalysis = $qualityFindings['learning_outcome_analysis'] ?? null;
+        if (!$loAnalysis && $course->learningOutcomes->isNotEmpty()) {
+            $loItems = $course->learningOutcomes->map(function ($lo) {
+                return [
+                    'code' => $lo->code,
+                    'description' => $lo->description,
+                    'status' => 'NOT_COVERED',
+                    'question_count' => 0,
+                    'strong_matches_count' => 0,
+                    'weak_matches_count' => 0,
+                    'max_similarity' => 0.0,
+                ];
+            })->toArray();
+
+            $loAnalysis = [
+                'status' => 'EVALUATED',
+                'total_los' => count($loItems),
+                'covered_los' => 0,
+                'weakly_covered_los' => 0,
+                'uncovered_los' => count($loItems),
+                'coverage_percentage' => 0.0,
+                'learning_outcomes' => $loItems,
+            ];
+        }
+
+        // 3. Difficulty analysis
+        $difficultyAnalysis = $qualityFindings['difficulty_analysis'] ?? null;
+
+        // 4. Cognitive analysis
+        $cognitiveAnalysis = $qualityFindings['cognitive_analysis'] ?? null;
+
+        // 5. Question diversity analysis
+        $questionDiversityAnalysis = $qualityFindings['question_diversity_analysis'] ?? null;
+
+        // 6. Marks analysis
+        $marksAnalysis = $qualityFindings['marks_analysis'] ?? null;
+        if (!$marksAnalysis && $assessment->total_marks > 0) {
+            $actualSum = (float) $questions->sum('marks');
+            $expectedTotal = (float) $assessment->total_marks;
+            $marksAnalysis = [
+                'status' => abs($expectedTotal - $actualSum) < 0.01 ? 'MATCHED' : 'MISMATCH',
+                'total_marks_expected' => $expectedTotal,
+                'total_marks_actual' => $actualSum,
+                'marks_match' => abs($expectedTotal - $actualSum) < 0.01,
+                'discrepancy' => round($actualSum - $expectedTotal, 2),
+                'max_single_question_percentage' => $expectedTotal > 0 ? round(($questions->max('marks') / $expectedTotal) * 100, 1) : 0,
+                'has_mark_concentration' => $expectedTotal > 0 && ($questions->max('marks') / $expectedTotal) >= 0.40,
+            ];
+        }
+
+        // 7. Similarity analysis
+        $similarityMatches = $report?->similarityMatches ?? collect();
+        $simMatchesData = [];
+        foreach ($similarityMatches as $sm) {
+            $simMatchesData[] = [
+                'current_question_number' => $sm->currentQuestion?->question_number,
+                'current_question_text' => $sm->currentQuestion?->question_text,
+                'max_similarity_score' => (float) $sm->similarity_score,
+                'max_similarity_status' => $sm->similarity_status,
+                'matches' => [
+                    [
+                        'source_assessment' => $sm->previousQuestion?->source_exam_name ?? 'Past Question',
+                        'previous_question_text' => $sm->previousQuestion?->question_text,
+                        'similarity_score' => (float) $sm->similarity_score,
+                        'similarity_status' => $sm->similarity_status,
+                    ]
+                ],
+            ];
+        }
+
+        $similarityAnalysis = [
+            'status' => $similarityMatches->isEmpty() ? 'NO_MATCHES' : 'EVALUATED',
+            'potential_duplicates_count' => $similarityMatches->where('similarity_status', 'POTENTIAL_DUPLICATE')->count(),
+            'highly_similar_count' => $similarityMatches->where('similarity_status', 'HIGHLY_SIMILAR')->count(),
+            'matches' => $simMatchesData,
+        ];
+
+        // 8. Quality analysis
+        $qualityAnalysis = [
+            'overall_quality_score' => $report?->overall_score ? (float) $report->overall_score : null,
+            'rating' => $qualityFindings['rating'] ?? null,
+            'components' => $qualityFindings['components'] ?? null,
+        ];
+
+        $payload = [
+            'assessment' => $assessmentData,
+            'topic_analysis' => $topicAnalysis,
+            'learning_outcome_analysis' => $loAnalysis,
+            'difficulty_analysis' => $difficultyAnalysis,
+            'cognitive_analysis' => $cognitiveAnalysis,
+            'question_diversity_analysis' => $questionDiversityAnalysis,
+            'marks_analysis' => $marksAnalysis,
+            'similarity_analysis' => $similarityAnalysis,
+            'quality_analysis' => $qualityAnalysis,
+        ];
+
+        try {
+            $aiResponse = $this->aiService->generateRecommendations($payload);
+
+            // Ensure AnalysisReport exists
+            if (!$report) {
+                $report = AnalysisReport::create([
+                    'assessment_id' => $assessment->id,
+                    'overall_score' => 0.0,
+                    'total_questions' => count($questions),
+                    'analysis_status' => 'completed',
+                    'analyzed_at' => now(),
+                ]);
+            }
+
+            // Persist recommendations
+            // We preserve existing accepted/dismissed statuses if the same problem/title exists
+            $existingRecs = Recommendation::where('analysis_report_id', $report->id)->get()->keyBy('title');
+
+            $newRecList = $aiResponse['recommendations'] ?? [];
+            $persistedIds = [];
+
+            foreach ($newRecList as $rec) {
+                $title = $rec['problem'] ?? 'Assessment Recommendation';
+                $existing = $existingRecs->get($title);
+
+                $status = $existing ? $existing->status : 'pending';
+                $facultyNotes = $existing ? $existing->faculty_notes : null;
+
+                $saved = Recommendation::updateOrCreate(
+                    [
+                        'analysis_report_id' => $report->id,
+                        'title' => $title,
+                    ],
+                    [
+                        'category' => $rec['category'] ?? 'general',
+                        'problem' => $rec['problem'] ?? $title,
+                        'description' => $rec['recommendation'] ?? '',
+                        'explanation' => $rec['explanation'] ?? '',
+                        'recommendation' => $rec['recommendation'] ?? '',
+                        'evidence' => $rec['evidence'] ?? null,
+                        'source_metric' => $rec['source_metric'] ?? '',
+                        'priority' => strtolower($rec['priority'] ?? 'medium'),
+                        'status' => $status,
+                        'faculty_notes' => $facultyNotes,
+                    ]
+                );
+
+                $persistedIds[] = $saved->id;
+            }
+
+            // Clean up stale pending recommendations that no longer apply
+            Recommendation::where('analysis_report_id', $report->id)
+                ->where('status', 'pending')
+                ->whereNotIn('id', $persistedIds)
+                ->delete();
+
+            $allRecommendations = Recommendation::where('analysis_report_id', $report->id)
+                ->orderByRaw("FIELD(priority, 'high', 'medium', 'low')")
+                ->get();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Recommendations generated and updated successfully.',
+                'data' => [
+                    'summary' => [
+                        'total_recommendations' => $allRecommendations->count(),
+                        'high_priority_count' => $allRecommendations->where('priority', 'high')->count(),
+                        'medium_priority_count' => $allRecommendations->where('priority', 'medium')->count(),
+                        'low_priority_count' => $allRecommendations->where('priority', 'low')->count(),
+                        'accepted_count' => $allRecommendations->where('status', 'accepted')->count(),
+                        'dismissed_count' => $allRecommendations->where('status', 'dismissed')->count(),
+                        'pending_count' => $allRecommendations->where('status', 'pending')->count(),
+                    ],
+                    'recommendations' => $allRecommendations,
+                ],
+            ]);
+        } catch (Exception $e) {
+            Log::error('Assessment recommendation generation failed: ' . $e->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 502);
+        }
+    }
+
+    /**
+     * Retrieve persisted recommendations for an assessment.
+     */
+    public function getAssessmentRecommendations(Assessment $assessment): JsonResponse
+    {
+        $report = $assessment->latestAnalysisReport;
+        if (!$report) {
+            return response()->json([
+                'status' => 'success',
+                'data' => [
+                    'summary' => [
+                        'total_recommendations' => 0,
+                        'high_priority_count' => 0,
+                        'medium_priority_count' => 0,
+                        'low_priority_count' => 0,
+                        'accepted_count' => 0,
+                        'dismissed_count' => 0,
+                        'pending_count' => 0,
+                    ],
+                    'recommendations' => [],
+                ],
+            ]);
+        }
+
+        $recommendations = Recommendation::where('analysis_report_id', $report->id)
+            ->orderByRaw("FIELD(priority, 'high', 'medium', 'low')")
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'summary' => [
+                    'total_recommendations' => $recommendations->count(),
+                    'high_priority_count' => $recommendations->where('priority', 'high')->count(),
+                    'medium_priority_count' => $recommendations->where('priority', 'medium')->count(),
+                    'low_priority_count' => $recommendations->where('priority', 'low')->count(),
+                    'accepted_count' => $recommendations->where('status', 'accepted')->count(),
+                    'dismissed_count' => $recommendations->where('status', 'dismissed')->count(),
+                    'pending_count' => $recommendations->where('status', 'pending')->count(),
+                ],
+                'recommendations' => $recommendations,
+            ],
+        ]);
+    }
+
+    /**
+     * Update status of a recommendation (accept, dismiss, review, pending).
+     */
+    public function updateRecommendationStatus(Request $request, Recommendation $recommendation): JsonResponse
+    {
+        // Multi-tenant check
+        $assessment = $recommendation->analysisReport?->assessment;
+        if (!$assessment || $assessment->course->user_id !== $request->user()->id) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized access to this recommendation.',
+            ], 403);
+        }
+
+        $validated = $request->validate([
+            'status' => ['required', 'string', 'in:pending,reviewed,accepted,dismissed,PENDING,REVIEWED,ACCEPTED,DISMISSED'],
+            'faculty_notes' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $status = strtolower($validated['status']);
+        $recommendation->status = $status;
+        if (array_key_exists('faculty_notes', $validated)) {
+            $recommendation->faculty_notes = $validated['faculty_notes'];
+        }
+        $recommendation->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => "Recommendation status updated to {$status}.",
+            'data' => $recommendation,
+        ]);
+    }
 }
+
 
 
 

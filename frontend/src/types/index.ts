@@ -241,8 +241,22 @@ export interface AnalysisFinding {
   relatedOutcome?: string;
 }
 
-export type RecommendationPriority = 'High' | 'Medium' | 'Low';
-export type RecommendationCategory = 'Learning Outcome' | 'Question Design' | 'Topic Balance' | 'Difficulty' | 'Integrity';
+export type RecommendationPriority = 'High' | 'Medium' | 'Low' | 'HIGH' | 'MEDIUM' | 'LOW' | 'high' | 'medium' | 'low';
+export type RecommendationCategory =
+  | 'Learning Outcome'
+  | 'Question Design'
+  | 'Topic Balance'
+  | 'Difficulty'
+  | 'Integrity'
+  | 'topic_coverage'
+  | 'learning_outcome'
+  | 'difficulty'
+  | 'cognitive_level'
+  | 'question_diversity'
+  | 'marks_distribution'
+  | 'semantic_similarity'
+  | 'assessment_quality'
+  | 'general';
 
 export interface Recommendation {
   id: string;
@@ -646,6 +660,43 @@ export interface AssessmentQualityResponseData {
     analysis_status?: string;
   };
 }
+
+// AI Recommendation Engine Types (Step 14)
+export type RecommendationStatus = 'pending' | 'reviewed' | 'accepted' | 'dismissed' | 'PENDING' | 'REVIEWED' | 'ACCEPTED' | 'DISMISSED';
+
+export interface EvidenceBasedRecommendation {
+  id: number | string;
+  analysis_report_id?: number | string;
+  category: RecommendationCategory | string;
+  problem: string;
+  title?: string;
+  description?: string;
+  explanation: string;
+  recommendation: string;
+  evidence?: Record<string, any>;
+  source_metric: string;
+  priority: RecommendationPriority;
+  status: RecommendationStatus;
+  faculty_notes?: string | null;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface RecommendationSummary {
+  total_recommendations: number;
+  high_priority_count: number;
+  medium_priority_count: number;
+  low_priority_count: number;
+  accepted_count?: number;
+  dismissed_count?: number;
+  pending_count?: number;
+}
+
+export interface RecommendationResponseData {
+  summary: RecommendationSummary;
+  recommendations: EvidenceBasedRecommendation[];
+}
+
 
 
 

@@ -12,6 +12,7 @@ import { QuestionAnalysisModal } from '@/components/assessments/QuestionAnalysis
 import { LearningOutcomeAlignmentModal } from '@/components/assessments/LearningOutcomeAlignmentModal';
 import { SemanticSimilarityModal } from '@/components/assessments/SemanticSimilarityModal';
 import { AssessmentQualityModal } from '@/components/assessments/AssessmentQualityModal';
+import { AssessmentRecommendationModal } from '@/components/assessments/AssessmentRecommendationModal';
 import {
   ArrowLeft,
   Edit,
@@ -50,6 +51,7 @@ export const AssessmentDetails: React.FC = () => {
   const [isAlignmentModalOpen, setIsAlignmentModalOpen] = useState(false);
   const [isSimilarityModalOpen, setIsSimilarityModalOpen] = useState(false);
   const [isQualityModalOpen, setIsQualityModalOpen] = useState(false);
+  const [isRecommendationModalOpen, setIsRecommendationModalOpen] = useState(false);
 
   // Action states
   const [isDeletingAssessment, setIsDeletingAssessment] = useState(false);
@@ -241,6 +243,14 @@ export const AssessmentDetails: React.FC = () => {
             onClick={() => setIsQualityModalOpen(true)}
           >
             Quality Audit
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            leftIcon={<Sparkles className="w-3.5 h-3.5 text-amber-500" />}
+            onClick={() => setIsRecommendationModalOpen(true)}
+          >
+            Recommendations
           </Button>
           <Button
             variant="outline"
@@ -597,6 +607,17 @@ export const AssessmentDetails: React.FC = () => {
         assessment={assessment}
         onQualityCompleted={() => {
           showNotification('Assessment Quality evaluation completed successfully!');
+          loadAssessment();
+        }}
+      />
+
+      {/* AI Recommendation Engine Modal (Step 14) */}
+      <AssessmentRecommendationModal
+        isOpen={isRecommendationModalOpen}
+        onClose={() => setIsRecommendationModalOpen(false)}
+        assessment={assessment}
+        onRecommendationsUpdated={() => {
+          showNotification('AI Recommendations refreshed!');
           loadAssessment();
         }}
       />
