@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\AssessmentController;
+use App\Http\Controllers\Api\AssessmentQuestionPaperController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\CourseMaterialController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\LearningOutcomeController;
+use App\Http\Controllers\Api\PreviousQuestionController;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -27,7 +30,7 @@ Route::prefix('auth')->group(function () {
 });
 
 /**
- * Protected Faculty & Course Management Endpoints
+ * Protected Faculty, Course & Assessment Management Endpoints
  */
 Route::middleware('auth:sanctum')->group(function () {
     // Course CRUD
@@ -44,4 +47,25 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/courses/{course}/materials', [CourseMaterialController::class, 'store']);
     Route::get('/materials/{material}', [CourseMaterialController::class, 'show']);
     Route::delete('/materials/{material}', [CourseMaterialController::class, 'destroy']);
+
+    // Assessment Management
+    Route::get('/assessments/history', [AssessmentController::class, 'history']);
+    Route::get('/assessments', [AssessmentController::class, 'index']);
+    Route::get('/courses/{course}/assessments', [AssessmentController::class, 'index']);
+    Route::post('/courses/{course}/assessments', [AssessmentController::class, 'store']);
+    Route::get('/assessments/{assessment}', [AssessmentController::class, 'show']);
+    Route::put('/assessments/{assessment}', [AssessmentController::class, 'update']);
+    Route::delete('/assessments/{assessment}', [AssessmentController::class, 'destroy']);
+
+    // Assessment Question Paper File Management
+    Route::get('/assessments/{assessment}/question-paper', [AssessmentQuestionPaperController::class, 'show']);
+    Route::post('/assessments/{assessment}/question-paper', [AssessmentQuestionPaperController::class, 'store']);
+    Route::delete('/assessments/{assessment}/question-paper', [AssessmentQuestionPaperController::class, 'destroy']);
+
+    // Previous Questions / Question Bank
+    Route::get('/courses/{course}/previous-questions', [PreviousQuestionController::class, 'index']);
+    Route::post('/courses/{course}/previous-questions', [PreviousQuestionController::class, 'store']);
+    Route::get('/previous-questions/{previousQuestion}', [PreviousQuestionController::class, 'show']);
+    Route::put('/previous-questions/{previousQuestion}', [PreviousQuestionController::class, 'update']);
+    Route::delete('/previous-questions/{previousQuestion}', [PreviousQuestionController::class, 'destroy']);
 });

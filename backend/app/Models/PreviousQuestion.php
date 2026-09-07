@@ -21,12 +21,17 @@ class PreviousQuestion extends Model
         'source',
         'source_year',
         'source_assessment',
+        'file_name',
+        'file_path',
+        'file_type',
+        'file_size',
     ];
 
     protected function casts(): array
     {
         return [
             'marks' => 'decimal:2',
+            'file_size' => 'integer',
         ];
     }
 
