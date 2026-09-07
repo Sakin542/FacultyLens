@@ -279,3 +279,46 @@ export interface DashboardStats {
   activeSemester: string;
 }
 
+export type DocumentProcessingType = 'syllabus' | 'question_paper' | 'assignment' | 'previous_exam' | 'other';
+export type DocumentProcessingStatus = 'uploaded' | 'processing' | 'completed' | 'failed';
+
+export interface DocumentProcessing {
+  id: number | string;
+  user_id?: number | string;
+  course_id: number | string;
+  assessment_id?: number | string | null;
+  document_type: DocumentProcessingType;
+  original_file_name: string;
+  stored_file_name?: string;
+  file_path?: string;
+  mime_type?: string;
+  file_size: number;
+  extracted_text?: string | null;
+  cleaned_text?: string | null;
+  processing_status: DocumentProcessingStatus;
+  processing_error?: string | null;
+  processed_at?: string | null;
+  course?: {
+    id: number | string;
+    title?: string;
+    course_name?: string;
+    code?: string;
+    course_code?: string;
+  };
+  assessment?: {
+    id: number | string;
+    title: string;
+    type?: string;
+  };
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface UploadDocumentPayload {
+  course_id: number | string;
+  assessment_id?: number | string | null;
+  document_type: DocumentProcessingType;
+  file: File;
+}
+
+

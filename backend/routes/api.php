@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AssessmentQuestionPaperController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\CourseMaterialController;
+use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\LearningOutcomeController;
 use App\Http\Controllers\Api\PreviousQuestionController;
@@ -68,4 +69,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/previous-questions/{previousQuestion}', [PreviousQuestionController::class, 'show']);
     Route::put('/previous-questions/{previousQuestion}', [PreviousQuestionController::class, 'update']);
     Route::delete('/previous-questions/{previousQuestion}', [PreviousQuestionController::class, 'destroy']);
+
+    // Document Processing & Extraction (STEP 08)
+    Route::get('/documents', [DocumentController::class, 'index']);
+    Route::post('/documents', [DocumentController::class, 'store']);
+    Route::get('/documents/{document}', [DocumentController::class, 'show']);
+    Route::get('/documents/{document}/download', [DocumentController::class, 'download']);
+    Route::post('/documents/{document}/reprocess', [DocumentController::class, 'reprocess']);
+    Route::delete('/documents/{document}', [DocumentController::class, 'destroy']);
 });
