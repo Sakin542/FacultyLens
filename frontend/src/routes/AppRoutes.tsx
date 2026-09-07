@@ -15,6 +15,7 @@ import { Assessments } from '@/pages/Assessments';
 import { AssessmentDetails } from '@/pages/AssessmentDetails';
 import { QuestionBank } from '@/pages/QuestionBank';
 import { Analysis } from '@/pages/Analysis';
+import { DocumentDetails } from '@/pages/DocumentDetails';
 import { History, AssessmentHistory } from '@/pages/AssessmentHistory';
 import { Settings } from '@/pages/Settings';
 import { NotFound } from '@/pages/NotFound';
@@ -40,6 +41,7 @@ export const AppRoutes: React.FC = () => {
           <Route path="/question-bank" element={<QuestionBank />} />
           <Route path="/assessments" element={<Assessments />} />
           <Route path="/assessments/:id" element={<AssessmentDetails />} />
+          <Route path="/documents/:id" element={<DocumentDetails />} />
           <Route path="/assessment-history" element={<AssessmentHistory />} />
           <Route path="/history" element={<History />} />
           <Route path="/analysis" element={<Analysis />} />

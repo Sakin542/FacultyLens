@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Course, LearningOutcome, CourseMaterial } from '@/types';
+import { Course, LearningOutcome, CourseMaterial, DocumentProcessing } from '@/types';
 import { courseService, CoursePayload } from '@/services/courseService';
 import { learningOutcomeService, LearningOutcomePayload } from '@/services/learningOutcomeService';
 import { courseMaterialService } from '@/services/courseMaterialService';
+import { documentService } from '@/services/documentService';
 import { Card } from '@/components/common/Card';
 import { Button } from '@/components/common/Button';
 import { Badge } from '@/components/common/Badge';
 import { CourseModal } from '@/components/courses/CourseModal';
 import { LearningOutcomeModal } from '@/components/courses/LearningOutcomeModal';
 import { MaterialUploadModal } from '@/components/courses/MaterialUploadModal';
+import { DocumentUploadModal } from '@/components/documents/DocumentUploadModal';
+import { DocumentList } from '@/components/documents/DocumentList';
 import {
   ArrowLeft,
   Edit,
@@ -34,7 +37,9 @@ export const CourseDetails: React.FC = () => {
   const [course, setCourse] = useState<Course | null>(null);
   const [learningOutcomes, setLearningOutcomes] = useState<LearningOutcome[]>([]);
   const [materials, setMaterials] = useState<CourseMaterial[]>([]);
+  const [documents, setDocuments] = useState<DocumentProcessing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingDocs, setIsLoadingDocs] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -43,6 +48,7 @@ export const CourseDetails: React.FC = () => {
   const [isAddCloOpen, setIsAddCloOpen] = useState(false);
   const [editingClo, setEditingClo] = useState<LearningOutcome | null>(null);
   const [isUploadMaterialOpen, setIsUploadMaterialOpen] = useState(false);
+  const [isUploadDocOpen, setIsUploadDocOpen] = useState(false);
 
   // Deletion confirm states
   const [deletingCourse, setDeletingCourse] = useState(false);
@@ -63,6 +69,17 @@ export const CourseDetails: React.FC = () => {
       setCourse(res.data);
       setLearningOutcomes(res.data.learning_outcomes || res.data.learningOutcomes || []);
       setMaterials(res.data.materials || []);
+
+      // Fetch documents for this course
+      try {
+        setIsLoadingDocs(true);
+        const docsRes = await documentService.getAll({ course_id: id });
+        setDocuments(docsRes.data || []);
+      } catch (docErr) {
+        console.warn('Could not load documents:', docErr);
+      } finally {
+        setIsLoadingDocs(false);
+      }
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -77,6 +94,51 @@ export const CourseDetails: React.FC = () => {
   useEffect(() => {
     fetchCourseDetails();
   }, [fetchCourseDetails]);
+
+  // Handle Document Upload
+  const handleUploadDocument = async (formData: FormData) => {
+    await documentService.upload(formData);
+    // Reload docs
+    if (id) {
+      const docsRes = await documentService.getAll({ course_id: id });
+      setDocuments(docsRes.data || []);
+    }
+    showNotification('Document uploaded and parsed successfully!');
+  };
+
+  // Handle Document Download
+  const handleDownloadDocument = async (doc: DocumentProcessing) => {
+    try {
+      await documentService.download(doc.id, doc.original_file_name);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      }
+    }
+  };
+
+  // Handle Document Delete
+  const handleDeleteDocument = async (docId: number | string) => {
+    if (!window.confirm('Are you sure you want to delete this document?')) return;
+    try {
+      await documentService.delete(docId);
+      setDocuments(documents.filter((d) => d.id !== docId));
+      showNotification('Document removed successfully!');
+    } catch (err: unknown) {
+      if (err instanceof Error) setError(err.message);
+    }
+  };
+
+  // Handle Document Reprocess
+  const handleReprocessDocument = async (docId: number | string) => {
+    try {
+      const res = await documentService.reprocess(docId);
+      setDocuments(documents.map((d) => (d.id === docId ? res.data : d)));
+      showNotification('Document reprocessed successfully!');
+    } catch (err: unknown) {
+      if (err instanceof Error) setError(err.message);
+    }
+  };
 
   // Handle Course Update
   const handleUpdateCourse = async (data: CoursePayload) => {
@@ -504,6 +566,36 @@ export const CourseDetails: React.FC = () => {
         </div>
       </div>
 
+      {/* Section 3: Processed Academic Documents (STEP 08) */}
+      <div className="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-700/80">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-[#F7F7F5] dark:bg-[#2C2C2E] flex items-center justify-center text-[#111111] dark:text-white">
+              <FileText className="w-4 h-4" />
+            </div>
+            <h2 className="text-base font-bold text-[#111111] dark:text-white">Extracted Academic Documents</h2>
+            <Badge variant="outline" className="text-[10px] font-mono">{documents.length}</Badge>
+          </div>
+          <Button
+            variant="primary"
+            size="sm"
+            leftIcon={<UploadCloud className="w-3.5 h-3.5" />}
+            onClick={() => setIsUploadDocOpen(true)}
+          >
+            Upload Document
+          </Button>
+        </div>
+
+        <DocumentList
+          documents={documents}
+          isLoading={isLoadingDocs}
+          onOpenUpload={() => setIsUploadDocOpen(true)}
+          onDownload={handleDownloadDocument}
+          onDelete={handleDeleteDocument}
+          onReprocess={handleReprocessDocument}
+        />
+      </div>
+
       {/* Edit Course Modal */}
       <CourseModal
         isOpen={isEditCourseOpen}
@@ -535,6 +627,17 @@ export const CourseDetails: React.FC = () => {
         onClose={() => setIsUploadMaterialOpen(false)}
         onSubmit={handleUploadMaterial}
       />
+
+      {/* Upload Academic Document Modal (STEP 08) */}
+      {id && (
+        <DocumentUploadModal
+          isOpen={isUploadDocOpen}
+          onClose={() => setIsUploadDocOpen(false)}
+          courseId={id}
+          onUploadSuccess={() => {}}
+          onSubmitUpload={handleUploadDocument}
+        />
+      )}
     </div>
   );
 };
