@@ -1422,11 +1422,22 @@ class AiAnalysisController extends Controller
                     $similarityAnalysis,
                     $components
                 ) {
-                    // 1. Update/create AnalysisReport
+                    // 1. Update/create AnalysisReport with versioning
                     $similarCount = ($similarityAnalysis['potential_duplicates_count'] ?? 0) + ($similarityAnalysis['highly_similar_count'] ?? 0);
-                    $report = AnalysisReport::updateOrCreate(
-                        ['assessment_id' => $assessment->id],
-                        [
+
+                    $existingCompleted = AnalysisReport::where('assessment_id', $assessment->id)
+                        ->where('analysis_status', 'completed')
+                        ->orderByDesc('analysis_version')
+                        ->first();
+
+                    if ($existingCompleted) {
+                        $nextVersion = $existingCompleted->analysis_version + 1;
+                        AnalysisReport::where('assessment_id', $assessment->id)->update(['is_current' => false]);
+
+                        $report = AnalysisReport::create([
+                            'assessment_id' => $assessment->id,
+                            'analysis_version' => $nextVersion,
+                            'is_current' => true,
                             'overall_score' => (float) ($qualityAnalysis['overall_quality_score'] ?? 0.0),
                             'topic_coverage_score' => (float) ($components['topic_coverage'] ?? 0.0),
                             'learning_outcome_alignment_score' => (float) ($components['learning_outcome_coverage'] ?? ($alignmentAnalysis['overall_alignment_score'] ?? 0.0)),
@@ -1445,8 +1456,34 @@ class AiAnalysisController extends Controller
                                 'similarity' => $similarityAnalysis,
                             ],
                             'analyzed_at' => now(),
-                        ]
-                    );
+                        ]);
+                    } else {
+                        $report = AnalysisReport::updateOrCreate(
+                            ['assessment_id' => $assessment->id, 'analysis_version' => 1],
+                            [
+                                'analysis_version' => 1,
+                                'is_current' => true,
+                                'overall_score' => (float) ($qualityAnalysis['overall_quality_score'] ?? 0.0),
+                                'topic_coverage_score' => (float) ($components['topic_coverage'] ?? 0.0),
+                                'learning_outcome_alignment_score' => (float) ($components['learning_outcome_coverage'] ?? ($alignmentAnalysis['overall_alignment_score'] ?? 0.0)),
+                                'difficulty_balance_score' => (float) ($components['difficulty_balance'] ?? 0.0),
+                                'cognitive_level_balance_score' => (float) ($components['cognitive_diversity'] ?? 0.0),
+                                'similarity_score' => (float) ($similarityAnalysis['average_similarity_score'] ?? 0.0),
+                                'similar_questions_count' => $similarCount,
+                                'total_questions' => count($questions),
+                                'analysis_status' => 'completed',
+                                'processing_error' => null,
+                                'findings' => [
+                                    'summary' => $aiResult['summary'] ?? [],
+                                    'quality' => $qualityAnalysis,
+                                    'quality_engine' => $qualityAnalysis,
+                                    'alignment' => $alignmentAnalysis,
+                                    'similarity' => $similarityAnalysis,
+                                ],
+                                'analyzed_at' => now(),
+                            ]
+                        );
+                    }
 
                     // 2. Update question AI fields (preserving faculty manual fields)
                     $qAnalysisList = $aiResult['questions_analysis']['questions'] ?? [];
@@ -1526,10 +1563,12 @@ class AiAnalysisController extends Controller
                         }
                     }
 
-                    // 5. Persist recommendations (preserving faculty manual decision status)
+                    // 5. Persist recommendations (preserving faculty manual decision status across versions)
                     $newRecList = $recommendationsData['recommendations'] ?? [];
                     if (!empty($newRecList)) {
-                        $existingRecs = Recommendation::where('analysis_report_id', $report->id)->get()->keyBy('title');
+                        $existingRecs = Recommendation::whereHas('analysisReport', function ($q) use ($assessment) {
+                            $q->where('assessment_id', $assessment->id);
+                        })->get()->keyBy('title');
                         $persistedIds = [];
 
                         foreach ($newRecList as $rec) {

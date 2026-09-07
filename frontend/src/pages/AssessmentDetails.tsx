@@ -35,6 +35,7 @@ import {
   CopyCheck,
   BarChart3,
   BrainCircuit,
+  History,
 } from 'lucide-react';
 
 export const AssessmentDetails: React.FC = () => {
@@ -270,6 +271,15 @@ export const AssessmentDetails: React.FC = () => {
             onClick={() => navigate(`/assessments/${id}/analysis`)}
           >
             AI Dashboard
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="border-[#E5E5E5] text-[#111111] dark:text-white"
+            leftIcon={<History className="w-3.5 h-3.5 text-blue-500" />}
+            onClick={() => navigate(`/history?search=${encodeURIComponent(assessment.title)}`)}
+          >
+            History
           </Button>
           <Button
             variant="outline"

@@ -61,7 +61,7 @@ class Assessment extends Model
      */
     public function analysisReports(): HasMany
     {
-        return $this->hasMany(AnalysisReport::class);
+        return $this->hasMany(AnalysisReport::class)->orderByDesc('analysis_version');
     }
 
     /**

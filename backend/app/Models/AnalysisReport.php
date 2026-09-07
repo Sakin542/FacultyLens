@@ -13,6 +13,7 @@ class AnalysisReport extends Model
 
     protected $fillable = [
         'assessment_id',
+        'analysis_version',
         'overall_score',
         'topic_coverage_score',
         'learning_outcome_alignment_score',
@@ -23,6 +24,7 @@ class AnalysisReport extends Model
         'similar_questions_count',
         'findings',
         'analysis_status',
+        'is_current',
         'processing_error',
         'analyzed_at',
     ];
@@ -30,6 +32,8 @@ class AnalysisReport extends Model
     protected function casts(): array
     {
         return [
+            'analysis_version' => 'integer',
+            'is_current' => 'boolean',
             'overall_score' => 'decimal:2',
             'topic_coverage_score' => 'decimal:2',
             'learning_outcome_alignment_score' => 'decimal:2',
@@ -41,6 +45,22 @@ class AnalysisReport extends Model
             'findings' => 'array',
             'analyzed_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Scope query to only include completed analyses.
+     */
+    public function scopeCompleted($query)
+    {
+        return $query->where('analysis_status', 'completed');
+    }
+
+    /**
+     * Scope query to only include current active version for each assessment.
+     */
+    public function scopeCurrent($query)
+    {
+        return $query->where('is_current', true);
     }
 
     /**

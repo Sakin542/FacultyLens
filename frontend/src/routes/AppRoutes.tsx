@@ -16,7 +16,10 @@ import { AssessmentDetails } from '@/pages/AssessmentDetails';
 import { QuestionBank } from '@/pages/QuestionBank';
 import { Analysis } from '@/pages/Analysis';
 import { DocumentDetails } from '@/pages/DocumentDetails';
-import { History, AssessmentHistory } from '@/pages/AssessmentHistory';
+import { AssessmentHistory } from '@/pages/AssessmentHistory';
+import { AnalysisHistory } from '@/pages/AnalysisHistory';
+import { AnalysisComparison } from '@/pages/AnalysisComparison';
+import { AnalysisDetails } from '@/pages/AnalysisDetails';
 import { Settings } from '@/pages/Settings';
 import { AssessmentReport } from '@/pages/AssessmentReport';
 import { SharedReport } from '@/pages/SharedReport';
@@ -51,7 +54,10 @@ export const AppRoutes: React.FC = () => {
           <Route path="/assessments/:id/report" element={<AssessmentReport />} />
           <Route path="/documents/:id" element={<DocumentDetails />} />
           <Route path="/assessment-history" element={<AssessmentHistory />} />
-          <Route path="/history" element={<History />} />
+          <Route path="/history" element={<AnalysisHistory />} />
+          <Route path="/analysis/history" element={<AnalysisHistory />} />
+          <Route path="/analysis/compare" element={<AnalysisComparison />} />
+          <Route path="/analysis/:analysisId" element={<AnalysisDetails />} />
           <Route path="/analysis" element={<Analysis />} />
           <Route path="/settings" element={<Settings />} />
         </Route>

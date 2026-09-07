@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AiAnalysisController;
+use App\Http\Controllers\Api\AnalysisHistoryController;
 use App\Http\Controllers\Api\AssessmentController;
 use App\Http\Controllers\Api\AssessmentQuestionPaperController;
 use App\Http\Controllers\Api\AssessmentReportController;
@@ -116,6 +117,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/assessment-reports/{report}/download', [AssessmentReportController::class, 'download']);
     Route::post('/assessment-reports/{report}/share', [AssessmentReportController::class, 'share']);
     Route::post('/assessment-reports/{report}/revoke-share', [AssessmentReportController::class, 'revokeShare']);
+
+    // STEP 19: Analysis History, Comparison & Trends
+    Route::get('/analysis/history', [AnalysisHistoryController::class, 'index']);
+    Route::get('/analysis/compare', [AnalysisHistoryController::class, 'compare']);
+    Route::get('/analysis/trends', [AnalysisHistoryController::class, 'trend']);
+    Route::get('/analysis/improvement-summary', [AnalysisHistoryController::class, 'improvementSummary']);
+    Route::get('/analysis/{id}', [AnalysisHistoryController::class, 'show']);
+    Route::get('/assessments/{assessment}/analysis-history', [AnalysisHistoryController::class, 'assessmentHistory']);
 });
 
 // Public Shared Report Endpoints (STEP 18)
