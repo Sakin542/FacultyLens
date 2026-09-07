@@ -10,6 +10,7 @@ import { Register } from '@/pages/Register';
 import { ForgotPassword } from '@/pages/ForgotPassword';
 import { Dashboard } from '@/pages/Dashboard';
 import { Courses } from '@/pages/Courses';
+import { CourseDetails } from '@/pages/CourseDetails';
 import { Assessments } from '@/pages/Assessments';
 import { Analysis } from '@/pages/Analysis';
 import { History } from '@/pages/History';
@@ -32,6 +33,7 @@ export const AppRoutes: React.FC = () => {
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/courses" element={<Courses />} />
+          <Route path="/courses/:id" element={<CourseDetails />} />
           <Route path="/assessments" element={<Assessments />} />
           <Route path="/analysis" element={<Analysis />} />
           <Route path="/history" element={<History />} />
