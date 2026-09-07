@@ -4,6 +4,8 @@ import { Button } from '@/components/common/Button';
 import { Badge } from '@/components/common/Badge';
 import { ProgressBar } from '@/components/dashboard/ProgressBar';
 import { mockDetailedAnalysis } from '@/utils/mockData';
+import { LearningOutcomeAlignmentSection } from '@/components/analysis/LearningOutcomeAlignmentSection';
+import { AlignmentAnalysisResult } from '@/types';
 import {
   Sparkles,
   AlertTriangle,
@@ -11,9 +13,160 @@ import {
   CopyCheck,
 } from 'lucide-react';
 
+const mockAlignmentData: AlignmentAnalysisResult = {
+  status: 'success',
+  method: 'sentence-transformers/all-MiniLM-L6-v2 + cosine_similarity',
+  overall_alignment_score: 82.5,
+  aligned_questions_count: 5,
+  total_questions: 6,
+  total_learning_outcomes: 5,
+  covered_learning_outcomes_count: 4,
+  thresholds: { strong: 0.70, weak: 0.50 },
+  findings: [
+    'Marginal Coverage: CLO-4 (Concurrency control) is only weakly assessed across questions.',
+    'Imbalanced Assessment: 50% of questions map to CLO-2 (SQL and Querying), indicating heavy focus on querying over transaction design.',
+    'Question Q5 has no strong semantic match to defined learning outcomes (similarity < 0.50).',
+  ],
+  learning_outcome_coverage: [
+    {
+      code: 'CLO-1',
+      description: 'Design conceptual and logical relational data models using ER diagrams.',
+      coverage_status: 'COVERED',
+      matching_questions_count: 1,
+      matching_question_numbers: [1],
+      max_similarity: 0.88,
+    },
+    {
+      code: 'CLO-2',
+      description: 'Formulate complex queries using Relational Algebra and structured SQL.',
+      coverage_status: 'COVERED',
+      matching_questions_count: 3,
+      matching_question_numbers: [2, 3, 6],
+      max_similarity: 0.91,
+    },
+    {
+      code: 'CLO-3',
+      description: 'Evaluate schema designs and apply normalization rules (1NF to BCNF).',
+      coverage_status: 'COVERED',
+      matching_questions_count: 1,
+      matching_question_numbers: [4],
+      max_similarity: 0.84,
+    },
+    {
+      code: 'CLO-4',
+      description: 'Analyze concurrency control protocols and crash recovery algorithms.',
+      coverage_status: 'WEAKLY_COVERED',
+      matching_questions_count: 0,
+      matching_question_numbers: [],
+      max_similarity: 0.46,
+    },
+    {
+      code: 'CLO-5',
+      description: 'Implement indexing and query optimization strategies for performance tuning.',
+      coverage_status: 'COVERED',
+      matching_questions_count: 1,
+      matching_question_numbers: [6],
+      max_similarity: 0.76,
+    },
+  ],
+  question_alignment: [
+    {
+      question_number: 1,
+      question_text: 'Draw an Entity-Relationship (ER) diagram for a hospital management database system.',
+      matched_learning_outcome: {
+        code: 'CLO-1',
+        description: 'Design conceptual and logical relational data models using ER diagrams.',
+        similarity: 0.88,
+        alignment_level: 'STRONG',
+      },
+      alternative_matches: [],
+      alignment_status: 'STRONG',
+      similarity_score: 0.88,
+      reasoning: 'Strong semantic match to CLO-1 (ER diagrams and conceptual modeling).',
+    },
+    {
+      question_number: 2,
+      question_text: 'Write SQL statements to retrieve top 5 departments with highest student enrollments.',
+      matched_learning_outcome: {
+        code: 'CLO-2',
+        description: 'Formulate complex queries using Relational Algebra and structured SQL.',
+        similarity: 0.91,
+        alignment_level: 'STRONG',
+      },
+      alternative_matches: [],
+      alignment_status: 'STRONG',
+      similarity_score: 0.91,
+      reasoning: 'Strong semantic match to CLO-2 (SQL queries).',
+    },
+    {
+      question_number: 3,
+      question_text: 'Translate the following SQL query into equivalent relational algebra expression.',
+      matched_learning_outcome: {
+        code: 'CLO-2',
+        description: 'Formulate complex queries using Relational Algebra and structured SQL.',
+        similarity: 0.89,
+        alignment_level: 'STRONG',
+      },
+      alternative_matches: [],
+      alignment_status: 'STRONG',
+      similarity_score: 0.89,
+      reasoning: 'Direct alignment to relational algebra and SQL querying in CLO-2.',
+    },
+    {
+      question_number: 4,
+      question_text: 'Decompose the given table into Third Normal Form (3NF) and identify candidate keys.',
+      matched_learning_outcome: {
+        code: 'CLO-3',
+        description: 'Evaluate schema designs and apply normalization rules (1NF to BCNF).',
+        similarity: 0.84,
+        alignment_level: 'STRONG',
+      },
+      alternative_matches: [],
+      alignment_status: 'STRONG',
+      similarity_score: 0.84,
+      reasoning: 'Strong match to CLO-3 (database normalization rules).',
+    },
+    {
+      question_number: 5,
+      question_text: 'Explain the difference between RAID 0, RAID 1, and RAID 5 storage configurations.',
+      matched_learning_outcome: {
+        code: 'CLO-5',
+        description: 'Implement indexing and query optimization strategies for performance tuning.',
+        similarity: 0.42,
+        alignment_level: 'NOT_ALIGNED',
+      },
+      alternative_matches: [],
+      alignment_status: 'NOT_ALIGNED',
+      similarity_score: 0.42,
+      reasoning: 'No clear match to course LOs. Topic relates to physical hardware storage rather than core DB syllabus.',
+    },
+    {
+      question_number: 6,
+      question_text: 'Explain B+ tree indexing and how clustered indexes improve range query performance.',
+      matched_learning_outcome: {
+        code: 'CLO-5',
+        description: 'Implement indexing and query optimization strategies for performance tuning.',
+        similarity: 0.76,
+        alignment_level: 'STRONG',
+      },
+      alternative_matches: [
+        {
+          code: 'CLO-2',
+          description: 'Formulate complex queries using Relational Algebra and structured SQL.',
+          similarity: 0.54,
+          alignment_level: 'WEAK',
+        },
+      ],
+      alignment_status: 'STRONG',
+      similarity_score: 0.76,
+      reasoning: 'Strong semantic match to indexing in CLO-5.',
+    },
+  ],
+};
+
 export const Analysis: React.FC = () => {
   const [analysis] = useState(mockDetailedAnalysis);
-  const [selectedTab, setSelectedTab] = useState<'overview' | 'findings' | 'recommendations' | 'questions'>('overview');
+  const [selectedTab, setSelectedTab] = useState<'overview' | 'alignment' | 'findings' | 'recommendations' | 'questions'>('overview');
   const [acceptedRecs, setAcceptedRecs] = useState<Record<string, boolean>>({});
 
   const toggleAcceptRec = (id: string) => {
@@ -115,9 +268,10 @@ export const Analysis: React.FC = () => {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex items-center gap-2 border-b border-[#E5E5E5] pb-2 text-xs">
+      <div className="flex items-center gap-2 border-b border-[#E5E5E5] pb-2 text-xs overflow-x-auto">
         {[
           { id: 'overview', label: 'Executive Summary' },
+          { id: 'alignment', label: `LO Alignment (${mockAlignmentData.covered_learning_outcomes_count}/${mockAlignmentData.total_learning_outcomes})` },
           { id: 'findings', label: `AI Findings (${analysis.findings.length})` },
           { id: 'recommendations', label: `Recommendations (${analysis.recommendations.length})` },
           { id: 'questions', label: `Question Breakdown (${analysis.questions.length})` },
@@ -126,7 +280,7 @@ export const Analysis: React.FC = () => {
             key={tab.id}
             type="button"
             onClick={() => setSelectedTab(tab.id as any)}
-            className={`px-3.5 py-2 rounded-lg font-medium transition-colors ${
+            className={`px-3.5 py-2 rounded-lg font-medium transition-colors shrink-0 ${
               selectedTab === tab.id
                 ? 'bg-[#111111] text-white shadow-subtle'
                 : 'text-[#737373] hover:text-[#111111] hover:bg-[#E5E5E5]'
@@ -261,6 +415,11 @@ export const Analysis: React.FC = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Tab: LO Alignment (Step 11) */}
+      {selectedTab === 'alignment' && (
+        <LearningOutcomeAlignmentSection alignmentData={mockAlignmentData} />
       )}
 
       {/* Tab: Findings */}

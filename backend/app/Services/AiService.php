@@ -276,6 +276,107 @@ class AiService
             throw new Exception('AI Service request timed out or encountered an error.');
         }
     }
+
+    /**
+     * Analyze Learning Outcome Alignment for a set of examination questions against course LOs.
+     *
+     * @param array $learningOutcomes
+     * @param array $questions
+     * @param array|null $thresholds
+     * @param int|null $courseId
+     * @return array
+     * @throws Exception
+     */
+    public function analyzeAlignment(
+        array $learningOutcomes,
+        array $questions,
+        ?array $thresholds = null,
+        ?int $courseId = null
+    ): array {
+        if (empty($learningOutcomes)) {
+            throw new Exception('At least one learning outcome is required for alignment analysis.');
+        }
+
+        if (empty($questions)) {
+            throw new Exception('At least one question is required for alignment analysis.');
+        }
+
+        $formattedLos = [];
+        foreach ($learningOutcomes as $idx => $lo) {
+            if (is_string($lo)) {
+                $formattedLos[] = [
+                    'id' => $idx + 1,
+                    'code' => 'LO' . ($idx + 1),
+                    'description' => trim($lo),
+                ];
+            } elseif (is_array($lo)) {
+                $formattedLos[] = [
+                    'id' => $lo['id'] ?? ($idx + 1),
+                    'code' => $lo['code'] ?? ('LO' . ($idx + 1)),
+                    'description' => trim($lo['description'] ?? ''),
+                ];
+            }
+        }
+
+        $formattedQuestions = [];
+        foreach ($questions as $idx => $q) {
+            if (is_string($q)) {
+                $formattedQuestions[] = [
+                    'id' => $idx + 1,
+                    'number' => $idx + 1,
+                    'text' => trim($q),
+                    'topics' => [],
+                ];
+            } elseif (is_array($q)) {
+                $formattedQuestions[] = [
+                    'id' => $q['id'] ?? ($idx + 1),
+                    'number' => $q['number'] ?? $q['question_number'] ?? ($idx + 1),
+                    'text' => trim($q['text'] ?? $q['question_text'] ?? ''),
+                    'topics' => $q['topics'] ?? $q['ai_topics'] ?? [],
+                ];
+            }
+        }
+
+        try {
+            $payload = [
+                'learning_outcomes' => $formattedLos,
+                'questions' => $formattedQuestions,
+            ];
+
+            if ($courseId) {
+                $payload['course_id'] = $courseId;
+            }
+
+            if (!empty($thresholds)) {
+                $payload['thresholds'] = [
+                    'strong' => (float) ($thresholds['strong'] ?? 0.70),
+                    'weak' => (float) ($thresholds['weak'] ?? 0.50),
+                ];
+            }
+
+            $response = $this->client()->post("{$this->baseUrl}/api/v1/analyze-alignment", $payload);
+
+            if ($response->successful()) {
+                return $response->json();
+            }
+
+            if ($response->status() === 422) {
+                $errorData = $response->json();
+                $message = $errorData['message'] ?? 'Validation failed in AI service.';
+                throw new Exception($message);
+            }
+
+            Log::error('AI Service analyze-alignment error: ' . $response->status() . ' - ' . $response->body());
+            throw new Exception('AI Service failed to analyze learning outcome alignment.');
+        } catch (ConnectionException $e) {
+            Log::error('AI Service connection error: ' . $e->getMessage());
+            throw new Exception('AI Service is currently unavailable.');
+        } catch (RequestException $e) {
+            Log::error('AI Service request exception: ' . $e->getMessage());
+            throw new Exception('AI Service request timed out or encountered an error.');
+        }
+    }
 }
+
 
 

@@ -1,4 +1,8 @@
 import { apiClient } from './api';
+import {
+  AlignmentAnalysisResult,
+  AssessmentAlignmentResponseData,
+} from '../types';
 
 export interface SingleQuestionAnalysisPayload {
   question: string;
@@ -13,6 +17,13 @@ export interface BatchQuestionAnalysisItem {
 export interface BatchQuestionAnalysisPayload {
   questions: BatchQuestionAnalysisItem[];
   course_topics?: string[];
+}
+
+export interface AlignmentAnalysisPayload {
+  course_id?: number | string;
+  learning_outcomes: Array<{ id?: number | string; code?: string; description: string }>;
+  questions: Array<{ id?: number | string; number?: number | string; text: string; topics?: string[] }>;
+  thresholds?: { strong?: number; weak?: number };
 }
 
 export interface AiTopicResult {
@@ -118,5 +129,32 @@ export const aiService = {
       body: JSON.stringify(payload || {}),
     });
   },
+
+  /**
+   * Analyze Learning Outcome Alignment directly for provided questions and LOs
+   */
+  analyzeAlignment: async (payload: AlignmentAnalysisPayload) => {
+    return apiClient<ApiResponseWrapper<AlignmentAnalysisResult>>('/ai/analyze-alignment', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+
+  /**
+   * Run Learning Outcome Alignment on an assessment and persist findings to AnalysisReport
+   */
+  analyzeAssessmentAlignment: async (
+    assessmentId: number | string,
+    payload?: { thresholds?: { strong?: number; weak?: number } }
+  ) => {
+    return apiClient<ApiResponseWrapper<AssessmentAlignmentResponseData>>(
+      `/ai/assessments/${assessmentId}/analyze-alignment`,
+      {
+        method: 'POST',
+        body: JSON.stringify(payload || {}),
+      }
+    );
+  },
 };
+
 

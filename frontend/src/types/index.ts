@@ -369,4 +369,67 @@ export interface UploadDocumentPayload {
   file: File;
 }
 
+// Learning Outcome Alignment Types (Step 11)
+export type AlignmentLevel = 'STRONG' | 'WEAK' | 'NOT_ALIGNED';
+export type LoCoverageStatus = 'COVERED' | 'WEAKLY_COVERED' | 'NOT_COVERED';
+
+export interface MatchedLoDetail {
+  id?: number | string;
+  code?: string;
+  description: string;
+  similarity: number;
+  alignment_level: AlignmentLevel;
+}
+
+export interface QuestionAlignmentDetail {
+  question_id?: number | string;
+  question_number?: number | string;
+  question_text: string;
+  matched_learning_outcome?: MatchedLoDetail;
+  alternative_matches: MatchedLoDetail[];
+  alignment_status: AlignmentLevel;
+  similarity_score: number;
+  reasoning?: string;
+}
+
+export interface LoCoverageDetail {
+  learning_outcome_id?: number | string;
+  code?: string;
+  description: string;
+  coverage_status: LoCoverageStatus;
+  matching_questions_count: number;
+  matching_question_numbers: Array<number | string>;
+  max_similarity: number;
+}
+
+export interface AlignmentAnalysisResult {
+  status: string;
+  method: string;
+  overall_alignment_score: number;
+  aligned_questions_count: number;
+  total_questions: number;
+  total_learning_outcomes: number;
+  covered_learning_outcomes_count: number;
+  question_alignment: QuestionAlignmentDetail[];
+  learning_outcome_coverage: LoCoverageDetail[];
+  findings: string[];
+  thresholds: {
+    strong: number;
+    weak: number;
+  };
+}
+
+export interface AssessmentAlignmentResponseData {
+  alignment: AlignmentAnalysisResult;
+  report?: {
+    id: number | string;
+    assessment_id: number | string;
+    learning_outcome_alignment_score: number;
+    overall_score?: number;
+    findings?: Record<string, unknown>;
+    analysis_status?: string;
+  };
+}
+
+
 

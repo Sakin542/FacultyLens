@@ -9,6 +9,7 @@ import { Badge } from '@/components/common/Badge';
 import { AssessmentModal } from '@/components/assessments/AssessmentModal';
 import { QuestionPaperUploadModal } from '@/components/assessments/QuestionPaperUploadModal';
 import { QuestionAnalysisModal } from '@/components/assessments/QuestionAnalysisModal';
+import { LearningOutcomeAlignmentModal } from '@/components/assessments/LearningOutcomeAlignmentModal';
 import {
   ArrowLeft,
   Edit,
@@ -26,6 +27,7 @@ import {
   HelpCircle,
   ExternalLink,
   Sparkles,
+  Target,
 } from 'lucide-react';
 
 export const AssessmentDetails: React.FC = () => {
@@ -41,6 +43,7 @@ export const AssessmentDetails: React.FC = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isPaperUploadOpen, setIsPaperUploadOpen] = useState(false);
   const [isAiAnalysisOpen, setIsAiAnalysisOpen] = useState(false);
+  const [isAlignmentModalOpen, setIsAlignmentModalOpen] = useState(false);
 
   // Action states
   const [isDeletingAssessment, setIsDeletingAssessment] = useState(false);
@@ -225,6 +228,14 @@ export const AssessmentDetails: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            leftIcon={<Target className="w-3.5 h-3.5" />}
+            onClick={() => setIsAlignmentModalOpen(true)}
+          >
+            LO Alignment
+          </Button>
           <Button
             variant="primary"
             size="sm"
@@ -531,6 +542,17 @@ export const AssessmentDetails: React.FC = () => {
         assessmentTitle={assessment.title}
         onAnalysisCompleted={() => {
           showNotification('AI Question Analysis completed successfully!');
+          loadAssessment();
+        }}
+      />
+
+      {/* Learning Outcome Alignment Modal (Step 11) */}
+      <LearningOutcomeAlignmentModal
+        isOpen={isAlignmentModalOpen}
+        onClose={() => setIsAlignmentModalOpen(false)}
+        assessment={assessment}
+        onAlignmentCompleted={() => {
+          showNotification('Learning Outcome Alignment completed successfully!');
           loadAssessment();
         }}
       />
