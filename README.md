@@ -505,7 +505,7 @@ The MVP intentionally focuses on **one useful academic journey** rather than att
 
 ---
 
-# 🔮 Future Scope
+#  Future Scope
 
 FacultyLens can be extended with:
 
@@ -539,7 +539,7 @@ FacultyLens can help faculty members:
 
 ---
 
-# 🚀 Getting Started
+#  Getting Started
 
 ## Clone the Repository
 
