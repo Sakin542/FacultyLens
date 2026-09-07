@@ -431,5 +431,64 @@ export interface AssessmentAlignmentResponseData {
   };
 }
 
+// Semantic Similarity & Duplicate Detection Types (Step 12)
+export type SimilarityStatus = 'POTENTIAL_DUPLICATE' | 'HIGHLY_SIMILAR' | 'SOMEWHAT_SIMILAR' | 'NOT_SIMILAR';
+
+export interface MatchedPreviousQuestionDetail {
+  previous_question_id?: number | string;
+  previous_question_text: string;
+  similarity_score: number;
+  similarity_status: SimilarityStatus;
+  source_year?: number | string;
+  source_assessment?: string;
+  question_type?: string;
+  cognitive_level?: string;
+}
+
+export interface QuestionSimilarityResultDetail {
+  current_question_id?: number | string;
+  current_question_number?: number | string;
+  current_question_text: string;
+  current_question_type?: string;
+  current_cognitive_level?: string;
+  max_similarity_score: number;
+  max_similarity_status: SimilarityStatus;
+  matches: MatchedPreviousQuestionDetail[];
+  reasoning?: string;
+}
+
+export interface SimilarityAnalysisResult {
+  status: string;
+  method: string;
+  model: string;
+  thresholds: {
+    potential_duplicate: number;
+    high_similarity: number;
+    moderate_similarity: number;
+  };
+  total_current_questions: number;
+  total_previous_questions: number;
+  potential_duplicates_count: number;
+  highly_similar_count: number;
+  somewhat_similar_count: number;
+  average_similarity_score: number;
+  results: QuestionSimilarityResultDetail[];
+  findings: string[];
+}
+
+export interface AssessmentSimilarityResponseData {
+  similarity: SimilarityAnalysisResult;
+  report?: {
+    id: number | string;
+    assessment_id: number | string;
+    similarity_score: number;
+    similar_questions_count: number;
+    overall_score?: number;
+    findings?: Record<string, unknown>;
+    analysis_status?: string;
+  };
+}
+
+
 
 

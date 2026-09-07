@@ -2,6 +2,8 @@ import { apiClient } from './api';
 import {
   AlignmentAnalysisResult,
   AssessmentAlignmentResponseData,
+  SimilarityAnalysisResult,
+  AssessmentSimilarityResponseData,
 } from '../types';
 
 export interface SingleQuestionAnalysisPayload {
@@ -24,6 +26,33 @@ export interface AlignmentAnalysisPayload {
   learning_outcomes: Array<{ id?: number | string; code?: string; description: string }>;
   questions: Array<{ id?: number | string; number?: number | string; text: string; topics?: string[] }>;
   thresholds?: { strong?: number; weak?: number };
+}
+
+export interface SimilarityAnalysisPayload {
+  course_id?: number | string;
+  current_questions: Array<{
+    id?: number | string;
+    number?: number | string;
+    text: string;
+    question_type?: string;
+    cognitive_level?: string;
+    topics?: string[];
+  }>;
+  previous_questions?: Array<{
+    id?: number | string;
+    text: string;
+    source_year?: number | string;
+    source_assessment?: string;
+    question_type?: string;
+    cognitive_level?: string;
+  }>;
+  thresholds?: {
+    duplicate?: number;
+    high?: number;
+    moderate?: number;
+    top_k?: number;
+  };
+  top_k?: number;
 }
 
 export interface AiTopicResult {
@@ -149,6 +178,40 @@ export const aiService = {
   ) => {
     return apiClient<ApiResponseWrapper<AssessmentAlignmentResponseData>>(
       `/ai/assessments/${assessmentId}/analyze-alignment`,
+      {
+        method: 'POST',
+        body: JSON.stringify(payload || {}),
+      }
+    );
+  },
+
+  /**
+   * Analyze Semantic Similarity directly for provided current and historical question sets
+   */
+  analyzeSimilarity: async (payload: SimilarityAnalysisPayload) => {
+    return apiClient<ApiResponseWrapper<SimilarityAnalysisResult>>('/ai/analyze-similarity', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+
+  /**
+   * Run Semantic Similarity & Duplicate Detection on an assessment against course question bank
+   */
+  analyzeAssessmentSimilarity: async (
+    assessmentId: number | string,
+    payload?: {
+      thresholds?: {
+        duplicate?: number;
+        high?: number;
+        moderate?: number;
+        top_k?: number;
+      };
+      top_k?: number;
+    }
+  ) => {
+    return apiClient<ApiResponseWrapper<AssessmentSimilarityResponseData>>(
+      `/ai/assessments/${assessmentId}/analyze-similarity`,
       {
         method: 'POST',
         body: JSON.stringify(payload || {}),

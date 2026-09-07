@@ -7,6 +7,7 @@ from app.services.text_cleaner import TextCleaner
 from app.services.analyzer import AcademicTextAnalyzer
 from app.services.question_analyzer import QuestionAnalyzer
 from app.services.alignment_analyzer import AlignmentAnalyzer
+from app.services.semantic_similarity_analyzer import SemanticSimilarityAnalyzer
 from app.utils.text_utils import split_paragraphs, split_sentences
 from app.schemas.analysis import (
     HealthResponse,
@@ -24,6 +25,10 @@ from app.schemas.analysis import (
 from app.schemas.alignment import (
     AnalyzeAlignmentRequest,
     AnalyzeAlignmentResponse,
+)
+from app.schemas.similarity import (
+    AnalyzeSimilarityRequest,
+    AnalyzeSimilarityResponse,
 )
 
 logger = logging.getLogger("facultylens.ai")
@@ -248,6 +253,40 @@ def analyze_learning_outcome_alignment(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to analyze learning outcome alignment.",
         )
+
+
+@router.post(
+    "/api/v1/analyze-similarity",
+    response_model=AnalyzeSimilarityResponse,
+    dependencies=[Depends(verify_api_key)],
+)
+def analyze_semantic_similarity(
+    payload: AnalyzeSimilarityRequest,
+    hf_service: HuggingFaceService = Depends(get_hf_service),
+) -> AnalyzeSimilarityResponse:
+    """
+    Analyze Semantic Similarity between current exam questions and historical previous questions.
+    Computes dense embeddings, vectorized cosine similarities, top-K match rankings,
+    duplicate/similar classifications, and explainable findings.
+    """
+    try:
+        analyzer = SemanticSimilarityAnalyzer(hf_service=hf_service)
+        result = analyzer.analyze(
+            current_questions=payload.current_questions,
+            previous_questions=payload.previous_questions,
+            thresholds=payload.thresholds,
+            top_k=payload.top_k,
+            course_id=payload.course_id,
+        )
+
+        return AnalyzeSimilarityResponse(**result)
+    except Exception as e:
+        logger.error(f"Error analyzing semantic similarity: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to analyze question semantic similarity.",
+        )
+
 
 
 
