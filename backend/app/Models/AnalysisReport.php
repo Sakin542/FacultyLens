@@ -23,6 +23,7 @@ class AnalysisReport extends Model
         'similar_questions_count',
         'findings',
         'analysis_status',
+        'processing_error',
         'analyzed_at',
     ];
 
@@ -64,6 +65,14 @@ class AnalysisReport extends Model
     public function similarityMatches(): HasMany
     {
         return $this->hasMany(QuestionSimilarityMatch::class);
+    }
+
+    /**
+     * The learning outcome alignment records for this analysis report.
+     */
+    public function learningOutcomeAlignments(): HasMany
+    {
+        return $this->hasMany(QuestionLearningOutcomeAlignment::class);
     }
 }
 

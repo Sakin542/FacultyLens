@@ -150,5 +150,34 @@ export const aiAnalysisService = {
       body: JSON.stringify(payload),
     });
   },
+
+  /**
+   * Send document for structured NLP text analysis and extraction.
+   */
+  async analyzeDocument(payload: { document_id?: number | string; text?: string; document_type?: string }) {
+    return apiClient<ApiResponseWrapper<any>>('/ai/analyze-document', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+
+  /**
+   * Get recommendations for an assessment.
+   */
+  async getAssessmentRecommendations(assessmentId: number | string) {
+    return apiClient<ApiResponseWrapper<any>>(`/ai/assessments/${assessmentId}/recommendations`, {
+      method: 'GET',
+    });
+  },
+
+  /**
+   * Update recommendation status (accepted, dismissed, reviewed, pending).
+   */
+  async updateRecommendationStatus(recommendationId: number | string, status: string, notes?: string) {
+    return apiClient<ApiResponseWrapper<any>>(`/ai/recommendations/${recommendationId}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status, faculty_notes: notes }),
+    });
+  },
 };
 
