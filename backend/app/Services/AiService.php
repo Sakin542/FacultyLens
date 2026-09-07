@@ -35,6 +35,7 @@ class AiService
 
         if (!empty($this->apiKey)) {
             $headers['X-AI-Service-Key'] = $this->apiKey;
+            $headers['Authorization'] = 'Bearer ' . $this->apiKey;
         }
 
         return Http::connectTimeout($this->connectTimeout)

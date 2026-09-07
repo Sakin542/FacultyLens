@@ -7,6 +7,7 @@ use App\Http\Requests\DocumentUploadRequest;
 use App\Models\Assessment;
 use App\Models\Course;
 use App\Models\DocumentProcessing;
+use App\Services\AuditLogService;
 use App\Services\DocumentTextExtractor;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -16,6 +17,13 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DocumentController extends Controller
 {
+    protected AuditLogService $auditLogService;
+
+    public function __construct(AuditLogService $auditLogService)
+    {
+        $this->auditLogService = $auditLogService;
+    }
+
     /**
      * Display a listing of documents for the authenticated faculty user.
      */
@@ -118,12 +126,28 @@ class DocumentController extends Controller
                 'processed_at' => now(),
             ]);
         } catch (Exception $e) {
+            \Illuminate\Support\Facades\Log::warning("Document text extraction failed: " . $e->getMessage());
             $document->update([
                 'processing_status' => 'failed',
-                'processing_error' => $e->getMessage(),
+                'processing_error' => 'The uploaded document could not be processed. Please ensure the file contains readable text and is not corrupted or empty.',
                 'processed_at' => now(),
             ]);
         }
+
+        // Audit log document upload event
+        $this->auditLogService->log(
+            'DOCUMENT_UPLOADED',
+            $document,
+            $document->id,
+            [
+                'document_type' => $document->document_type,
+                'original_file_name' => $document->original_file_name,
+                'file_size' => $document->file_size,
+                'processing_status' => $document->processing_status,
+                'course_id' => $course->id,
+            ],
+            $user
+        );
 
         $document->load(['course:id,course_name,course_code', 'assessment:id,title,type']);
 
@@ -237,7 +261,23 @@ class DocumentController extends Controller
             Storage::disk('local')->delete($document->file_path);
         }
 
+        $docId = $document->id;
+        $meta = [
+            'document_type' => $document->document_type,
+            'original_file_name' => $document->original_file_name,
+            'course_id' => $document->course_id,
+        ];
+
         $document->delete();
+
+        // Audit log document deletion event
+        $this->auditLogService->log(
+            'DOCUMENT_DELETED',
+            'DocumentProcessing',
+            $docId,
+            $meta,
+            $request->user()
+        );
 
         return response()->json([
             'message' => 'Document deleted successfully.',

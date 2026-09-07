@@ -93,6 +93,42 @@ class AuthController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'role' => $user->role ?? 'FACULTY',
+                'department' => $user->department,
+                'designation' => $user->designation,
+            ],
+        ]);
+    }
+
+    /**
+     * Update user profile with strict protection against privilege escalation.
+     */
+    public function updateProfile(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'name' => ['sometimes', 'string', 'max:255'],
+            'department' => ['sometimes', 'string', 'max:255'],
+            'designation' => ['sometimes', 'string', 'max:255'],
+        ]);
+
+        // Explicit role escalation defense: only an existing ADMIN can alter roles
+        if ($request->has('role') && $user->isAdmin()) {
+            $user->role = strtoupper($request->input('role'));
+        }
+
+        $user->fill($validated);
+        $user->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Profile updated successfully.',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role ?? 'FACULTY',
                 'department' => $user->department,
                 'designation' => $user->designation,
             ],
