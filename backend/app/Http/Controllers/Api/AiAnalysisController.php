@@ -5,13 +5,16 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\AnalysisReport;
 use App\Models\Assessment;
+use App\Models\DocumentProcessing;
 use App\Models\PreviousQuestion;
+use App\Models\QuestionLearningOutcomeAlignment;
 use App\Models\QuestionSimilarityMatch;
 use App\Models\Recommendation;
 use App\Services\AiService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class AiAnalysisController extends Controller
@@ -21,6 +24,40 @@ class AiAnalysisController extends Controller
     public function __construct(AiService $aiService)
     {
         $this->aiService = $aiService;
+    }
+
+    /**
+     * Map exception messages to appropriate HTTP status codes (504 for timeout, 422 for validation, 502 for connection/service).
+     */
+    protected function determineErrorStatus(Exception $e): int
+    {
+        $msg = strtolower($e->getMessage());
+        if (str_contains($msg, 'timed out') || str_contains($msg, 'timeout')) {
+            return 504;
+        }
+        if (str_contains($msg, 'validation') || str_contains($msg, 'required') || str_contains($msg, 'empty')) {
+            return 422;
+        }
+        return 502;
+    }
+
+    /**
+     * Validate structured AI response ranges and integrity before database persistence.
+     */
+    protected function validateUnifiedAiResponse(array $response): void
+    {
+        if (empty($response) || !isset($response['status']) || $response['status'] !== 'success') {
+            throw new Exception('Invalid AI response: status is not success.');
+        }
+
+        if (!isset($response['quality_analysis'])) {
+            throw new Exception('Invalid AI response: missing quality_analysis payload.');
+        }
+
+        $overallScore = $response['quality_analysis']['overall_quality_score'] ?? null;
+        if ($overallScore !== null && ($overallScore < 0 || $overallScore > 100)) {
+            throw new Exception("Invalid overall quality score: {$overallScore}. Expected range is 0 to 100.");
+        }
     }
 
     /**
@@ -67,7 +104,69 @@ class AiAnalysisController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
-            ], 502);
+            ], $this->determineErrorStatus($e));
+        }
+    }
+
+    /**
+     * Analyze a previously uploaded and processed document.
+     * Verifies user authorization, processing status, and passes cleaned text to AI Service.
+     */
+    public function analyzeDocument(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'document_id' => ['required_without:text', 'nullable', 'integer', 'exists:document_processings,id'],
+            'text' => ['required_without:document_id', 'nullable', 'string', 'min:3'],
+            'document_type' => ['nullable', 'string', 'max:100'],
+        ]);
+
+        $user = $request->user();
+        $text = $validated['text'] ?? null;
+        $documentType = $validated['document_type'] ?? 'question_paper';
+
+        if (!empty($validated['document_id'])) {
+            $document = DocumentProcessing::find($validated['document_id']);
+
+            if (!$document || $document->user_id !== $user->id) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Unauthorized access to document.',
+                ], 403);
+            }
+
+            if ($document->processing_status !== 'completed') {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Document has not completed processing yet. Current status: ' . $document->processing_status,
+                ], 422);
+            }
+
+            $text = $document->cleaned_text ?: $document->extracted_text;
+            if (empty(trim((string) $text))) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Document contains no extractable text for AI analysis.',
+                ], 422);
+            }
+
+            $documentType = $document->document_type ?? $documentType;
+        }
+
+        try {
+            $analysisResult = $this->aiService->sendDocument($text, $documentType);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Document analyzed successfully by AI service.',
+                'data' => $analysisResult,
+            ], 200);
+        } catch (Exception $e) {
+            Log::error('AI Document Analysis failed: ' . $e->getMessage());
+
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], $this->determineErrorStatus($e));
         }
     }
 
@@ -178,21 +277,22 @@ class AiAnalysisController extends Controller
         try {
             $aiResult = $this->aiService->analyzeQuestions($batchPayload, $courseTopics);
 
-            // Update individual question models with AI insights
-            $analyzedList = $aiResult['questions'] ?? [];
-            foreach ($analyzedList as $idx => $analyzedItem) {
-                $qModel = $questions->get($idx);
-                if ($qModel) {
-                    $qModel->update([
-                        'ai_question_type' => $analyzedItem['classification']['question_type'] ?? null,
-                        'ai_difficulty_level' => $analyzedItem['difficulty']['level'] ?? null,
-                        'ai_cognitive_level' => $analyzedItem['cognitive_level']['level'] ?? null,
-                        'ai_topics' => $analyzedItem['topics'] ?? [],
-                        'ai_analysis_status' => 'completed',
-                        'ai_analyzed_at' => now(),
-                    ]);
+            DB::transaction(function () use ($questions, $aiResult) {
+                $analyzedList = $aiResult['questions'] ?? [];
+                foreach ($analyzedList as $idx => $analyzedItem) {
+                    $qModel = $questions->get($idx);
+                    if ($qModel) {
+                        $qModel->update([
+                            'ai_question_type' => $analyzedItem['classification']['question_type'] ?? null,
+                            'ai_difficulty_level' => $analyzedItem['difficulty']['level'] ?? null,
+                            'ai_cognitive_level' => $analyzedItem['cognitive_level']['level'] ?? null,
+                            'ai_topics' => $analyzedItem['topics'] ?? [],
+                            'ai_analysis_status' => 'completed',
+                            'ai_analyzed_at' => now(),
+                        ]);
+                    }
                 }
-            }
+            });
 
             return response()->json([
                 'status' => 'success',
@@ -200,7 +300,6 @@ class AiAnalysisController extends Controller
                 'data' => $aiResult,
             ]);
         } catch (Exception $e) {
-            // Update questions to failed status if needed
             $questions->each(function ($q) {
                 $q->update(['ai_analysis_status' => 'failed']);
             });
@@ -209,7 +308,7 @@ class AiAnalysisController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
-            ], 502);
+            ], $this->determineErrorStatus($e));
         }
     }
 
@@ -250,7 +349,7 @@ class AiAnalysisController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
-            ], 502);
+            ], $this->determineErrorStatus($e));
         }
     }
 
@@ -264,6 +363,7 @@ class AiAnalysisController extends Controller
         // Check faculty authorization
         if ($assessment->course->user_id !== $user->id) {
             return response()->json([
+                'status' => 'error',
                 'message' => 'Unauthorized access to assessment.',
             ], 403);
         }
@@ -314,55 +414,91 @@ class AiAnalysisController extends Controller
                 $course->id
             );
 
-            // Update question -> learning_outcome_id mapping for strong/weak matches if question matches an LO
-            $qaList = $aiResult['question_alignment'] ?? [];
-            foreach ($qaList as $qa) {
-                $qId = $qa['question_id'] ?? null;
-                $matchedLo = $qa['matched_learning_outcome'] ?? null;
-                $status = $qa['alignment_status'] ?? 'NOT_ALIGNED';
+            $report = DB::transaction(function () use ($assessment, $questions, $learningOutcomes, $aiResult) {
+                // Update question -> learning_outcome_id mapping for strong/weak matches if question matches an LO
+                $qaList = $aiResult['question_alignment'] ?? [];
+                foreach ($qaList as $qa) {
+                    $qId = $qa['question_id'] ?? null;
+                    $matchedLo = $qa['matched_learning_outcome'] ?? null;
+                    $status = $qa['alignment_status'] ?? 'NOT_ALIGNED';
 
-                if ($qId && $matchedLo && !empty($matchedLo['id']) && in_array($status, ['STRONG', 'WEAK'])) {
-                    $questionModel = $questions->firstWhere('id', $qId);
-                    if ($questionModel && empty($questionModel->learning_outcome_id)) {
-                        $questionModel->update([
-                            'learning_outcome_id' => $matchedLo['id'],
+                    if ($qId && $matchedLo && !empty($matchedLo['id']) && in_array($status, ['STRONG', 'WEAK'])) {
+                        $questionModel = $questions->firstWhere('id', $qId);
+                        if ($questionModel && empty($questionModel->learning_outcome_id)) {
+                            $questionModel->update([
+                                'learning_outcome_id' => $matchedLo['id'],
+                            ]);
+                        }
+                    }
+                }
+
+                // Merge findings into AnalysisReport
+                $existingFindings = $assessment->latestAnalysisReport?->findings ?? [];
+                $updatedFindings = array_merge($existingFindings, [
+                    'alignment_findings' => $aiResult['findings'] ?? [],
+                    'learning_outcome_coverage' => $aiResult['learning_outcome_coverage'] ?? [],
+                ]);
+
+                $savedReport = AnalysisReport::updateOrCreate(
+                    ['assessment_id' => $assessment->id],
+                    [
+                        'learning_outcome_alignment_score' => $aiResult['overall_alignment_score'] ?? 0.0,
+                        'total_questions' => $aiResult['total_questions'] ?? count($questions),
+                        'findings' => $updatedFindings,
+                        'analysis_status' => 'completed',
+                        'processing_error' => null,
+                        'analyzed_at' => now(),
+                    ]
+                );
+
+                // Persist granular QuestionLearningOutcomeAlignment records
+                QuestionLearningOutcomeAlignment::where('analysis_report_id', $savedReport->id)->delete();
+                $loById = $learningOutcomes->keyBy('id');
+                $qById = $questions->keyBy('id');
+
+                foreach ($qaList as $qa) {
+                    $qId = $qa['question_id'] ?? null;
+                    $matchedLo = $qa['matched_learning_outcome'] ?? null;
+                    $loId = $matchedLo['id'] ?? null;
+
+                    if ($qId && $loId && $qById->has($qId) && $loById->has($loId)) {
+                        QuestionLearningOutcomeAlignment::create([
+                            'analysis_report_id' => $savedReport->id,
+                            'question_id' => $qId,
+                            'learning_outcome_id' => $loId,
+                            'similarity_score' => $qa['alignment_score'] ?? ($matchedLo['similarity_score'] ?? 0.0),
+                            'alignment' => $qa['alignment_status'] ?? 'NOT_ALIGNED',
+                            'reasoning' => $qa['reasoning'] ?? null,
                         ]);
                     }
                 }
-            }
 
-            // Merge findings into AnalysisReport
-            $existingFindings = $assessment->latestAnalysisReport?->findings ?? [];
-            $updatedFindings = array_merge($existingFindings, [
-                'alignment_findings' => $aiResult['findings'] ?? [],
-                'learning_outcome_coverage' => $aiResult['learning_outcome_coverage'] ?? [],
-            ]);
-
-            $report = AnalysisReport::updateOrCreate(
-                ['assessment_id' => $assessment->id],
-                [
-                    'learning_outcome_alignment_score' => $aiResult['overall_alignment_score'] ?? 0.0,
-                    'total_questions' => $aiResult['total_questions'] ?? count($questions),
-                    'findings' => $updatedFindings,
-                    'analysis_status' => 'completed',
-                    'analyzed_at' => now(),
-                ]
-            );
+                return $savedReport;
+            });
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'Assessment learning outcome alignment analyzed successfully.',
                 'data' => [
                     'alignment' => $aiResult,
-                    'report' => $report,
+                    'report' => $report->load('learningOutcomeAlignments'),
                 ],
             ]);
         } catch (Exception $e) {
             Log::error('Assessment LO alignment analysis failed: ' . $e->getMessage());
+
+            AnalysisReport::updateOrCreate(
+                ['assessment_id' => $assessment->id],
+                [
+                    'analysis_status' => 'failed',
+                    'processing_error' => $e->getMessage(),
+                ]
+            );
+
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
-            ], 502);
+            ], $this->determineErrorStatus($e));
         }
     }
 
@@ -406,7 +542,7 @@ class AiAnalysisController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
-            ], 502);
+            ], $this->determineErrorStatus($e));
         }
     }
 
@@ -420,6 +556,7 @@ class AiAnalysisController extends Controller
         // Check faculty authorization
         if ($assessment->course->user_id !== $user->id) {
             return response()->json([
+                'status' => 'error',
                 'message' => 'Unauthorized access to assessment.',
             ], 403);
         }
@@ -471,48 +608,53 @@ class AiAnalysisController extends Controller
                 $course->id
             );
 
-            // Merge findings into AnalysisReport
-            $existingFindings = $assessment->latestAnalysisReport?->findings ?? [];
-            $updatedFindings = array_merge($existingFindings, [
-                'similarity_findings' => $aiResult['findings'] ?? [],
-            ]);
+            $report = DB::transaction(function () use ($assessment, $questions, $aiResult) {
+                // Merge findings into AnalysisReport
+                $existingFindings = $assessment->latestAnalysisReport?->findings ?? [];
+                $updatedFindings = array_merge($existingFindings, [
+                    'similarity_findings' => $aiResult['findings'] ?? [],
+                ]);
 
-            $similarQuestionsCount = ($aiResult['potential_duplicates_count'] ?? 0) + ($aiResult['highly_similar_count'] ?? 0);
+                $similarQuestionsCount = ($aiResult['potential_duplicates_count'] ?? 0) + ($aiResult['highly_similar_count'] ?? 0);
 
-            $report = AnalysisReport::updateOrCreate(
-                ['assessment_id' => $assessment->id],
-                [
-                    'similarity_score' => $aiResult['average_similarity_score'] ?? 0.0,
-                    'similar_questions_count' => $similarQuestionsCount,
-                    'total_questions' => $aiResult['total_current_questions'] ?? count($questions),
-                    'findings' => $updatedFindings,
-                    'analysis_status' => 'completed',
-                    'analyzed_at' => now(),
-                ]
-            );
+                $savedReport = AnalysisReport::updateOrCreate(
+                    ['assessment_id' => $assessment->id],
+                    [
+                        'similarity_score' => $aiResult['average_similarity_score'] ?? 0.0,
+                        'similar_questions_count' => $similarQuestionsCount,
+                        'total_questions' => $aiResult['total_current_questions'] ?? count($questions),
+                        'findings' => $updatedFindings,
+                        'analysis_status' => 'completed',
+                        'processing_error' => null,
+                        'analyzed_at' => now(),
+                    ]
+                );
 
-            // Persist granular question similarity matches
-            QuestionSimilarityMatch::where('analysis_report_id', $report->id)->delete();
+                // Persist granular question similarity matches
+                QuestionSimilarityMatch::where('analysis_report_id', $savedReport->id)->delete();
 
-            $resultsList = $aiResult['results'] ?? [];
-            foreach ($resultsList as $qRes) {
-                $cId = $qRes['current_question_id'] ?? null;
-                $matchesList = $qRes['matches'] ?? [];
+                $resultsList = $aiResult['results'] ?? [];
+                foreach ($resultsList as $qRes) {
+                    $cId = $qRes['current_question_id'] ?? null;
+                    $matchesList = $qRes['matches'] ?? [];
 
-                foreach ($matchesList as $matchItem) {
-                    $pId = $matchItem['previous_question_id'] ?? null;
-                    if ($cId && $pId) {
-                        QuestionSimilarityMatch::create([
-                            'analysis_report_id' => $report->id,
-                            'current_question_id' => $cId,
-                            'previous_question_id' => $pId,
-                            'similarity_score' => $matchItem['similarity_score'] ?? 0.0,
-                            'similarity_status' => $matchItem['similarity_status'] ?? 'NOT_SIMILAR',
-                            'reasoning' => $qRes['reasoning'] ?? null,
-                        ]);
+                    foreach ($matchesList as $matchItem) {
+                        $pId = $matchItem['previous_question_id'] ?? null;
+                        if ($cId && $pId) {
+                            QuestionSimilarityMatch::create([
+                                'analysis_report_id' => $savedReport->id,
+                                'current_question_id' => $cId,
+                                'previous_question_id' => $pId,
+                                'similarity_score' => $matchItem['similarity_score'] ?? 0.0,
+                                'similarity_status' => $matchItem['similarity_status'] ?? 'NOT_SIMILAR',
+                                'reasoning' => $qRes['reasoning'] ?? null,
+                            ]);
+                        }
                     }
                 }
-            }
+
+                return $savedReport;
+            });
 
             return response()->json([
                 'status' => 'success',
@@ -524,10 +666,19 @@ class AiAnalysisController extends Controller
             ]);
         } catch (Exception $e) {
             Log::error('Assessment similarity analysis failed: ' . $e->getMessage());
+
+            AnalysisReport::updateOrCreate(
+                ['assessment_id' => $assessment->id],
+                [
+                    'analysis_status' => 'failed',
+                    'processing_error' => $e->getMessage(),
+                ]
+            );
+
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
-            ], 502);
+            ], $this->determineErrorStatus($e));
         }
     }
 
@@ -574,7 +725,7 @@ class AiAnalysisController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
-            ], 502);
+            ], $this->determineErrorStatus($e));
         }
     }
 
@@ -588,6 +739,7 @@ class AiAnalysisController extends Controller
         // Check faculty authorization
         if ($assessment->course->user_id !== $user->id) {
             return response()->json([
+                'status' => 'error',
                 'message' => 'Unauthorized access to assessment.',
             ], 403);
         }
@@ -702,20 +854,23 @@ class AiAnalysisController extends Controller
 
             $components = $aiResult['components'] ?? [];
 
-            $report = AnalysisReport::updateOrCreate(
-                ['assessment_id' => $assessment->id],
-                [
-                    'overall_score' => $aiResult['overall_quality_score'] ?? 0.0,
-                    'topic_coverage_score' => $components['topic_coverage'] ?? null,
-                    'learning_outcome_alignment_score' => $components['learning_outcome_coverage'] ?? null,
-                    'difficulty_balance_score' => $components['difficulty_balance'] ?? null,
-                    'cognitive_level_balance_score' => $components['cognitive_diversity'] ?? null,
-                    'total_questions' => count($questions),
-                    'findings' => $updatedFindings,
-                    'analysis_status' => 'completed',
-                    'analyzed_at' => now(),
-                ]
-            );
+            $report = DB::transaction(function () use ($assessment, $questions, $aiResult, $updatedFindings, $components) {
+                return AnalysisReport::updateOrCreate(
+                    ['assessment_id' => $assessment->id],
+                    [
+                        'overall_score' => (float) ($aiResult['overall_quality_score'] ?? 0.0),
+                        'topic_coverage_score' => (float) ($components['topic_coverage'] ?? 0.0),
+                        'learning_outcome_alignment_score' => (float) ($components['learning_outcome_coverage'] ?? 0.0),
+                        'difficulty_balance_score' => (float) ($components['difficulty_balance'] ?? 0.0),
+                        'cognitive_level_balance_score' => (float) ($components['cognitive_diversity'] ?? 0.0),
+                        'total_questions' => count($questions),
+                        'findings' => $updatedFindings,
+                        'analysis_status' => 'completed',
+                        'processing_error' => null,
+                        'analyzed_at' => now(),
+                    ]
+                );
+            });
 
             return response()->json([
                 'status' => 'success',
@@ -727,10 +882,19 @@ class AiAnalysisController extends Controller
             ]);
         } catch (Exception $e) {
             Log::error('Assessment quality analysis failed: ' . $e->getMessage());
+
+            AnalysisReport::updateOrCreate(
+                ['assessment_id' => $assessment->id],
+                [
+                    'analysis_status' => 'failed',
+                    'processing_error' => $e->getMessage(),
+                ]
+            );
+
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
-            ], 502);
+            ], $this->determineErrorStatus($e));
         }
     }
 
@@ -754,7 +918,7 @@ class AiAnalysisController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
-            ], 502);
+            ], $this->determineErrorStatus($e));
         }
     }
 
@@ -915,62 +1079,65 @@ class AiAnalysisController extends Controller
         try {
             $aiResponse = $this->aiService->generateRecommendations($payload);
 
-            // Ensure AnalysisReport exists
-            if (!$report) {
-                $report = AnalysisReport::create([
-                    'assessment_id' => $assessment->id,
-                    'overall_score' => 0.0,
-                    'total_questions' => count($questions),
-                    'analysis_status' => 'completed',
-                    'analyzed_at' => now(),
-                ]);
-            }
-
-            // Persist recommendations
-            // We preserve existing accepted/dismissed statuses if the same problem/title exists
-            $existingRecs = Recommendation::where('analysis_report_id', $report->id)->get()->keyBy('title');
-
-            $newRecList = $aiResponse['recommendations'] ?? [];
-            $persistedIds = [];
-
-            foreach ($newRecList as $rec) {
-                $title = $rec['problem'] ?? 'Assessment Recommendation';
-                $existing = $existingRecs->get($title);
-
-                $status = $existing ? $existing->status : 'pending';
-                $facultyNotes = $existing ? $existing->faculty_notes : null;
-
-                $saved = Recommendation::updateOrCreate(
+            $allRecommendations = DB::transaction(function () use ($assessment, $questions, $aiResponse) {
+                // Ensure AnalysisReport exists
+                $report = AnalysisReport::firstOrCreate(
+                    ['assessment_id' => $assessment->id],
                     [
-                        'analysis_report_id' => $report->id,
-                        'title' => $title,
-                    ],
-                    [
-                        'category' => $rec['category'] ?? 'general',
-                        'problem' => $rec['problem'] ?? $title,
-                        'description' => $rec['recommendation'] ?? '',
-                        'explanation' => $rec['explanation'] ?? '',
-                        'recommendation' => $rec['recommendation'] ?? '',
-                        'evidence' => $rec['evidence'] ?? null,
-                        'source_metric' => $rec['source_metric'] ?? '',
-                        'priority' => strtolower($rec['priority'] ?? 'medium'),
-                        'status' => $status,
-                        'faculty_notes' => $facultyNotes,
+                        'overall_score' => 0.0,
+                        'total_questions' => count($questions),
+                        'analysis_status' => 'completed',
+                        'processing_error' => null,
+                        'analyzed_at' => now(),
                     ]
                 );
 
-                $persistedIds[] = $saved->id;
-            }
+                // Persist recommendations
+                // We preserve existing accepted/dismissed statuses if the same problem/title exists
+                $existingRecs = Recommendation::where('analysis_report_id', $report->id)->get()->keyBy('title');
 
-            // Clean up stale pending recommendations that no longer apply
-            Recommendation::where('analysis_report_id', $report->id)
-                ->where('status', 'pending')
-                ->whereNotIn('id', $persistedIds)
-                ->delete();
+                $newRecList = $aiResponse['recommendations'] ?? [];
+                $persistedIds = [];
 
-            $allRecommendations = Recommendation::where('analysis_report_id', $report->id)
-                ->orderByRaw("FIELD(priority, 'high', 'medium', 'low')")
-                ->get();
+                foreach ($newRecList as $rec) {
+                    $title = $rec['problem'] ?? 'Assessment Recommendation';
+                    $existing = $existingRecs->get($title);
+
+                    $status = $existing ? $existing->status : 'pending';
+                    $facultyNotes = $existing ? $existing->faculty_notes : null;
+
+                    $saved = Recommendation::updateOrCreate(
+                        [
+                            'analysis_report_id' => $report->id,
+                            'title' => $title,
+                        ],
+                        [
+                            'category' => $rec['category'] ?? 'general',
+                            'problem' => $rec['problem'] ?? $title,
+                            'description' => $rec['recommendation'] ?? '',
+                            'explanation' => $rec['explanation'] ?? '',
+                            'recommendation' => $rec['recommendation'] ?? '',
+                            'evidence' => $rec['evidence'] ?? null,
+                            'source_metric' => $rec['source_metric'] ?? '',
+                            'priority' => strtolower($rec['priority'] ?? 'medium'),
+                            'status' => $status,
+                            'faculty_notes' => $facultyNotes,
+                        ]
+                    );
+
+                    $persistedIds[] = $saved->id;
+                }
+
+                // Clean up stale pending recommendations that no longer apply
+                Recommendation::where('analysis_report_id', $report->id)
+                    ->where('status', 'pending')
+                    ->whereNotIn('id', $persistedIds)
+                    ->delete();
+
+                return Recommendation::where('analysis_report_id', $report->id)
+                    ->orderByRaw("FIELD(priority, 'high', 'medium', 'low')")
+                    ->get();
+            });
 
             return response()->json([
                 'status' => 'success',
@@ -990,10 +1157,18 @@ class AiAnalysisController extends Controller
             ]);
         } catch (Exception $e) {
             Log::error('Assessment recommendation generation failed: ' . $e->getMessage());
+
+            if ($report) {
+                $report->update([
+                    'analysis_status' => 'failed',
+                    'processing_error' => $e->getMessage(),
+                ]);
+            }
+
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
-            ], 502);
+            ], $this->determineErrorStatus($e));
         }
     }
 
@@ -1076,7 +1251,7 @@ class AiAnalysisController extends Controller
     }
 
     /**
-     * STEP 15: Unified AI Assessment Analysis endpoint.
+     * STEP 15 & 16: Unified AI Assessment Analysis endpoint.
      * Evaluates Questions, LO Alignment, Past Similarity, Quality Engine, and Recommendations in one consolidated run.
      */
     public function analyzeAssessment(Request $request): JsonResponse
@@ -1126,6 +1301,15 @@ class AiAnalysisController extends Controller
                     'message' => 'Assessment has no questions to analyze.',
                 ], 422);
             }
+
+            // Set analysis report status to processing
+            AnalysisReport::updateOrCreate(
+                ['assessment_id' => $assessment->id],
+                [
+                    'analysis_status' => 'processing',
+                    'processing_error' => null,
+                ]
+            );
 
             $course = $assessment->course;
             $topics = [];
@@ -1217,6 +1401,7 @@ class AiAnalysisController extends Controller
 
         try {
             $aiResult = $this->aiService->analyzeAssessment($payload);
+            $this->validateUnifiedAiResponse($aiResult);
 
             // Persist to database if assessment exists
             if ($assessment) {
@@ -1224,115 +1409,165 @@ class AiAnalysisController extends Controller
                 $recommendationsData = $aiResult['recommendations'] ?? [];
                 $alignmentAnalysis = $aiResult['alignment_analysis'] ?? [];
                 $similarityAnalysis = $aiResult['similarity_analysis'] ?? [];
+                $components = $qualityAnalysis['components'] ?? [];
 
-                // 1. Update/create AnalysisReport
-                $report = AnalysisReport::updateOrCreate(
-                    ['assessment_id' => $assessment->id],
-                    [
-                        'overall_score' => $qualityAnalysis['overall_quality_score'] ?? 0.0,
-                        'total_questions' => count($questions),
-                        'analysis_status' => 'completed',
-                        'findings' => [
-                            'summary' => $aiResult['summary'] ?? [],
-                            'quality' => $qualityAnalysis,
-                            'alignment' => $alignmentAnalysis,
-                            'similarity' => $similarityAnalysis,
-                        ],
-                        'analyzed_at' => now(),
-                    ]
-                );
+                DB::transaction(function () use (
+                    $assessment,
+                    $questions,
+                    $prevQuestions,
+                    $aiResult,
+                    $qualityAnalysis,
+                    $recommendationsData,
+                    $alignmentAnalysis,
+                    $similarityAnalysis,
+                    $components
+                ) {
+                    // 1. Update/create AnalysisReport
+                    $similarCount = ($similarityAnalysis['potential_duplicates_count'] ?? 0) + ($similarityAnalysis['highly_similar_count'] ?? 0);
+                    $report = AnalysisReport::updateOrCreate(
+                        ['assessment_id' => $assessment->id],
+                        [
+                            'overall_score' => (float) ($qualityAnalysis['overall_quality_score'] ?? 0.0),
+                            'topic_coverage_score' => (float) ($components['topic_coverage'] ?? 0.0),
+                            'learning_outcome_alignment_score' => (float) ($components['learning_outcome_coverage'] ?? ($alignmentAnalysis['overall_alignment_score'] ?? 0.0)),
+                            'difficulty_balance_score' => (float) ($components['difficulty_balance'] ?? 0.0),
+                            'cognitive_level_balance_score' => (float) ($components['cognitive_diversity'] ?? 0.0),
+                            'similarity_score' => (float) ($similarityAnalysis['average_similarity_score'] ?? 0.0),
+                            'similar_questions_count' => $similarCount,
+                            'total_questions' => count($questions),
+                            'analysis_status' => 'completed',
+                            'processing_error' => null,
+                            'findings' => [
+                                'summary' => $aiResult['summary'] ?? [],
+                                'quality' => $qualityAnalysis,
+                                'quality_engine' => $qualityAnalysis,
+                                'alignment' => $alignmentAnalysis,
+                                'similarity' => $similarityAnalysis,
+                            ],
+                            'analyzed_at' => now(),
+                        ]
+                    );
 
-                // 2. Update question AI fields
-                $qAnalysisList = $aiResult['questions_analysis']['questions'] ?? [];
-                $qAnalysisMap = [];
-                foreach ($qAnalysisList as $qa) {
-                    $qAnalysisMap[$qa['number']] = $qa;
-                }
-
-                foreach ($questions as $q) {
-                    $qa = $qAnalysisMap[$q->question_number] ?? null;
-                    if ($qa) {
-                        $q->ai_cognitive_level = $qa['cognitive_level']['level'] ?? $q->ai_cognitive_level;
-                        $q->ai_difficulty_level = $qa['difficulty']['level'] ?? $q->ai_difficulty_level;
-                        $q->ai_question_type = $qa['classification']['type'] ?? $q->ai_question_type;
-                        $q->ai_topics = array_map(function ($t) {
-                            return is_array($t) ? ($t['name'] ?? '') : (string) $t;
-                        }, $qa['topics'] ?? []);
-                        $q->ai_analysis_status = 'completed';
-                        $q->ai_analyzed_at = now();
-                        $q->save();
+                    // 2. Update question AI fields (preserving faculty manual fields)
+                    $qAnalysisList = $aiResult['questions_analysis']['questions'] ?? [];
+                    $qAnalysisMap = [];
+                    foreach ($qAnalysisList as $qa) {
+                        $qNum = $qa['number'] ?? $qa['question_number'] ?? null;
+                        if ($qNum) {
+                            $qAnalysisMap[$qNum] = $qa;
+                        }
                     }
-                }
 
-                // 3. Persist similarity matches if available
-                if (!empty($similarityAnalysis['matches'])) {
+                    foreach ($questions as $q) {
+                        $qa = $qAnalysisMap[$q->question_number] ?? null;
+                        if ($qa) {
+                            $q->ai_cognitive_level = $qa['cognitive_level']['level'] ?? $q->ai_cognitive_level;
+                            $q->ai_difficulty_level = $qa['difficulty']['level'] ?? $q->ai_difficulty_level;
+                            $q->ai_question_type = $qa['classification']['type'] ?? ($qa['classification']['question_type'] ?? $q->ai_question_type);
+                            $q->ai_topics = array_map(function ($t) {
+                                return is_array($t) ? ($t['name'] ?? '') : (string) $t;
+                            }, $qa['topics'] ?? []);
+                            $q->ai_analysis_status = 'completed';
+                            $q->ai_analyzed_at = now();
+                            $q->save();
+                        }
+                    }
+
+                    // 3. Persist similarity matches if available
                     QuestionSimilarityMatch::where('analysis_report_id', $report->id)->delete();
-                    $qByNumber = $questions->keyBy('question_number');
-                    $pqById = $prevQuestions->keyBy('id');
+                    if (!empty($similarityAnalysis['matches'])) {
+                        $qByNumber = $questions->keyBy('question_number');
+                        $pqById = $prevQuestions->keyBy('id');
 
-                    foreach ($similarityAnalysis['matches'] as $matchGroup) {
-                        $cNum = $matchGroup['current_question_number'] ?? null;
-                        $cQuestion = $qByNumber->get($cNum);
+                        foreach ($similarityAnalysis['matches'] as $matchGroup) {
+                            $cNum = $matchGroup['current_question_number'] ?? null;
+                            $cQuestion = $qByNumber->get($cNum);
 
-                        if ($cQuestion && !empty($matchGroup['matches'])) {
-                            foreach ($matchGroup['matches'] as $m) {
-                                $pId = $m['previous_question_id'] ?? null;
-                                if ($pId && $pqById->has($pId)) {
-                                    QuestionSimilarityMatch::create([
-                                        'analysis_report_id' => $report->id,
-                                        'current_question_id' => $cQuestion->id,
-                                        'previous_question_id' => $pId,
-                                        'similarity_score' => $m['similarity_score'] ?? 0.0,
-                                        'similarity_status' => $m['similarity_status'] ?? 'NOT_SIMILAR',
-                                        'reasoning' => $matchGroup['reasoning'] ?? null,
-                                    ]);
+                            if ($cQuestion && !empty($matchGroup['matches'])) {
+                                foreach ($matchGroup['matches'] as $m) {
+                                    $pId = $m['previous_question_id'] ?? null;
+                                    if ($pId && $pqById->has($pId)) {
+                                        QuestionSimilarityMatch::create([
+                                            'analysis_report_id' => $report->id,
+                                            'current_question_id' => $cQuestion->id,
+                                            'previous_question_id' => $pId,
+                                            'similarity_score' => $m['similarity_score'] ?? 0.0,
+                                            'similarity_status' => $m['similarity_status'] ?? 'NOT_SIMILAR',
+                                            'reasoning' => $matchGroup['reasoning'] ?? null,
+                                        ]);
+                                    }
                                 }
                             }
                         }
                     }
-                }
 
-                // 4. Persist recommendations
-                $newRecList = $recommendationsData['recommendations'] ?? [];
-                if (!empty($newRecList)) {
-                    $existingRecs = Recommendation::where('analysis_report_id', $report->id)->get()->keyBy('title');
-                    $persistedIds = [];
+                    // 4. Persist Learning Outcome Alignment records
+                    QuestionLearningOutcomeAlignment::where('analysis_report_id', $report->id)->delete();
+                    $qaList = $alignmentAnalysis['question_alignment'] ?? [];
+                    if (!empty($qaList) && $assessment->course->learningOutcomes->isNotEmpty()) {
+                        $loById = $assessment->course->learningOutcomes->keyBy('id');
+                        $qById = $questions->keyBy('id');
 
-                    foreach ($newRecList as $rec) {
-                        $title = $rec['problem'] ?? 'Assessment Recommendation';
-                        $existing = $existingRecs->get($title);
+                        foreach ($qaList as $qaItem) {
+                            $qId = $qaItem['question_id'] ?? null;
+                            $matchedLo = $qaItem['matched_learning_outcome'] ?? null;
+                            $loId = $matchedLo['id'] ?? null;
 
-                        $status = $existing ? $existing->status : 'pending';
-                        $facultyNotes = $existing ? $existing->faculty_notes : null;
-
-                        $saved = Recommendation::updateOrCreate(
-                            [
-                                'analysis_report_id' => $report->id,
-                                'title' => $title,
-                            ],
-                            [
-                                'category' => $rec['category'] ?? 'general',
-                                'problem' => $rec['problem'] ?? $title,
-                                'description' => $rec['recommendation'] ?? '',
-                                'explanation' => $rec['explanation'] ?? '',
-                                'recommendation' => $rec['recommendation'] ?? '',
-                                'evidence' => $rec['evidence'] ?? null,
-                                'source_metric' => $rec['source_metric'] ?? '',
-                                'priority' => strtolower($rec['priority'] ?? 'medium'),
-                                'status' => $status,
-                                'faculty_notes' => $facultyNotes,
-                            ]
-                        );
-
-                        $persistedIds[] = $saved->id;
+                            if ($qId && $loId && $qById->has($qId) && $loById->has($loId)) {
+                                QuestionLearningOutcomeAlignment::create([
+                                    'analysis_report_id' => $report->id,
+                                    'question_id' => $qId,
+                                    'learning_outcome_id' => $loId,
+                                    'similarity_score' => $qaItem['alignment_score'] ?? ($matchedLo['similarity_score'] ?? 0.0),
+                                    'alignment' => $qaItem['alignment_status'] ?? 'NOT_ALIGNED',
+                                    'reasoning' => $qaItem['reasoning'] ?? null,
+                                ]);
+                            }
+                        }
                     }
 
-                    // Clean up stale pending recommendations
-                    Recommendation::where('analysis_report_id', $report->id)
-                        ->where('status', 'pending')
-                        ->whereNotIn('id', $persistedIds)
-                        ->delete();
-                }
+                    // 5. Persist recommendations (preserving faculty manual decision status)
+                    $newRecList = $recommendationsData['recommendations'] ?? [];
+                    if (!empty($newRecList)) {
+                        $existingRecs = Recommendation::where('analysis_report_id', $report->id)->get()->keyBy('title');
+                        $persistedIds = [];
+
+                        foreach ($newRecList as $rec) {
+                            $title = $rec['problem'] ?? 'Assessment Recommendation';
+                            $existing = $existingRecs->get($title);
+
+                            $status = $existing ? $existing->status : 'pending';
+                            $facultyNotes = $existing ? $existing->faculty_notes : null;
+
+                            $saved = Recommendation::updateOrCreate(
+                                [
+                                    'analysis_report_id' => $report->id,
+                                    'title' => $title,
+                                ],
+                                [
+                                    'category' => $rec['category'] ?? 'general',
+                                    'problem' => $rec['problem'] ?? $title,
+                                    'description' => $rec['recommendation'] ?? '',
+                                    'explanation' => $rec['explanation'] ?? '',
+                                    'recommendation' => $rec['recommendation'] ?? '',
+                                    'evidence' => $rec['evidence'] ?? null,
+                                    'source_metric' => $rec['source_metric'] ?? '',
+                                    'priority' => strtolower($rec['priority'] ?? 'medium'),
+                                    'status' => $status,
+                                    'faculty_notes' => $facultyNotes,
+                                ]
+                            );
+
+                            $persistedIds[] = $saved->id;
+                        }
+
+                        // Clean up stale pending recommendations
+                        Recommendation::where('analysis_report_id', $report->id)
+                            ->where('status', 'pending')
+                            ->whereNotIn('id', $persistedIds)
+                            ->delete();
+                    }
+                });
             }
 
             return response()->json([
@@ -1342,10 +1577,21 @@ class AiAnalysisController extends Controller
             ]);
         } catch (Exception $e) {
             Log::error('Unified assessment analysis failed: ' . $e->getMessage());
+
+            if ($assessment) {
+                AnalysisReport::updateOrCreate(
+                    ['assessment_id' => $assessment->id],
+                    [
+                        'analysis_status' => 'failed',
+                        'processing_error' => $e->getMessage(),
+                    ]
+                );
+            }
+
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
-            ], 502);
+            ], $this->determineErrorStatus($e));
         }
     }
 

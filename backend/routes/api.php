@@ -83,6 +83,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('ai')->group(function () {
         Route::get('/health', [AiAnalysisController::class, 'health']);
         Route::post('/analyze', [AiAnalysisController::class, 'analyze']);
+        Route::post('/analyze-document', [AiAnalysisController::class, 'analyzeDocument']);
         Route::post('/analyze-question', [AiAnalysisController::class, 'analyzeQuestion']);
         Route::post('/analyze-questions', [AiAnalysisController::class, 'analyzeQuestions']);
         Route::post('/analyze-alignment', [AiAnalysisController::class, 'analyzeAlignment']);

@@ -12,17 +12,19 @@ class AiService
 {
     protected string $baseUrl;
     protected ?string $apiKey;
+    protected int $connectTimeout;
     protected int $timeout;
 
     public function __construct()
     {
         $this->baseUrl = rtrim(config('services.ai.url', 'http://127.0.0.1:8001'), '/');
         $this->apiKey = config('services.ai.api_key');
-        $this->timeout = (int) config('services.ai.timeout', 30);
+        $this->connectTimeout = (int) config('services.ai.connect_timeout', 10);
+        $this->timeout = (int) config('services.ai.timeout', 120);
     }
 
     /**
-     * Build HTTP client with base configuration and optional authentication headers.
+     * Build HTTP client with base configuration, timeouts and optional authentication headers.
      */
     protected function client()
     {
@@ -35,8 +37,22 @@ class AiService
             $headers['X-AI-Service-Key'] = $this->apiKey;
         }
 
-        return Http::timeout($this->timeout)
+        return Http::connectTimeout($this->connectTimeout)
+            ->timeout($this->timeout)
             ->withHeaders($headers);
+    }
+
+    /**
+     * Send raw/cleaned document text to FastAPI for structured document extraction and NLP analysis.
+     *
+     * @param string $text
+     * @param string $documentType
+     * @return array
+     * @throws Exception
+     */
+    public function sendDocument(string $text, string $documentType = 'question_paper'): array
+    {
+        return $this->analyze($text, $documentType);
     }
 
     /**
@@ -106,11 +122,9 @@ class AiService
             Log::error('AI Service returned error status: ' . $response->status() . ' - ' . $response->body());
             throw new Exception('AI Service failed to process the document.');
         } catch (ConnectionException $e) {
-            Log::error('AI Service connection error: ' . $e->getMessage());
-            throw new Exception('AI Service is currently unavailable. Please ensure the AI service is running.');
+            $this->handleHttpException($e, 'analyzing document text');
         } catch (RequestException $e) {
-            Log::error('AI Service request exception: ' . $e->getMessage());
-            throw new Exception('AI Service request timed out or encountered an error.');
+            $this->handleHttpException($e, 'analyzing document text');
         }
     }
 
@@ -209,11 +223,9 @@ class AiService
             Log::error('AI Service analyze-question error: ' . $response->status() . ' - ' . $response->body());
             throw new Exception('AI Service failed to analyze question.');
         } catch (ConnectionException $e) {
-            Log::error('AI Service connection error: ' . $e->getMessage());
-            throw new Exception('AI Service is currently unavailable.');
+            $this->handleHttpException($e, 'analyzing single question');
         } catch (RequestException $e) {
-            Log::error('AI Service request exception: ' . $e->getMessage());
-            throw new Exception('AI Service request timed out or encountered an error.');
+            $this->handleHttpException($e, 'analyzing single question');
         }
     }
 
@@ -269,11 +281,9 @@ class AiService
             Log::error('AI Service analyze-questions error: ' . $response->status() . ' - ' . $response->body());
             throw new Exception('AI Service failed to analyze questions batch.');
         } catch (ConnectionException $e) {
-            Log::error('AI Service connection error: ' . $e->getMessage());
-            throw new Exception('AI Service is currently unavailable.');
+            $this->handleHttpException($e, 'analyzing questions batch');
         } catch (RequestException $e) {
-            Log::error('AI Service request exception: ' . $e->getMessage());
-            throw new Exception('AI Service request timed out or encountered an error.');
+            $this->handleHttpException($e, 'analyzing questions batch');
         }
     }
 
@@ -369,11 +379,9 @@ class AiService
             Log::error('AI Service analyze-alignment error: ' . $response->status() . ' - ' . $response->body());
             throw new Exception('AI Service failed to analyze learning outcome alignment.');
         } catch (ConnectionException $e) {
-            Log::error('AI Service connection error: ' . $e->getMessage());
-            throw new Exception('AI Service is currently unavailable.');
+            $this->handleHttpException($e, 'analyzing learning outcome alignment');
         } catch (RequestException $e) {
-            Log::error('AI Service request exception: ' . $e->getMessage());
-            throw new Exception('AI Service request timed out or encountered an error.');
+            $this->handleHttpException($e, 'analyzing learning outcome alignment');
         }
     }
 
@@ -476,11 +484,9 @@ class AiService
             Log::error('AI Service analyze-similarity error: ' . $response->status() . ' - ' . $response->body());
             throw new Exception('AI Service failed to analyze question semantic similarity.');
         } catch (ConnectionException $e) {
-            Log::error('AI Service connection error: ' . $e->getMessage());
-            throw new Exception('AI Service is currently unavailable.');
+            $this->handleHttpException($e, 'analyzing semantic similarity');
         } catch (RequestException $e) {
-            Log::error('AI Service request exception: ' . $e->getMessage());
-            throw new Exception('AI Service request timed out or encountered an error.');
+            $this->handleHttpException($e, 'analyzing semantic similarity');
         }
     }
 
@@ -602,11 +608,9 @@ class AiService
             Log::error('AI Service analyze-assessment-quality error: ' . $response->status() . ' - ' . $response->body());
             throw new Exception('AI Service failed to evaluate assessment quality.');
         } catch (ConnectionException $e) {
-            Log::error('AI Service connection error: ' . $e->getMessage());
-            throw new Exception('AI Service is currently unavailable.');
+            $this->handleHttpException($e, 'evaluating assessment quality');
         } catch (RequestException $e) {
-            Log::error('AI Service request exception: ' . $e->getMessage());
-            throw new Exception('AI Service request timed out or encountered an error.');
+            $this->handleHttpException($e, 'evaluating assessment quality');
         }
     }
 
@@ -635,11 +639,9 @@ class AiService
             Log::error('AI Service generate-recommendations error: ' . $response->status() . ' - ' . $response->body());
             throw new Exception('AI Service failed to generate recommendations.');
         } catch (ConnectionException $e) {
-            Log::error('AI Service connection error: ' . $e->getMessage());
-            throw new Exception('AI Service is currently unavailable.');
+            $this->handleHttpException($e, 'generating recommendations');
         } catch (RequestException $e) {
-            Log::error('AI Service request exception: ' . $e->getMessage());
-            throw new Exception('AI Service request timed out or encountered an error.');
+            $this->handleHttpException($e, 'generating recommendations');
         }
     }
 
@@ -672,12 +674,38 @@ class AiService
             Log::error('AI Service analyze-assessment error: ' . $response->status() . ' - ' . $response->body());
             throw new Exception('AI Service failed to perform unified assessment analysis.');
         } catch (ConnectionException $e) {
-            Log::error('AI Service connection error: ' . $e->getMessage());
-            throw new Exception('AI Service is currently unavailable.');
+            $this->handleHttpException($e, 'performing unified assessment analysis');
         } catch (RequestException $e) {
-            Log::error('AI Service request exception: ' . $e->getMessage());
-            throw new Exception('AI Service request timed out or encountered an error.');
+            $this->handleHttpException($e, 'performing unified assessment analysis');
         }
+    }
+
+    /**
+     * Translate HTTP / Connection / Request exceptions into descriptive domain exceptions with timeout detection.
+     *
+     * @param Exception $e
+     * @param string $action
+     * @return void
+     * @throws Exception
+     */
+    protected function handleHttpException(Exception $e, string $action): void
+    {
+        $msg = $e->getMessage();
+        Log::error("AI Service {$action} error: {$msg}");
+
+        if (
+            str_contains(strtolower($msg), 'timed out') ||
+            str_contains(strtolower($msg), 'timeout') ||
+            str_contains($msg, 'cURL error 28')
+        ) {
+            throw new Exception("AI Service request timed out while {$action}.");
+        }
+
+        if ($e instanceof ConnectionException) {
+            throw new Exception("AI Service is currently unavailable while {$action}.");
+        }
+
+        throw new Exception("AI Service request encountered an error while {$action}.");
     }
 }
 
