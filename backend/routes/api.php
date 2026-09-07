@@ -92,5 +92,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/assessments/{assessment}/analyze-alignment', [AiAnalysisController::class, 'analyzeAssessmentAlignment']);
         Route::post('/assessments/{assessment}/analyze-similarity', [AiAnalysisController::class, 'analyzeAssessmentSimilarity']);
         Route::post('/assessments/{assessment}/analyze-quality', [AiAnalysisController::class, 'analyzeAssessmentQuality']);
+
+        // AI Recommendation Engine (STEP 14)
+        Route::post('/generate-recommendations', [AiAnalysisController::class, 'generateRecommendations']);
+        Route::post('/assessments/{assessment}/generate-recommendations', [AiAnalysisController::class, 'generateAssessmentRecommendations']);
+        Route::get('/assessments/{assessment}/recommendations', [AiAnalysisController::class, 'getAssessmentRecommendations']);
+        Route::patch('/recommendations/{recommendation}/status', [AiAnalysisController::class, 'updateRecommendationStatus']);
     });
 });

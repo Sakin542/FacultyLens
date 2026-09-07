@@ -9,6 +9,7 @@ from app.services.question_analyzer import QuestionAnalyzer
 from app.services.alignment_analyzer import AlignmentAnalyzer
 from app.services.semantic_similarity_analyzer import SemanticSimilarityAnalyzer
 from app.services.assessment_quality_engine import AssessmentQualityEngine
+from app.services.recommendation_engine import RecommendationEngine
 from app.utils.text_utils import split_paragraphs, split_sentences
 from app.schemas.analysis import (
     HealthResponse,
@@ -34,6 +35,10 @@ from app.schemas.similarity import (
 from app.schemas.quality import (
     QualityAnalysisRequest,
     QualityAnalysisResponse,
+)
+from app.schemas.recommendation import (
+    RecommendationRequest,
+    RecommendationResponse,
 )
 
 logger = logging.getLogger("facultylens.ai")
@@ -321,6 +326,31 @@ def analyze_assessment_quality(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to evaluate assessment quality: {str(e)}",
         )
+
+
+@router.post(
+    "/api/v1/generate-recommendations",
+    response_model=RecommendationResponse,
+    dependencies=[Depends(verify_api_key)],
+)
+def generate_recommendations(
+    payload: RecommendationRequest,
+) -> RecommendationResponse:
+    """
+    Generate prioritized, evidence-based pedagogical recommendations based on
+    detected problems across topic coverage, LO alignment, difficulty balance,
+    Bloom cognitive diversity, question formats, marks integrity, and past similarity.
+    """
+    try:
+        engine = RecommendationEngine(custom_thresholds=payload.custom_rules)
+        return engine.generate(payload)
+    except Exception as e:
+        logger.error(f"Error generating recommendations: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to generate recommendations: {str(e)}",
+        )
+
 
 
 

@@ -609,7 +609,41 @@ class AiService
             throw new Exception('AI Service request timed out or encountered an error.');
         }
     }
+
+    /**
+     * Generate prioritized, evidence-based recommendations for faculty review.
+     *
+     * @param array $payload Structured request with assessment metadata and prior analysis sections
+     * @return array
+     * @throws Exception
+     */
+    public function generateRecommendations(array $payload): array
+    {
+        try {
+            $response = $this->client()->post("{$this->baseUrl}/api/v1/generate-recommendations", $payload);
+
+            if ($response->successful()) {
+                return $response->json();
+            }
+
+            if ($response->status() === 422) {
+                $errorData = $response->json();
+                $message = $errorData['message'] ?? 'Validation failed in AI service.';
+                throw new Exception($message);
+            }
+
+            Log::error('AI Service generate-recommendations error: ' . $response->status() . ' - ' . $response->body());
+            throw new Exception('AI Service failed to generate recommendations.');
+        } catch (ConnectionException $e) {
+            Log::error('AI Service connection error: ' . $e->getMessage());
+            throw new Exception('AI Service is currently unavailable.');
+        } catch (RequestException $e) {
+            Log::error('AI Service request exception: ' . $e->getMessage());
+            throw new Exception('AI Service request timed out or encountered an error.');
+        }
+    }
 }
+
 
 
 

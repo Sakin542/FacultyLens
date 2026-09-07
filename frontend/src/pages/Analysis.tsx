@@ -7,11 +7,16 @@ import { mockDetailedAnalysis } from '@/utils/mockData';
 import { LearningOutcomeAlignmentSection } from '@/components/analysis/LearningOutcomeAlignmentSection';
 import { SemanticSimilaritySection } from '@/components/analysis/SemanticSimilaritySection';
 import { AssessmentQualitySection } from '@/components/analysis/AssessmentQualitySection';
-import { AlignmentAnalysisResult, SimilarityAnalysisResult, AssessmentQualityResult } from '@/types';
+import { RecommendationSection } from '@/components/analysis/RecommendationSection';
+import {
+  AlignmentAnalysisResult,
+  SimilarityAnalysisResult,
+  AssessmentQualityResult,
+  EvidenceBasedRecommendation,
+} from '@/types';
 import {
   Sparkles,
   AlertTriangle,
-  CheckCircle2,
   CopyCheck,
 } from 'lucide-react';
 
@@ -412,14 +417,109 @@ const mockQualityData: AssessmentQualityResult = {
   ],
 };
 
+const mockRecommendationData: EvidenceBasedRecommendation[] = [
+  {
+    id: 'rec_lo_101',
+    category: 'learning_outcome',
+    problem: 'CLO-4 (Concurrency Control) is only weakly assessed',
+    explanation: 'CLO-4 lacks any strongly aligned examination questions and max semantic similarity is only 0.46.',
+    evidence: {
+      lo_code: 'CLO-4',
+      description: 'Analyze concurrency control protocols and crash recovery algorithms.',
+      aligned_questions_count: 0,
+      strong_matches_count: 0,
+      weak_matches_count: 0,
+      max_similarity_score: 0.46,
+    },
+    recommendation: 'Consider adding a dedicated question on two-phase locking (2PL) or write-ahead logging (WAL) protocols to evaluate CLO-4 directly.',
+    priority: 'HIGH',
+    source_metric: 'Learning Outcome Alignment',
+    status: 'pending',
+  },
+  {
+    id: 'rec_sim_102',
+    category: 'semantic_similarity',
+    problem: 'Question #2 is potentially duplicated from Spring 2025 Midterm Exam (92.4% similarity)',
+    explanation: 'Question #2 shares 92.4% semantic similarity with "Write an SQL query to find the top 5 departments with the highest total student enrollments" from Spring 2025.',
+    evidence: {
+      current_question_number: 2,
+      current_question_text: 'Write SQL statements to retrieve top 5 departments with highest student enrollments.',
+      similarity_score: 0.924,
+      matched_source: 'Spring 2025 Midterm Exam Q3',
+      status: 'POTENTIAL_DUPLICATE',
+    },
+    recommendation: 'Review the question formulation and consider modifying the schema context, grouping conditions, or aggregation criteria to preserve originality.',
+    priority: 'HIGH',
+    source_metric: 'Semantic Similarity Engine',
+    status: 'pending',
+  },
+  {
+    id: 'rec_cog_103',
+    category: 'cognitive_level',
+    problem: 'Cognitive concentration at Apply level (66.7% of marks)',
+    explanation: 'Two-thirds of total marks are concentrated in Apply-tier queries and calculations, with limited representation in Analyze or Evaluate domains.',
+    evidence: {
+      level: 'Apply',
+      percentage: 66.7,
+      threshold: 60.0,
+    },
+    recommendation: 'Consider incorporating higher-order questions (e.g. comparing query execution plans or critiquing transaction schedules) to stimulate analytical reasoning.',
+    priority: 'MEDIUM',
+    source_metric: 'Bloom Cognitive Distribution',
+    status: 'pending',
+  },
+  {
+    id: 'rec_dif_104',
+    category: 'difficulty',
+    problem: 'Slight deviation from difficulty target profile (Medium-order skew)',
+    explanation: 'The actual assessment features 65% Medium difficulty vs. target of 50%, with lower Easy foundational questions (15% vs 30%).',
+    evidence: {
+      actual_distribution: { easy: 15.0, medium: 65.0, hard: 20.0 },
+      target_distribution: { easy: 30.0, medium: 50.0, hard: 20.0 },
+      total_deviation: 30.0,
+    },
+    recommendation: 'Consider introducing a foundational definition or concept verification question to align closer with the intended 30% / 50% / 20% profile.',
+    priority: 'MEDIUM',
+    source_metric: 'Difficulty Balance Analysis',
+    status: 'accepted',
+    faculty_notes: 'Will replace Q1 sub-part with a 5-mark foundational ER terminology check.',
+  },
+  {
+    id: 'rec_top_105',
+    category: 'topic_coverage',
+    problem: 'Topic "Transaction Recovery & Logging" is not represented in the question paper',
+    explanation: 'The current assessment contains 0 questions mapped to this core database management syllabus module.',
+    evidence: {
+      topic_name: 'Transaction Recovery & Logging',
+      question_count: 0,
+      coverage_percentage: 0.0,
+      status: 'NOT_COVERED',
+    },
+    recommendation: 'Consider adding a question evaluating checkpointing or ARIES recovery to ensure comprehensive module evaluation.',
+    priority: 'MEDIUM',
+    source_metric: 'Topic Coverage Analysis',
+    status: 'pending',
+  },
+  {
+    id: 'rec_div_106',
+    category: 'question_diversity',
+    problem: 'High reliance on Descriptive / Problem-Solving format (83.3%)',
+    explanation: '5 of 6 questions are descriptive problem statements with no structured scenario or design walkthrough items.',
+    evidence: {
+      question_type: 'Descriptive / Problem Solving',
+      percentage: 83.3,
+    },
+    recommendation: 'Consider blending question formats (e.g. structured case scenario or schema critique) to provide varied student evaluation modalities.',
+    priority: 'LOW',
+    source_metric: 'Question Format Diversity',
+    status: 'dismissed',
+    faculty_notes: 'Retaining descriptive format as this is a technical written midterm.',
+  },
+];
+
 export const Analysis: React.FC = () => {
   const [analysis] = useState(mockDetailedAnalysis);
   const [selectedTab, setSelectedTab] = useState<'overview' | 'quality' | 'alignment' | 'similarity' | 'findings' | 'recommendations' | 'questions'>('overview');
-  const [acceptedRecs, setAcceptedRecs] = useState<Record<string, boolean>>({});
-
-  const toggleAcceptRec = (id: string) => {
-    setAcceptedRecs((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
 
   const getSeverityBadge = (severity: string) => {
     switch (severity) {
@@ -523,7 +623,7 @@ export const Analysis: React.FC = () => {
           { id: 'alignment', label: `LO Alignment (${mockAlignmentData.covered_learning_outcomes_count}/${mockAlignmentData.total_learning_outcomes})` },
           { id: 'similarity', label: `Semantic Similarity (${mockSimilarityData.potential_duplicates_count + mockSimilarityData.highly_similar_count} flags)` },
           { id: 'findings', label: `AI Findings (${analysis.findings.length})` },
-          { id: 'recommendations', label: `Recommendations (${analysis.recommendations.length})` },
+          { id: 'recommendations', label: `Recommendations (${mockRecommendationData.length})` },
           { id: 'questions', label: `Question Breakdown (${analysis.questions.length})` },
         ].map((tab) => (
           <button
@@ -719,61 +819,9 @@ export const Analysis: React.FC = () => {
         </div>
       )}
 
-      {/* Tab: Recommendations */}
+      {/* Tab: Recommendations (Step 14) */}
       {selectedTab === 'recommendations' && (
-        <div className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Actionable AI Recommendations</CardTitle>
-              <CardDescription>Faculty-in-the-loop decision suggestions to elevate assessment quality</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {analysis.recommendations.map((rec) => {
-                const isAccepted = acceptedRecs[rec.id];
-                return (
-                  <div
-                    key={rec.id}
-                    className={`p-5 rounded-xl border transition-all space-y-3 ${
-                      isAccepted
-                        ? 'border-[#16A34A] bg-[#F0FDF4]'
-                        : 'border-[#E5E5E5] bg-white hover:border-[#111111]'
-                    }`}
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <Badge variant={rec.priority === 'High' ? 'Critical' : 'Attention'} className="text-[10px]">
-                            {rec.priority} Priority
-                          </Badge>
-                          <Badge variant="neutral" className="text-[10px]">{rec.category}</Badge>
-                        </div>
-                        <h4 className="text-sm font-bold text-[#111111] pt-1">{rec.title}</h4>
-                      </div>
-
-                      <Button
-                        variant={isAccepted ? 'primary' : 'outline'}
-                        size="sm"
-                        leftIcon={isAccepted ? <CheckCircle2 className="w-3.5 h-3.5" /> : undefined}
-                        onClick={() => toggleAcceptRec(rec.id)}
-                      >
-                        {isAccepted ? 'Marked for Action' : 'Accept Suggestion'}
-                      </Button>
-                    </div>
-
-                    <p className="text-xs text-[#737373] leading-relaxed">{rec.description}</p>
-
-                    <div className="pt-2 flex items-center gap-2 text-[11px] font-mono text-[#111111]">
-                      <span className="font-semibold text-[#737373]">Action:</span>
-                      <span className="px-2 py-0.5 rounded bg-[#F7F7F5] border border-[#E5E5E5]">
-                        {rec.action}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
-            </CardContent>
-          </Card>
-        </div>
+        <RecommendationSection recommendations={mockRecommendationData} />
       )}
 
       {/* Tab: Question Breakdown */}
