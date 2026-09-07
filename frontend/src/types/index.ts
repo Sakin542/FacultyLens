@@ -1,14 +1,15 @@
 export type UserRole = 'faculty' | 'department_head' | 'dean' | 'admin';
 
 export interface User {
-  id: string;
-  fullName: string;
+  id: number | string;
+  name: string;
+  fullName?: string;
   email: string;
   department: string;
   designation: string;
-  role: UserRole;
+  role?: UserRole;
   avatarUrl?: string;
-  createdAt: string;
+  createdAt?: string;
 }
 
 export interface LearningOutcome {

@@ -1,8 +1,7 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { cn } from '@/utils/cn';
-import { mockCurrentUser } from '@/utils/mockData';
-import { getCurrentUser, logoutUser } from '@/utils/auth';
+import { useAuth } from '@/context/AuthContext';
 import { Logo } from '@/components/common/Logo';
 import {
   LayoutDashboard,
@@ -23,7 +22,7 @@ export interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) => {
   const navigate = useNavigate();
-  const currentUser = getCurrentUser() || mockCurrentUser;
+  const { user, logout } = useAuth();
 
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
@@ -34,11 +33,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
     { name: 'Settings', path: '/settings', icon: Settings },
   ];
 
-  const handleLogout = () => {
-    logoutUser();
+  const handleLogout = async () => {
+    await logout();
     if (onCloseMobile) onCloseMobile();
-    navigate('/login');
+    navigate('/login', { replace: true });
   };
+
+  const displayName = user?.name || user?.fullName || 'Faculty Member';
+  const displayDesignation = user?.designation || user?.department || 'Faculty';
 
   const content = (
     <div className="flex flex-col h-full bg-[#111111] text-white border-r border-[#262626]">
@@ -107,10 +109,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-xs font-bold text-white truncate tracking-tight">
-              {currentUser.fullName}
+              {displayName}
             </p>
             <p className="text-[10px] text-[#A3A3A3] truncate font-medium">
-              {currentUser.designation}
+              {displayDesignation}
             </p>
           </div>
         </div>

@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/common/Card';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Input';
 import { Badge } from '@/components/common/Badge';
 import { useTheme } from '@/context/ThemeContext';
-import { mockCurrentUser } from '@/utils/mockData';
-import { getCurrentUser, logoutUser } from '@/utils/auth';
+import { useAuth } from '@/context/AuthContext';
 import {
   User,
   LogOut,
@@ -23,14 +22,25 @@ import {
 export const Settings: React.FC = () => {
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
-  const currentUser = getCurrentUser() || mockCurrentUser;
+  const { user, logout } = useAuth();
 
   const [profile, setProfile] = useState({
-    fullName: currentUser.fullName,
-    email: currentUser.email,
-    department: currentUser.department,
-    designation: currentUser.designation,
+    fullName: user?.name || user?.fullName || 'Dr. Faculty Member',
+    email: user?.email || '',
+    department: user?.department || 'Computer Science',
+    designation: user?.designation || 'Lecturer',
   });
+
+  useEffect(() => {
+    if (user) {
+      setProfile({
+        fullName: user.name || user.fullName || '',
+        email: user.email || '',
+        department: user.department || '',
+        designation: user.designation || '',
+      });
+    }
+  }, [user]);
 
   const [passwords, setPasswords] = useState({
     currentPassword: '',
@@ -58,9 +68,9 @@ export const Settings: React.FC = () => {
     setTimeout(() => setPasswordSuccess(false), 3000);
   };
 
-  const handleLogout = () => {
-    logoutUser();
-    navigate('/login');
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login', { replace: true });
   };
 
   return (
@@ -120,7 +130,7 @@ export const Settings: React.FC = () => {
               <CardTitle>Faculty Profile</CardTitle>
               <CardDescription>Manage your institutional identification and department details</CardDescription>
             </div>
-            <Badge variant="outline" className="font-mono">Faculty ID: {currentUser.id || mockCurrentUser.id}</Badge>
+            <Badge variant="outline" className="font-mono">Faculty ID: {user?.id || 'FL-8820'}</Badge>
           </div>
         </CardHeader>
         <CardContent>
@@ -246,7 +256,7 @@ export const Settings: React.FC = () => {
         </CardHeader>
         <CardContent className="flex items-center justify-between pt-2">
           <p className="text-xs text-[#737373]">
-            You are signed in as <strong>{mockCurrentUser.email}</strong>
+            You are signed in as <strong>{user?.email || 'faculty account'}</strong>
           </p>
           <Button
             variant="danger"
