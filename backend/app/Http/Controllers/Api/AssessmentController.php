@@ -69,11 +69,10 @@ class AssessmentController extends Controller
             });
         }
 
-        $assessments = $query->latest()->get();
+        $perPage     = min(max((int) $request->get('per_page', 20), 1), 100);
+        $assessments = $query->latest()->paginate($perPage);
 
-        return response()->json([
-            'data' => $assessments,
-        ]);
+        return response()->json($assessments);
     }
 
     /**

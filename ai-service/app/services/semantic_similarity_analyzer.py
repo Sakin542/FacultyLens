@@ -29,18 +29,24 @@ class SemanticSimilarityAnalyzer:
         thresholds: Optional[SimilarityThresholdsConfig] = None,
         top_k: Optional[int] = None,
         course_id: Optional[int] = None,
+        precomputed_current_embeddings: Optional[List[List[float]]] = None,
     ) -> Dict[str, Any]:
         """
         Run batch semantic similarity analysis and duplicate classification.
+
+        Args:
+            precomputed_current_embeddings: Optional pre-computed embeddings for current
+                questions. When provided, the encode step is skipped to avoid redundant
+                inference in the unified analysis pipeline.
         """
         settings = get_settings()
 
-        th_dup = thresholds.duplicate if thresholds else settings.similarity_duplicate_threshold
+        th_dup  = thresholds.duplicate if thresholds else settings.similarity_duplicate_threshold
         th_high = thresholds.high if thresholds else settings.similarity_high_threshold
-        th_mod = thresholds.moderate if thresholds else settings.similarity_moderate_threshold
+        th_mod  = thresholds.moderate if thresholds else settings.similarity_moderate_threshold
         k = top_k or (thresholds.top_k if thresholds else settings.similarity_top_k)
 
-        total_current = len(current_questions)
+        total_current  = len(current_questions)
         total_previous = len(previous_questions)
 
         # Edge case: No previous questions available in question bank
@@ -78,12 +84,30 @@ class SemanticSimilarityAnalyzer:
                 "findings": ["No historical questions found in the course question bank. All questions are novel."],
             }
 
-        # Step 1: Batch Encode Current and Previous Questions
-        current_texts = [q.text.strip() for q in current_questions]
+        # Step 1: Encode Current and Previous Questions
+        current_texts  = [q.text.strip() for q in current_questions]
         previous_texts = [q.text.strip() for q in previous_questions]
 
-        current_embeddings = self.hf_service.generate_batch_embeddings(current_texts)
-        previous_embeddings = self.hf_service.generate_batch_embeddings(previous_texts)
+        # Use precomputed embeddings when available (avoids double-encoding in unified analysis)
+        if precomputed_current_embeddings is not None and len(precomputed_current_embeddings) == total_current:
+            current_embeddings = precomputed_current_embeddings
+        else:
+            current_embeddings = self.hf_service.generate_batch_embeddings(current_texts)
+
+        # Encode previous questions — batch for memory efficiency on large banks
+        PREV_BATCH_SIZE = 500
+        if total_previous > PREV_BATCH_SIZE:
+            logger.info(
+                f"Large previous question bank ({total_previous}): "
+                f"encoding in batches of {PREV_BATCH_SIZE}."
+            )
+            previous_embeddings: List[List[float]] = []
+            for start in range(0, total_previous, PREV_BATCH_SIZE):
+                batch_texts = previous_texts[start:start + PREV_BATCH_SIZE]
+                batch_vecs  = self.hf_service.generate_batch_embeddings(batch_texts)
+                previous_embeddings.extend(batch_vecs)
+        else:
+            previous_embeddings = self.hf_service.generate_batch_embeddings(previous_texts)
 
         # Step 2: Compute Pairwise Similarity Matrix (N current x M previous)
         sim_matrix = self.similarity_service.compute_similarity_matrix(
