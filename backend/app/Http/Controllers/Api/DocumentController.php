@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DocumentUploadRequest;
+use App\Jobs\ProcessDocumentJob;
 use App\Models\Assessment;
 use App\Models\Course;
 use App\Models\DocumentProcessing;
@@ -63,8 +64,9 @@ class DocumentController extends Controller
 
     /**
      * Store and process a newly uploaded document.
+     * Text extraction is handled asynchronously via ProcessDocumentJob.
      */
-    public function store(DocumentUploadRequest $request, DocumentTextExtractor $extractor): JsonResponse
+    public function store(DocumentUploadRequest $request): JsonResponse
     {
         $user = $request->user();
 
@@ -88,63 +90,46 @@ class DocumentController extends Controller
             }
         }
 
-        $file = $request->file('file');
+        $file             = $request->file('file');
         $originalFileName = $file->getClientOriginalName();
-        $extension = strtolower($file->getClientOriginalExtension() ?: $file->extension());
-        $mimeType = $file->getClientMimeType() ?: $file->getMimeType();
-        $fileSize = $file->getSize();
+        $extension        = strtolower($file->getClientOriginalExtension() ?: $file->extension());
+        $mimeType         = $file->getClientMimeType() ?: $file->getMimeType();
+        $fileSize         = $file->getSize();
 
         // 3. Store file securely
         $storeDirectory = "documents/user_{$user->id}/course_{$course->id}";
         $storedFilePath = $file->store($storeDirectory, 'local');
         $storedFileName = basename($storedFilePath);
 
-        // 4. Create document record with processing state
+        // 4. Create document record with pending state
         $document = DocumentProcessing::create([
-            'user_id' => $user->id,
-            'course_id' => $course->id,
-            'assessment_id' => $request->assessment_id,
-            'document_type' => $request->document_type,
+            'user_id'            => $user->id,
+            'course_id'          => $course->id,
+            'assessment_id'      => $request->assessment_id,
+            'document_type'      => $request->document_type,
             'original_file_name' => $originalFileName,
-            'stored_file_name' => $storedFileName,
-            'file_path' => $storedFilePath,
-            'mime_type' => $mimeType,
-            'file_size' => $fileSize,
-            'processing_status' => 'processing',
+            'stored_file_name'   => $storedFileName,
+            'file_path'          => $storedFilePath,
+            'mime_type'          => $mimeType,
+            'file_size'          => $fileSize,
+            'processing_status'  => 'processing',
         ]);
 
-        // 5. Extract and clean text
-        try {
-            $absolutePath = Storage::disk('local')->path($storedFilePath);
-            $extractionResult = $extractor->extract($absolutePath, $extension);
+        // 5. Dispatch asynchronous text extraction job
+        ProcessDocumentJob::dispatch($document);
+        $document->refresh();
 
-            $document->update([
-                'extracted_text' => $extractionResult['raw_text'],
-                'cleaned_text' => $extractionResult['cleaned_text'],
-                'processing_status' => 'completed',
-                'processing_error' => null,
-                'processed_at' => now(),
-            ]);
-        } catch (Exception $e) {
-            \Illuminate\Support\Facades\Log::warning("Document text extraction failed: " . $e->getMessage());
-            $document->update([
-                'processing_status' => 'failed',
-                'processing_error' => 'The uploaded document could not be processed. Please ensure the file contains readable text and is not corrupted or empty.',
-                'processed_at' => now(),
-            ]);
-        }
-
-        // Audit log document upload event
+        // 6. Audit log document upload event
         $this->auditLogService->log(
             'DOCUMENT_UPLOADED',
             $document,
             $document->id,
             [
-                'document_type' => $document->document_type,
+                'document_type'      => $document->document_type,
                 'original_file_name' => $document->original_file_name,
-                'file_size' => $document->file_size,
-                'processing_status' => $document->processing_status,
-                'course_id' => $course->id,
+                'file_size'          => $document->file_size,
+                'processing_status'  => $document->processing_status,
+                'course_id'          => $course->id,
             ],
             $user
         );
@@ -152,10 +137,10 @@ class DocumentController extends Controller
         $document->load(['course:id,course_name,course_code', 'assessment:id,title,type']);
 
         return response()->json([
-            'data' => $document,
+            'data'    => $document,
             'message' => $document->processing_status === 'completed'
                 ? 'Document uploaded and processed successfully.'
-                : 'Document uploaded but text processing encountered an issue.',
+                : 'Document uploaded successfully. Text extraction is processing.',
         ], 201);
     }
 

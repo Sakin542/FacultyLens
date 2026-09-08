@@ -22,10 +22,19 @@ class LearningOutcomeMatcher:
         questions: List[QuestionItem],
         learning_outcomes: List[LearningOutcomeItem],
         thresholds: ThresholdsConfig,
+        precomputed_q_embeddings: Optional[List[List[float]]] = None,
     ) -> List[Dict[str, Any]]:
         """
         Perform batch semantic encoding of questions and LOs, compute similarity matrix,
         and classify question alignment into STRONG, WEAK, or NOT_ALIGNED.
+
+        Args:
+            questions: List of question items to match.
+            learning_outcomes: List of learning outcome items.
+            thresholds: Similarity thresholds for classification.
+            precomputed_q_embeddings: Optional pre-computed question embeddings. When
+                provided (and length matches ``questions``), the encoding step is skipped,
+                eliminating redundant inference calls in the unified analysis pipeline.
         """
         if not questions or not learning_outcomes:
             return []
@@ -47,8 +56,11 @@ class LearningOutcomeMatcher:
             else:
                 lo_texts.append(lo.description)
 
-        # Batch encode
-        q_embeddings = self.hf_service.generate_batch_embeddings(q_texts)
+        # Use precomputed embeddings if provided to avoid re-encoding
+        if precomputed_q_embeddings is not None and len(precomputed_q_embeddings) == len(questions):
+            q_embeddings = precomputed_q_embeddings
+        else:
+            q_embeddings = self.hf_service.generate_batch_embeddings(q_texts)
         lo_embeddings = self.hf_service.generate_batch_embeddings(lo_texts)
 
         # Pairwise similarity matrix (N questions x M LOs)

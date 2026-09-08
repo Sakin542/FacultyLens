@@ -82,6 +82,9 @@ class AssessmentAnalysisService:
         self, request: UnifiedAssessmentAnalysisRequest
     ) -> Dict[str, Any]:
         """Execute the complete unified analysis pipeline."""
+        import time
+        start_total = time.perf_counter()
+
         logger.info(
             f"Starting unified assessment analysis: {len(request.questions)} questions, "
             f"{len(request.learning_outcomes or [])} LOs, "
@@ -92,6 +95,7 @@ class AssessmentAnalysisService:
         # ------------------------------------------------------------------
         # STEP 1: Question Analysis (Bloom's, Difficulty, Format, Topics)
         # ------------------------------------------------------------------
+        t0 = time.perf_counter()
         q_dicts = [
             {
                 "id": q.id,
@@ -106,6 +110,7 @@ class AssessmentAnalysisService:
             course_topics=request.course_topics or [],
         )
         analyzed_questions_list = batch_question_analysis.get("questions", [])
+        timing_question_ms = round((time.perf_counter() - t0) * 1000)
 
         # Create lookup for enriched question properties
         enriched_q_map = {
@@ -114,10 +119,28 @@ class AssessmentAnalysisService:
         }
 
         # ------------------------------------------------------------------
+        # PRE-COMPUTE: Question embeddings — reused in STEP 2 and STEP 3
+        # ------------------------------------------------------------------
+        t0 = time.perf_counter()
+        question_texts_for_embedding = [q.text.strip() for q in request.questions]
+        shared_q_embeddings = None
+        try:
+            shared_q_embeddings = self.hf_service.generate_batch_embeddings(
+                question_texts_for_embedding
+            )
+        except Exception as e:
+            logger.warning(
+                f"Could not precompute shared question embeddings: {e}. "
+                "Will re-encode per stage."
+            )
+        timing_embedding_ms = round((time.perf_counter() - t0) * 1000)
+
+        # ------------------------------------------------------------------
         # STEP 2: Learning Outcome Alignment
         # ------------------------------------------------------------------
         alignment_result: Optional[Dict[str, Any]] = None
         q_lo_match_map: Dict[Any, Dict[str, Any]] = {}
+        t0 = time.perf_counter()
 
         if request.learning_outcomes and len(request.learning_outcomes) > 0:
             try:
@@ -146,6 +169,7 @@ class AssessmentAnalysisService:
                     questions=align_q_items,
                     learning_outcomes=align_lo_items,
                     course_id=request.course_id,
+                    precomputed_q_embeddings=shared_q_embeddings,
                 )
 
                 # Map question number/id -> matched LO code
@@ -166,12 +190,14 @@ class AssessmentAnalysisService:
                 "status": "UNAVAILABLE",
                 "message": "No learning outcomes provided for alignment analysis.",
             }
+        timing_alignment_ms = round((time.perf_counter() - t0) * 1000)
 
         # ------------------------------------------------------------------
         # STEP 3: Semantic Similarity (Past Question Bank Comparison)
         # ------------------------------------------------------------------
         similarity_result: Optional[Dict[str, Any]] = None
         q_sim_match_map: Dict[Any, Dict[str, Any]] = {}
+        t0 = time.perf_counter()
 
         if request.previous_questions and len(request.previous_questions) > 0:
             try:
@@ -203,6 +229,7 @@ class AssessmentAnalysisService:
                     current_questions=cur_q_items,
                     previous_questions=prev_q_items,
                     course_id=request.course_id,
+                    precomputed_current_embeddings=shared_q_embeddings,
                 )
 
                 # Map question number/id -> top similarity and duplicate flag
@@ -223,10 +250,12 @@ class AssessmentAnalysisService:
                 "status": "UNAVAILABLE",
                 "message": "No previous questions provided for similarity analysis.",
             }
+        timing_similarity_ms = round((time.perf_counter() - t0) * 1000)
 
         # ------------------------------------------------------------------
         # STEP 4: Assessment Quality Engine
         # ------------------------------------------------------------------
+        t0 = time.perf_counter()
         quality_questions: List[AssessmentQuestionInput] = []
         for i, q in enumerate(request.questions):
             q_num = q.number or (i + 1)
@@ -313,10 +342,12 @@ class AssessmentAnalysisService:
 
         quality_response_model = self.quality_engine.analyze(quality_request)
         quality_result = quality_response_model.model_dump()
+        timing_quality_ms = round((time.perf_counter() - t0) * 1000)
 
         # ------------------------------------------------------------------
         # STEP 5: AI Recommendation Engine
         # ------------------------------------------------------------------
+        t0 = time.perf_counter()
         # Construct RecommendationRequest
         rec_assessment_meta = (
             AssessmentMeta(
@@ -373,6 +404,7 @@ class AssessmentAnalysisService:
         rec_engine = RecommendationEngine(custom_thresholds=request.custom_rules)
         rec_response_model = rec_engine.generate(rec_req)
         rec_result = rec_response_model.model_dump()
+        timing_recommendations_ms = round((time.perf_counter() - t0) * 1000)
 
         # ------------------------------------------------------------------
         # STEP 6: Consolidated Summary and Response
@@ -404,6 +436,26 @@ class AssessmentAnalysisService:
             ),
         }
 
+        total_ms = round((time.perf_counter() - start_total) * 1000)
+        timing_ms = {
+            "question_analysis":  timing_question_ms,
+            "embedding_precompute": timing_embedding_ms,
+            "lo_alignment":       timing_alignment_ms,
+            "similarity":         timing_similarity_ms,
+            "quality":            timing_quality_ms,
+            "recommendations":    timing_recommendations_ms,
+            "total":              total_ms,
+        }
+        logger.info(
+            f"Unified analysis complete: total={total_ms}ms, "
+            f"questions={timing_question_ms}ms, "
+            f"embed_precompute={timing_embedding_ms}ms, "
+            f"alignment={timing_alignment_ms}ms, "
+            f"similarity={timing_similarity_ms}ms, "
+            f"quality={timing_quality_ms}ms, "
+            f"recommendations={timing_recommendations_ms}ms"
+        )
+
         return {
             "status": "success",
             "method": "unified_assessment_analysis_pipeline",
@@ -415,4 +467,5 @@ class AssessmentAnalysisService:
             "quality_analysis": quality_result,
             "recommendations": rec_result,
             "summary": summary,
+            "timing_ms": timing_ms,
         }

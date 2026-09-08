@@ -28,17 +28,23 @@ class AlignmentAnalyzer:
         learning_outcomes: List[LearningOutcomeItem],
         thresholds: Optional[ThresholdsConfig] = None,
         course_id: Optional[int] = None,
+        precomputed_q_embeddings: Optional[List[List[float]]] = None,
     ) -> Dict[str, Any]:
         """
         Run the complete LO alignment analysis pipeline.
+
+        Args:
+            precomputed_q_embeddings: Optional pre-computed question embeddings from the
+                unified analysis pipeline, avoiding redundant inference calls.
         """
         th = thresholds or ThresholdsConfig()
 
-        # Step 1: Match questions to LOs
+        # Step 1: Match questions to LOs (pass precomputed embeddings when available)
         question_alignments = self.matcher.match_questions_to_los(
             questions=questions,
             learning_outcomes=learning_outcomes,
             thresholds=th,
+            precomputed_q_embeddings=precomputed_q_embeddings,
         )
 
         total_questions = len(questions)

@@ -323,10 +323,21 @@ export const aiService = {
       }
     );
   },
+
+  /**
+   * Lightweight polling endpoint — returns current analysis status without the full payload.
+   * Use this to poll until analysis_status === 'completed' or 'failed'.
+   */
+  getAnalysisStatus(assessmentId: number): Promise<{
+    analysis_status: 'not_analyzed' | 'processing' | 'completed' | 'failed';
+    analysis_id: number | null;
+    overall_score: number | null;
+    processing_error: string | null;
+    analyzed_at: string | null;
+    updated_at: string | null;
+  }> {
+    return apiClient(`/ai/assessments/${assessmentId}/analysis-status`);
+  },
 };
 
 export { aiAnalysisService } from './aiAnalysisService';
-
-
-
-

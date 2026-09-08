@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\AnalyzeAssessmentJob;
 use App\Models\AnalysisReport;
 use App\Models\Assessment;
 use App\Models\DocumentProcessing;
@@ -15,6 +16,7 @@ use App\Services\AuditLogService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -1635,6 +1637,8 @@ class AiAnalysisController extends Controller
             }
 
             if ($assessment) {
+                Cache::forget("user:{$user->id}:assessment:{$assessment->id}:analysis");
+
                 $this->auditLogService->log(
                     'AI_ANALYSIS_COMPLETED',
                     $assessment,
@@ -1675,9 +1679,64 @@ class AiAnalysisController extends Controller
 
     /**
      * Route-model bound endpoint for analyzing a specific assessment.
+     * Supports both async execution (when ?async=1 is passed) and synchronous execution.
      */
     public function analyzeAssessmentByRoute(Request $request, Assessment $assessment): JsonResponse
     {
+        if ($request->boolean('async')) {
+            $user = $request->user();
+
+            // Authorization
+            if ($assessment->course->user_id !== $user->id) {
+                return response()->json([
+                    'status'  => 'error',
+                    'message' => 'Unauthorized access to assessment.',
+                ], 403);
+            }
+
+            // Validation: must have questions
+            if ($assessment->questions()->count() === 0) {
+                return response()->json([
+                    'status'  => 'error',
+                    'message' => 'Assessment has no questions to analyze. Please add questions before running analysis.',
+                ], 422);
+            }
+
+            // Prevent duplicate simultaneous analysis (5-minute window)
+            $activeReport = $assessment->latestAnalysisReport;
+            if ($activeReport
+                && $activeReport->analysis_status === 'processing'
+                && $activeReport->updated_at
+                && $activeReport->updated_at->diffInMinutes(now()) < 5
+            ) {
+                return response()->json([
+                    'status'      => 'processing',
+                    'message'     => 'Analysis is already processing for this assessment.',
+                    'analysis_id' => $activeReport->id,
+                ], 202);
+            }
+
+            // Create/update report row so frontend can poll status immediately
+            $report = AnalysisReport::updateOrCreate(
+                ['assessment_id' => $assessment->id],
+                ['analysis_status' => 'processing', 'processing_error' => null]
+            );
+
+            // Dispatch the job to the queue
+            AnalyzeAssessmentJob::dispatch($assessment, $user->id);
+
+            $this->auditLogService->log('AI_ANALYSIS_QUEUED', $assessment, $assessment->id, [
+                'assessment_title' => $assessment->title,
+                'queued_by'        => $user->id,
+            ], $user);
+
+            return response()->json([
+                'status'      => 'processing',
+                'message'     => 'Assessment analysis has been queued and will complete shortly. Poll the status endpoint for updates.',
+                'analysis_id' => $report->id,
+            ], 202);
+        }
+
         $request->merge(['assessment_id' => $assessment->id]);
         return $this->analyzeAssessment($request);
     }
@@ -1715,7 +1774,13 @@ class AiAnalysisController extends Controller
             ], 403);
         }
 
-        // Load assessment relations
+        // Serve from cache for completed analyses (5-minute TTL, user-scoped key)
+        $cacheKey = "user:{$user->id}:assessment:{$assessment->id}:analysis";
+        $cached   = Cache::get($cacheKey);
+        if ($cached !== null && ($cached['data']['analysis_status'] ?? '') === 'completed') {
+            return response()->json($cached);
+        }
+
         $assessment->load([
             'course.learningOutcomes',
             'questions.learningOutcome',
@@ -1847,48 +1912,94 @@ class AiAnalysisController extends Controller
             }
         }
 
-        return response()->json([
+        $responseData = [
             'status' => 'success',
-            'data' => [
+            'data'   => [
                 'assessment' => [
-                    'id' => $assessment->id,
-                    'title' => $assessment->title,
-                    'type' => $assessment->type,
-                    'total_marks' => (float) $assessment->total_marks,
-                    'total_questions' => $assessment->questions_count,
+                    'id'               => $assessment->id,
+                    'title'            => $assessment->title,
+                    'type'             => $assessment->type,
+                    'total_marks'      => (float) $assessment->total_marks,
+                    'total_questions'  => $assessment->questions_count,
                     'duration_minutes' => $assessment->duration_minutes,
-                    'assessment_date' => $assessment->assessment_date?->toDateString(),
-                    'course_id' => $assessment->course->id,
-                    'course_code' => $assessment->course->course_code,
-                    'course_name' => $assessment->course->course_name,
+                    'assessment_date'  => $assessment->assessment_date?->toDateString(),
+                    'course_id'        => $assessment->course->id,
+                    'course_code'      => $assessment->course->course_code,
+                    'course_name'      => $assessment->course->course_name,
                 ],
                 'report' => [
-                    'id' => $report->id,
-                    'overall_score' => $overallScore,
-                    'rating' => $qualityAnalysis['rating'] ?? $rating,
-                    'topic_coverage_score' => $report->topic_coverage_score !== null ? (float) $report->topic_coverage_score : null,
+                    'id'                               => $report->id,
+                    'overall_score'                    => $overallScore,
+                    'rating'                           => $qualityAnalysis['rating'] ?? $rating,
+                    'topic_coverage_score'             => $report->topic_coverage_score !== null ? (float) $report->topic_coverage_score : null,
                     'learning_outcome_alignment_score' => $report->learning_outcome_alignment_score !== null ? (float) $report->learning_outcome_alignment_score : null,
-                    'difficulty_balance_score' => $report->difficulty_balance_score !== null ? (float) $report->difficulty_balance_score : null,
-                    'cognitive_level_balance_score' => $report->cognitive_level_balance_score !== null ? (float) $report->cognitive_level_balance_score : null,
-                    'similarity_score' => $report->similarity_score !== null ? (float) $report->similarity_score : null,
-                    'total_questions' => $report->total_questions,
-                    'similar_questions_count' => $report->similar_questions_count,
-                    'analysis_status' => $report->analysis_status,
-                    'processing_error' => $report->processing_error,
-                    'analyzed_at' => $report->analyzed_at?->toIso8601String(),
+                    'difficulty_balance_score'         => $report->difficulty_balance_score !== null ? (float) $report->difficulty_balance_score : null,
+                    'cognitive_level_balance_score'    => $report->cognitive_level_balance_score !== null ? (float) $report->cognitive_level_balance_score : null,
+                    'similarity_score'                 => $report->similarity_score !== null ? (float) $report->similarity_score : null,
+                    'total_questions'                  => $report->total_questions,
+                    'similar_questions_count'          => $report->similar_questions_count,
+                    'analysis_status'                  => $report->analysis_status,
+                    'processing_error'                 => $report->processing_error,
+                    'analyzed_at'                      => $report->analyzed_at?->toIso8601String(),
                 ],
-                'analysis_status' => $report->analysis_status,
-                'quality_analysis' => $qualityAnalysis,
-                'alignment_analysis' => $alignmentAnalysis,
-                'similarity_analysis' => $similarityAnalysis,
-                'learning_outcome_alignments' => $loAlignments,
-                'similarity_matches' => $similarityMatches,
-                'recommendations' => $recommendations,
-                'recommendation_summary' => $recommendationSummary,
-                'findings' => $uniqueFindings,
-                'summary' => $summary,
-                'questions' => $assessment->questions,
+                'analysis_status'           => $report->analysis_status,
+                'quality_analysis'          => $qualityAnalysis,
+                'alignment_analysis'        => $alignmentAnalysis,
+                'similarity_analysis'       => $similarityAnalysis,
+                'learning_outcome_alignments'=> $loAlignments,
+                'similarity_matches'        => $similarityMatches,
+                'recommendations'           => $recommendations,
+                'recommendation_summary'    => $recommendationSummary,
+                'findings'                  => $uniqueFindings,
+                'summary'                   => $summary,
+                'questions'                 => $assessment->questions,
             ],
+        ];
+
+        // Cache completed results for 5 minutes (user-scoped, never shared between users)
+        if ($report->analysis_status === 'completed') {
+            Cache::put($cacheKey, $responseData, 300);
+        }
+
+        return response()->json($responseData);
+    }
+
+    /**
+     * Lightweight status polling endpoint for async analysis.
+     * Returns only the current status fields without loading the full analysis payload.
+     * Frontend polls this every 3 seconds after triggering analyzeAssessmentByRoute().
+     */
+    public function getAnalysisStatus(Request $request, Assessment $assessment): JsonResponse
+    {
+        $user = $request->user();
+
+        if ($assessment->course->user_id !== $user->id) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Unauthorized access to assessment.',
+            ], 403);
+        }
+
+        $report = $assessment->latestAnalysisReport;
+
+        if (!$report) {
+            return response()->json([
+                'analysis_status'  => 'not_analyzed',
+                'analysis_id'      => null,
+                'overall_score'    => null,
+                'processing_error' => null,
+                'analyzed_at'      => null,
+                'updated_at'       => null,
+            ]);
+        }
+
+        return response()->json([
+            'analysis_status'  => $report->analysis_status,
+            'analysis_id'      => $report->id,
+            'overall_score'    => $report->overall_score !== null ? (float) $report->overall_score : null,
+            'processing_error' => $report->processing_error,
+            'analyzed_at'      => $report->analyzed_at?->toIso8601String(),
+            'updated_at'       => $report->updated_at?->toIso8601String(),
         ]);
     }
 
@@ -1900,8 +2011,4 @@ class AiAnalysisController extends Controller
         return $this->analyzeAlignment($request);
     }
 }
-
-
-
-
 

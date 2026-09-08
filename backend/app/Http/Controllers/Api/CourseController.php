@@ -7,6 +7,7 @@ use App\Http\Requests\CourseRequest;
 use App\Models\Course;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class CourseController extends Controller
@@ -16,11 +17,15 @@ class CourseController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $courses = $request->user()
-            ->courses()
-            ->withCount(['learningOutcomes', 'assessments', 'materials'])
-            ->latest()
-            ->get();
+        $user     = $request->user();
+        $cacheKey = "user:{$user->id}:courses";
+
+        $courses = Cache::remember($cacheKey, 120, function () use ($user) {
+            return $user->courses()
+                ->withCount(['learningOutcomes', 'assessments', 'materials'])
+                ->latest()
+                ->get();
+        });
 
         return response()->json([
             'data' => $courses,
@@ -33,12 +38,12 @@ class CourseController extends Controller
     public function store(CourseRequest $request): JsonResponse
     {
         $course = $request->user()->courses()->create($request->validated());
-
-        // Eager load relations for clean response
         $course->load(['learningOutcomes', 'materials']);
 
+        Cache::forget("user:{$request->user()->id}:courses");
+
         return response()->json([
-            'data' => $course,
+            'data'    => $course,
             'message' => 'Course created successfully',
         ], 201);
     }
@@ -81,8 +86,10 @@ class CourseController extends Controller
         $course->update($request->validated());
         $course->load(['learningOutcomes', 'materials']);
 
+        Cache::forget("user:{$request->user()->id}:courses");
+
         return response()->json([
-            'data' => $course,
+            'data'    => $course,
             'message' => 'Course updated successfully',
         ]);
     }
@@ -106,6 +113,8 @@ class CourseController extends Controller
         }
 
         $course->delete();
+
+        Cache::forget("user:{$request->user()->id}:courses");
 
         return response()->json([
             'message' => 'Course deleted successfully',
