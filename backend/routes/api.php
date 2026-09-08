@@ -15,6 +15,9 @@ use App\Http\Controllers\Api\LearningOutcomeController;
 use App\Http\Controllers\Api\PreviousQuestionController;
 use App\Http\Controllers\Api\RecommendationFeedbackController;
 use App\Http\Controllers\Api\RubricController;
+use App\Http\Controllers\Api\StudentAnswerController;
+use App\Http\Controllers\Api\StudentController;
+use App\Http\Controllers\Api\StudentSubmissionController;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -151,6 +154,27 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/rubrics/{rubric}', [RubricController::class, 'destroy']);
     Route::post('/rubrics/{rubric}/approve', [RubricController::class, 'approve']);
     Route::post('/rubrics/{rubric}/regenerate', [RubricController::class, 'regenerate'])->middleware('throttle:ai-analysis');
+
+    // STEP 26: Student Answer Management (faculty-side; private academic records)
+    Route::get('/students', [StudentController::class, 'index']);
+    Route::post('/students', [StudentController::class, 'store']);
+    Route::get('/students/{student}', [StudentController::class, 'show']);
+    Route::put('/students/{student}', [StudentController::class, 'update']);
+    Route::delete('/students/{student}', [StudentController::class, 'destroy']);
+
+    Route::get('/assessments/{assessment}/submissions', [StudentSubmissionController::class, 'index']);
+    Route::get('/assessments/{assessment}/submissions/summary', [StudentSubmissionController::class, 'summary']);
+    Route::post('/assessments/{assessment}/submissions', [StudentSubmissionController::class, 'store']);
+    Route::post('/assessments/{assessment}/submissions/import', [StudentSubmissionController::class, 'import'])->middleware('throttle:uploads');
+    Route::get('/submissions/{submission}', [StudentSubmissionController::class, 'show']);
+    Route::patch('/submissions/{submission}/status', [StudentSubmissionController::class, 'updateStatus']);
+    Route::delete('/submissions/{submission}', [StudentSubmissionController::class, 'destroy']);
+
+    Route::post('/submissions/{submission}/answers', [StudentAnswerController::class, 'store'])->middleware('throttle:uploads');
+    Route::put('/student-answers/{answer}', [StudentAnswerController::class, 'update'])->middleware('throttle:uploads');
+    Route::post('/student-answers/{answer}', [StudentAnswerController::class, 'update'])->middleware('throttle:uploads'); // multipart updates (file replace)
+    Route::delete('/student-answers/{answer}', [StudentAnswerController::class, 'destroy']);
+    Route::get('/student-answers/{answer}/download', [StudentAnswerController::class, 'download']);
 });
 
 // Public Shared Report Endpoints (STEP 18)

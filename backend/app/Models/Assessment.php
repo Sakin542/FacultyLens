@@ -95,5 +95,13 @@ class Assessment extends Model
     {
         return $this->hasMany(Rubric::class);
     }
+
+    /**
+     * STEP 26: Student submissions for this assessment.
+     */
+    public function submissions(): HasMany
+    {
+        return $this->hasMany(StudentSubmission::class);
+    }
 }
 

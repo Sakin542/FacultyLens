@@ -15,6 +15,10 @@ import { SemanticSimilarityModal } from '@/components/assessments/SemanticSimila
 import { AssessmentQualityModal } from '@/components/assessments/AssessmentQualityModal';
 import { AssessmentRecommendationModal } from '@/components/assessments/AssessmentRecommendationModal';
 import { RubricGenerator } from '@/components/rubric/RubricGenerator';
+import { SubmissionCard } from '@/components/submissions/SubmissionCard';
+import { ImportAnswersModal } from '@/components/submissions/ImportAnswersModal';
+import { studentSubmissionService } from '@/services/studentSubmissionService';
+import { SubmissionSummaryStats } from '@/types/submission';
 import {
   ArrowLeft,
   Edit,
@@ -58,6 +62,24 @@ export const AssessmentDetails: React.FC = () => {
   const [isQualityModalOpen, setIsQualityModalOpen] = useState(false);
   const [isRecommendationModalOpen, setIsRecommendationModalOpen] = useState(false);
   const [rubricQuestion, setRubricQuestion] = useState<QuestionDetail | null>(null);
+  const [submissionStats, setSubmissionStats] = useState<SubmissionSummaryStats | null>(null);
+  const [submissionStatsError, setSubmissionStatsError] = useState<string | null>(null);
+  const [isImportAnswersOpen, setIsImportAnswersOpen] = useState(false);
+
+  const loadSubmissionStats = useCallback(async () => {
+    if (!id) return;
+    try {
+      setSubmissionStatsError(null);
+      const res = await studentSubmissionService.getSummary(id);
+      setSubmissionStats(res.data);
+    } catch (err) {
+      setSubmissionStatsError(err instanceof Error ? err.message : 'Could not load submission statistics.');
+    }
+  }, [id]);
+
+  useEffect(() => {
+    loadSubmissionStats();
+  }, [loadSubmissionStats]);
 
   // Action states
   const [isDeletingAssessment, setIsDeletingAssessment] = useState(false);
@@ -421,6 +443,15 @@ export const AssessmentDetails: React.FC = () => {
         </div>
       </Card>
 
+      {/* Student Submissions (Step 26) — real counts from the API */}
+      <SubmissionCard
+        assessmentId={assessment.id}
+        stats={submissionStats}
+        isLoading={!submissionStats && !submissionStatsError}
+        error={submissionStatsError}
+        onImport={() => setIsImportAnswersOpen(true)}
+      />
+
       {/* Two Column Layout: Question Paper & Questions / Question Bank */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Section 1: Question Paper File */}
@@ -703,6 +734,17 @@ export const AssessmentDetails: React.FC = () => {
         isOpen={rubricQuestion !== null}
         onClose={() => setRubricQuestion(null)}
         question={rubricQuestion}
+      />
+
+      {/* Student answer CSV import (Step 26) */}
+      <ImportAnswersModal
+        isOpen={isImportAnswersOpen}
+        onClose={() => setIsImportAnswersOpen(false)}
+        assessmentId={assessment.id}
+        onImported={(r) => {
+          showNotification(`${r.answers_created} student answers imported across ${r.submissions_created} new submissions.`);
+          loadSubmissionStats();
+        }}
       />
     </div>
   );
