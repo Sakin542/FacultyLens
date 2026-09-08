@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Assessment } from '@/types';
+import { Assessment, QuestionDetail } from '@/types';
 import { assessmentService, AssessmentPayload } from '@/services/assessmentService';
 import { questionPaperService } from '@/services/questionPaperService';
 import { aiAnalysisService } from '@/services/aiAnalysisService';
@@ -14,6 +14,7 @@ import { LearningOutcomeAlignmentModal } from '@/components/assessments/Learning
 import { SemanticSimilarityModal } from '@/components/assessments/SemanticSimilarityModal';
 import { AssessmentQualityModal } from '@/components/assessments/AssessmentQualityModal';
 import { AssessmentRecommendationModal } from '@/components/assessments/AssessmentRecommendationModal';
+import { RubricGenerator } from '@/components/rubric/RubricGenerator';
 import {
   ArrowLeft,
   Edit,
@@ -36,6 +37,7 @@ import {
   BarChart3,
   BrainCircuit,
   History,
+  ClipboardList,
 } from 'lucide-react';
 
 export const AssessmentDetails: React.FC = () => {
@@ -55,6 +57,7 @@ export const AssessmentDetails: React.FC = () => {
   const [isSimilarityModalOpen, setIsSimilarityModalOpen] = useState(false);
   const [isQualityModalOpen, setIsQualityModalOpen] = useState(false);
   const [isRecommendationModalOpen, setIsRecommendationModalOpen] = useState(false);
+  const [rubricQuestion, setRubricQuestion] = useState<QuestionDetail | null>(null);
 
   // Action states
   const [isDeletingAssessment, setIsDeletingAssessment] = useState(false);
@@ -590,6 +593,18 @@ export const AssessmentDetails: React.FC = () => {
                     {q.question_text || q.text}
                   </p>
 
+                  <div className="flex items-center justify-end">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      leftIcon={<ClipboardList className="w-3.5 h-3.5" />}
+                      onClick={() => setRubricQuestion(q)}
+                      aria-label={`Generate rubric for question ${q.question_number || q.questionNumber || idx + 1}`}
+                    >
+                      Generate Rubric
+                    </Button>
+                  </div>
+
                   {q.ai_topics && q.ai_topics.length > 0 && (
                     <div className="flex items-center gap-1.5 pt-1 text-[11px] text-[#737373]">
                       <span className="font-semibold text-[#111111] dark:text-white">AI Topics:</span>
@@ -681,6 +696,13 @@ export const AssessmentDetails: React.FC = () => {
           showNotification('AI Recommendations refreshed!');
           loadAssessment();
         }}
+      />
+
+      {/* AI Rubric Generator (Step 25) */}
+      <RubricGenerator
+        isOpen={rubricQuestion !== null}
+        onClose={() => setRubricQuestion(null)}
+        question={rubricQuestion}
       />
     </div>
   );

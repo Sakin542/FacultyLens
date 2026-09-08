@@ -87,5 +87,13 @@ class Assessment extends Model
     {
         return $this->hasOne(AssessmentReport::class)->latestOfMany();
     }
+
+    /**
+     * STEP 25: Rubrics generated for questions in this assessment.
+     */
+    public function rubrics(): HasMany
+    {
+        return $this->hasMany(Rubric::class);
+    }
 }
 
