@@ -81,6 +81,10 @@ services:
       - HF_MODEL_NAME=sentence-transformers/all-MiniLM-L6-v2
       - HF_HOME=/app/cache/huggingface
       - AI_SERVICE_API_KEY=
+      # STEP 25 rubric drafting: template engine by default; set a small seq2seq
+      # model (e.g. google/flan-t5-small) and enable to use Hugging Face generation.
+      - RUBRIC_GENERATION_ENABLED=false
+      - RUBRIC_GENERATION_MODEL=
     volumes:
       - ./ai-service:/app
       - ai_models_cache:/app/cache/huggingface

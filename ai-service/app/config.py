@@ -55,6 +55,24 @@ class Settings(BaseSettings):
     target_medium_percent: float = 50.0
     target_hard_percent: float = 20.0
 
+    # AI Rubric Generator Settings (Step 25)
+    # MiniLM (hf_model_name) stays responsible for embeddings only. Rubric text
+    # drafting may optionally use a small seq2seq model such as google/flan-t5-small.
+    # Leave rubric_generation_model empty to use the structured template engine only.
+    rubric_generation_enabled: bool = False
+    rubric_generation_model: Optional[str] = None
+    rubric_generation_max_new_tokens: int = 192
+    rubric_max_criteria: int = 8
+
+    @field_validator("rubric_generation_enabled", mode="before")
+    @classmethod
+    def parse_rubric_generation_enabled(cls, v: Any) -> bool:
+        if isinstance(v, bool):
+            return v
+        if isinstance(v, str):
+            return v.strip().lower() in ("true", "1", "yes", "on", "t")
+        return bool(v)
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

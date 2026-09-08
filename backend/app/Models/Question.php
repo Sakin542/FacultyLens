@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Question extends Model
 {
@@ -52,6 +54,22 @@ class Question extends Model
     public function learningOutcome(): BelongsTo
     {
         return $this->belongsTo(LearningOutcome::class);
+    }
+
+    /**
+     * STEP 25: All rubric versions generated for this question (newest first).
+     */
+    public function rubrics(): HasMany
+    {
+        return $this->hasMany(Rubric::class)->orderByDesc('version');
+    }
+
+    /**
+     * The currently approved rubric for this question, if any.
+     */
+    public function approvedRubric(): HasOne
+    {
+        return $this->hasOne(Rubric::class)->where('status', Rubric::STATUS_APPROVED)->latestOfMany('version');
     }
 }
 

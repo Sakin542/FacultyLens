@@ -11,6 +11,9 @@ from app.services.semantic_similarity_analyzer import SemanticSimilarityAnalyzer
 from app.services.assessment_quality_engine import AssessmentQualityEngine
 from app.services.recommendation_engine import RecommendationEngine
 from app.services.assessment_analysis_service import AssessmentAnalysisService
+from app.services.rubric_generator import RubricGenerator
+from app.services.rubric_validator import RubricValidationError
+from app.services.text_generation_service import TextGenerationService, get_text_generation_service
 from app.utils.text_utils import split_paragraphs, split_sentences
 from app.schemas.analysis import (
     HealthResponse,
@@ -44,6 +47,10 @@ from app.schemas.recommendation import (
 from app.schemas.assessment_analysis import (
     UnifiedAssessmentAnalysisRequest,
     UnifiedAssessmentAnalysisResponse,
+)
+from app.schemas.rubric import (
+    GenerateRubricRequest,
+    GenerateRubricResponse,
 )
 
 logger = logging.getLogger("facultylens.ai")
@@ -393,6 +400,43 @@ def analyze_assessment_unified(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to perform unified assessment analysis: {str(e)}",
+        )
+
+
+@router.post(
+    "/api/v1/generate-rubric",
+    response_model=GenerateRubricResponse,
+    dependencies=[Depends(verify_api_key)],
+)
+def generate_rubric(
+    payload: GenerateRubricRequest,
+    hf_service: HuggingFaceService = Depends(get_hf_service),
+    text_generation_service: TextGenerationService = Depends(get_text_generation_service),
+) -> GenerateRubricResponse:
+    """
+    STEP 25: AI Rubric Generator.
+    Produces a structured DRAFT grading rubric for a single question. The draft is
+    validated so criterion marks sum exactly to the question total. Faculty review
+    and approval happen in Laravel; this endpoint never finalizes a rubric.
+    """
+    try:
+        generator = RubricGenerator(
+            hf_service=hf_service,
+            text_generation_service=text_generation_service,
+        )
+        result = generator.generate(payload)
+        return GenerateRubricResponse(**result)
+    except RubricValidationError as e:
+        logger.warning(f"Generated rubric failed validation: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="The AI service could not produce a valid rubric for this question.",
+        )
+    except Exception as e:
+        logger.error(f"Error generating rubric: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to generate rubric draft.",
         )
 
 

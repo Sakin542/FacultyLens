@@ -92,6 +92,16 @@ cp .env.example .env
 | `HF_TOKEN` | *(empty)* | Optional Hugging Face access token |
 | `HF_HOME` | `./cache/huggingface` | Model cache directory on disk |
 | `AI_SERVICE_API_KEY` | *(empty)* | Optional internal API key for request validation (`X-AI-Service-Key`) |
+| `RUBRIC_GENERATION_ENABLED` | `false` | STEP 25: enable optional Hugging Face seq2seq model for rubric drafting |
+| `RUBRIC_GENERATION_MODEL` | *(empty)* | e.g. `google/flan-t5-small` (~300 MB, ~1 GB RAM, CPU). Empty = template engine only |
+| `RUBRIC_GENERATION_MAX_NEW_TOKENS` | `192` | Generation length cap for the rubric model |
+| `RUBRIC_MAX_CRITERIA` | `8` | Maximum criteria in a generated rubric draft |
+
+> **Model roles:** `HF_MODEL_NAME` (MiniLM) is an *encoder* used for embeddings, similarity and
+> semantic analysis only. It cannot draft rubric text. Rubric drafting uses a deterministic
+> template engine and, optionally, a separate small generative model configured above.
+> Generated output is always validated (marks must sum to the question total) and the
+> template engine is used as a fallback.
 
 ---
 
@@ -331,6 +341,70 @@ docker compose logs -f ai-service
   }
 }
 ```
+
+### 7.7 AI Rubric Generator (STEP 25)
+
+**POST** `/api/v1/generate-rubric`
+
+Produces a structured **draft** grading rubric for a single question. The draft is an
+assistive artifact: Laravel stores it with `status = DRAFT` and faculty must review,
+edit and approve it. Criterion marks are guaranteed to sum exactly to `total_marks`.
+
+Request:
+
+```json
+{
+  "question_id": 15,
+  "question_text": "Explain database normalization and describe 1NF, 2NF, and 3NF with examples.",
+  "question_type": "DESCRIPTIVE",
+  "total_marks": 10,
+  "difficulty_level": "MEDIUM",
+  "cognitive_level": "UNDERSTAND",
+  "learning_outcome": { "code": "CO2", "description": "Explain fundamental database concepts." },
+  "course_context": { "course_code": "CSE101", "course_name": "Database Systems" }
+}
+```
+
+Supported `question_type` values (case-insensitive): `MCQ`, `SHORT_ANSWER`, `DESCRIPTIVE`,
+`PROBLEM_SOLVING`, `TRUE_FALSE`, `CONCEPTUAL`, `ANALYTICAL`, `OTHER`.
+
+Response:
+
+```json
+{
+  "status": "success",
+  "generation_method": "template_based",
+  "draft_status": "DRAFT",
+  "rubric": {
+    "title": "Q15 Rubric: Database normalization",
+    "question_text": "...",
+    "total_marks": 10,
+    "criteria": [
+      {
+        "criterion": "Explanation of database normalization",
+        "description": "Correctly explains database normalization as required by the question.",
+        "max_marks": 2,
+        "scoring_guidance": "Full marks (2) for ... Partial credit (about 1) ... No marks if ...",
+        "expected_indicators": ["Database normalization addressed directly", "Key points covered"],
+        "sort_order": 1
+      }
+    ],
+    "general_guidance": "Award marks based on demonstrated understanding ... This is an AI-generated draft."
+  },
+  "metadata": {
+    "model": "facultylens-rubric-template-engine",
+    "version": "1.0.0",
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "generative_model_used": false,
+    "criteria_count": 6,
+    "validation_passed": true,
+    "disclaimer": "AI-generated draft rubric. Faculty review and approval are required before use."
+  }
+}
+```
+
+`generation_method` is `ai_assisted` only when the optional generative model actually
+contributed criteria. No confidence score is returned because none is calibrated.
 
 ---
 

@@ -682,6 +682,80 @@ class AiService
     }
 
     /**
+     * STEP 25: Request a DRAFT grading rubric for a single question from the AI service.
+     * The payload must be built server-side from trusted database records (never from the frontend).
+     *
+     * @param array $payload question_text, question_type, total_marks, difficulty_level, cognitive_level,
+     *                       expected_answer, learning_outcome{code,description}, course_context{course_code,course_name}
+     * @return array Structured response: status, generation_method, rubric{...}, metadata{...}
+     * @throws Exception
+     */
+    public function generateRubric(array $payload): array
+    {
+        $questionText = trim((string) ($payload['question_text'] ?? ''));
+        if ($questionText === '') {
+            throw new Exception('Question text cannot be empty.');
+        }
+
+        $totalMarks = (float) ($payload['total_marks'] ?? 0);
+        if ($totalMarks <= 0) {
+            throw new Exception('Question marks must be greater than zero to generate a rubric.');
+        }
+
+        $request = [
+            'question_id' => isset($payload['question_id']) ? (int) $payload['question_id'] : null,
+            'question_text' => $questionText,
+            'question_type' => strtoupper((string) ($payload['question_type'] ?? 'descriptive')),
+            'total_marks' => $totalMarks,
+            'difficulty_level' => isset($payload['difficulty_level']) ? strtoupper((string) $payload['difficulty_level']) : null,
+            'cognitive_level' => isset($payload['cognitive_level']) ? strtoupper((string) $payload['cognitive_level']) : null,
+            'expected_answer' => isset($payload['expected_answer']) && trim((string) $payload['expected_answer']) !== ''
+                ? trim((string) $payload['expected_answer'])
+                : null,
+        ];
+
+        if (!empty($payload['learning_outcome']) && is_array($payload['learning_outcome'])) {
+            $request['learning_outcome'] = [
+                'code' => $payload['learning_outcome']['code'] ?? null,
+                'description' => $payload['learning_outcome']['description'] ?? null,
+            ];
+        }
+
+        if (!empty($payload['course_context']) && is_array($payload['course_context'])) {
+            $request['course_context'] = [
+                'course_code' => $payload['course_context']['course_code'] ?? null,
+                'course_name' => $payload['course_context']['course_name'] ?? null,
+            ];
+        }
+
+        try {
+            $response = $this->client()->post("{$this->baseUrl}/api/v1/generate-rubric", $request);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                if (!is_array($data)) {
+                    throw new Exception('AI Service returned a malformed rubric response.');
+                }
+                return $data;
+            }
+
+            if ($response->status() === 422) {
+                $errorData = $response->json();
+                $message = $errorData['message'] ?? 'Validation failed in AI service.';
+                Log::warning('AI Service generate-rubric validation error: ' . json_encode($errorData));
+                throw new Exception($message);
+            }
+
+            Log::error('AI Service generate-rubric error: ' . $response->status());
+            throw new Exception('AI Service failed to generate a rubric draft.');
+        } catch (ConnectionException $e) {
+            $this->handleHttpException($e, 'generating rubric');
+        } catch (RequestException $e) {
+            $this->handleHttpException($e, 'generating rubric');
+        }
+    }
+
+    /**
      * Translate HTTP / Connection / Request exceptions into descriptive domain exceptions with timeout detection.
      *
      * @param Exception $e

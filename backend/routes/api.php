@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\LearningOutcomeController;
 use App\Http\Controllers\Api\PreviousQuestionController;
 use App\Http\Controllers\Api\RecommendationFeedbackController;
+use App\Http\Controllers\Api\RubricController;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -141,6 +142,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/feedback', [FeedbackController::class, 'index']);
     Route::get('/feedback/summary', [FeedbackController::class, 'summary']);
     Route::get('/ai/improvement-signals', [FeedbackController::class, 'improvementSignals']);
+
+    // STEP 25: AI Rubric Generator (draft -> faculty review -> approve)
+    Route::post('/questions/{question}/rubrics/generate', [RubricController::class, 'generate'])->middleware('throttle:ai-analysis');
+    Route::get('/questions/{question}/rubrics', [RubricController::class, 'index']);
+    Route::get('/rubrics/{rubric}', [RubricController::class, 'show']);
+    Route::put('/rubrics/{rubric}', [RubricController::class, 'update']);
+    Route::delete('/rubrics/{rubric}', [RubricController::class, 'destroy']);
+    Route::post('/rubrics/{rubric}/approve', [RubricController::class, 'approve']);
+    Route::post('/rubrics/{rubric}/regenerate', [RubricController::class, 'regenerate'])->middleware('throttle:ai-analysis');
 });
 
 // Public Shared Report Endpoints (STEP 18)

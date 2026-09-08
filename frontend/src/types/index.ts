@@ -141,6 +141,7 @@ export interface QuestionDetail {
   question_text?: string;
   maxMarks?: number;
   marks?: number;
+  question_type?: 'mcq' | 'short_answer' | 'descriptive' | 'problem_solving' | 'true_false' | 'other' | string;
   topic?: string;
   learningOutcomeCode?: string;
   learning_outcome_id?: number | string;
