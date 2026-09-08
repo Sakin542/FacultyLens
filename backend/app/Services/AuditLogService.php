@@ -25,6 +25,10 @@ class AuditLogService
         'question_text',
         'questions_raw',
         'syllabus_text',
+        'answer_text',
+        'original_answer_text',
+        'faculty_feedback',
+        'email',
     ];
 
     /**

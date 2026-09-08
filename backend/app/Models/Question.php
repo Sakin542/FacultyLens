@@ -71,5 +71,13 @@ class Question extends Model
     {
         return $this->hasOne(Rubric::class)->where('status', Rubric::STATUS_APPROVED)->latestOfMany('version');
     }
+
+    /**
+     * STEP 26: Student answers to this question across all submissions.
+     */
+    public function studentAnswers(): HasMany
+    {
+        return $this->hasMany(StudentAnswer::class);
+    }
 }
 

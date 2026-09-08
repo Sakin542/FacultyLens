@@ -108,6 +108,14 @@ class User extends Authenticatable
     }
 
     /**
+     * STEP 26: Students registered by this faculty member.
+     */
+    public function students(): HasMany
+    {
+        return $this->hasMany(Student::class, 'created_by');
+    }
+
+    /**
      * Check if user is an administrator.
      */
     public function isAdmin(): bool

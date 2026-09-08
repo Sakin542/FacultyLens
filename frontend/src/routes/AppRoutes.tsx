@@ -28,6 +28,8 @@ const AnalysisDetails    = lazy(() => import('@/pages/AnalysisDetails').then(m =
 const Feedback           = lazy(() => import('@/pages/Feedback').then(m => ({ default: m.Feedback })));
 const AssessmentReport   = lazy(() => import('@/pages/AssessmentReport').then(m => ({ default: m.AssessmentReport })));
 const SharedReport       = lazy(() => import('@/pages/SharedReport').then(m => ({ default: m.SharedReport })));
+const StudentSubmissions = lazy(() => import('@/pages/StudentSubmissions').then(m => ({ default: m.StudentSubmissions })));
+const SubmissionDetails  = lazy(() => import('@/pages/SubmissionDetails').then(m => ({ default: m.SubmissionDetails })));
 
 /**
  * Lightweight fallback shown while a lazy page chunk loads.
@@ -64,6 +66,8 @@ export const AppRoutes: React.FC = () => {
             <Route path="/assessments" element={<Assessments />} />
             <Route path="/assessments/:id" element={<AssessmentDetails />} />
             <Route path="/assessments/:id/analysis" element={<Analysis />} />
+            <Route path="/assessments/:id/submissions" element={<StudentSubmissions />} />
+            <Route path="/submissions/:id" element={<SubmissionDetails />} />
             <Route path="/assessments/:assessmentId/report" element={<AssessmentReport />} />
             <Route path="/assessments/:id/report" element={<AssessmentReport />} />
             <Route path="/documents/:id" element={<DocumentDetails />} />
