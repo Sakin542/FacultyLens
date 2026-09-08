@@ -32,6 +32,7 @@
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="AI_SERVICE_URL" value="http://ai-service:8001"/>
+        <env name="FILESYSTEM_DISK" value="testing"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
     </php>
 </phpunit>
