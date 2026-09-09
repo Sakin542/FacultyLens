@@ -243,8 +243,8 @@ class StudentSubmissionTest extends TestCase
             ->assertJsonPath('data.allowed_transitions', ['UNDER_REVIEW', 'DRAFT']);
         // Storage path never exposed.
         $this->assertStringNotContainsString('answer_file_path', $res->getContent());
-        // No AI grading fields.
-        $this->assertStringNotContainsString('ai_', $res->getContent());
+        // STEP 27: AI grading is exposed per answer but is null until faculty request it.
+        $res->assertJsonPath('data.questions.1.answer.ai_grading', null);
     }
 
     public function test_status_workflow_allows_valid_and_blocks_invalid_transitions(): void

@@ -406,6 +406,71 @@ Response:
 `generation_method` is `ai_assisted` only when the optional generative model actually
 contributed criteria. No confidence score is returned because none is calibrated.
 
+### 7.8 AI Grading Assistance (STEP 27)
+
+**POST** `/api/v1/grade-answer`
+
+Aligns a student answer with an **approved** rubric and returns *suggested* marks with
+criterion-level evidence. The final grade is always decided by faculty in Laravel; this
+endpoint never finalizes anything and never logs student answer text.
+
+How a suggestion is formed (transparent and rubric-traceable, no hidden chain-of-thought):
+
+1. The answer is split into sentences.
+2. Each rubric criterion description and expected indicator is compared with the answer
+   sentences using MiniLM sentence embeddings (cosine similarity). If embeddings are
+   unavailable the engine falls back to keyword alignment and says so in `metadata`.
+3. Indicator coverage and description similarity give a per-criterion coverage ratio,
+   converted to marks on the rubric's mark step (0.5 for ≥2-mark criteria) and clamped
+   to `[0, max_marks]`. The total is the sum of criterion marks.
+4. Best-matching sentences are returned as `evidence`; unmatched indicators as
+   `missing_elements`. Evaluation text is template-based and may optionally be refined
+   by the configured seq2seq model (`RUBRIC_GENERATION_MODEL`), reported honestly via
+   `generative_model_used`.
+
+Request (built by Laravel from database records, never from the browser):
+
+```json
+{
+  "student_answer": { "id": 101, "text": "Normalization is the process of organizing...", "answer_type": "TEXT" },
+  "question": { "id": 5, "text": "Explain database normalization.", "total_marks": 10,
+                "question_type": "DESCRIPTIVE", "difficulty_level": "MEDIUM", "cognitive_level": "UNDERSTAND" },
+  "rubric": { "id": 20, "version": 1, "total_marks": 10,
+              "criteria": [ { "id": 1, "criterion": "Definition", "description": "Defines normalization correctly.",
+                              "max_marks": 2, "expected_indicators": ["reduces redundancy", "organizes data"], "sort_order": 1 } ] }
+}
+```
+
+Validation (422): empty answer text (image-only answers are not supported), rubric criteria
+that do not sum to `rubric.total_marks`, rubric total ≠ question marks, duplicate criterion ids.
+
+Response:
+
+```json
+{
+  "status": "success",
+  "suggested_marks": 7.5,
+  "maximum_marks": 10,
+  "criterion_results": [
+    { "rubric_criterion_id": 1, "criterion": "Definition", "suggested_marks": 1.5, "maximum_marks": 2,
+      "evaluation": "The answer partially addresses 'Definition'; ...", "evidence": ["Normalization is the process of organizing..."],
+      "missing_elements": ["organizes data (only partially evident)"], "coverage_level": "PARTIAL" }
+  ],
+  "overall_feedback": "The answer demonstrates a reasonable understanding but misses some important details. ...",
+  "strengths": ["Addresses '1NF' well."],
+  "missing_elements": ["3NF: transitive dependency"],
+  "evaluation_summary": "Suggested 7.5 of 10 marks across 5 rubric criteria: ...",
+  "metadata": { "model": "facultylens-grading-engine", "version": "1.0.0",
+                "embedding_model": "sentence-transformers/all-MiniLM-L6-v2", "generative_model_used": false,
+                "generation_method": "embedding_rubric_alignment", "criteria_count": 5, "validation_passed": true,
+                "disclaimer": "AI-generated grading assistance. Faculty review is required before finalizing marks." }
+}
+```
+
+The service guarantees `0 ≤ suggested_marks ≤ maximum_marks`, `0 ≤ criterion marks ≤ criterion max`
+and that criterion marks sum to `suggested_marks`; Laravel re-validates independently and
+rejects anything inconsistent. No confidence scores are returned.
+
 ---
 
 ## 8. Laravel Integration
