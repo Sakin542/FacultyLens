@@ -7,6 +7,7 @@ use App\Models\Assessment;
 use App\Models\StudentAnswer;
 use App\Models\StudentSubmission;
 use App\Services\AiGradingService;
+use App\Services\RubricAlignmentService;
 use App\Services\StudentSubmissionService;
 use App\Services\SubmissionException;
 use Illuminate\Http\JsonResponse;
@@ -156,6 +157,7 @@ class StudentSubmissionController extends Controller
             'assessment.course:id,course_code,course_name',
             'assessment.questions.approvedRubric',
             'answers.currentAiGrading.criterionResults',
+            'answers.currentRubricAlignment.criterionAlignments',
         ]);
 
         $answersByQuestion = $submission->answers->keyBy('question_id');
@@ -320,6 +322,10 @@ class StudentSubmissionController extends Controller
         if ($a->relationLoaded('currentAiGrading') && $a->currentAiGrading) {
             $aiGrading = app(AiGradingService::class)->present($a->currentAiGrading, $a);
         }
+        $rubricAlignment = null;
+        if ($a->relationLoaded('currentRubricAlignment') && $a->currentRubricAlignment) {
+            $rubricAlignment = app(RubricAlignmentService::class)->present($a->currentRubricAlignment, $a);
+        }
 
         return [
             'id' => $a->id,
@@ -337,6 +343,7 @@ class StudentSubmissionController extends Controller
             'faculty_feedback' => $a->faculty_feedback,
             'answer_status' => $a->answer_status,
             'ai_grading' => $aiGrading,
+            'rubric_alignment' => $rubricAlignment,
             'created_at' => $a->created_at?->toISOString(),
             'updated_at' => $a->updated_at?->toISOString(),
         ];

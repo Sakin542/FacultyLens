@@ -116,6 +116,10 @@ services:
       # model (e.g. google/flan-t5-small) and enable to use Hugging Face generation.
       - RUBRIC_GENERATION_ENABLED=false
       - RUBRIC_GENERATION_MODEL=
+      # STEP 28 alignment thresholds (initial values; validate against faculty-reviewed examples).
+      - RUBRIC_ALIGNMENT_STRONG_THRESHOLD=0.75
+      - RUBRIC_ALIGNMENT_PARTIAL_THRESHOLD=0.55
+      - RUBRIC_ALIGNMENT_WEAK_THRESHOLD=0.35
     volumes:
       - ./ai-service:/app
       - ai_models_cache:/app/cache/huggingface

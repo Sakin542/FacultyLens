@@ -4,6 +4,7 @@
  */
 import { LearningOutcome } from './index';
 import { AIGradingResult } from './grading';
+import { RubricAlignment } from './rubricAlignment';
 
 export type SubmissionStatus = 'DRAFT' | 'SUBMITTED' | 'UNDER_REVIEW' | 'GRADED' | 'RETURNED';
 
@@ -66,6 +67,8 @@ export interface StudentAnswer {
   answer_status: AnswerStatus;
   /** Current AI grading suggestion (STEP 27); null until faculty request it. */
   ai_grading?: AIGradingResult | null;
+  /** Current Answer <-> Rubric alignment analysis (STEP 28); null until requested. */
+  rubric_alignment?: RubricAlignment | null;
   created_at?: string;
   updated_at?: string;
 }

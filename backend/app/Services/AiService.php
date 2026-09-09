@@ -864,6 +864,105 @@ class AiService
     }
 
     /**
+     * STEP 28: Analyze how well a student answer aligns with each criterion of an approved rubric.
+     * Alignment is coverage evidence, not a grade. Payload is built server-side from trusted records.
+     * Student answer text is never logged.
+     *
+     * @param array $payload student_answer{id,text}, question{id,text,total_marks}, rubric{id,version,total_marks,criteria[]}
+     * @return array status, overall_alignment_score, overall_alignment_status, counts, criterion_alignments[], metadata
+     * @throws Exception
+     */
+    public function analyzeAnswerRubricAlignment(array $payload): array
+    {
+        $answerText = trim((string) ($payload['student_answer']['text'] ?? ''));
+        if ($answerText === '') {
+            throw new Exception('Student answer text cannot be empty.');
+        }
+
+        $questionText = trim((string) ($payload['question']['text'] ?? ''));
+        if ($questionText === '') {
+            throw new Exception('Question text cannot be empty.');
+        }
+
+        $criteria = $payload['rubric']['criteria'] ?? null;
+        if (!is_array($criteria) || count($criteria) === 0) {
+            throw new Exception('An approved rubric with at least one criterion is required.');
+        }
+
+        $request = [
+            'student_answer' => [
+                'id' => isset($payload['student_answer']['id']) ? (int) $payload['student_answer']['id'] : null,
+                'text' => $answerText,
+                'answer_type' => strtoupper((string) ($payload['student_answer']['answer_type'] ?? 'TEXT')),
+            ],
+            'question' => [
+                'id' => isset($payload['question']['id']) ? (int) $payload['question']['id'] : null,
+                'text' => $questionText,
+                'total_marks' => isset($payload['question']['total_marks']) && (float) $payload['question']['total_marks'] > 0
+                    ? (float) $payload['question']['total_marks']
+                    : null,
+                'question_type' => isset($payload['question']['question_type']) ? strtoupper((string) $payload['question']['question_type']) : null,
+                'expected_answer' => isset($payload['question']['expected_answer']) && trim((string) $payload['question']['expected_answer']) !== ''
+                    ? trim((string) $payload['question']['expected_answer'])
+                    : null,
+            ],
+            'rubric' => [
+                'id' => isset($payload['rubric']['id']) ? (int) $payload['rubric']['id'] : null,
+                'version' => isset($payload['rubric']['version']) ? (int) $payload['rubric']['version'] : null,
+                'total_marks' => isset($payload['rubric']['total_marks']) ? (float) $payload['rubric']['total_marks'] : null,
+                'criteria' => array_values(array_map(fn ($c) => [
+                    'id' => (int) $c['id'],
+                    'criterion' => (string) $c['criterion'],
+                    'description' => (string) ($c['description'] ?? ''),
+                    'max_marks' => (float) $c['max_marks'],
+                    'scoring_guidance' => $c['scoring_guidance'] ?? null,
+                    'expected_indicators' => array_values(array_filter((array) ($c['expected_indicators'] ?? []), fn ($i) => is_string($i) && trim($i) !== '')),
+                    'sort_order' => isset($c['sort_order']) ? (int) $c['sort_order'] : null,
+                ], $criteria)),
+            ],
+        ];
+
+        if (!empty($payload['learning_outcome']) && is_array($payload['learning_outcome'])) {
+            $request['learning_outcome'] = [
+                'code' => $payload['learning_outcome']['code'] ?? null,
+                'description' => $payload['learning_outcome']['description'] ?? null,
+            ];
+        }
+        if (!empty($payload['course_context']) && is_array($payload['course_context'])) {
+            $request['course_context'] = [
+                'course_code' => $payload['course_context']['course_code'] ?? null,
+                'course_name' => $payload['course_context']['course_name'] ?? null,
+            ];
+        }
+
+        try {
+            $response = $this->client()->post("{$this->baseUrl}/api/v1/analyze-answer-rubric-alignment", $request);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                if (!is_array($data)) {
+                    throw new Exception('AI Service returned a malformed alignment response.');
+                }
+                return $data;
+            }
+
+            if ($response->status() === 422) {
+                $errorData = $response->json();
+                $message = $errorData['message'] ?? 'Validation failed in AI service.';
+                Log::warning('AI Service analyze-answer-rubric-alignment validation error (422).');
+                throw new Exception($message);
+            }
+
+            Log::error('AI Service analyze-answer-rubric-alignment error: ' . $response->status());
+            throw new Exception('AI Service failed to analyze answer-rubric alignment.');
+        } catch (ConnectionException $e) {
+            $this->handleHttpException($e, 'analyzing answer-rubric alignment');
+        } catch (RequestException $e) {
+            $this->handleHttpException($e, 'analyzing answer-rubric alignment');
+        }
+    }
+
+    /**
      * Translate HTTP / Connection / Request exceptions into descriptive domain exceptions with timeout detection.
      *
      * @param Exception $e

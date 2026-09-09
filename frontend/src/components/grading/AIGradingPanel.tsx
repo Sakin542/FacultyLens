@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { aiGradingService } from '@/services/aiGradingService';
 import { ApiError } from '@/services/api';
 import { AIGradingResult as AIGradingResultType, FinalGradePayload, isAIGradingActive } from '@/types/grading';
+import { RubricAlignment } from '@/types/rubricAlignment';
 import { StudentAnswer, SubmissionQuestion } from '@/types/submission';
 import { AIGradingButton } from './AIGradingButton';
 import { AIGradingLoading } from './AIGradingLoading';
@@ -16,6 +17,8 @@ interface AIGradingPanelProps {
   pollIntervalMs?: number;
   /** Called after the faculty grade changes so the parent can refresh the submission. */
   onGradeSaved?: () => Promise<void> | void;
+  /** STEP 28: current alignment analysis (server state) shown as a separate signal. */
+  alignment?: RubricAlignment | null;
 }
 
 const IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/jpg'];
@@ -30,6 +33,7 @@ export const AIGradingPanel: React.FC<AIGradingPanelProps> = ({
   readOnly = false,
   pollIntervalMs = 3000,
   onGradeSaved,
+  alignment,
 }) => {
   const [result, setResult] = useState<AIGradingResultType | null>(answer.ai_grading ?? null);
   const [requestError, setRequestError] = useState<Error | null>(null);
@@ -150,6 +154,7 @@ export const AIGradingPanel: React.FC<AIGradingPanelProps> = ({
           onRegenerate={regenerate}
           onFinalize={finalize}
           onReject={reject}
+          alignment={alignment}
         />
       </div>
     );

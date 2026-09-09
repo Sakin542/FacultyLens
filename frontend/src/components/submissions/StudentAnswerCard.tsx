@@ -8,6 +8,7 @@ import { AnswerStatusBadge, formatAnswerStatus } from './SubmissionStatusBadge';
 import { AnswerTextEditor } from './AnswerTextEditor';
 import { AnswerUpload } from './AnswerUpload';
 import { AIGradingPanel } from '@/components/grading/AIGradingPanel';
+import { RubricAlignmentPanel } from '@/components/rubricAlignment/RubricAlignmentPanel';
 
 interface StudentAnswerCardProps {
   question: SubmissionQuestion;
@@ -21,6 +22,8 @@ interface StudentAnswerCardProps {
   onGradeSaved?: () => Promise<void> | void;
   /** Disable the AI grading panel (e.g. in isolated tests). */
   showAIGrading?: boolean;
+  /** STEP 28: disable the Answer <-> Rubric alignment panel. */
+  showRubricAlignment?: boolean;
 }
 
 function formatBytes(bytes?: number | null) {
@@ -44,6 +47,7 @@ export const StudentAnswerCard: React.FC<StudentAnswerCardProps> = ({
   onViewRubric,
   onGradeSaved,
   showAIGrading = true,
+  showRubricAlignment = true,
 }) => {
   const answer = question.answer;
   const [mode, setMode] = useState<'view' | 'edit'>('view');
@@ -299,7 +303,10 @@ export const StudentAnswerCard: React.FC<StudentAnswerCardProps> = ({
           )}
 
           {showAIGrading && (
-            <AIGradingPanel question={question} answer={answer} readOnly={readOnly} onGradeSaved={onGradeSaved} />
+            <AIGradingPanel question={question} answer={answer} readOnly={readOnly} onGradeSaved={onGradeSaved} alignment={answer.rubric_alignment ?? null} />
+          )}
+          {showRubricAlignment && (
+            <RubricAlignmentPanel question={question} answer={answer} readOnly={readOnly} aiGrading={answer.ai_grading ?? null} />
           )}
         </div>
       ) : (

@@ -73,6 +73,14 @@ class Settings(BaseSettings):
             return v.strip().lower() in ("true", "1", "yes", "on", "t")
         return bool(v)
 
+    # Answer <-> Rubric Alignment Settings (Step 28)
+    # Initial engineering thresholds on the combined semantic/lexical criterion signal.
+    # They are deliberately separate from the STEP 11 learning-outcome thresholds and
+    # MUST be validated against real faculty-reviewed examples before being trusted.
+    rubric_alignment_strong_threshold: float = 0.75
+    rubric_alignment_partial_threshold: float = 0.55
+    rubric_alignment_weak_threshold: float = 0.35
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
