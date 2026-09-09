@@ -15,6 +15,8 @@ from app.services.rubric_generator import RubricGenerator
 from app.services.rubric_validator import RubricValidationError
 from app.services.grading_engine import GradingEngine
 from app.services.grading_validator import GradingValidationError
+from app.services.rubric_alignment_analyzer import RubricAlignmentAnalyzer
+from app.services.rubric_alignment_validator import RubricAlignmentValidationError
 from app.services.text_generation_service import TextGenerationService, get_text_generation_service
 from app.utils.text_utils import split_paragraphs, split_sentences
 from app.schemas.analysis import (
@@ -57,6 +59,10 @@ from app.schemas.rubric import (
 from app.schemas.grading import (
     GradeAnswerRequest,
     GradeAnswerResponse,
+)
+from app.schemas.rubric_alignment import (
+    AnalyzeAnswerRubricAlignmentRequest,
+    AnalyzeAnswerRubricAlignmentResponse,
 )
 
 logger = logging.getLogger("facultylens.ai")
@@ -481,6 +487,44 @@ def grade_answer(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to generate grading assistance.",
+        )
+
+
+@router.post(
+    "/api/v1/analyze-answer-rubric-alignment",
+    response_model=AnalyzeAnswerRubricAlignmentResponse,
+    dependencies=[Depends(verify_api_key)],
+)
+def analyze_answer_rubric_alignment(
+    payload: AnalyzeAnswerRubricAlignmentRequest,
+    hf_service: HuggingFaceService = Depends(get_hf_service),
+    text_generation_service: TextGenerationService = Depends(get_text_generation_service),
+) -> AnalyzeAnswerRubricAlignmentResponse:
+    """
+    STEP 28: Answer <-> Rubric Alignment.
+    Classifies each rubric criterion as STRONG / PARTIAL / WEAK / NOT_ALIGNED using MiniLM
+    semantic similarity plus lexical indicator coverage, and returns a mark-weighted
+    alignment score with answer-grounded evidence. Alignment is not a grade and not
+    correctness; faculty review remains necessary. Student answer text is not logged.
+    """
+    try:
+        analyzer = RubricAlignmentAnalyzer(
+            hf_service=hf_service,
+            text_generation_service=text_generation_service,
+        )
+        result = analyzer.analyze(payload)
+        return AnalyzeAnswerRubricAlignmentResponse(**result)
+    except RubricAlignmentValidationError as e:
+        logger.warning(f"Alignment result failed validation: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="The AI service could not produce a valid rubric alignment for this answer.",
+        )
+    except Exception as e:
+        logger.error(f"Error analyzing rubric alignment: {type(e).__name__}", exc_info=False)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to analyze answer-rubric alignment.",
         )
 
 

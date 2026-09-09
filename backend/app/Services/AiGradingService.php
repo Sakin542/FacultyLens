@@ -318,7 +318,7 @@ class AiGradingService
             ], $user);
         });
 
-        return $answer->fresh(['question', 'currentAiGrading.criterionResults']);
+        return $answer->fresh(['question', 'currentAiGrading.criterionResults', 'currentRubricAlignment.criterionAlignments']);
     }
 
     /**

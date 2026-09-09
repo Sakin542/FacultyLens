@@ -3,6 +3,7 @@ import { AlertTriangle, CheckCircle2, MinusCircle, RotateCcw, Sparkles } from 'l
 import { Button } from '@/components/common/Button';
 import { Badge } from '@/components/common/Badge';
 import { AIGradingResult as AIGradingResultType, FinalGradePayload } from '@/types/grading';
+import { RubricAlignment } from '@/types/rubricAlignment';
 import { StudentAnswer } from '@/types/submission';
 import { SuggestedMarksCard } from './SuggestedMarksCard';
 import { CriterionGradingBreakdown } from './CriterionGradingBreakdown';
@@ -18,6 +19,8 @@ interface AIGradingResultProps {
   onRegenerate: () => void;
   onFinalize: (data: FinalGradePayload) => Promise<void>;
   onReject: () => Promise<void>;
+  /** STEP 28: separate alignment signal (never merged into marks). */
+  alignment?: RubricAlignment | null;
 }
 
 const DECISION_LABEL: Record<string, string> = {
@@ -38,6 +41,7 @@ export const AIGradingResult: React.FC<AIGradingResultProps> = ({
   onRegenerate,
   onFinalize,
   onReject,
+  alignment,
 }) => (
   <section
     className="rounded-xl border border-[#E5E5E5] dark:border-[#2C2C2E] bg-white dark:bg-[#1C1C1E] p-4 space-y-4"
@@ -80,7 +84,7 @@ export const AIGradingResult: React.FC<AIGradingResultProps> = ({
       </div>
     )}
 
-    <SuggestedMarksCard result={result} facultyMarks={answer.awarded_marks} />
+    <SuggestedMarksCard result={result} facultyMarks={answer.awarded_marks} alignment={alignment} />
 
     {result.overall_feedback && (
       <div className="space-y-1">

@@ -37,6 +37,22 @@ and are never set automatically. All routes are Sanctum-protected and authorized
 
 E2E: `bash backend/tests/e2e_grading.sh` against the Docker stack.
 
+### STEP 28: Answer ↔ Rubric Alignment endpoints
+
+Alignment describes how well an answer addresses each approved-rubric criterion (`STRONG` / `PARTIAL` / `WEAK` / `NOT_ALIGNED`,
+mark-weighted overall %). It is **not** a grade and **not** correctness; it never writes to marks, feedback, rubrics or answers.
+Rubric version, answer fingerprint, model name/version and analysis method are stored per run; stale results are flagged.
+
+| Method | Route | Purpose |
+| :--- | :--- | :--- |
+| POST | `/api/student-answers/{answer}/rubric-alignment` | Queue an analysis (202). Idempotent while pending; 409 if a fresh completed analysis exists. 422 without an approved rubric / image-only answer. |
+| GET | `/api/student-answers/{answer}/rubric-alignment` | Current analysis with criterion alignments, evidence, missing elements, explanation, staleness. |
+| GET | `/api/student-answers/{answer}/rubric-alignment/history` | All runs, newest first. |
+| POST | `/api/rubric-alignments/{alignment}/regenerate` | New run (202); previous runs preserved. |
+| POST | `/api/rubric-alignments/{alignment}/review` | Faculty marks the analysis as reviewed (marks unchanged). |
+
+E2E: `bash backend/tests/e2e_alignment.sh`.
+
 ---
 
 ## 3. Development Credentials (Local Only)

@@ -93,6 +93,9 @@ cp .env.example .env
 | `HF_HOME` | `./cache/huggingface` | Model cache directory on disk |
 | `AI_SERVICE_API_KEY` | *(empty)* | Optional internal API key for request validation (`X-AI-Service-Key`) |
 | `RUBRIC_GENERATION_ENABLED` | `false` | STEP 25: enable optional Hugging Face seq2seq model for rubric drafting |
+| `RUBRIC_ALIGNMENT_STRONG_THRESHOLD` | `0.75` | STEP 28: criterion signal ≥ this → STRONG (initial value; needs empirical validation) |
+| `RUBRIC_ALIGNMENT_PARTIAL_THRESHOLD` | `0.55` | STEP 28: criterion signal ≥ this → PARTIAL |
+| `RUBRIC_ALIGNMENT_WEAK_THRESHOLD` | `0.35` | STEP 28: criterion signal ≥ this → WEAK, otherwise NOT_ALIGNED |
 | `RUBRIC_GENERATION_MODEL` | *(empty)* | e.g. `google/flan-t5-small` (~300 MB, ~1 GB RAM, CPU). Empty = template engine only |
 | `RUBRIC_GENERATION_MAX_NEW_TOKENS` | `192` | Generation length cap for the rubric model |
 | `RUBRIC_MAX_CRITERIA` | `8` | Maximum criteria in a generated rubric draft |
@@ -470,6 +473,72 @@ Response:
 The service guarantees `0 ≤ suggested_marks ≤ maximum_marks`, `0 ≤ criterion marks ≤ criterion max`
 and that criterion marks sum to `suggested_marks`; Laravel re-validates independently and
 rejects anything inconsistent. No confidence scores are returned.
+
+### 7.9 Answer ↔ Rubric Alignment (STEP 28)
+
+**POST** `/api/v1/analyze-answer-rubric-alignment`
+
+Answers *"how well does this answer satisfy each rubric criterion?"* — a different question
+from STEP 27 (*"what marks might it deserve?"*). The two signals are never merged, and
+alignment is **not** correctness: an answer can be strongly aligned yet contain an incorrect
+statement. Faculty review remains necessary.
+
+Hybrid, deterministic pipeline (no chain-of-thought is produced or stored):
+
+1. Answer → sentences → MiniLM embeddings, batched together with every criterion
+   description/title and expected indicator (MiniLM provides *semantic similarity only*).
+2. Per criterion signal = `0.65 × mean(indicator signals) + 0.35 × description signal`, where each
+   signal = `max(cosine similarity over sentences, lexical keyword coverage × 0.8)`. If embeddings
+   are unavailable the lexical part alone is used and `metadata.method` says so.
+3. Configurable thresholds → `STRONG` / `PARTIAL` / `WEAK` / `NOT_ALIGNED` with fixed weights
+   `1 / 0.5 / 0.25 / 0`.
+4. `overall_alignment_score` (primary) = Σ(weight × criterion max_marks) / Σ(max_marks) × 100;
+   `unweighted_alignment_score` = mean(weight) × 100. Overall status: ≥75 STRONG, ≥45 PARTIAL,
+   ≥20 WEAK, else NOT_ALIGNED.
+5. `evidence` is always an excerpt of the student's actual sentences; `missing_elements` lists
+   indicators with no/limited evidence. Explanations are template-based (cautious wording) and
+   may optionally be refined by the configured seq2seq model — the status and score never depend
+   on free-form model output.
+
+Request (built by Laravel from database records):
+
+```json
+{
+  "student_answer": { "id": 101, "text": "Normalization organizes data to reduce redundancy. First normal form requires atomic values." },
+  "question": { "id": 5, "text": "Explain database normalization.", "total_marks": 10 },
+  "rubric": { "id": 20, "version": 1, "total_marks": 10,
+              "criteria": [ { "id": 1, "criterion": "Definition", "description": "Defines normalization correctly.",
+                              "max_marks": 2, "expected_indicators": ["reduces redundancy", "organizes data"] } ] }
+}
+```
+
+Response:
+
+```json
+{
+  "status": "success",
+  "overall_alignment_score": 40.0,
+  "unweighted_alignment_score": 40.0,
+  "overall_alignment_status": "WEAK",
+  "counts": { "strong": 2, "partial": 0, "weak": 0, "not_aligned": 3 },
+  "summary": "The answer shows limited alignment with the rubric criteria. Mark-weighted alignment 40% ...",
+  "strengths": ["Addresses 'Definition' with clear evidence."],
+  "missing_elements": ["2NF: No evidence found for: partial dependency."],
+  "criterion_alignments": [
+    { "rubric_criterion_id": 1, "criterion": "Definition", "max_marks": 2, "alignment_status": "STRONG",
+      "alignment_score": 1.0, "similarity": 0.91, "evidence": ["Normalization organizes data to reduce redundancy."],
+      "missing_elements": [], "explanation": "The answer directly addresses 'Definition' ... Faculty review is recommended to verify correctness." }
+  ],
+  "metadata": { "model": "facultylens-rubric-alignment-engine", "version": "1.0.0",
+                "embedding_model": "sentence-transformers/all-MiniLM-L6-v2", "generative_model_used": false,
+                "method": "semantic_and_rubric_alignment", "thresholds": { "strong": 0.75, "partial": 0.55, "weak": 0.35 },
+                "disclaimer": "AI-generated rubric alignment is an assistive analysis. ... Faculty review remains necessary." }
+}
+```
+
+422 on: empty answer, missing rubric/criteria, negative criterion marks, criteria not summing to
+`rubric.total_marks` (when given), duplicate or missing criterion ids. The thresholds are initial
+engineering values and require validation against real faculty-reviewed examples.
 
 ---
 

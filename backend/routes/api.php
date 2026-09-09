@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\LearningOutcomeController;
 use App\Http\Controllers\Api\PreviousQuestionController;
 use App\Http\Controllers\Api\RecommendationFeedbackController;
+use App\Http\Controllers\Api\RubricAlignmentController;
 use App\Http\Controllers\Api\RubricController;
 use App\Http\Controllers\Api\StudentAnswerController;
 use App\Http\Controllers\Api\StudentController;
@@ -185,6 +186,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/student-answers/{answer}/final-grade', [AiGradingController::class, 'finalizeGrade']);
     Route::post('/ai-grading/{result}/regenerate', [AiGradingController::class, 'regenerate'])->middleware('throttle:ai-analysis');
     Route::post('/ai-grading/{result}/reject', [AiGradingController::class, 'reject']);
+
+    // STEP 28: Answer <-> Rubric Alignment (coverage evidence; never a grade)
+    Route::post('/student-answers/{answer}/rubric-alignment', [RubricAlignmentController::class, 'request'])->middleware('throttle:ai-analysis');
+    Route::get('/student-answers/{answer}/rubric-alignment', [RubricAlignmentController::class, 'show']);
+    Route::get('/student-answers/{answer}/rubric-alignment/history', [RubricAlignmentController::class, 'history']);
+    Route::post('/rubric-alignments/{alignment}/regenerate', [RubricAlignmentController::class, 'regenerate'])->middleware('throttle:ai-analysis');
+    Route::post('/rubric-alignments/{alignment}/review', [RubricAlignmentController::class, 'review']);
 });
 
 // Public Shared Report Endpoints (STEP 18)

@@ -78,6 +78,17 @@ class StudentAnswer extends Model
         return $this->hasOne(AiGradingResult::class)->where('is_current', true);
     }
 
+    public function rubricAlignments(): HasMany
+    {
+        return $this->hasMany(AnswerRubricAlignment::class)->orderByDesc('id');
+    }
+
+    /** STEP 28: the most recent Answer <-> Rubric alignment run. */
+    public function currentRubricAlignment(): HasOne
+    {
+        return $this->hasOne(AnswerRubricAlignment::class)->where('is_current', true);
+    }
+
     public function hasFile(): bool
     {
         return !empty($this->answer_file_path);

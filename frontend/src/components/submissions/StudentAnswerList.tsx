@@ -12,6 +12,7 @@ interface StudentAnswerListProps {
   onViewRubric?: (rubricId: number) => void;
   onGradeSaved?: () => Promise<void> | void;
   showAIGrading?: boolean;
+  showRubricAlignment?: boolean;
 }
 
 export const StudentAnswerList: React.FC<StudentAnswerListProps> = ({ questions, ...handlers }) => {
