@@ -41,5 +41,23 @@ class LearningOutcome extends Model
     {
         return $this->hasMany(Question::class);
     }
+
+    /** STEP 31: CO -> PO mappings for this outcome (acting as a Course Outcome). */
+    public function poMappings(): HasMany
+    {
+        return $this->hasMany(CoPoMapping::class);
+    }
+
+    public function questionCoMappings(): HasMany
+    {
+        return $this->hasMany(QuestionCoMapping::class);
+    }
+
+    protected static function booted(): void
+    {
+        $invalidate = fn (LearningOutcome $lo) => \App\Services\CoPoMappingValidatorService::invalidateCache((int) $lo->course_id);
+        static::saved($invalidate);
+        static::deleted($invalidate);
+    }
 }
 

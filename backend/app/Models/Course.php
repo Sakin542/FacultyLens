@@ -13,6 +13,7 @@ class Course extends Model
 
     protected $fillable = [
         'user_id',
+        'program_id',
         'course_code',
         'course_name',
         'description',
@@ -35,6 +36,17 @@ class Course extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /** STEP 31: the program whose outcomes (PO) this course's COs map to. */
+    public function program(): BelongsTo
+    {
+        return $this->belongsTo(Program::class);
+    }
+
+    public function coPoMappings(): HasMany
+    {
+        return $this->hasMany(CoPoMapping::class);
     }
 
     /**

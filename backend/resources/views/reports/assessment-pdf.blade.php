@@ -690,6 +690,64 @@
         @endif
     </div>
 
+    <!-- SECTION 7: STUDENT PERFORMANCE SUMMARY (STEP 30, finalized grades only) -->
+    @if(!empty($data['student_performance']))
+    @php $sp = $data['student_performance']; @endphp
+    <div class="avoid-break" style="margin-top: 14px;">
+        <h2>7. Student Performance Summary</h2>
+        <p style="font-size: 8.5pt; color: #475569;">
+            Based on <strong>{{ $sp['finalized_answers'] }}</strong> finalized answers from <strong>{{ $sp['students'] }}</strong> students (analysis {{ $sp['analyzed_at'] }}{{ $sp['is_stale'] ? ', may be outdated' : '' }}).
+            Overall performance <strong>{{ $sp['overall'] }}</strong> against an expected benchmark of <strong>{{ $sp['expected'] }}</strong>
+            (gap {{ $sp['gap'] }}) &mdash; status: <strong>{{ $sp['status'] }}</strong>.
+        </p>
+        <table class="data-table">
+            <thead><tr><th style="width:12%;">Question</th><th style="width:14%; text-align:center;">Average</th><th style="width:18%; text-align:center;">Finalized / Submissions</th><th style="width:12%; text-align:center;">Gap (pts)</th><th style="width:14%;">Difficulty</th><th>Status</th></tr></thead>
+            <tbody>
+                @foreach($sp['questions'] as $q)
+                <tr><td><strong>{{ $q['label'] }}</strong></td><td class="text-center">{{ $q['average'] }}</td><td class="text-center">{{ $q['responses'] }}</td><td class="text-center">{{ $q['gap'] }}</td><td>{{ $q['difficulty'] }}</td><td>{{ $q['status'] }}</td></tr>
+                @endforeach
+            </tbody>
+        </table>
+        <table style="width:100%; margin-top: 8px; font-size: 8.5pt;">
+            <tr>
+                <td style="width:50%; vertical-align:top; padding-right: 8px;">
+                    <strong>Learning Outcome Performance</strong>
+                    @forelse($sp['learning_outcomes'] as $lo)
+                    <div>{{ $lo['label'] }} &mdash; {{ $lo['average'] }} ({{ $lo['status'] }})</div>
+                    @empty
+                    <div class="text-muted">No learning outcomes are mapped to this assessment.</div>
+                    @endforelse
+                    <div style="margin-top: 6px;"><strong>Topic Performance</strong></div>
+                    @forelse($sp['topics'] as $t)
+                    <div>{{ $t['label'] }} &mdash; {{ $t['average'] }} ({{ $t['status'] }})</div>
+                    @empty
+                    <div class="text-muted">Topic performance unavailable for questions without topic classification.</div>
+                    @endforelse
+                </td>
+                <td style="width:50%; vertical-align:top;">
+                    <strong>Potential Gap Areas (for faculty review)</strong>
+                    @forelse($sp['gap_areas'] as $g)
+                    <div>&bull; {{ $g }}</div>
+                    @empty
+                    <div class="text-muted">No potential gap areas met the minimum sample size.</div>
+                    @endforelse
+                    <div style="margin-top: 6px;"><strong>Strong Performance Areas</strong></div>
+                    @forelse($sp['strong_areas'] as $s)
+                    <div>&bull; {{ $s }}</div>
+                    @empty
+                    <div class="text-muted">No strong performance areas identified.</div>
+                    @endforelse
+                </td>
+            </tr>
+        </table>
+        <p style="font-size: 7.5pt; color: #64748b; margin-top: 6px;"><em>Limitations: {{ $sp['limitations'] }}</em></p>
+    </div>
+    @endif
+
+    @if(!empty($data['co_po_mapping']))
+    @include('reports.partials.co-po-mapping', ['cp' => $data['co_po_mapping']])
+    @endif
+
     <!-- SIGN-OFF SECTION -->
     <div class="avoid-break" style="margin-top: 24px; padding-top: 14px; border-top: 1px solid #cbd5e1;">
         <table style="width: 100%; font-size: 8.5pt;">

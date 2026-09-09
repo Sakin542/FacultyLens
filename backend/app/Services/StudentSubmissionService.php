@@ -108,6 +108,7 @@ class StudentSubmissionService
         }
 
         $submission->update($attributes);
+        StudentPerformanceService::invalidateCache((int) $submission->assessment_id);
 
         $this->auditLogService->log('SUBMISSION_STATUS_CHANGED', $submission, $submission->id, [
             'from' => $from,
@@ -577,6 +578,8 @@ class StudentSubmissionService
         }
 
         $submission->update($attributes);
+        StudentPerformanceService::invalidateCache((int) $submission->assessment_id);
+        CoPoMappingValidatorService::invalidateCacheForAssessment((int) $submission->assessment_id);
     }
 
     public function assessmentTotalMarks(Assessment $assessment): ?float

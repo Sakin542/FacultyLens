@@ -40,6 +40,22 @@ class Question extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        // STEP 30/31: marks / LO / topic changes invalidate cached performance and CO/PO analytics.
+        $invalidate = function (Question $q) {
+            \App\Services\StudentPerformanceService::invalidateCache((int) $q->assessment_id);
+            \App\Services\CoPoMappingValidatorService::invalidateCacheForAssessment((int) $q->assessment_id);
+        };
+        static::saved($invalidate);
+        static::deleted($invalidate);
+    }
+
+    public function coMappings(): HasMany
+    {
+        return $this->hasMany(QuestionCoMapping::class);
+    }
+
     /**
      * The assessment this question belongs to.
      */
