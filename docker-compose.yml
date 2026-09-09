@@ -27,6 +27,37 @@ services:
     networks:
       - facultylens-network
 
+  # STEP 23/27: database queue worker for asynchronous AI jobs (grading, analysis, extraction).
+  queue-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: facultylens-queue-worker
+    restart: unless-stopped
+    working_dir: /var/www/html
+    command: ["php", "artisan", "queue:work", "--tries=2", "--timeout=200", "--sleep=2", "--max-jobs=500"]
+    volumes:
+      - ./backend:/var/www/html
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=facultylens
+      - DB_USERNAME=root
+      - DB_PASSWORD=root123
+      - QUEUE_CONNECTION=database
+      - AI_SERVICE_URL=http://ai-service:8001
+      - AI_SERVICE_API_KEY=
+    depends_on:
+      mysql:
+        condition: service_healthy
+      app:
+        condition: service_started
+    networks:
+      - facultylens-network
+
   mysql:
     image: mysql:8.0
     container_name: facultylens-mysql

@@ -10,6 +10,8 @@ interface StudentAnswerListProps {
   onDelete?: (answer: StudentAnswer) => Promise<void>;
   onDownload?: (answer: StudentAnswer) => Promise<void>;
   onViewRubric?: (rubricId: number) => void;
+  onGradeSaved?: () => Promise<void> | void;
+  showAIGrading?: boolean;
 }
 
 export const StudentAnswerList: React.FC<StudentAnswerListProps> = ({ questions, ...handlers }) => {

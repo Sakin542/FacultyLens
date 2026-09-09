@@ -208,13 +208,15 @@ describe('AnswerUpload', () => {
 });
 
 describe('StudentAnswerCard', () => {
-  it('shows "Not graded", rubric availability and no AI score', () => {
+  it('shows "Not graded", rubric availability and no AI suggestion before it is requested', () => {
     const q = detail().questions[0];
     render(<StudentAnswerCard question={{ ...q, approved_rubric: { id: 5, title: 'R', status: 'APPROVED', version: 1 } }} onUpdate={vi.fn()} />);
     expect(screen.getByTestId('answer-text')).toHaveTextContent('A unique identifier for a row.');
     expect(screen.getByTestId('answer-marks')).toHaveTextContent('Not graded');
     expect(screen.getByTestId('rubric-available')).toHaveTextContent(/approved/i);
-    expect(screen.queryByText(/ai score|ai suggested|confidence/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/ai score|ai suggested marks|confidence/i)).not.toBeInTheDocument();
+    // STEP 27: AI assistance is opt-in per answer
+    expect(screen.getByTestId('ai-grading-button')).toBeEnabled();
   });
 
   it('shows Add Answer for unanswered questions and submits text answer', async () => {

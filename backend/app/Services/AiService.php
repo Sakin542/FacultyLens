@@ -756,6 +756,114 @@ class AiService
     }
 
     /**
+     * STEP 27: Request AI grading assistance for one student answer against an approved rubric.
+     * The payload is built server-side from trusted database records (never from the frontend).
+     * Student answer text is never logged.
+     *
+     * @param array $payload student_answer{id,text,answer_type}, question{id,text,total_marks,...},
+     *                       rubric{id,version,total_marks,criteria[]}, learning_outcome, course_context
+     * @return array Structured response: status, suggested_marks, maximum_marks, criterion_results[], ...
+     * @throws Exception
+     */
+    public function gradeAnswer(array $payload): array
+    {
+        $answerText = trim((string) ($payload['student_answer']['text'] ?? ''));
+        if ($answerText === '') {
+            throw new Exception('Student answer text cannot be empty.');
+        }
+
+        $questionText = trim((string) ($payload['question']['text'] ?? ''));
+        if ($questionText === '') {
+            throw new Exception('Question text cannot be empty.');
+        }
+
+        $totalMarks = (float) ($payload['question']['total_marks'] ?? 0);
+        if ($totalMarks <= 0) {
+            throw new Exception('Question marks must be greater than zero to request grading assistance.');
+        }
+
+        $criteria = $payload['rubric']['criteria'] ?? null;
+        if (!is_array($criteria) || count($criteria) === 0) {
+            throw new Exception('An approved rubric with at least one criterion is required.');
+        }
+
+        $request = [
+            'student_answer' => [
+                'id' => isset($payload['student_answer']['id']) ? (int) $payload['student_answer']['id'] : null,
+                'text' => $answerText,
+                'answer_type' => strtoupper((string) ($payload['student_answer']['answer_type'] ?? 'TEXT')),
+            ],
+            'question' => [
+                'id' => isset($payload['question']['id']) ? (int) $payload['question']['id'] : null,
+                'text' => $questionText,
+                'total_marks' => $totalMarks,
+                'question_type' => strtoupper((string) ($payload['question']['question_type'] ?? 'descriptive')),
+                'difficulty_level' => isset($payload['question']['difficulty_level']) ? strtoupper((string) $payload['question']['difficulty_level']) : null,
+                'cognitive_level' => isset($payload['question']['cognitive_level']) ? strtoupper((string) $payload['question']['cognitive_level']) : null,
+                'expected_answer' => isset($payload['question']['expected_answer']) && trim((string) $payload['question']['expected_answer']) !== ''
+                    ? trim((string) $payload['question']['expected_answer'])
+                    : null,
+            ],
+            'rubric' => [
+                'id' => isset($payload['rubric']['id']) ? (int) $payload['rubric']['id'] : null,
+                'version' => isset($payload['rubric']['version']) ? (int) $payload['rubric']['version'] : null,
+                'total_marks' => (float) ($payload['rubric']['total_marks'] ?? $totalMarks),
+                'general_guidance' => $payload['rubric']['general_guidance'] ?? null,
+                'criteria' => array_values(array_map(fn ($c) => [
+                    'id' => (int) $c['id'],
+                    'criterion' => (string) $c['criterion'],
+                    'description' => (string) ($c['description'] ?? ''),
+                    'max_marks' => (float) $c['max_marks'],
+                    'scoring_guidance' => $c['scoring_guidance'] ?? null,
+                    'expected_indicators' => array_values(array_filter((array) ($c['expected_indicators'] ?? []), fn ($i) => is_string($i) && trim($i) !== '')),
+                    'sort_order' => isset($c['sort_order']) ? (int) $c['sort_order'] : null,
+                ], $criteria)),
+            ],
+        ];
+
+        if (!empty($payload['learning_outcome']) && is_array($payload['learning_outcome'])) {
+            $request['learning_outcome'] = [
+                'code' => $payload['learning_outcome']['code'] ?? null,
+                'description' => $payload['learning_outcome']['description'] ?? null,
+            ];
+        }
+
+        if (!empty($payload['course_context']) && is_array($payload['course_context'])) {
+            $request['course_context'] = [
+                'course_code' => $payload['course_context']['course_code'] ?? null,
+                'course_name' => $payload['course_context']['course_name'] ?? null,
+            ];
+        }
+
+        try {
+            $response = $this->client()->post("{$this->baseUrl}/api/v1/grade-answer", $request);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                if (!is_array($data)) {
+                    throw new Exception('AI Service returned a malformed grading response.');
+                }
+                return $data;
+            }
+
+            if ($response->status() === 422) {
+                $errorData = $response->json();
+                $message = $errorData['message'] ?? 'Validation failed in AI service.';
+                // Do not log the body: it may echo student answer content.
+                Log::warning('AI Service grade-answer validation error (422).');
+                throw new Exception($message);
+            }
+
+            Log::error('AI Service grade-answer error: ' . $response->status());
+            throw new Exception('AI Service failed to generate grading assistance.');
+        } catch (ConnectionException $e) {
+            $this->handleHttpException($e, 'grading answer');
+        } catch (RequestException $e) {
+            $this->handleHttpException($e, 'grading answer');
+        }
+    }
+
+    /**
      * Translate HTTP / Connection / Request exceptions into descriptive domain exceptions with timeout detection.
      *
      * @param Exception $e

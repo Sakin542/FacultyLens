@@ -13,6 +13,8 @@ from app.services.recommendation_engine import RecommendationEngine
 from app.services.assessment_analysis_service import AssessmentAnalysisService
 from app.services.rubric_generator import RubricGenerator
 from app.services.rubric_validator import RubricValidationError
+from app.services.grading_engine import GradingEngine
+from app.services.grading_validator import GradingValidationError
 from app.services.text_generation_service import TextGenerationService, get_text_generation_service
 from app.utils.text_utils import split_paragraphs, split_sentences
 from app.schemas.analysis import (
@@ -51,6 +53,10 @@ from app.schemas.assessment_analysis import (
 from app.schemas.rubric import (
     GenerateRubricRequest,
     GenerateRubricResponse,
+)
+from app.schemas.grading import (
+    GradeAnswerRequest,
+    GradeAnswerResponse,
 )
 
 logger = logging.getLogger("facultylens.ai")
@@ -437,6 +443,44 @@ def generate_rubric(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to generate rubric draft.",
+        )
+
+
+@router.post(
+    "/api/v1/grade-answer",
+    response_model=GradeAnswerResponse,
+    dependencies=[Depends(verify_api_key)],
+)
+def grade_answer(
+    payload: GradeAnswerRequest,
+    hf_service: HuggingFaceService = Depends(get_hf_service),
+    text_generation_service: TextGenerationService = Depends(get_text_generation_service),
+) -> GradeAnswerResponse:
+    """
+    STEP 27: AI Grading Assistance.
+    Aligns a student answer with an approved rubric and returns *suggested* marks,
+    criterion-level evidence, missing elements and draft feedback. Faculty review
+    and the final grade happen in Laravel; this endpoint never finalizes a grade.
+    Student answer text is not logged.
+    """
+    try:
+        engine = GradingEngine(
+            hf_service=hf_service,
+            text_generation_service=text_generation_service,
+        )
+        result = engine.grade(payload)
+        return GradeAnswerResponse(**result)
+    except GradingValidationError as e:
+        logger.warning(f"Grading suggestion failed validation: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="The AI service could not produce a valid grading suggestion for this answer.",
+        )
+    except Exception as e:
+        logger.error(f"Error grading answer: {type(e).__name__}", exc_info=False)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to generate grading assistance.",
         )
 
 

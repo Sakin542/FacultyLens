@@ -21,8 +21,8 @@ function detailErrorMessage(err: unknown): string {
 }
 
 /**
- * STEP 26: One student's submission with every question and its answer.
- * Marks shown here are faculty-entered; no AI score exists at this step.
+ * STEP 26/27: One student's submission with every question, its answer, and AI grading assistance.
+ * Faculty final marks are separate from AI suggested marks and always require faculty action.
  */
 export const SubmissionDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -263,9 +263,10 @@ export const SubmissionDetails: React.FC = () => {
           onDelete={handleDeleteAnswer}
           onDownload={handleDownload}
           onViewRubric={() => navigate(`/assessments/${submission.assessment_id}`)}
+          onGradeSaved={async () => { await refresh(); flash('Final marks saved.'); }}
         />
         <p className="text-[11px] text-[#737373] italic">
-          Marks and feedback are entered by faculty. Student records are private academic data.
+          AI grading assistance is a decision-support feature. Faculty review and final judgment are required. Student records are private academic data.
         </p>
       </div>
     </div>

@@ -1,8 +1,9 @@
 /**
  * STEP 26: Student Answer Management types.
- * Faculty-side records only; no AI grading fields exist yet.
+ * Faculty-side records; AI grading suggestions (STEP 27) are attached per answer as `ai_grading`.
  */
 import { LearningOutcome } from './index';
+import { AIGradingResult } from './grading';
 
 export type SubmissionStatus = 'DRAFT' | 'SUBMITTED' | 'UNDER_REVIEW' | 'GRADED' | 'RETURNED';
 
@@ -63,6 +64,8 @@ export interface StudentAnswer {
   awarded_marks?: number | null;
   faculty_feedback?: string | null;
   answer_status: AnswerStatus;
+  /** Current AI grading suggestion (STEP 27); null until faculty request it. */
+  ai_grading?: AIGradingResult | null;
   created_at?: string;
   updated_at?: string;
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AiAnalysisController;
+use App\Http\Controllers\Api\AiGradingController;
 use App\Http\Controllers\Api\AnalysisHistoryController;
 use App\Http\Controllers\Api\AssessmentController;
 use App\Http\Controllers\Api\AssessmentQuestionPaperController;
@@ -175,6 +176,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/student-answers/{answer}', [StudentAnswerController::class, 'update'])->middleware('throttle:uploads'); // multipart updates (file replace)
     Route::delete('/student-answers/{answer}', [StudentAnswerController::class, 'destroy']);
     Route::get('/student-answers/{answer}/download', [StudentAnswerController::class, 'download']);
+
+    // STEP 27: AI Grading Assistance (suggestion -> faculty review -> faculty final marks)
+    Route::post('/student-answers/{answer}/ai-grade', [AiGradingController::class, 'request'])->middleware('throttle:ai-analysis');
+    Route::get('/student-answers/{answer}/ai-grading', [AiGradingController::class, 'show']);
+    Route::get('/student-answers/{answer}/ai-grading/history', [AiGradingController::class, 'history']);
+    Route::post('/student-answers/{answer}/finalize-grade', [AiGradingController::class, 'finalizeGrade']);
+    Route::put('/student-answers/{answer}/final-grade', [AiGradingController::class, 'finalizeGrade']);
+    Route::post('/ai-grading/{result}/regenerate', [AiGradingController::class, 'regenerate'])->middleware('throttle:ai-analysis');
+    Route::post('/ai-grading/{result}/reject', [AiGradingController::class, 'reject']);
 });
 
 // Public Shared Report Endpoints (STEP 18)

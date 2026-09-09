@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * STEP 26: One student's answer to one question within a submission.
- * Marks/feedback here are faculty-entered only; AI grading belongs to later steps.
+ * Marks/feedback here are faculty-entered only; AI suggestions live in AiGradingResult (STEP 27).
  */
 class StudentAnswer extends Model
 {
@@ -65,8 +67,31 @@ class StudentAnswer extends Model
         return $this->belongsTo(Question::class);
     }
 
+    public function aiGradingResults(): HasMany
+    {
+        return $this->hasMany(AiGradingResult::class)->orderByDesc('id');
+    }
+
+    /** The most recent AI grading run (superseded runs are kept for audit). */
+    public function currentAiGrading(): HasOne
+    {
+        return $this->hasOne(AiGradingResult::class)->where('is_current', true);
+    }
+
     public function hasFile(): bool
     {
         return !empty($this->answer_file_path);
+    }
+
+    /**
+     * Fingerprint of the evaluated content so AI results can be flagged stale when the answer changes.
+     */
+    public function contentFingerprint(): string
+    {
+        return hash('sha256', implode('|', [
+            (string) $this->answer_text,
+            (string) $this->answer_file_path,
+            (string) $this->answer_file_size,
+        ]));
     }
 }

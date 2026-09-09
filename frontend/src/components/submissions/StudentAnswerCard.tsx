@@ -7,6 +7,7 @@ import { ANSWER_STATUSES, AnswerPayload, AnswerStatus, StudentAnswer, Submission
 import { AnswerStatusBadge, formatAnswerStatus } from './SubmissionStatusBadge';
 import { AnswerTextEditor } from './AnswerTextEditor';
 import { AnswerUpload } from './AnswerUpload';
+import { AIGradingPanel } from '@/components/grading/AIGradingPanel';
 
 interface StudentAnswerCardProps {
   question: SubmissionQuestion;
@@ -16,6 +17,10 @@ interface StudentAnswerCardProps {
   onDelete?: (answer: StudentAnswer) => Promise<void>;
   onDownload?: (answer: StudentAnswer) => Promise<void>;
   onViewRubric?: (rubricId: number) => void;
+  /** STEP 27: called after faculty final marks are saved through the AI grading panel. */
+  onGradeSaved?: () => Promise<void> | void;
+  /** Disable the AI grading panel (e.g. in isolated tests). */
+  showAIGrading?: boolean;
 }
 
 function formatBytes(bytes?: number | null) {
@@ -27,7 +32,7 @@ function formatBytes(bytes?: number | null) {
 
 /**
  * One question of the submission with the student's answer and faculty controls.
- * Marks are faculty-entered only; no AI grading is shown here.
+ * Faculty marks are entered here; AI suggestions (STEP 27) appear in a separate panel below.
  */
 export const StudentAnswerCard: React.FC<StudentAnswerCardProps> = ({
   question,
@@ -37,6 +42,8 @@ export const StudentAnswerCard: React.FC<StudentAnswerCardProps> = ({
   onDelete,
   onDownload,
   onViewRubric,
+  onGradeSaved,
+  showAIGrading = true,
 }) => {
   const answer = question.answer;
   const [mode, setMode] = useState<'view' | 'edit'>('view');
@@ -289,6 +296,10 @@ export const StudentAnswerCard: React.FC<StudentAnswerCardProps> = ({
                 <Button variant="outline" size="sm" leftIcon={<Edit className="w-3.5 h-3.5" />} onClick={startEdit} disabled={busy}>Edit Answer</Button>
               )}
             </div>
+          )}
+
+          {showAIGrading && (
+            <AIGradingPanel question={question} answer={answer} readOnly={readOnly} onGradeSaved={onGradeSaved} />
           )}
         </div>
       ) : (
