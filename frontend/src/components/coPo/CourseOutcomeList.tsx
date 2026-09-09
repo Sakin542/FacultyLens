@@ -1,0 +1,1 @@
+export { CourseOutcomeList } from './OutcomeLists';

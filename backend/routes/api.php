@@ -7,12 +7,15 @@ use App\Http\Controllers\Api\AssessmentController;
 use App\Http\Controllers\Api\AssessmentQuestionPaperController;
 use App\Http\Controllers\Api\AssessmentReportController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CoPoMappingController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\CourseMaterialController;
 use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\FeedbackController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\LearningOutcomeController;
+use App\Http\Controllers\Api\PerformanceController;
+use App\Http\Controllers\Api\ProgramController;
 use App\Http\Controllers\Api\PreviousQuestionController;
 use App\Http\Controllers\Api\RecommendationFeedbackController;
 use App\Http\Controllers\Api\RubricAlignmentController;
@@ -193,6 +196,39 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/student-answers/{answer}/rubric-alignment/history', [RubricAlignmentController::class, 'history']);
     Route::post('/rubric-alignments/{alignment}/regenerate', [RubricAlignmentController::class, 'regenerate'])->middleware('throttle:ai-analysis');
     Route::post('/rubric-alignments/{alignment}/review', [RubricAlignmentController::class, 'review']);
+
+    // STEP 30: Student Performance / Gap Analysis (finalized faculty marks only; review signals, not decisions)
+    Route::get('/assessments/{assessment}/performance', [PerformanceController::class, 'show']);
+    Route::post('/assessments/{assessment}/performance/analyze', [PerformanceController::class, 'analyze']);
+    Route::get('/assessments/{assessment}/performance/questions', [PerformanceController::class, 'questions']);
+    Route::get('/assessments/{assessment}/performance/topics', [PerformanceController::class, 'topics']);
+    Route::get('/assessments/{assessment}/performance/learning-outcomes', [PerformanceController::class, 'learningOutcomes']);
+    Route::get('/assessments/{assessment}/performance/history', [PerformanceController::class, 'history']);
+    Route::get('/students/{student}/assessments/{assessment}/performance', [PerformanceController::class, 'student']);
+
+    // STEP 31: CO/PO Mapping Validator (review signals; never an accreditation decision)
+    Route::get('/programs', [ProgramController::class, 'index']);
+    Route::post('/programs', [ProgramController::class, 'store']);
+    Route::get('/programs/{program}', [ProgramController::class, 'show']);
+    Route::put('/programs/{program}', [ProgramController::class, 'update']);
+    Route::delete('/programs/{program}', [ProgramController::class, 'destroy']);
+    Route::get('/programs/{program}/outcomes', [ProgramController::class, 'outcomes']);
+    Route::post('/programs/{program}/outcomes', [ProgramController::class, 'storeOutcome']);
+    Route::put('/program-outcomes/{programOutcome}', [ProgramController::class, 'updateOutcome']);
+    Route::delete('/program-outcomes/{programOutcome}', [ProgramController::class, 'destroyOutcome']);
+
+    Route::get('/courses/{course}/co-po-mapping', [CoPoMappingController::class, 'show']);
+    Route::post('/courses/{course}/co-po-mapping/analyze', [CoPoMappingController::class, 'analyze']);
+    Route::get('/courses/{course}/co-po-mapping/matrix', [CoPoMappingController::class, 'matrix']);
+    Route::get('/courses/{course}/co-po-mapping/findings', [CoPoMappingController::class, 'findings']);
+    Route::get('/courses/{course}/co-po-mapping/co-performance', [CoPoMappingController::class, 'coPerformance']);
+    Route::get('/courses/{course}/co-po-mapping/po-evidence', [CoPoMappingController::class, 'poEvidence']);
+    Route::get('/courses/{course}/co-po-mapping/question-mappings', [CoPoMappingController::class, 'questionMappings']);
+    Route::post('/courses/{course}/co-po-mappings', [CoPoMappingController::class, 'storeMapping']);
+    Route::put('/co-po-mappings/{mapping}', [CoPoMappingController::class, 'updateMapping']);
+    Route::delete('/co-po-mappings/{mapping}', [CoPoMappingController::class, 'destroyMapping']);
+    Route::post('/questions/{question}/co-mappings/confirm', [CoPoMappingController::class, 'confirmQuestionMapping']);
+    Route::post('/questions/{question}/co-mappings/reject', [CoPoMappingController::class, 'rejectQuestionMapping']);
 });
 
 // Public Shared Report Endpoints (STEP 18)

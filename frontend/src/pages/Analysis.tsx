@@ -15,6 +15,7 @@ import { RecommendationsSection } from '@/components/analysis/RecommendationsSec
 import { AnalysisLoading } from '@/components/analysis/AnalysisLoading';
 import { AnalysisEmptyState } from '@/components/analysis/AnalysisEmptyState';
 import { AnalysisError } from '@/components/analysis/AnalysisError';
+import { PerformanceOverview } from '@/components/performance/PerformanceOverview';
 import { aiAnalysisService, FullAssessmentAnalysisData } from '@/services/aiAnalysisService';
 import { assessmentService } from '@/services/assessmentService';
 import { Assessment, RecommendationStatus } from '@/types';
@@ -329,6 +330,9 @@ export const Analysis: React.FC = () => {
           />
         </div>
       )}
+
+      {/* STEP 30: Student Performance / Gap Analysis — a separate analytic from assessment quality */}
+      <PerformanceOverview assessmentId={selectedAssessmentId} />
     </div>
   );
 };

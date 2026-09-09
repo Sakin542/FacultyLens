@@ -413,6 +413,8 @@ class AssessmentReportService
             'findings' => $findings,
             'recommendations' => $recommendations,
             'recommendation_summary' => $recommendationSummary,
+            'student_performance' => $this->buildStudentPerformanceSection($assessment),
+            'co_po_mapping' => $this->buildCoPoSection($assessment),
             'generated_report' => $latestReportModel ? [
                 'id' => $latestReportModel->id,
                 'uuid' => $latestReportModel->report_uuid,
@@ -429,6 +431,72 @@ class AssessmentReportService
                 'version' => '1.0.0',
                 'analysis_report_id' => $report->id,
             ],
+        ];
+    }
+
+    /**
+     * STEP 30: Student performance summary for the report, only when a completed analysis with
+     * finalized grades exists. Aggregate statistics only — no student identity.
+     */
+    protected function buildStudentPerformanceSection(Assessment $assessment): ?array
+    {
+        $run = \App\Models\PerformanceAnalysisRun::where('assessment_id', $assessment->id)->where('is_current', true)->first();
+        if (!$run || !$run->isCompleted() || (int) $run->finalized_answer_count === 0) {
+            return null;
+        }
+
+        $service = app(\App\Services\StudentPerformanceService::class);
+        $data = $service->present($run, true);
+        $pct = fn ($v) => $v === null ? 'N/A' : number_format((float) $v, 1) . '%';
+        $label = fn ($s) => ucwords(strtolower(str_replace('_', ' ', (string) $s)));
+
+        return [
+            'analyzed_at' => $run->analyzed_at?->format('Y-m-d H:i'),
+            'is_stale' => $data['is_stale'],
+            'students' => $data['student_count'],
+            'finalized_answers' => $data['finalized_answer_count'],
+            'overall' => $pct($data['overall_average_percentage']),
+            'expected' => $pct($data['expected_performance_percent']),
+            'gap' => $data['overall_gap'] === null ? 'N/A' : number_format((float) $data['overall_gap'], 1) . ' pts',
+            'status' => $label($data['overall_status']),
+            'questions' => array_map(fn ($q) => [
+                'label' => 'Q' . $q['question_number'],
+                'average' => $pct($q['average_percentage']),
+                'responses' => $q['response_count'] . ' / ' . $q['submission_count'],
+                'gap' => $q['performance_gap'] === null ? '—' : number_format((float) $q['performance_gap'], 1),
+                'status' => $label($q['performance_status']),
+                'difficulty' => $q['difficulty_level'] ? ucfirst($q['difficulty_level']) : '—',
+            ], $data['questions']),
+            'topics' => array_map(fn ($t) => ['label' => $t['topic'], 'average' => $pct($t['average_percentage']), 'status' => $label($t['performance_status'])], $data['topics']),
+            'learning_outcomes' => array_map(fn ($lo) => ['label' => $lo['lo_code'], 'average' => $pct($lo['average_percentage']), 'status' => $label($lo['performance_status'])], $data['learning_outcomes']),
+            'gap_areas' => array_map(fn ($g) => $g['label'] . ' — ' . $pct($g['average_percentage']) . ' (gap ' . number_format((float) $g['performance_gap'], 1) . ' pts)', array_slice($data['summary']['gap_areas'] ?? [], 0, 6)),
+            'strong_areas' => array_map(fn ($s) => $s['label'] . ' — ' . $pct($s['average_percentage']), array_slice($data['summary']['strong_areas'] ?? [], 0, 6)),
+            'limitations' => $data['limitations'],
+        ];
+    }
+
+    /**
+     * STEP 31: course-level CO/PO mapping analysis, only when a completed run exists.
+     */
+    protected function buildCoPoSection(Assessment $assessment): ?array
+    {
+        $run = \App\Models\CoPoMappingAnalysisRun::where('course_id', $assessment->course_id)->where('is_current', true)->with('findings')->first();
+        if (!$run || !$run->isCompleted()) {
+            return null;
+        }
+        $service = app(\App\Services\CoPoMappingValidatorService::class);
+        $data = $service->present($run, true);
+
+        return [
+            'program' => $run->program?->code ? $run->program->code . ' — ' . $run->program->name : null,
+            'analyzed_at' => $run->analyzed_at?->format('Y-m-d H:i'),
+            'is_stale' => $data['is_stale'],
+            'summary' => $data['summary'],
+            'matrix' => $data['matrix'],
+            'co_coverage' => $data['co_coverage'],
+            'po_evidence' => $data['po_evidence'],
+            'findings' => array_slice($data['findings'], 0, 12),
+            'disclaimer' => $data['disclaimer'],
         ];
     }
 

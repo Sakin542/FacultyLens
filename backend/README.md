@@ -53,6 +53,44 @@ Rubric version, answer fingerprint, model name/version and analysis method are s
 
 E2E: `bash backend/tests/e2e_alignment.sh`.
 
+### STEP 30: Student Performance / Gap Analysis
+
+Deterministic Laravel/MySQL aggregation of **finalized faculty marks only** (an answer counts when it is `REVIEWED` with awarded marks and its
+submission's `grading_status` is `FACULTY_REVIEWED`/`FINALIZED`; AI-suggested marks are never counted). Percentages are mark-weighted:
+`Σ final marks ÷ Σ maximum marks × 100`. Statuses `STRONG / ON_TARGET / MINOR_GAP / MODERATE_GAP / HIGH_GAP / INSUFFICIENT_DATA` are review
+signals — no causal claims, no student labels, no grade changes. Thresholds live in `config/performance.php` (`PERFORMANCE_EXPECTED_PERCENT=70`,
+`PERFORMANCE_GAP_LOW/MODERATE/HIGH=5/10/20`, `PERFORMANCE_MIN_RESPONSES=5`, `PERFORMANCE_ASYNC_THRESHOLD=500`) and are initial values institutions should calibrate.
+
+| Method | Route | Purpose |
+| :--- | :--- | :--- |
+| GET | `/api/assessments/{assessment}/performance` | Current snapshot (questions, topics, learning outcomes, gap/strong areas, staleness) or `data: null`. |
+| POST | `/api/assessments/{assessment}/performance/analyze` | Generate a snapshot (200 inline; 202 + `AnalyzeStudentPerformanceJob` above the async threshold). 409 if a fresh snapshot exists (`?force=1` to regenerate; history preserved). |
+| GET | `/api/assessments/{assessment}/performance/{questions,topics,learning-outcomes,history}` | Sub-resources (cached; invalidated on grade/question changes). |
+| GET | `/api/students/{student}/assessments/{assessment}/performance` | Authorized per-student view ("areas for review"; unfinalized marks flagged). |
+
+Topics come from STEP 10 `ai_topics`; LO mapping uses the question's faculty LO plus STEP 11 `STRONG_ALIGNMENT`. STEP 27/28 averages are attached as context only.
+The PDF report gains a "Student Performance Summary" section when a completed snapshot exists.
+
+### STEP 31: CO/PO Mapping Validator
+
+Existing `learning_outcomes` act as Course Outcomes (displayed `LO1` → `CO1`). New tables: `programs`, `program_outcomes`, `courses.program_id`,
+`co_po_mappings` (level 0–3), `question_co_mappings` (faculty confirm/reject of STEP 11 AI suggestions), `co_po_mapping_analysis_runs`, `co_po_mapping_findings`.
+Formulas: CO coverage = marks attributed to CO ÷ total course assessment marks (shared equally when a question maps to several COs); density = non-zero cells ÷ (COs × POs);
+PO contribution = Σ(CO coverage × weight 1/3, 2/3, 1); CO/PO student performance reuses STEP 30 finalized marks. Thresholds in `config/co_po.php`
+(`COPO_CO_MIN_COVERAGE_PERCENT=5`, `COPO_CO_CONCENTRATION_PERCENT=60`, `COPO_PO_EVIDENCE_MIN_PERCENT=10`, `COPO_MAPPING_DENSITY_REVIEW_PERCENT=90`).
+Findings carry STEP 14-style `category/priority/recommendation`. **No accreditation claims are made; AI never creates official mappings.**
+
+| Method | Route | Purpose |
+| :--- | :--- | :--- |
+| CRUD | `/api/programs`, `/api/programs/{program}/outcomes`, `/api/program-outcomes/{po}` | Programs and institution-defined POs (faculty-scoped). |
+| GET | `/api/courses/{course}/co-po-mapping` | Overview: COs, POs, mappings, live summary, current run. |
+| POST | `/api/courses/{course}/co-po-mapping/analyze` | Deterministic analysis (409 if unchanged; `?force=1`). Old runs become non-current; mapping changes mark runs `STALE`. |
+| GET | `/api/courses/{course}/co-po-mapping/{matrix,findings,co-performance,po-evidence,question-mappings}` | Matrix, findings, CO coverage+performance, PO evidence, question→CO review list. |
+| POST/PUT/DELETE | `/api/courses/{course}/co-po-mappings`, `/api/co-po-mappings/{mapping}` | CO→PO mapping (validates LO ∈ course, PO ∈ course's program). |
+| POST | `/api/questions/{question}/co-mappings/{confirm,reject}` | Faculty decision on a question→CO suggestion (`mapping_source=FACULTY`). |
+
+E2E for STEP 30 + 31: `bash backend/tests/e2e_performance_copo.sh`.
+
 ---
 
 ## 3. Development Credentials (Local Only)

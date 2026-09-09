@@ -10,6 +10,7 @@ import { AnswerPayload, StudentAnswer, StudentSubmissionDetail, SubmissionStatus
 import { GradingStatusBadge, SubmissionStatusBadge, formatSubmissionStatus } from '@/components/submissions/SubmissionStatusBadge';
 import { StudentAnswerList } from '@/components/submissions/StudentAnswerList';
 import { formatDate } from '@/components/submissions/SubmissionTable';
+import { StudentPerformanceCard } from '@/components/performance/StudentPerformanceCard';
 
 function detailErrorMessage(err: unknown): string {
   if (err instanceof ApiError) {
@@ -269,6 +270,9 @@ export const SubmissionDetails: React.FC = () => {
           AI grading assistance is a decision-support feature. Faculty review and final judgment are required. Student records are private academic data.
         </p>
       </div>
+
+      {/* STEP 30: authorized per-student performance view (finalized marks only) */}
+      <StudentPerformanceCard key={`${submission.id}-${submission.updated_at ?? ''}`} studentId={submission.student_id} assessmentId={submission.assessment_id} />
     </div>
   );
 };

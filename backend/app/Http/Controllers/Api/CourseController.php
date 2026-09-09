@@ -62,6 +62,7 @@ class CourseController extends Controller
         $course->load([
             'learningOutcomes',
             'materials',
+            'program.outcomes',
             'assessments' => function ($q) {
                 $q->latest()->withCount('questions');
             },
@@ -84,9 +85,10 @@ class CourseController extends Controller
         }
 
         $course->update($request->validated());
-        $course->load(['learningOutcomes', 'materials']);
+        $course->load(['learningOutcomes', 'materials', 'program.outcomes']);
 
         Cache::forget("user:{$request->user()->id}:courses");
+        \App\Services\CoPoMappingValidatorService::invalidateCache($course->id);
 
         return response()->json([
             'data'    => $course,

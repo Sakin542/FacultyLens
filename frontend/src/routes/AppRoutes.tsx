@@ -12,6 +12,7 @@ import { ForgotPassword } from '@/pages/ForgotPassword';
 import { Dashboard } from '@/pages/Dashboard';
 import { Courses } from '@/pages/Courses';
 import { CourseDetails } from '@/pages/CourseDetails';
+import { CoPoMapping } from '@/pages/CoPoMapping';
 import { Assessments } from '@/pages/Assessments';
 import { AssessmentDetails } from '@/pages/AssessmentDetails';
 import { Settings } from '@/pages/Settings';
@@ -61,6 +62,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/courses" element={<Courses />} />
             <Route path="/courses/:id" element={<CourseDetails />} />
+            <Route path="/courses/:courseId/co-po-mapping" element={<CoPoMapping />} />
             <Route path="/courses/:courseId/question-bank" element={<QuestionBank />} />
             <Route path="/question-bank" element={<QuestionBank />} />
             <Route path="/assessments" element={<Assessments />} />

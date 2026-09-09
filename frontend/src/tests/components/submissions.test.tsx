@@ -34,6 +34,9 @@ vi.mock('@/services/studentSubmissionService', () => ({
 vi.mock('@/services/assessmentService', () => ({
   assessmentService: { getById: vi.fn() },
 }));
+vi.mock('@/services/performanceService', () => ({
+  performanceService: { getStudentPerformance: vi.fn().mockResolvedValue({ status: 'success', data: { student: { id: 3, student_identifier: 'STU001', name: 'Student One' }, assessment: { id: 7, title: 'Midterm' }, submission_id: 1, submission_status: 'SUBMITTED', grading_status: 'NOT_STARTED', has_finalized_grades: false, finalized_question_count: 0, question_count: 2, total_awarded_marks: null, total_maximum_marks: null, overall_percentage: null, expected_performance_percent: 70, questions: [], areas_for_review: [], note: 'n' } }) },
+}));
 
 import { studentSubmissionService, studentService } from '@/services/studentSubmissionService';
 import { assessmentService } from '@/services/assessmentService';
