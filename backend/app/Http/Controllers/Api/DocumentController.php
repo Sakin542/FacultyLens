@@ -32,13 +32,16 @@ class DocumentController extends Controller
     public function index(Request $request): JsonResponse
     {
         $user = $request->user();
-        $query = DocumentProcessing::where('user_id', $user->id);
+        // STEP 34: own uploads plus documents of courses the user may view (authorization in SQL).
+        $query = DocumentProcessing::where(function ($q) use ($user) {
+            $q->where('user_id', $user->id)
+                ->orWhereIn('course_id', Course::query()->accessibleBy($user)->select('courses.id'));
+        });
 
         if ($request->filled('course_id')) {
             $courseId = $request->input('course_id');
-            // Ensure faculty owns this course
-            $course = Course::where('id', $courseId)->where('user_id', $user->id)->first();
-            if (!$course) {
+            $course = Course::find($courseId);
+            if (!$course || !$user->can('view', $course)) {
                 return response()->json([
                     'message' => 'Unauthorized access or course not found.',
                 ], 403);
@@ -71,9 +74,9 @@ class DocumentController extends Controller
     {
         $user = $request->user();
 
-        // 1. Verify course ownership
-        $course = Course::where('id', $request->course_id)->where('user_id', $user->id)->first();
-        if (!$course) {
+        // 1. Verify course access (owner or collaborator with upload permission)
+        $course = Course::find($request->course_id);
+        if (!$course || !app(\App\Services\CourseAccessService::class)->can($user, $course, 'upload_documents')) {
             return response()->json([
                 'message' => 'Unauthorized: Course does not belong to you.',
             ], 403);
@@ -150,7 +153,7 @@ class DocumentController extends Controller
      */
     public function show(Request $request, DocumentProcessing $document): JsonResponse
     {
-        if ($document->user_id !== $request->user()->id) {
+        if (!$request->user()->can('view', $document)) {
             return response()->json([
                 'message' => 'Unauthorized access to document.',
             ], 403);
@@ -168,7 +171,7 @@ class DocumentController extends Controller
      */
     public function reprocess(Request $request, DocumentProcessing $document, DocumentTextExtractor $extractor): JsonResponse
     {
-        if ($document->user_id !== $request->user()->id) {
+        if (!$request->user()->can('reprocess', $document)) {
             return response()->json([
                 'message' => 'Unauthorized access to document.',
             ], 403);
@@ -225,7 +228,7 @@ class DocumentController extends Controller
      */
     public function download(Request $request, DocumentProcessing $document): StreamedResponse|JsonResponse
     {
-        if ($document->user_id !== $request->user()->id) {
+        if (!$request->user()->can('download', $document)) {
             return response()->json([
                 'message' => 'Unauthorized access to document.',
             ], 403);
@@ -245,7 +248,7 @@ class DocumentController extends Controller
      */
     public function destroy(Request $request, DocumentProcessing $document): JsonResponse
     {
-        if ($document->user_id !== $request->user()->id) {
+        if (!$request->user()->can('delete', $document)) {
             return response()->json([
                 'message' => 'Unauthorized access to document.',
             ], 403);

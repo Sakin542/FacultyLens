@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CourseRequest;
 use App\Models\Course;
+use App\Models\CourseCollaborator;
+use App\Services\CourseAccessService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -20,11 +22,15 @@ class CourseController extends Controller
         $user     = $request->user();
         $cacheKey = "user:{$user->id}:courses";
 
+        // STEP 34: owned + actively shared courses (authorization in SQL), each tagged with the caller's role.
         $courses = Cache::remember($cacheKey, 120, function () use ($user) {
-            return $user->courses()
+            $access = app(CourseAccessService::class);
+
+            return Course::query()->accessibleBy($user)
                 ->withCount(['learningOutcomes', 'assessments', 'materials'])
                 ->latest()
-                ->get();
+                ->get()
+                ->each(fn (Course $c) => $c->setAttribute('current_role', $access->roleFor($user, $c)));
         });
 
         return response()->json([
@@ -53,7 +59,7 @@ class CourseController extends Controller
      */
     public function show(Request $request, Course $course): JsonResponse
     {
-        if ($course->user_id !== $request->user()->id) {
+        if (!$request->user()->can('view', $course)) {
             return response()->json([
                 'message' => 'Unauthorized access to course.',
             ], 403);
@@ -63,10 +69,15 @@ class CourseController extends Controller
             'learningOutcomes',
             'materials',
             'program.outcomes',
+            'user:id,name,email',
             'assessments' => function ($q) {
                 $q->latest()->withCount('questions');
             },
         ]);
+
+        $access = app(CourseAccessService::class);
+        $course->setAttribute('current_role', $access->roleFor($request->user(), $course));
+        $course->setAttribute('permissions', $access->permissions($request->user(), $course));
 
         return response()->json([
             'data' => $course,
@@ -78,16 +89,19 @@ class CourseController extends Controller
      */
     public function update(CourseRequest $request, Course $course): JsonResponse
     {
-        if ($course->user_id !== $request->user()->id) {
+        if (!$request->user()->can('update', $course)) {
             return response()->json([
                 'message' => 'Unauthorized access to course.',
             ], 403);
         }
 
-        $course->update($request->validated());
+        // Collaborators may edit content but never re-assign ownership/program through this endpoint.
+        $data = $request->validated();
+        unset($data['user_id']);
+        $course->update($data);
         $course->load(['learningOutcomes', 'materials', 'program.outcomes']);
 
-        Cache::forget("user:{$request->user()->id}:courses");
+        self::forgetCourseListCaches($course);
         \App\Services\CoPoMappingValidatorService::invalidateCache($course->id);
 
         return response()->json([
@@ -101,11 +115,13 @@ class CourseController extends Controller
      */
     public function destroy(Request $request, Course $course): JsonResponse
     {
-        if ($course->user_id !== $request->user()->id) {
+        if (!$request->user()->can('delete', $course)) {
             return response()->json([
                 'message' => 'Unauthorized access to course.',
             ], 403);
         }
+
+        self::forgetCourseListCaches($course);
 
         // Delete any physical course material files from disk
         foreach ($course->materials as $material) {
@@ -116,11 +132,20 @@ class CourseController extends Controller
 
         $course->delete();
 
-        Cache::forget("user:{$request->user()->id}:courses");
-
         return response()->json([
             'message' => 'Course deleted successfully',
         ]);
+    }
+
+    /**
+     * STEP 34: the course list is cached per user; owner and every member must be invalidated.
+     */
+    public static function forgetCourseListCaches(Course $course): void
+    {
+        Cache::forget("user:{$course->user_id}:courses");
+        foreach (CourseCollaborator::where('course_id', $course->id)->pluck('user_id') as $memberId) {
+            Cache::forget("user:{$memberId}:courses");
+        }
     }
 }
 

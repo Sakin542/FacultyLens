@@ -27,8 +27,8 @@ class AssessmentReportController extends Controller
     protected function authorizeAssessmentOwner(Request $request, Assessment $assessment): void
     {
         $assessment->loadMissing('course');
-        if ($assessment->course->user_id !== $request->user()->id) {
-            abort(403, 'Unauthorized. You do not own this course or assessment.');
+        if (!$request->user()->can('viewAnalysis', $assessment)) {
+            abort(403, 'Unauthorized. You do not have access to this course or assessment.');
         }
     }
 
@@ -95,7 +95,7 @@ class AssessmentReportController extends Controller
     public function download(Request $request, AssessmentReport $report): StreamedResponse|JsonResponse
     {
         $report->loadMissing('assessment.course');
-        if ($report->assessment->course->user_id !== $request->user()->id) {
+        if (!$request->user()->can('viewAnalysis', $report->assessment)) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Unauthorized. You do not own this assessment report.',
@@ -125,7 +125,7 @@ class AssessmentReportController extends Controller
     public function share(Request $request, AssessmentReport $report): JsonResponse
     {
         $report->loadMissing('assessment.course');
-        if ($report->assessment->course->user_id !== $request->user()->id) {
+        if (!$request->user()->can('update', $report->assessment)) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Unauthorized. You do not own this report.',
@@ -152,7 +152,7 @@ class AssessmentReportController extends Controller
     public function revokeShare(Request $request, AssessmentReport $report): JsonResponse
     {
         $report->loadMissing('assessment.course');
-        if ($report->assessment->course->user_id !== $request->user()->id) {
+        if (!$request->user()->can('update', $report->assessment)) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Unauthorized. You do not own this report.',

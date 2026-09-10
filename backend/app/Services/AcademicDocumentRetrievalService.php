@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\AcademicChatSession;
+use App\Models\Course;
 use App\Models\DocumentChunk;
 use App\Models\DocumentProcessing;
 use App\Models\User;
@@ -25,11 +26,17 @@ class AcademicDocumentRetrievalService
      */
     public function scopedChunksQuery(User $user, AcademicChatSession $session): Builder
     {
+        // STEP 34: authorization first — the user must be an active member of the session's course.
+        $course = $session->course_id ? Course::find($session->course_id) : null;
+        if (!$course || !app(CourseAccessService::class)->can($user, $course, 'view_documents')) {
+            return DocumentChunk::query()->whereRaw('1 = 0');
+        }
+
         $query = DocumentChunk::query()
-            ->where('document_chunks.user_id', $user->id)
+            ->where('document_chunks.course_id', $course->id)
             ->whereNotNull('document_chunks.embedding')
-            ->whereHas('document', function (Builder $q) use ($user) {
-                $q->where('user_id', $user->id)
+            ->whereHas('document', function (Builder $q) use ($course) {
+                $q->where('course_id', $course->id)
                     ->where('processing_status', 'completed')
                     ->where('indexing_status', DocumentProcessing::INDEX_INDEXED);
             });
@@ -58,7 +65,11 @@ class AcademicDocumentRetrievalService
      */
     public function scopeIndexSummary(User $user, AcademicChatSession $session): array
     {
-        $query = DocumentProcessing::query()->where('user_id', $user->id);
+        $course = $session->course_id ? Course::find($session->course_id) : null;
+        if (!$course || !app(CourseAccessService::class)->can($user, $course, 'view_documents')) {
+            return ['total' => 0, 'indexed' => 0, 'indexing' => 0, 'failed' => 0, 'documents' => []];
+        }
+        $query = DocumentProcessing::query()->where('course_id', $course->id);
         switch ($session->scope_type) {
             case AcademicChatSession::SCOPE_DOCUMENT:
                 $query->where('id', $session->document_processing_id);

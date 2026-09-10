@@ -55,6 +55,8 @@ export interface GeneratedQuestionListProps {
   outcomes: { id: number | string; code: string; description: string }[];
   regenerationsLeft: number;
   hasAssessment: boolean;
+  canReview?: boolean;
+  renderDiscussion?: (q: GeneratedQuestion) => React.ReactNode;
   onEdit: (q: GeneratedQuestion, data: UpdateGeneratedQuestionInput) => Promise<void>;
   onApprove: (q: GeneratedQuestion) => void;
   onReject: (q: GeneratedQuestion) => void;
@@ -64,7 +66,7 @@ export interface GeneratedQuestionListProps {
   onViewSimilar?: (existingId: number, source: string) => void;
 }
 
-export const GeneratedQuestionList: React.FC<GeneratedQuestionListProps> = ({ questions, ...rest }) => {
+export const GeneratedQuestionList: React.FC<GeneratedQuestionListProps> = ({ questions, renderDiscussion, ...rest }) => {
   const [showRejected, setShowRejected] = useState(false);
   const visible = questions.filter((q) => showRejected || q.review_status !== 'REJECTED');
   const rejected = questions.length - questions.filter((q) => q.review_status !== 'REJECTED').length;
@@ -75,7 +77,7 @@ export const GeneratedQuestionList: React.FC<GeneratedQuestionListProps> = ({ qu
         <span>{visible.length} draft{visible.length === 1 ? '' : 's'}</span>
         {rejected > 0 && <button type="button" className="underline" onClick={() => setShowRejected((s) => !s)}>{showRejected ? 'Hide' : 'Show'} {rejected} rejected</button>}
       </div>
-      {visible.map((q) => <GeneratedQuestionCard key={q.id} question={q} {...rest} />)}
+      {visible.map((q) => <GeneratedQuestionCard key={q.id} question={q} {...rest} discussion={renderDiscussion?.(q)} />)}
     </div>
   );
 };

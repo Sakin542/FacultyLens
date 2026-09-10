@@ -52,11 +52,49 @@ class AuditLogService
             'action' => strtoupper($action),
             'entity_type' => $resolvedEntityType,
             'entity_id' => $resolvedEntityId,
+            'course_id' => $this->resolveCourseId($entityType, $metadata),
             'metadata' => $sanitizedMetadata,
             'ip_address' => request()?->ip(),
             'user_agent' => request()?->userAgent() ? substr(request()->userAgent(), 0, 255) : null,
             'created_at' => now(),
         ]);
+    }
+
+    /**
+     * STEP 34: best-effort course linkage so the per-course activity feed can filter audit rows.
+     */
+    protected function resolveCourseId(Model|string $entity, ?array $metadata): ?int
+    {
+        if (is_array($metadata) && is_numeric($metadata['course_id'] ?? null)) {
+            return (int) $metadata['course_id'];
+        }
+        if (!$entity instanceof Model) {
+            return null;
+        }
+        try {
+            if ($entity instanceof \App\Models\Course) {
+                return (int) $entity->getKey();
+            }
+            if (isset($entity->course_id) && is_numeric($entity->course_id)) {
+                return (int) $entity->course_id;
+            }
+            if ($entity instanceof \App\Models\Question || $entity instanceof \App\Models\Rubric || $entity instanceof \App\Models\AnalysisReport) {
+                return $entity->assessment?->course_id ? (int) $entity->assessment->course_id : null;
+            }
+            if ($entity instanceof \App\Models\Recommendation) {
+                return $entity->analysisReport?->assessment?->course_id ? (int) $entity->analysisReport->assessment->course_id : null;
+            }
+            if ($entity instanceof \App\Models\GeneratedQuestion) {
+                return $entity->request?->course_id ? (int) $entity->request->course_id : null;
+            }
+            if ($entity instanceof \App\Models\AcademicChatMessage) {
+                return $entity->session?->course_id ? (int) $entity->session->course_id : null;
+            }
+        } catch (\Throwable) {
+            return null;
+        }
+
+        return null;
     }
 
     /**

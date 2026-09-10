@@ -146,10 +146,14 @@ export interface GeneratedQuestionCardProps {
   onViewSimilar?: (existingId: number, source: string) => void;
   regenerationsLeft: number;
   hasAssessment: boolean;
+  /** STEP 34: false for reviewers/viewers — they can read and discuss but not change drafts */
+  canReview?: boolean;
+  /** STEP 34: optional discussion thread rendered inside the card */
+  discussion?: React.ReactNode;
 }
 
 export const GeneratedQuestionCard: React.FC<GeneratedQuestionCardProps> = ({
-  question: q, outcomes, onEdit, onApprove, onReject, onRegenerate, onAddToAssessment, onGenerateRubric, onViewSimilar, regenerationsLeft, hasAssessment,
+  question: q, outcomes, onEdit, onApprove, onReject, onRegenerate, onAddToAssessment, onGenerateRubric, onViewSimilar, regenerationsLeft, hasAssessment, canReview = true, discussion,
 }) => {
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -201,7 +205,7 @@ export const GeneratedQuestionCard: React.FC<GeneratedQuestionCardProps> = ({
       <ConstraintValidation question={q} />
       {q.review_note && <p className="text-xs text-[#737373]">Note: {q.review_note}</p>}
 
-      {!editing && (
+      {!editing && canReview && (
         <footer className="flex flex-wrap gap-2 pt-1">
           {!isFinal && q.review_status !== 'REJECTED' && <Button size="sm" variant="outline" leftIcon={<Edit3 className="w-3.5 h-3.5" />} onClick={() => setEditing(true)} data-testid="edit-button">Edit</Button>}
           {!isFinal && q.review_status !== 'APPROVED' && q.review_status !== 'REJECTED' && <Button size="sm" leftIcon={<CheckCircle2 className="w-3.5 h-3.5" />} onClick={() => onApprove(q)} data-testid="approve-button">Approve</Button>}
@@ -211,6 +215,8 @@ export const GeneratedQuestionCard: React.FC<GeneratedQuestionCardProps> = ({
           {isFinal && onGenerateRubric && <Button size="sm" variant="outline" leftIcon={<Link2 className="w-3.5 h-3.5" />} onClick={() => onGenerateRubric(q)} data-testid="generate-rubric-button">Generate rubric</Button>}
         </footer>
       )}
+      {!canReview && <p className="text-[11px] text-[#A3A3A3]" data-testid="review-readonly">You can review and discuss this draft; approval and edits require an Editor or Owner role.</p>}
+      {discussion}
     </article>
   );
 };

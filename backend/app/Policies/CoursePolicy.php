@@ -7,44 +7,45 @@ use App\Models\User;
 
 class CoursePolicy
 {
-    /**
-     * Determine whether the user can view any courses.
-     */
+    use ResolvesCourseAccess;
+
     public function viewAny(User $user): bool
     {
         return true;
     }
 
-    /**
-     * Determine whether the user can view the course.
-     */
     public function view(User $user, Course $course): bool
     {
-        return $user->isAdmin() || $course->user_id === $user->id;
+        return $this->allows($user, $course, 'view');
     }
 
-    /**
-     * Determine whether the user can create courses.
-     */
     public function create(User $user): bool
     {
         return true;
     }
 
-    /**
-     * Determine whether the user can update the course.
-     */
     public function update(User $user, Course $course): bool
     {
-        return $user->isAdmin() || $course->user_id === $user->id;
+        return $this->allows($user, $course, 'edit_course');
     }
 
-    /**
-     * Determine whether the user can delete the course.
-     */
     public function delete(User $user, Course $course): bool
     {
-        return $user->isAdmin() || $course->user_id === $user->id;
+        return $this->allows($user, $course, 'delete_course');
+    }
+
+    public function manageCollaborators(User $user, Course $course): bool
+    {
+        return $this->allows($user, $course, 'manage_collaborators');
+    }
+
+    public function comment(User $user, Course $course): bool
+    {
+        return $this->allows($user, $course, 'comment');
+    }
+
+    public function viewStudentData(User $user, Course $course): bool
+    {
+        return $this->allows($user, $course, 'view_student_data');
     }
 }
-

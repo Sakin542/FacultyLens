@@ -33,6 +33,9 @@ const StudentSubmissions = lazy(() => import('@/pages/StudentSubmissions').then(
 const SubmissionDetails  = lazy(() => import('@/pages/SubmissionDetails').then(m => ({ default: m.SubmissionDetails })));
 const AcademicChat       = lazy(() => import('@/pages/AcademicChat').then(m => ({ default: m.AcademicChat })));
 const QuestionGenerator  = lazy(() => import('@/pages/QuestionGenerator').then(m => ({ default: m.QuestionGenerator })));
+const CourseCollaboration = lazy(() => import('@/pages/CourseCollaboration').then(m => ({ default: m.CourseCollaboration })));
+const PendingInvitations = lazy(() => import('@/pages/Invitations').then(m => ({ default: m.PendingInvitations })));
+const InvitationLanding  = lazy(() => import('@/pages/Invitations').then(m => ({ default: m.InvitationLanding })));
 
 /**
  * Lightweight fallback shown while a lazy page chunk loads.
@@ -57,6 +60,8 @@ export const AppRoutes: React.FC = () => {
 
         {/* Public Shared Report Access (STEP 18) */}
         <Route path="/shared/reports/:token" element={<SharedReport />} />
+        {/* STEP 34: secure invitation link (minimal preview; accept/decline require sign-in) */}
+        <Route path="/collaboration/invitations/:token" element={<InvitationLanding />} />
 
         {/* Protected Dashboard Routes (Only Authenticated / Registered Faculty) */}
         <Route element={<ProtectedRoute />}>
@@ -69,6 +74,8 @@ export const AppRoutes: React.FC = () => {
             <Route path="/academic-chat" element={<AcademicChat />} />
             <Route path="/courses/:courseId/question-generator" element={<QuestionGenerator />} />
             <Route path="/question-generator" element={<QuestionGenerator />} />
+            <Route path="/courses/:courseId/collaboration" element={<CourseCollaboration />} />
+            <Route path="/collaboration/invitations" element={<PendingInvitations />} />
             <Route path="/courses/:courseId/question-bank" element={<QuestionBank />} />
             <Route path="/question-bank" element={<QuestionBank />} />
             <Route path="/assessments" element={<Assessments />} />

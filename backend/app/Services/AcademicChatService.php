@@ -46,7 +46,7 @@ class AcademicChatService
         switch ($scope) {
             case AcademicChatSession::SCOPE_DOCUMENT:
                 $document = DocumentProcessing::find($input['document_id'] ?? null);
-                if (!$document || $document->user_id !== $user->id) {
+                if (!$document || !$user->can('view', $document)) {
                     throw new HttpException(403, 'Unauthorized access to document.');
                 }
                 $attributes['document_processing_id'] = $document->id;
@@ -264,11 +264,10 @@ class AcademicChatService
     }
 
     /**
-     * Chat retrieval is keyed to the document owner, so scope ownership is strict (no admin bypass):
-     * an admin chatting over another faculty's course would otherwise see an empty index.
+     * STEP 34: any active member may chat over the course's indexed documents (view_documents).
      */
     protected function ownsCourse(User $user, Course $course): bool
     {
-        return $course->user_id === $user->id;
+        return app(CourseAccessService::class)->can($user, $course, 'view_documents');
     }
 }

@@ -3,6 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Menu, Sparkles } from 'lucide-react';
 import { Badge } from '@/components/common/Badge';
+import { NotificationBell } from '@/components/collaboration/CollaborationActivity';
 
 export const DashboardLayout: React.FC = () => {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -61,6 +62,7 @@ export const DashboardLayout: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
+            <NotificationBell />
             <Badge variant="outline" className="font-mono text-[11px] hidden sm:inline-flex bg-white">
               Spring 2026
             </Badge>

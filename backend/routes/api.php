@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\AcademicChatController;
+use App\Http\Controllers\Api\CollaborationCommentController;
+use App\Http\Controllers\Api\CollaborationController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\QuestionGenerationController;
 use App\Http\Controllers\Api\AiAnalysisController;
 use App\Http\Controllers\Api\AiGradingController;
@@ -252,7 +255,38 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/generated-questions/{generatedQuestion}/reject', [QuestionGenerationController::class, 'reject']);
     Route::post('/generated-questions/{generatedQuestion}/regenerate', [QuestionGenerationController::class, 'regenerateQuestion'])->middleware('throttle:question-generation');
     Route::post('/generated-questions/{generatedQuestion}/add-to-assessment', [QuestionGenerationController::class, 'addToAssessment']);
+
+    // STEP 34: Faculty Collaboration (membership, invitations, comments, activity, notifications)
+    Route::get('/courses/{course}/collaboration', [CollaborationController::class, 'show']);
+    Route::get('/courses/{course}/collaboration/activity', [CollaborationController::class, 'activity']);
+    Route::get('/courses/{course}/collaboration/members', [CollaborationController::class, 'members']);
+    Route::delete('/courses/{course}/collaboration/invitations/{invitation}', [CollaborationController::class, 'revokeInvitation']);
+    Route::get('/courses/{course}/collaborators', [CollaborationController::class, 'collaborators']);
+    Route::post('/courses/{course}/collaborators/invite', [CollaborationController::class, 'invite'])->middleware('throttle:collaboration-invite');
+    Route::patch('/courses/{course}/collaborators/{user}/role', [CollaborationController::class, 'changeRole']);
+    Route::delete('/courses/{course}/collaborators/{user}', [CollaborationController::class, 'remove']);
+    Route::get('/collaboration/summary', [CollaborationController::class, 'summary']);
+    Route::get('/collaboration/invitations', [CollaborationController::class, 'myInvitations']);
+    Route::post('/collaboration/invitations/{token}/accept', [CollaborationController::class, 'accept']);
+    Route::post('/collaboration/invitations/{token}/decline', [CollaborationController::class, 'decline']);
+    Route::post('/collaboration/my-invitations/{invitation}/accept', [CollaborationController::class, 'acceptById']);
+    Route::post('/collaboration/my-invitations/{invitation}/decline', [CollaborationController::class, 'declineById']);
+
+    Route::get('/courses/{course}/comments', [CollaborationCommentController::class, 'index']);
+    Route::post('/courses/{course}/comments', [CollaborationCommentController::class, 'store'])->middleware('throttle:collaboration-comment');
+    Route::get('/comments/{comment}', [CollaborationCommentController::class, 'show']);
+    Route::put('/comments/{comment}', [CollaborationCommentController::class, 'update']);
+    Route::delete('/comments/{comment}', [CollaborationCommentController::class, 'destroy']);
+    Route::post('/comments/{comment}/resolve', [CollaborationCommentController::class, 'resolve']);
+    Route::post('/comments/{comment}/reopen', [CollaborationCommentController::class, 'reopen']);
+
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead']);
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markRead']);
 });
+
+// STEP 34: minimal public invitation preview (course code/name, inviter, role, expiry — no course content)
+Route::get('/collaboration/invitations/{token}', [CollaborationController::class, 'preview'])->middleware('throttle:auth');
 
 // Public Shared Report Endpoints (STEP 18)
 Route::get('/shared/reports/{token}', [AssessmentReportController::class, 'viewShared']);

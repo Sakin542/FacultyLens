@@ -42,7 +42,7 @@ class CoPoMappingController extends Controller
     /** POST /api/courses/{course}/co-po-mapping/analyze */
     public function analyze(Request $request, Course $course): JsonResponse
     {
-        if (!$this->owns($request, $course)) {
+        if (!$this->owns($request, $course, 'run_analysis')) {
             return $this->forbidden();
         }
         try {
@@ -103,7 +103,7 @@ class CoPoMappingController extends Controller
     /** POST /api/courses/{course}/co-po-mappings */
     public function storeMapping(Request $request, Course $course): JsonResponse
     {
-        if (!$this->owns($request, $course)) {
+        if (!$this->owns($request, $course, 'edit_course')) {
             return $this->forbidden();
         }
         $data = $request->validate([
@@ -131,7 +131,7 @@ class CoPoMappingController extends Controller
     public function updateMapping(Request $request, CoPoMapping $mapping): JsonResponse
     {
         $course = $mapping->course;
-        if (!$course || !$this->owns($request, $course)) {
+        if (!$course || !$this->owns($request, $course, 'edit_course')) {
             return $this->forbidden();
         }
         $data = $request->validate([
@@ -148,7 +148,7 @@ class CoPoMappingController extends Controller
     public function destroyMapping(Request $request, CoPoMapping $mapping): JsonResponse
     {
         $course = $mapping->course;
-        if (!$course || !$this->owns($request, $course)) {
+        if (!$course || !$this->owns($request, $course, 'edit_course')) {
             return $this->forbidden();
         }
         $this->afterMappingChange($course, $mapping, 'CO_PO_MAPPING_DELETED', $request);
@@ -175,7 +175,7 @@ class CoPoMappingController extends Controller
     {
         $question->loadMissing('assessment.course');
         $course = $question->assessment?->course;
-        if (!$course || !$this->owns($request, $course)) {
+        if (!$course || !$this->owns($request, $course, 'edit_course')) {
             return $this->forbidden();
         }
         $data = $request->validate(['learning_outcome_id' => ['required', 'integer']]);
@@ -239,9 +239,10 @@ class CoPoMappingController extends Controller
         ], $request->user());
     }
 
-    protected function owns(Request $request, Course $course): bool
+    /** STEP 34: reads need view_analysis; curriculum changes (mappings/confirmations) need edit_course. */
+    protected function owns(Request $request, Course $course, string $ability = 'view_analysis'): bool
     {
-        return $request->user()->isAdmin() || $course->user_id === $request->user()->id;
+        return app(\App\Services\CourseAccessService::class)->can($request->user(), $course, $ability);
     }
 
     protected function forbidden(): JsonResponse

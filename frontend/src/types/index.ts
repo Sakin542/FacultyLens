@@ -52,6 +52,9 @@ export interface TopicCoverage {
 export interface Course {
   id: number | string;
   user_id?: number | string;
+  /** STEP 34: caller's collaboration role and server-provided permission hints */
+  current_role?: 'OWNER' | 'EDITOR' | 'REVIEWER' | 'VIEWER' | null;
+  permissions?: Partial<Record<string, boolean>>;
   course_code?: string;
   course_name?: string;
   description?: string | null;
@@ -290,8 +293,9 @@ export interface AssessmentAnalysis {
 
 export interface Assessment {
   id: number | string;
-  course_id?: number | string;
-  title: string;
+  course_id?: number | string;  /** STEP 34 */
+  current_role?: 'OWNER' | 'EDITOR' | 'REVIEWER' | 'VIEWER' | null;
+  permissions?: Partial<Record<string, boolean>>;  title: string;
   type: AssessmentType;
   description?: string | null;
   assessment_date?: string | null;

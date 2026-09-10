@@ -20,6 +20,14 @@ vi.mock('@/services/assessmentService', () => ({ assessmentService: { getByCours
 vi.mock('@/services/learningOutcomeService', () => ({ learningOutcomeService: { getByCourse: vi.fn() } }));
 vi.mock('@/services/coPoMappingService', () => ({ coPoMappingService: { getCourseMapping: vi.fn() } }));
 vi.mock('@/services/documentService', () => ({ documentService: { getAll: vi.fn() } }));
+vi.mock('@/services/collaborationService', () => ({
+  collaborationService: {
+    getCollaboration: vi.fn().mockResolvedValue({ status: 'success', data: { permissions: { approve_generated_question: true, comment: true } } }),
+    getComments: vi.fn().mockResolvedValue({ status: 'success', data: [], meta: { can_comment: true } }),
+    getMembers: vi.fn().mockResolvedValue({ status: 'success', data: [] }),
+  },
+}));
+vi.mock('@/context/AuthContext', () => ({ useAuth: () => ({ user: { id: 1, name: 'Dr. A' }, loading: false }) }));
 
 import { questionGenerationService } from '@/services/questionGenerationService';
 import { courseService } from '@/services/courseService';

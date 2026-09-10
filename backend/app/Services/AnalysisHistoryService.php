@@ -25,7 +25,7 @@ class AnalysisHistoryService
     {
         $query = AnalysisReport::query()
             ->whereHas('assessment.course', function ($q) use ($user) {
-                $q->where('user_id', $user->id);
+                $q->accessibleBy($user);
             })
             ->with([
                 'assessment.course',
@@ -143,7 +143,7 @@ class AnalysisHistoryService
     public function getAssessmentHistory(Assessment $assessment, User $user): array
     {
         $assessment->loadMissing('course');
-        if ($assessment->course->user_id !== $user->id) {
+        if (!$user->can('viewAnalysis', $assessment)) {
             throw new Exception('Unauthorized. You do not own this assessment.');
         }
 
@@ -204,7 +204,7 @@ class AnalysisHistoryService
         ])->findOrFail($analysisReportId);
 
         $assessment = $report->assessment;
-        if (!$assessment || $assessment->course->user_id !== $user->id) {
+        if (!$assessment || !$user->can('viewAnalysis', $assessment)) {
             throw new Exception('Unauthorized. You do not own this analysis report.');
         }
 
@@ -329,7 +329,7 @@ class AnalysisHistoryService
         $left = AnalysisReport::with(['assessment.course'])->findOrFail($leftId);
         $right = AnalysisReport::with(['assessment.course'])->findOrFail($rightId);
 
-        if ($left->assessment->course->user_id !== $user->id || $right->assessment->course->user_id !== $user->id) {
+        if (!$user->can('viewAnalysis', $left->assessment) || !$user->can('viewAnalysis', $right->assessment)) {
             throw new Exception('Unauthorized. You can only compare analyses of your own courses.');
         }
 
@@ -420,7 +420,7 @@ class AnalysisHistoryService
      */
     public function getTrendData(User $user, int $courseId, ?string $assessmentType = null): array
     {
-        $course = Course::where('id', $courseId)->where('user_id', $user->id)->firstOrFail();
+        $course = Course::query()->accessibleBy($user)->where('courses.id', $courseId)->firstOrFail();
 
         $query = AnalysisReport::whereHas('assessment', function ($q) use ($courseId, $assessmentType) {
             $q->where('course_id', $courseId);

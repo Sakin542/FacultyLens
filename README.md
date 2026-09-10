@@ -320,6 +320,44 @@ UI at `/question-generator` and `/courses/:courseId/question-generator`.
 
 ---
 
+#  10. Faculty Collaboration
+
+FacultyLens supports **controlled** faculty collaboration — not an open shared workspace.
+
+```text
+Faculty → Course → Course Collaboration → Collaborators → Roles → Shared academic resources
+```
+
+- **Course-level membership.** `courses.user_id` stays the single OWNER; additional members live in `course_collaborators`
+  with roles **EDITOR / REVIEWER / VIEWER**. A faculty member never gains access to a course they were not invited to.
+- **Permission matrix** (`config/collaboration.php`) is the single source of truth, enforced server-side through
+  `CourseAccessService` and every policy. Editors edit content/assessments/questions and approve recommendations, generated
+  questions and rubrics; Reviewers view and comment; Viewers only view. Only the Owner manages collaborators or deletes.
+  **Student answers, grades and grading feedback are visible to Owner/Editor only.**
+- **Invitations** are single-use, expire (`COLLABORATION_INVITATION_EXPIRES_DAYS`), are stored as SHA-256 hashes, and expose
+  only course code/name, inviter and role until accepted. Delivered by mail + in-app notification (queued).
+- **Discussion** threads (`collaboration_comments`) on courses, assessments, questions, analysis reports, recommendations,
+  generated questions, rubrics and documents: replies, edit-own, resolve/reopen, member-only @mentions, soft delete.
+  Comments never modify AI results or official content; decisions still go through the normal approval actions.
+- **Activity feed** reuses the audit log (`audit_logs.course_id`), paginated per course; grading events are hidden from
+  Reviewers/Viewers. **Version-aware editing**: stale edits of assessments (`expected_updated_at`) and generated
+  questions (`expected_version`) return `409` instead of overwriting a colleague's change.
+- **Protection.** Rate limits (`COLLABORATION_INVITE_RATE_LIMIT`/hour, `COLLABORATION_COMMENT_RATE_LIMIT`/min), duplicate-
+  invitation and duplicate-comment guards, owner cannot be removed or demoted, all actions audited
+  (`COLLABORATOR_INVITED`, `COLLABORATION_ACCEPTED`, `COLLABORATOR_ROLE_CHANGED`, `COMMENT_CREATED`, …).
+
+> Collaboration provides controlled faculty review and discussion. AI-generated findings and recommendations remain
+> assistive and do not become institutional decisions automatically.
+
+**Endpoints.** `GET /api/courses/{course}/collaboration`, `GET /api/courses/{course}/collaborators`,
+`POST /api/courses/{course}/collaborators/invite`, `PATCH|DELETE /api/courses/{course}/collaborators/{user}[/role]`,
+`GET /api/collaboration/invitations[/{token}]`, `POST /api/collaboration/invitations/{token}/{accept|decline}`,
+`GET|POST /api/courses/{course}/comments`, `PUT|DELETE /api/comments/{id}`, `POST /api/comments/{id}/{resolve|reopen}`,
+`GET /api/courses/{course}/collaboration/activity`, `GET /api/collaboration/summary`, `GET /api/notifications`.
+UI at `/courses/:courseId/collaboration`, `/collaboration/invitations`, `/collaboration/invitations/:token`.
+
+---
+
 #  FacultyLens Workflow
 
 ```text

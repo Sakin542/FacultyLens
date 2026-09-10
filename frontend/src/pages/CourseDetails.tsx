@@ -30,6 +30,7 @@ import {
   CheckCircle2,
   Grid3X3,
   MessageSquareText,
+  Users,
 } from 'lucide-react';
 
 export const CourseDetails: React.FC = () => {
@@ -37,6 +38,8 @@ export const CourseDetails: React.FC = () => {
   const navigate = useNavigate();
 
   const [course, setCourse] = useState<Course | null>(null);
+  // STEP 34: server-provided permission hints (backend remains authoritative); owner defaults to all
+  const can = (perm: string) => (course?.permissions ? !!course.permissions[perm] : true);
   const [learningOutcomes, setLearningOutcomes] = useState<LearningOutcome[]>([]);
   const [materials, setMaterials] = useState<CourseMaterial[]>([]);
   const [documents, setDocuments] = useState<DocumentProcessing[]>([]);
@@ -302,34 +305,43 @@ export const CourseDetails: React.FC = () => {
           <h1 className="text-2xl font-bold text-[#111111] dark:text-white">{courseName}</h1>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Link to={`/courses/${course.id}/question-generator`} data-testid="question-generator-link">
-            <Button variant="outline" size="sm" leftIcon={<Sparkles className="w-3.5 h-3.5" />}>Generate Questions</Button>
+        <div className="flex items-center gap-2 flex-wrap">
+          <Link to={`/courses/${course.id}/collaboration`} data-testid="collaboration-link">
+            <Button variant="outline" size="sm" leftIcon={<Users className="w-3.5 h-3.5" />}>Collaboration{course.current_role && course.current_role !== 'OWNER' ? ` · ${course.current_role.toLowerCase()}` : ''}</Button>
           </Link>
+          {can('generate_questions') && (
+            <Link to={`/courses/${course.id}/question-generator`} data-testid="question-generator-link">
+              <Button variant="outline" size="sm" leftIcon={<Sparkles className="w-3.5 h-3.5" />}>Generate Questions</Button>
+            </Link>
+          )}
           <Link to={`/courses/${course.id}/chat`} data-testid="document-chat-link">
             <Button variant="outline" size="sm" leftIcon={<MessageSquareText className="w-3.5 h-3.5" />}>Document Chat</Button>
           </Link>
           <Link to={`/courses/${course.id}/co-po-mapping`} data-testid="co-po-link">
             <Button variant="outline" size="sm" leftIcon={<Grid3X3 className="w-3.5 h-3.5" />}>CO / PO Mapping</Button>
           </Link>
-          <Button
-            variant="outline"
-            size="sm"
-            leftIcon={<Edit className="w-3.5 h-3.5" />}
-            onClick={() => setIsEditCourseOpen(true)}
-          >
-            Edit Course
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/30 border-red-200 dark:border-red-900/50"
-            leftIcon={deletingCourse ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
-            onClick={handleDeleteCourse}
-            disabled={deletingCourse}
-          >
-            Delete
-          </Button>
+          {can('edit_course') && (
+            <Button
+              variant="outline"
+              size="sm"
+              leftIcon={<Edit className="w-3.5 h-3.5" />}
+              onClick={() => setIsEditCourseOpen(true)}
+            >
+              Edit Course
+            </Button>
+          )}
+          {can('delete_course') && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/30 border-red-200 dark:border-red-900/50"
+              leftIcon={deletingCourse ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+              onClick={handleDeleteCourse}
+              disabled={deletingCourse}
+            >
+              Delete
+            </Button>
+          )}
         </div>
       </div>
 

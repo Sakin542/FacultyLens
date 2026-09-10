@@ -59,6 +59,17 @@ class User extends Authenticatable
         return $this->hasMany(Course::class);
     }
 
+    /** STEP 34: memberships on other faculty's courses. */
+    public function courseCollaborations(): HasMany
+    {
+        return $this->hasMany(CourseCollaborator::class);
+    }
+
+    public function collaborationComments(): HasMany
+    {
+        return $this->hasMany(CollaborationComment::class);
+    }
+
     /**
      * Get the historical previous questions added by this faculty member.
      */

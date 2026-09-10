@@ -20,6 +20,7 @@ class AuditLog extends Model
         'action',
         'entity_type',
         'entity_id',
+        'course_id',
         'metadata',
         'ip_address',
         'user_agent',

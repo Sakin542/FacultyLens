@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\QuestionGenerationRequestForm;
 use App\Models\GeneratedQuestion;
+use App\Models\Course;
 use App\Models\Question;
 use App\Models\QuestionGenerationRequest;
 use App\Services\QuestionGenerationService;
@@ -26,7 +27,8 @@ class QuestionGenerationController extends Controller
     /** GET /api/question-generation?course_id=&assessment_id= */
     public function index(Request $request): JsonResponse
     {
-        $query = QuestionGenerationRequest::where('user_id', $request->user()->id)
+        // STEP 34: requests on any course the user owns or collaborates on.
+        $query = QuestionGenerationRequest::whereIn('course_id', Course::query()->accessibleBy($request->user())->select('courses.id'))
             ->with(['course:id,course_code,course_name', 'assessment:id,title', 'learningOutcome:id,code,description', 'programOutcome:id,code,title'])
             ->withCount(['generatedQuestions', 'generatedQuestions as approved_count' => fn ($q) => $q->where('review_status', GeneratedQuestion::REVIEW_APPROVED)])
             ->orderByDesc('id');
@@ -67,7 +69,7 @@ class QuestionGenerationController extends Controller
     /** GET /api/question-generation/{generation} */
     public function show(Request $request, QuestionGenerationRequest $generation): JsonResponse
     {
-        if ($generation->user_id !== $request->user()->id) {
+        if (!$this->access()->can($request->user(), $generation->course, 'view')) {
             return response()->json(['status' => 'error', 'message' => 'Unauthorized access to generation request.'], 403);
         }
         $generation->load(['course:id,course_code,course_name', 'assessment:id,title,total_marks', 'learningOutcome:id,code,description', 'programOutcome:id,code,title', 'generatedQuestions']);
@@ -78,7 +80,7 @@ class QuestionGenerationController extends Controller
     /** GET /api/question-generation/{generation}/questions */
     public function questions(Request $request, QuestionGenerationRequest $generation): JsonResponse
     {
-        if ($generation->user_id !== $request->user()->id) {
+        if (!$this->access()->can($request->user(), $generation->course, 'view')) {
             return response()->json(['status' => 'error', 'message' => 'Unauthorized access to generation request.'], 403);
         }
 
@@ -92,7 +94,7 @@ class QuestionGenerationController extends Controller
     /** POST /api/question-generation/{generation}/regenerate */
     public function regenerate(Request $request, QuestionGenerationRequest $generation): JsonResponse
     {
-        if ($generation->user_id !== $request->user()->id) {
+        if (!$this->access()->can($request->user(), $generation->course, 'generate_questions')) {
             return response()->json(['status' => 'error', 'message' => 'Unauthorized access to generation request.'], 403);
         }
         $validated = $request->validate($this->feedbackRules());
@@ -126,7 +128,18 @@ class QuestionGenerationController extends Controller
             'correct_option' => ['sometimes', 'nullable', 'string', 'max:500'],
             'expected_answer' => ['sometimes', 'nullable', 'string', 'max:5000'],
             'explanation' => ['sometimes', 'nullable', 'string', 'max:2000'],
+            'expected_version' => ['sometimes', 'nullable', 'integer'],
         ]);
+
+        // STEP 34: version-aware editing — reject stale edits instead of overwriting a collaborator's change.
+        if (isset($validated['expected_version']) && (int) $validated['expected_version'] !== (int) $generatedQuestion->version) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'This draft was edited by someone else since you loaded it (now v' . $generatedQuestion->version . '). Reload before saving.',
+                'data' => $this->questionPayload($generatedQuestion),
+            ], 409);
+        }
+        unset($validated['expected_version']);
 
         try {
             $updated = $this->service->update($generatedQuestion, $request->user(), $validated);
@@ -213,14 +226,23 @@ class QuestionGenerationController extends Controller
 
     // ------------------------------------------------------------------ helpers
 
-    protected function deny(Request $request, GeneratedQuestion $q): ?JsonResponse
+    /**
+     * STEP 34: drafts belong to the course; edit/approve/reject/regenerate/add need approve_generated_question
+     * (OWNER/EDITOR). Reviewers and viewers read them and discuss via comments.
+     */
+    protected function deny(Request $request, GeneratedQuestion $q, string $ability = 'approve_generated_question'): ?JsonResponse
     {
-        $q->loadMissing('request');
-        if (!$q->request || $q->request->user_id !== $request->user()->id) {
+        $q->loadMissing('request.course');
+        if (!$q->request || !$this->access()->can($request->user(), $q->request->course, $ability)) {
             return response()->json(['status' => 'error', 'message' => 'Unauthorized access to generated question.'], 403);
         }
 
         return null;
+    }
+
+    protected function access(): \App\Services\CourseAccessService
+    {
+        return app(\App\Services\CourseAccessService::class);
     }
 
     protected function feedbackRules(): array

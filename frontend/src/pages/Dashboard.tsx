@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/com
 import { Badge } from '@/components/common/Badge';
 import { Button } from '@/components/common/Button';
 import { useAuth } from '@/context/AuthContext';
+import { CollaborationSummaryCard } from '@/components/collaboration/CollaborationActivity';
 import {
   mockDashboardStats,
   mockAssessments,
@@ -93,6 +94,9 @@ export const Dashboard: React.FC = () => {
           icon={<Lightbulb className="w-5 h-5" />}
         />
       </div>
+
+      {/* STEP 34: Collaboration summary (only courses the user owns or is a member of) */}
+      <CollaborationSummaryCard />
 
       {/* Analytics Visualization Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -47,6 +48,47 @@ class Course extends Model
     public function coPoMappings(): HasMany
     {
         return $this->hasMany(CoPoMapping::class);
+    }
+
+    /** STEP 34: additional members (the owner is courses.user_id). */
+    public function collaborators(): HasMany
+    {
+        return $this->hasMany(CourseCollaborator::class);
+    }
+
+    public function activeCollaborators(): HasMany
+    {
+        return $this->collaborators()->where('status', CourseCollaborator::STATUS_ACTIVE);
+    }
+
+    public function collaborationInvitations(): HasMany
+    {
+        return $this->hasMany(CourseCollaborationInvitation::class);
+    }
+
+    public function collaborationComments(): HasMany
+    {
+        return $this->hasMany(CollaborationComment::class);
+    }
+
+    /**
+     * STEP 34: courses the user owns OR actively collaborates on. Authorization happens in SQL, never in the client.
+     */
+    public function scopeAccessibleBy(Builder $query, User $user): Builder
+    {
+        if ($user->isAdmin()) {
+            return $query;
+        }
+
+        return $query->where(function (Builder $q) use ($user) {
+            $q->where('courses.user_id', $user->id)
+                ->orWhereExists(function ($sub) use ($user) {
+                    $sub->selectRaw('1')->from('course_collaborators')
+                        ->whereColumn('course_collaborators.course_id', 'courses.id')
+                        ->where('course_collaborators.user_id', $user->id)
+                        ->where('course_collaborators.status', CourseCollaborator::STATUS_ACTIVE);
+                });
+        });
     }
 
     /**
