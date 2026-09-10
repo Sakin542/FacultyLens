@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AcademicChatController;
+use App\Http\Controllers\Api\QuestionGenerationController;
 use App\Http\Controllers\Api\AiAnalysisController;
 use App\Http\Controllers\Api\AiGradingController;
 use App\Http\Controllers\Api\AnalysisHistoryController;
@@ -239,6 +240,18 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/sessions/{session}', [AcademicChatController::class, 'destroy']);
         Route::post('/sessions/{session}/messages', [AcademicChatController::class, 'sendMessage'])->middleware('throttle:academic-chat');
     });
+
+    // STEP 33: Constrained Question Generator (drafts only; approval + explicit add-to-assessment required)
+    Route::get('/question-generation', [QuestionGenerationController::class, 'index']);
+    Route::post('/question-generation', [QuestionGenerationController::class, 'store'])->middleware('throttle:question-generation');
+    Route::get('/question-generation/{generation}', [QuestionGenerationController::class, 'show']);
+    Route::get('/question-generation/{generation}/questions', [QuestionGenerationController::class, 'questions']);
+    Route::post('/question-generation/{generation}/regenerate', [QuestionGenerationController::class, 'regenerate'])->middleware('throttle:question-generation');
+    Route::put('/generated-questions/{generatedQuestion}', [QuestionGenerationController::class, 'update']);
+    Route::post('/generated-questions/{generatedQuestion}/approve', [QuestionGenerationController::class, 'approve']);
+    Route::post('/generated-questions/{generatedQuestion}/reject', [QuestionGenerationController::class, 'reject']);
+    Route::post('/generated-questions/{generatedQuestion}/regenerate', [QuestionGenerationController::class, 'regenerateQuestion'])->middleware('throttle:question-generation');
+    Route::post('/generated-questions/{generatedQuestion}/add-to-assessment', [QuestionGenerationController::class, 'addToAssessment']);
 });
 
 // Public Shared Report Endpoints (STEP 18)

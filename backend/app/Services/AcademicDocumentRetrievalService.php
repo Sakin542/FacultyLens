@@ -90,14 +90,32 @@ class AcademicDocumentRetrievalService
     }
 
     /**
+     * STEP 33: retrieve for an ad-hoc scope without persisting a chat session.
+     *
+     * @param array{scope_type?:string, course_id?:int|null, document_id?:int|null, assessment_id?:int|null} $scope
+     */
+    public function retrieveForScope(User $user, array $scope, string $query, ?int $topK = null, ?float $minScore = null): array
+    {
+        $session = new AcademicChatSession([
+            'user_id' => $user->id,
+            'scope_type' => $scope['scope_type'] ?? AcademicChatSession::SCOPE_COURSE,
+            'course_id' => $scope['course_id'] ?? null,
+            'document_processing_id' => $scope['document_id'] ?? null,
+            'assessment_id' => $scope['assessment_id'] ?? null,
+        ]);
+
+        return $this->retrieve($user, $session, $query, $topK, $minScore);
+    }
+
+    /**
      * Retrieve the top-K most relevant chunks for a query, restricted to the session scope.
      *
      * @return array{chunks: array<int, array<string, mixed>>, candidates: int, embedding_model: string, threshold: float}
      */
-    public function retrieve(User $user, AcademicChatSession $session, string $query): array
+    public function retrieve(User $user, AcademicChatSession $session, string $query, ?int $topK = null, ?float $minScore = null): array
     {
-        $topK = max(1, (int) config('academic_chat.top_k'));
-        $minScore = (float) config('academic_chat.min_relevance_score');
+        $topK = max(1, $topK ?? (int) config('academic_chat.top_k'));
+        $minScore = $minScore ?? (float) config('academic_chat.min_relevance_score');
         $model = (string) config('academic_chat.embedding_model');
 
         $candidates = $this->scopedChunksQuery($user, $session)

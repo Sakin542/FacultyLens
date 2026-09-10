@@ -279,6 +279,47 @@ guarantees; small generation models may still paraphrase imprecisely — always 
 
 ---
 
+#  9. Constrained Question Generator
+
+Faculty generate **draft** assessment questions under explicit academic constraints — never random AI questions,
+never auto-published.
+
+```text
+Constraints (course · CO · PO · topic · type · difficulty · Bloom · marks · count · document scope)
+        ↓
+STEP 32 retrieval → relevant document passages          existing questions (assessment, question bank, previous papers)
+        ↓                                                          ↓
+Hugging Face generation model (HF_GENERATION_MODEL) — or constraint-driven template engine when none is configured
+        ↓
+Validation per draft: STEP 10 type/difficulty/Bloom · STEP 11 CO alignment (≥0.70 strong / ≥0.50 weak) ·
+                      STEP 12 similarity (≥0.85 potential duplicate / ≥0.70 highly similar) · topic · marks
+        ↓
+Faculty review: Edit (original preserved, versioned) · Approve · Reject · Regenerate (with feedback, limited)
+        ↓
+[Add to Assessment] — only for APPROVED drafts, only on explicit confirmation → official `questions` row
+```
+
+- **Modes.** Standalone drafts for a course, or drafts for a specific assessment (existing questions are supplied
+  as "do not reproduce" context; requested marks are checked against the remaining allocation and *warned*, never
+  auto-adjusted). Optional **blueprint** (e.g. 2 easy/Remember + 1 hard/Evaluate) with distribution feedback.
+- **Validation is advisory.** Requested vs AI-estimated values are shown side by side (`PASSED`,
+  `PASSED_WITH_WARNINGS`, `FAILED`); similarity is a retrieval metric, not proof of duplication; warnings are never hidden.
+- **Models.** `HF_MODEL_NAME` (MiniLM) is used only for embeddings (alignment/similarity). Drafting uses
+  `HF_GENERATION_MODEL`; with none configured, a deterministic template engine drafts from the topic, CO and
+  retrieved sentences (reported as `facultylens-constrained-question-template-engine`). Model + prompt versions are stored.
+- **Security.** Course/assessment/CO/PO/document ownership is verified server-side before any generation; retrieved
+  document text and existing questions are passed to the model as untrusted data; `QUESTION_GENERATION_RATE_LIMIT`
+  (10/min) throttles requests; all steps are audit-logged (`QUESTION_GENERATION_REQUESTED` … `QUESTION_ADDED_TO_ASSESSMENT`).
+- **Boundaries.** The generator never grades, never modifies existing questions/marks/CO-PO mappings, never creates
+  rubrics (use STEP 25 after approval) and never claims academic correctness.
+
+**Endpoints.** `GET|POST /api/question-generation`, `GET /api/question-generation/{id}[/questions]`,
+`POST /api/question-generation/{id}/regenerate`, `PUT /api/generated-questions/{id}`,
+`POST /api/generated-questions/{id}/{approve|reject|regenerate|add-to-assessment}`.
+UI at `/question-generator` and `/courses/:courseId/question-generator`.
+
+---
+
 #  FacultyLens Workflow
 
 ```text

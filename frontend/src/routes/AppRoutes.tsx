@@ -32,6 +32,7 @@ const SharedReport       = lazy(() => import('@/pages/SharedReport').then(m => (
 const StudentSubmissions = lazy(() => import('@/pages/StudentSubmissions').then(m => ({ default: m.StudentSubmissions })));
 const SubmissionDetails  = lazy(() => import('@/pages/SubmissionDetails').then(m => ({ default: m.SubmissionDetails })));
 const AcademicChat       = lazy(() => import('@/pages/AcademicChat').then(m => ({ default: m.AcademicChat })));
+const QuestionGenerator  = lazy(() => import('@/pages/QuestionGenerator').then(m => ({ default: m.QuestionGenerator })));
 
 /**
  * Lightweight fallback shown while a lazy page chunk loads.
@@ -66,6 +67,8 @@ export const AppRoutes: React.FC = () => {
             <Route path="/courses/:courseId/co-po-mapping" element={<CoPoMapping />} />
             <Route path="/courses/:courseId/chat" element={<AcademicChat />} />
             <Route path="/academic-chat" element={<AcademicChat />} />
+            <Route path="/courses/:courseId/question-generator" element={<QuestionGenerator />} />
+            <Route path="/question-generator" element={<QuestionGenerator />} />
             <Route path="/courses/:courseId/question-bank" element={<QuestionBank />} />
             <Route path="/question-bank" element={<QuestionBank />} />
             <Route path="/assessments" element={<Assessments />} />

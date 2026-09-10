@@ -94,6 +94,13 @@ class Settings(BaseSettings):
     chat_max_question_length: int = 5000
     chat_prompt_version: str = "1.0.0"
 
+    # Constrained Question Generator (Step 33) — reuses hf_generation_model for drafting;
+    # falls back to a constraint-driven template engine. MiniLM is embeddings-only.
+    question_generation_max_new_tokens: int = 512
+    question_generation_max_questions: int = 20
+    question_generation_alignment_strong: float = 0.70   # STEP 11 thresholds
+    question_generation_alignment_weak: float = 0.50
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

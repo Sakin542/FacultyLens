@@ -303,6 +303,9 @@ export const CourseDetails: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
+          <Link to={`/courses/${course.id}/question-generator`} data-testid="question-generator-link">
+            <Button variant="outline" size="sm" leftIcon={<Sparkles className="w-3.5 h-3.5" />}>Generate Questions</Button>
+          </Link>
           <Link to={`/courses/${course.id}/chat`} data-testid="document-chat-link">
             <Button variant="outline" size="sm" leftIcon={<MessageSquareText className="w-3.5 h-3.5" />}>Document Chat</Button>
           </Link>

@@ -47,5 +47,11 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute((int) config('academic_chat.rate_limit_per_minute', 30))
                 ->by($request->user()?->id ?: $request->ip());
         });
+
+        // STEP 33: Question generation is expensive (configurable via QUESTION_GENERATION_RATE_LIMIT)
+        RateLimiter::for('question-generation', function (Request $request) {
+            return Limit::perMinute((int) config('question_generation.rate_limit_per_minute', 10))
+                ->by($request->user()?->id ?: $request->ip());
+        });
     }
 }

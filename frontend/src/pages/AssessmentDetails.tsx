@@ -550,11 +550,18 @@ export const AssessmentDetails: React.FC = () => {
               <h2 className="text-base font-bold text-[#111111] dark:text-white">Questions & Question Bank</h2>
             </div>
             {course && (
-              <Link to={`/courses/${course.id}/question-bank`}>
-                <Button variant="outline" size="sm" leftIcon={<ExternalLink className="w-3.5 h-3.5" />}>
-                  Course Question Bank
-                </Button>
-              </Link>
+              <div className="flex gap-2">
+                <Link to={`/courses/${course.id}/question-generator?assessment=${assessment?.id ?? ''}`} data-testid="generate-questions-link">
+                  <Button variant="outline" size="sm" leftIcon={<Sparkles className="w-3.5 h-3.5" />}>
+                    Generate Questions
+                  </Button>
+                </Link>
+                <Link to={`/courses/${course.id}/question-bank`}>
+                  <Button variant="outline" size="sm" leftIcon={<ExternalLink className="w-3.5 h-3.5" />}>
+                    Course Question Bank
+                  </Button>
+                </Link>
+              </div>
             )}
           </div>
 

@@ -128,6 +128,9 @@ services:
       - CHAT_MIN_RELEVANCE_SCORE=0.35
       - CHAT_MAX_CONTEXT_CHARS=6000
       - CHAT_MAX_HISTORY_MESSAGES=10
+      # STEP 33 question generator (uses HF_GENERATION_MODEL; template engine fallback)
+      - QUESTION_GENERATION_MAX_NEW_TOKENS=512
+      - QUESTION_GENERATION_MAX_QUESTIONS=20
     volumes:
       - ./ai-service:/app
       - ai_models_cache:/app/cache/huggingface
