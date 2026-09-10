@@ -234,6 +234,51 @@ This makes FacultyLens a **decision-support tool rather than a simple content ge
 
 ---
 
+#  8. AI Chat with Academic Documents (RAG)
+
+Faculty can ask natural-language questions about their own uploaded syllabi, lecture notes, and
+question papers and receive **document-grounded answers with source citations**.
+
+```text
+React chat UI ──► Laravel (auth + retrieval) ──► FastAPI (grounded answer) ──► Laravel (persist) ──► UI
+                        │                                  │
+                        │  1. authorize scope (owner only) │  5. prompt = SYSTEM + UNTRUSTED CONTEXT + QUESTION
+                        │  2. embed question (MiniLM)      │  6. generate (HF model) or extractive fallback
+                        │  3. cosine top-K over indexed    │  7. validate: cites [S#], no leaked instructions
+                        │     chunks, threshold            │  8. grounded=true only when context was used
+                        │  4. send ONLY authorized chunks  │
+```
+
+**Indexing.** When a document finishes text extraction, `GenerateDocumentEmbeddingsJob` splits it into
+overlapping word-based chunks (`CHAT_CHUNK_SIZE` / `CHAT_CHUNK_OVERLAP`), embeds them with MiniLM via
+`POST /api/v1/embeddings/batch`, and stores them in `document_chunks` (packed float32 BLOBs — MySQL 8.0
+has no vector type, so cosine similarity runs application-side). A content hash prevents re-embedding
+unchanged documents. Indexing state is tracked per document: `NOT_INDEXED → INDEXING → INDEXED | FAILED`
+(`STALE` after reprocessing).
+
+**Two models, two jobs.** `HF_MODEL_NAME` (MiniLM) is an *embedding* model and only ranks chunks. Answer
+text comes from a separate `HF_GENERATION_MODEL` (e.g. `google/flan-t5-base`). If unset, a deterministic
+**extractive engine** quotes the most relevant retrieved sentences — still grounded, still cited.
+
+**Grounding & safety.**
+- Retrieval is restricted to documents the user owns *before* similarity is computed; cross-user and
+  cross-course chunks can never become candidates. Scopes: `COURSE`, `DOCUMENT`, `ASSESSMENT`.
+- Document text is passed to the model as **untrusted data**; instructions found inside documents are ignored.
+- If no chunk clears `CHAT_MIN_RELEVANCE_SCORE`, the assistant replies
+  *"I couldn't find enough information about that in the documents available to this chat."* without calling the generator.
+- Sources list only real metadata (document name, page, section when known) — never fabricated pages or file paths.
+- Every answer carries a disclaimer; `CHAT_RATE_LIMIT` (30/min) throttles messages; sessions/messages are audit-logged.
+- A failed AI call persists nothing — the user's question is not saved and can be retried.
+
+**Endpoints.** `GET|POST /api/academic-chat/sessions`, `GET|DELETE /api/academic-chat/sessions/{id}`,
+`POST /api/academic-chat/sessions/{id}/messages`. UI at `/academic-chat` and `/courses/:courseId/chat`.
+
+**Limitations.** Retrieval quality depends on extraction quality (scanned PDFs without text are not indexed);
+page numbers are available for PDFs only; similarity thresholds are engineering defaults, not correctness
+guarantees; small generation models may still paraphrase imprecisely — always verify against the source.
+
+---
+
 #  FacultyLens Workflow
 
 ```text

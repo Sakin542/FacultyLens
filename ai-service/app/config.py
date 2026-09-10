@@ -81,6 +81,19 @@ class Settings(BaseSettings):
     rubric_alignment_partial_threshold: float = 0.55
     rubric_alignment_weak_threshold: float = 0.35
 
+    # Academic Document Chat (Step 32) — RAG.
+    # MiniLM (hf_model_name) embeds chunks and queries; answers are produced by a SEPARATE,
+    # configurable generative model. When none is configured the service falls back to an
+    # extractive, evidence-only answer built from the retrieved chunks (reported honestly).
+    hf_generation_model: Optional[str] = None       # e.g. google/flan-t5-base
+    hf_generation_max_new_tokens: int = 256
+    chat_top_k: int = 5
+    chat_min_relevance_score: float = 0.35          # cosine on MiniLM; engineering threshold
+    chat_max_context_chars: int = 6000
+    chat_max_history_messages: int = 10
+    chat_max_question_length: int = 5000
+    chat_prompt_version: str = "1.0.0"
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

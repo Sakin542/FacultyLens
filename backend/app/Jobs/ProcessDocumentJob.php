@@ -76,6 +76,15 @@ class ProcessDocumentJob implements ShouldQueue
                 'processing_error'  => 'The uploaded document could not be processed. Please ensure the file contains readable text and is not corrupted or empty.',
                 'processed_at'      => now(),
             ]);
+            return;
+        }
+
+        // STEP 32: index the document for academic chat retrieval. Indexing problems are tracked on
+        // indexing_status and must never flip a successful extraction to "failed".
+        try {
+            GenerateDocumentEmbeddingsJob::dispatch($document);
+        } catch (\Throwable $e) {
+            Log::warning("ProcessDocumentJob: embedding dispatch failed for document {$document->id}: {$e->getMessage()}");
         }
     }
 

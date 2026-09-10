@@ -68,6 +68,30 @@ class DocumentTextExtractor
     }
 
     /**
+     * Extract PDF text page-by-page (STEP 32 chunking). Returns [] on failure so callers
+     * can fall back to the page-less text already stored on the document.
+     *
+     * @return array<int, string> 1-based page number => page text
+     */
+    public function extractPdfPages(string $filePath): array
+    {
+        try {
+            $parser = new PdfParser();
+            $pdf = $parser->parseFile($filePath);
+            $pages = [];
+            foreach ($pdf->getPages() as $i => $page) {
+                $pages[$i + 1] = (string) $page->getText();
+            }
+
+            return $pages;
+        } catch (Exception $e) {
+            Log::warning("PDF per-page extraction failed for {$filePath}: " . $e->getMessage());
+
+            return [];
+        }
+    }
+
+    /**
      * Extract text from a PDF file using smalot/pdfparser.
      */
     protected function extractPdf(string $filePath): string

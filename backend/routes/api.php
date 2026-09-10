@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AcademicChatController;
 use App\Http\Controllers\Api\AiAnalysisController;
 use App\Http\Controllers\Api\AiGradingController;
 use App\Http\Controllers\Api\AnalysisHistoryController;
@@ -229,6 +230,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/co-po-mappings/{mapping}', [CoPoMappingController::class, 'destroyMapping']);
     Route::post('/questions/{question}/co-mappings/confirm', [CoPoMappingController::class, 'confirmQuestionMapping']);
     Route::post('/questions/{question}/co-mappings/reject', [CoPoMappingController::class, 'rejectQuestionMapping']);
+
+    // STEP 32: AI Chat with Academic Documents (RAG)
+    Route::prefix('academic-chat')->group(function () {
+        Route::get('/sessions', [AcademicChatController::class, 'index']);
+        Route::post('/sessions', [AcademicChatController::class, 'store']);
+        Route::get('/sessions/{session}', [AcademicChatController::class, 'show']);
+        Route::delete('/sessions/{session}', [AcademicChatController::class, 'destroy']);
+        Route::post('/sessions/{session}/messages', [AcademicChatController::class, 'sendMessage'])->middleware('throttle:academic-chat');
+    });
 });
 
 // Public Shared Report Endpoints (STEP 18)

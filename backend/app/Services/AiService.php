@@ -963,6 +963,88 @@ class AiService
     }
 
     /**
+     * STEP 32: Embed a batch of chunk texts (MiniLM) via POST /api/v1/embeddings/batch.
+     *
+     * @param string[] $texts
+     * @return array{embeddings: array<int, float[]>, model: string, dimension: int}
+     * @throws Exception
+     */
+    public function generateEmbeddings(array $texts): array
+    {
+        $texts = array_values(array_map(fn ($t) => trim((string) $t), $texts));
+        if ($texts === []) {
+            return ['embeddings' => [], 'model' => '', 'dimension' => 0];
+        }
+
+        try {
+            $response = $this->client()->timeout(180)->post("{$this->baseUrl}/api/v1/embeddings/batch", [
+                'texts' => $texts,
+            ]);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                // FastAPI BatchEmbeddingResponse: {status, model, embedding_dimension, vectors}
+                $vectors = is_array($data) ? ($data['vectors'] ?? $data['embeddings'] ?? null) : null;
+                if (!is_array($vectors) || count($vectors) !== count($texts)) {
+                    throw new Exception('AI Service returned a malformed batch embedding response.');
+                }
+
+                return [
+                    'embeddings' => array_values($vectors),
+                    'model' => (string) ($data['model'] ?? ''),
+                    'dimension' => (int) ($data['embedding_dimension'] ?? $data['dimension'] ?? (isset($vectors[0]) ? count($vectors[0]) : 0)),
+                ];
+            }
+
+            Log::error('AI Service embeddings/batch error: ' . $response->status());
+            throw new Exception('AI Service failed to generate embeddings.');
+        } catch (ConnectionException $e) {
+            $this->handleHttpException($e, 'generating embeddings');
+        } catch (RequestException $e) {
+            $this->handleHttpException($e, 'generating embeddings');
+        }
+    }
+
+    /**
+     * STEP 32: Generate a grounded answer from already-retrieved, already-authorized chunks
+     * via POST /api/v1/chat/academic. Retrieval and authorization happen in Laravel; the AI
+     * service only reasons over the context it is given.
+     *
+     * @param array $payload Matches ai-service AcademicChatRequest.
+     * @return array
+     * @throws Exception
+     */
+    public function chatWithAcademicDocuments(array $payload): array
+    {
+        try {
+            $response = $this->client()->timeout(120)->post("{$this->baseUrl}/api/v1/chat/academic", $payload);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                if (!is_array($data) || !isset($data['answer']) || !is_string($data['answer'])
+                    || !array_key_exists('grounded', $data) || !isset($data['sources']) || !is_array($data['sources'])) {
+                    throw new Exception('AI Service returned a malformed chat response.');
+                }
+
+                return $data;
+            }
+
+            if ($response->status() === 422) {
+                $errorData = $response->json();
+                Log::warning('AI Service chat/academic validation error (422).');
+                throw new Exception(is_string($errorData['message'] ?? null) ? $errorData['message'] : 'Validation failed in AI service.');
+            }
+
+            Log::error('AI Service chat/academic error: ' . $response->status());
+            throw new Exception('AI Service failed to generate a chat response.');
+        } catch (ConnectionException $e) {
+            $this->handleHttpException($e, 'answering the academic chat question');
+        } catch (RequestException $e) {
+            $this->handleHttpException($e, 'answering the academic chat question');
+        }
+    }
+
+    /**
      * Translate HTTP / Connection / Request exceptions into descriptive domain exceptions with timeout detection.
      *
      * @param Exception $e
