@@ -17,6 +17,8 @@ from app.services.grading_engine import GradingEngine
 from app.services.grading_validator import GradingValidationError
 from app.services.rubric_alignment_analyzer import RubricAlignmentAnalyzer
 from app.services.rubric_alignment_validator import RubricAlignmentValidationError
+from app.services.academic_chat import AcademicChatService
+from app.services.generation_service import GenerationService, get_generation_service
 from app.services.text_generation_service import TextGenerationService, get_text_generation_service
 from app.utils.text_utils import split_paragraphs, split_sentences
 from app.schemas.analysis import (
@@ -63,6 +65,12 @@ from app.schemas.grading import (
 from app.schemas.rubric_alignment import (
     AnalyzeAnswerRubricAlignmentRequest,
     AnalyzeAnswerRubricAlignmentResponse,
+)
+from app.schemas.chat import (
+    AcademicChatRequest,
+    AcademicChatResponse,
+    BatchEmbeddingRequest,
+    BatchEmbeddingResponse,
 )
 
 logger = logging.getLogger("facultylens.ai")
@@ -525,6 +533,63 @@ def analyze_answer_rubric_alignment(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to analyze answer-rubric alignment.",
+        )
+
+
+@router.post(
+    "/api/v1/embeddings/batch",
+    response_model=BatchEmbeddingResponse,
+    dependencies=[Depends(verify_api_key)],
+)
+def generate_batch_embeddings(
+    payload: BatchEmbeddingRequest,
+    hf_service: HuggingFaceService = Depends(get_hf_service),
+) -> BatchEmbeddingResponse:
+    """
+    STEP 32: Batch MiniLM embeddings for document chunks / chat queries (indexing pipeline).
+    Text content is never logged.
+    """
+    try:
+        vectors = hf_service.generate_batch_embeddings(payload.texts)
+        return BatchEmbeddingResponse(
+            model=hf_service.model_name,
+            embedding_dimension=hf_service.embedding_dimension,
+            vectors=vectors,
+        )
+    except Exception as e:
+        logger.error(f"Error generating batch embeddings: {type(e).__name__}", exc_info=False)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to generate embeddings.",
+        )
+
+
+@router.post(
+    "/api/v1/chat/academic",
+    response_model=AcademicChatResponse,
+    dependencies=[Depends(verify_api_key)],
+)
+def chat_academic(
+    payload: AcademicChatRequest,
+    hf_service: HuggingFaceService = Depends(get_hf_service),
+    generation_service: GenerationService = Depends(get_generation_service),
+) -> AcademicChatResponse:
+    """
+    STEP 32: Document-grounded academic chat (RAG answer step).
+    Laravel authorizes and retrieves chunks; this endpoint filters them by relevance, builds a
+    prompt that treats document text as untrusted data, and answers with the configured
+    generation model or an extractive evidence-only fallback. Never answers from outside knowledge.
+    Question and document text are not logged.
+    """
+    try:
+        service = AcademicChatService(generation_service=generation_service, hf_service=hf_service)
+        result = service.answer(payload)
+        return AcademicChatResponse(**result)
+    except Exception as e:
+        logger.error(f"Error in academic chat: {type(e).__name__}", exc_info=False)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="The academic document assistant could not generate a response.",
         )
 
 

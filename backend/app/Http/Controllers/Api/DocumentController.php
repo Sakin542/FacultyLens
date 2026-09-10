@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DocumentUploadRequest;
+use App\Jobs\GenerateDocumentEmbeddingsJob;
 use App\Jobs\ProcessDocumentJob;
 use App\Models\Assessment;
 use App\Models\Course;
@@ -155,7 +156,7 @@ class DocumentController extends Controller
             ], 403);
         }
 
-        $document->load(['course:id,title,code', 'assessment:id,title,type']);
+        $document->load(['course:id,course_name,course_code', 'assessment:id,title,type']);
 
         return response()->json([
             'data' => $document,
@@ -194,7 +195,15 @@ class DocumentController extends Controller
                 'processing_status' => 'completed',
                 'processing_error' => null,
                 'processed_at' => now(),
+                'indexing_status' => DocumentProcessing::INDEX_STALE,
             ]);
+
+            // STEP 32: re-index for chat (skips embedding if the text is unchanged).
+            try {
+                GenerateDocumentEmbeddingsJob::dispatch($document);
+            } catch (\Throwable $e) {
+                // Indexing failures are tracked on indexing_status; extraction succeeded regardless.
+            }
         } catch (Exception $e) {
             $document->update([
                 'processing_status' => 'failed',

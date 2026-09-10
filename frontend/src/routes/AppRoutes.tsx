@@ -31,6 +31,7 @@ const AssessmentReport   = lazy(() => import('@/pages/AssessmentReport').then(m 
 const SharedReport       = lazy(() => import('@/pages/SharedReport').then(m => ({ default: m.SharedReport })));
 const StudentSubmissions = lazy(() => import('@/pages/StudentSubmissions').then(m => ({ default: m.StudentSubmissions })));
 const SubmissionDetails  = lazy(() => import('@/pages/SubmissionDetails').then(m => ({ default: m.SubmissionDetails })));
+const AcademicChat       = lazy(() => import('@/pages/AcademicChat').then(m => ({ default: m.AcademicChat })));
 
 /**
  * Lightweight fallback shown while a lazy page chunk loads.
@@ -63,6 +64,8 @@ export const AppRoutes: React.FC = () => {
             <Route path="/courses" element={<Courses />} />
             <Route path="/courses/:id" element={<CourseDetails />} />
             <Route path="/courses/:courseId/co-po-mapping" element={<CoPoMapping />} />
+            <Route path="/courses/:courseId/chat" element={<AcademicChat />} />
+            <Route path="/academic-chat" element={<AcademicChat />} />
             <Route path="/courses/:courseId/question-bank" element={<QuestionBank />} />
             <Route path="/question-bank" element={<QuestionBank />} />
             <Route path="/assessments" element={<Assessments />} />

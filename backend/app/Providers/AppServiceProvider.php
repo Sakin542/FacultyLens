@@ -41,5 +41,11 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('uploads', function (Request $request) {
             return Limit::perMinute(25)->by($request->user()?->id ?: $request->ip());
         });
+
+        // STEP 32: Academic chat messages (configurable via CHAT_RATE_LIMIT)
+        RateLimiter::for('academic-chat', function (Request $request) {
+            return Limit::perMinute((int) config('academic_chat.rate_limit_per_minute', 30))
+                ->by($request->user()?->id ?: $request->ip());
+        });
     }
 }

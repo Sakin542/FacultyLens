@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { documentService } from '@/services/documentService';
 import { DocumentProcessing } from '@/types';
 import { Button } from '@/components/common/Button';
@@ -348,6 +348,24 @@ export const DocumentDetails: React.FC = () => {
               <div className="border-b border-slate-100 dark:border-slate-700/60 pb-3">
                 <dt className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Processed Timestamp</dt>
                 <dd className="mt-1 text-slate-700 dark:text-slate-300">{document.processed_at ? new Date(document.processed_at).toLocaleString() : 'Pending'}</dd>
+              </div>
+
+              <div className="border-b border-slate-100 dark:border-slate-700/60 pb-3" data-testid="document-indexing-status">
+                <dt className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Chat Indexing</dt>
+                <dd className="mt-1 text-slate-700 dark:text-slate-300">
+                  <span className="font-mono text-xs">{document.indexing_status ?? 'NOT_INDEXED'}</span>
+                  {document.indexing_status === 'INDEXED' && document.chunk_count != null && (
+                    <span className="ml-2 text-xs text-slate-500">{document.chunk_count} chunks</span>
+                  )}
+                  {document.indexing_status === 'FAILED' && document.indexing_error && (
+                    <p className="mt-1 text-xs text-red-600 dark:text-red-400">{document.indexing_error}</p>
+                  )}
+                  {document.indexing_status === 'INDEXED' && (
+                    <Link to={`/courses/${document.course_id}/chat`} className="ml-2 text-xs text-indigo-600 dark:text-indigo-400 underline">
+                      Open document chat
+                    </Link>
+                  )}
+                </dd>
               </div>
 
               <div className="sm:col-span-2">

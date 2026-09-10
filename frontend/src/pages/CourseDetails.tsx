@@ -29,6 +29,7 @@ import {
   Loader2,
   CheckCircle2,
   Grid3X3,
+  MessageSquareText,
 } from 'lucide-react';
 
 export const CourseDetails: React.FC = () => {
@@ -302,6 +303,9 @@ export const CourseDetails: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
+          <Link to={`/courses/${course.id}/chat`} data-testid="document-chat-link">
+            <Button variant="outline" size="sm" leftIcon={<MessageSquareText className="w-3.5 h-3.5" />}>Document Chat</Button>
+          </Link>
           <Link to={`/courses/${course.id}/co-po-mapping`} data-testid="co-po-link">
             <Button variant="outline" size="sm" leftIcon={<Grid3X3 className="w-3.5 h-3.5" />}>CO / PO Mapping</Button>
           </Link>

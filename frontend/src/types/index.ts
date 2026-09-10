@@ -361,6 +361,11 @@ export interface DocumentProcessing {
   processing_status: DocumentProcessingStatus;
   processing_error?: string | null;
   processed_at?: string | null;
+  /** STEP 32: chat indexing state */
+  indexing_status?: 'NOT_INDEXED' | 'INDEXING' | 'INDEXED' | 'FAILED' | 'STALE';
+  indexing_error?: string | null;
+  chunk_count?: number;
+  indexed_at?: string | null;
   course?: {
     id: number | string;
     title?: string;
