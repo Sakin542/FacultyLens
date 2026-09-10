@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AcademicChatController;
+use App\Http\Controllers\Api\AiEvaluationController;
 use App\Http\Controllers\Api\CollaborationCommentController;
 use App\Http\Controllers\Api\CollaborationController;
 use App\Http\Controllers\Api\NotificationController;
@@ -283,6 +284,30 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead']);
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markRead']);
+
+    // STEP 35: AI Evaluation & Model Performance (evaluation is separate from production AI)
+    Route::prefix('ai/evaluation')->group(function () {
+        Route::get('/', [AiEvaluationController::class, 'index']);
+        Route::get('/models', [AiEvaluationController::class, 'models']);
+        Route::get('/prompts', [AiEvaluationController::class, 'prompts']);
+        Route::get('/datasets', [AiEvaluationController::class, 'datasets']);
+        Route::post('/datasets', [AiEvaluationController::class, 'storeDataset']);
+        Route::get('/datasets/{dataset}', [AiEvaluationController::class, 'showDataset']);
+        Route::put('/datasets/{dataset}', [AiEvaluationController::class, 'updateDataset']);
+        Route::delete('/datasets/{dataset}', [AiEvaluationController::class, 'destroyDataset']);
+        Route::delete('/datasets/{dataset}/examples/{example}', [AiEvaluationController::class, 'destroyExample']);
+        Route::post('/datasets/{dataset}/validate', [AiEvaluationController::class, 'validateDataset']);
+        Route::post('/datasets/{dataset}/run', [AiEvaluationController::class, 'run'])->middleware('throttle:ai-analysis');
+        Route::get('/runs', [AiEvaluationController::class, 'runs']);
+        Route::get('/compare', [AiEvaluationController::class, 'compare']);
+        Route::get('/runs/{run}', [AiEvaluationController::class, 'showRun']);
+        Route::get('/runs/{run}/metrics', [AiEvaluationController::class, 'metrics']);
+        Route::get('/runs/{run}/errors', [AiEvaluationController::class, 'errors']);
+        Route::get('/runs/{run}/report', [AiEvaluationController::class, 'reportJson']);
+        Route::get('/runs/{run}/export', [AiEvaluationController::class, 'export']);
+        Route::post('/runs/{run}/cancel', [AiEvaluationController::class, 'cancel']);
+        Route::post('/ratings', [AiEvaluationController::class, 'rate']);
+    });
 });
 
 // STEP 34: minimal public invitation preview (course code/name, inviter, role, expiry — no course content)

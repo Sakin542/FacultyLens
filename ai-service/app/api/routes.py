@@ -1,5 +1,5 @@
 import logging
-from typing import Optional
+from typing import Any, Dict, Optional
 from fastapi import APIRouter, Header, HTTPException, status, Depends
 from app.config import get_settings, Settings
 from app.services.huggingface_service import HuggingFaceService, get_hf_service
@@ -19,6 +19,7 @@ from app.services.rubric_alignment_analyzer import RubricAlignmentAnalyzer
 from app.services.rubric_alignment_validator import RubricAlignmentValidationError
 from app.services.academic_chat import AcademicChatService
 from app.services.question_generator import QuestionGenerator
+from app.services.evaluation_inventory import model_inventory
 from app.schemas.question_generation import GenerateQuestionsRequest, GenerateQuestionsResponse
 from app.services.generation_service import GenerationService, get_generation_service
 from app.services.text_generation_service import TextGenerationService, get_text_generation_service
@@ -619,6 +620,15 @@ def generate_questions(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="The question generator could not produce drafts.",
         )
+
+
+@router.get("/api/v1/evaluation/models", dependencies=[Depends(verify_api_key)])
+def evaluation_models(
+    hf_service: HuggingFaceService = Depends(get_hf_service),
+    generation_service: GenerationService = Depends(get_generation_service),
+) -> Dict[str, Any]:
+    """STEP 35: inventory of configured models, engines, prompt versions and thresholds for the Laravel registry."""
+    return model_inventory(hf_service, generation_service)
 
 
 # API aliases for consistent naming convention across STEP 15 specification
