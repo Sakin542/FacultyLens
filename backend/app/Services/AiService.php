@@ -1081,6 +1081,26 @@ class AiService
     }
 
     /**
+     * STEP 35: inventory of configured models/engines/prompt versions for the evaluation model registry.
+     *
+     * @throws Exception
+     */
+    public function evaluationInventory(): array
+    {
+        try {
+            $response = $this->client()->timeout(30)->get("{$this->baseUrl}/api/v1/evaluation/models");
+            if ($response->successful() && is_array($response->json()) && isset($response->json()['embedding_model'])) {
+                return $response->json();
+            }
+            throw new Exception('AI Service returned a malformed model inventory.');
+        } catch (ConnectionException $e) {
+            $this->handleHttpException($e, 'loading the model inventory');
+        } catch (RequestException $e) {
+            $this->handleHttpException($e, 'loading the model inventory');
+        }
+    }
+
+    /**
      * Translate HTTP / Connection / Request exceptions into descriptive domain exceptions with timeout detection.
      *
      * @param Exception $e

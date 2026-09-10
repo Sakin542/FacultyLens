@@ -640,6 +640,36 @@ AI-generated results should be considered **recommendations**, not authoritative
 
 ---
 
+## AI Evaluation & Model Performance
+
+FacultyLens evaluates its AI capabilities using
+faculty-validated evaluation datasets and task-specific
+metrics.
+
+Evaluated areas include:
+
+- Question classification
+- Difficulty classification
+- Bloom classification
+- Learning-outcome alignment
+- Semantic similarity
+- Rubric generation
+- AI grading assistance
+- Answer-rubric alignment
+- Document-grounded chat
+- Constrained question generation
+
+Evaluation results are used for monitoring and analysis.
+They do not automatically retrain, change, or deploy AI models.
+
+The dashboard at `/ai-evaluation` shows classification metrics (accuracy, macro/weighted F1, confusion matrix, per-class metrics),
+similarity precision/recall at the production thresholds plus an evaluation-only threshold sweep, grading MAE/RMSE/agreement rates,
+RAG groundedness/citation/refusal/prompt-injection results, question-generation constraint satisfaction, quality gates, regression
+detection, run comparison, example-level error analysis and PDF/CSV/JSON export. Every number comes from a persisted evaluation run;
+tasks without a run show **Not evaluated yet**. See [docs/ai-evaluation.md](docs/ai-evaluation.md).
+
+---
+
 #  MVP Scope
 
 The core FacultyLens workflow is:
