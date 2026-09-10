@@ -8,6 +8,9 @@ import { assessmentService } from '@/services/assessmentService';
 import { learningOutcomeService } from '@/services/learningOutcomeService';
 import { coPoMappingService } from '@/services/coPoMappingService';
 import { documentService } from '@/services/documentService';
+import { collaborationService } from '@/services/collaborationService';
+import { useAuth } from '@/context/AuthContext';
+import { CollaborationComments } from '@/components/collaboration/CollaborationComments';
 import { Assessment, Course, DocumentProcessing, LearningOutcome } from '@/types';
 import { ProgramOutcome } from '@/types/coPo';
 import { CreateGenerationInput, FeedbackInput, GeneratedQuestion, GenerationRequest, UpdateGeneratedQuestionInput } from '@/types/questionGeneration';
@@ -25,6 +28,7 @@ export const QuestionGenerator: React.FC = () => {
   const { courseId: routeCourseId } = useParams<{ courseId: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const [courses, setCourses] = useState<Course[]>([]);
   const [assessments, setAssessments] = useState<Assessment[]>([]);
@@ -45,6 +49,9 @@ export const QuestionGenerator: React.FC = () => {
   const pollRef = useRef<number | null>(null);
 
   const outcomeOptions = useMemo(() => outcomes.map((o) => ({ id: o.id, code: o.code, description: o.description })), [outcomes]);
+  // STEP 34: server-provided permissions for the active request's course (API remains authoritative)
+  const [permissions, setPermissions] = useState<Record<string, boolean> | null>(null);
+  const canReview = permissions ? !!permissions.approve_generated_question : true;
   const assessmentOptions = useMemo(() => assessments.map((a) => ({ id: a.id, title: a.title, total_marks: a.total_marks })), [assessments]);
   const questions = active?.questions ?? [];
   const regenerationsLeft = active ? Math.max(0, active.max_regenerations - active.regeneration_count) : 0;
@@ -62,6 +69,12 @@ export const QuestionGenerator: React.FC = () => {
     courseService.getAll().then((r) => setCourses(r.data)).catch(() => undefined);
     void loadHistory(routeCourseId ?? '');
   }, [routeCourseId, loadHistory]);
+
+  useEffect(() => {
+    const cid = active?.course_id ?? (courseId ? Number(courseId) : null);
+    if (!cid) { setPermissions(null); return; }
+    collaborationService.getCollaboration(cid).then((r) => setPermissions(r.data.permissions as Record<string, boolean>)).catch(() => setPermissions(null));
+  }, [active?.course_id, courseId]);
 
   useEffect(() => {
     if (!courseId) { setAssessments([]); setOutcomes([]); setProgramOutcomes([]); setDocuments([]); return; }
@@ -185,6 +198,12 @@ export const QuestionGenerator: React.FC = () => {
                   </div>
                   <GeneratedQuestionList
                     questions={questions} outcomes={outcomeOptions} regenerationsLeft={regenerationsLeft} hasAssessment={!!active.assessment_id}
+                    canReview={canReview}
+                    renderDiscussion={(q) => (
+                      <details className="text-xs"><summary className="cursor-pointer text-[#737373]">Discussion</summary>
+                        <div className="mt-2"><CollaborationComments courseId={active.course_id} commentableType="generated_question" commentableId={q.id} currentUserId={user ? Number(user.id) : undefined} canComment={permissions ? !!permissions.comment : undefined} canResolve={canReview} title="Draft discussion" compact showResolvedToggle={false} /></div>
+                      </details>
+                    )}
                     onEdit={onEdit} onApprove={onApprove} onReject={onReject} onRegenerate={(q) => setRegenTarget(q)} onAddToAssessment={(q) => setAddTarget(q)}
                     onGenerateRubric={(q) => q.official_question_id && active.assessment_id && navigate(`/assessments/${active.assessment_id}?question=${q.official_question_id}`)}
                     onViewSimilar={(_, source) => { if (active.assessment_id && source === 'assessment') navigate(`/assessments/${active.assessment_id}/analysis`); else navigate(`/courses/${active.course_id}/question-bank`); }}

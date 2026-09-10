@@ -16,7 +16,7 @@ class LearningOutcomeController extends Controller
      */
     public function index(Request $request, Course $course): JsonResponse
     {
-        if ($course->user_id !== $request->user()->id) {
+        if (!$request->user()->can('view', $course)) {
             return response()->json([
                 'message' => 'Unauthorized access to course learning outcomes.',
             ], 403);
@@ -34,7 +34,7 @@ class LearningOutcomeController extends Controller
      */
     public function store(LearningOutcomeRequest $request, Course $course): JsonResponse
     {
-        if ($course->user_id !== $request->user()->id) {
+        if (!$request->user()->can('update', $course)) {
             return response()->json([
                 'message' => 'Unauthorized access to course.',
             ], 403);
@@ -58,7 +58,7 @@ class LearningOutcomeController extends Controller
      */
     public function update(LearningOutcomeRequest $request, LearningOutcome $learningOutcome): JsonResponse
     {
-        if ($learningOutcome->course->user_id !== $request->user()->id) {
+        if (!$request->user()->can('update', $learningOutcome)) {
             return response()->json([
                 'message' => 'Unauthorized access to learning outcome.',
             ], 403);
@@ -77,7 +77,7 @@ class LearningOutcomeController extends Controller
      */
     public function destroy(Request $request, LearningOutcome $learningOutcome): JsonResponse
     {
-        if ($learningOutcome->course->user_id !== $request->user()->id) {
+        if (!$request->user()->can('delete', $learningOutcome)) {
             return response()->json([
                 'message' => 'Unauthorized access to learning outcome.',
             ], 403);

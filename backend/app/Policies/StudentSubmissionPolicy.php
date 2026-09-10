@@ -6,33 +6,24 @@ use App\Models\StudentSubmission;
 use App\Models\User;
 
 /**
- * Authorization chain: User -> Course (user_id) -> Assessment -> StudentSubmission.
+ * Authorization chain: User -> Course (owner or active collaborator with view_student_data) -> Assessment -> Submission.
  */
 class StudentSubmissionPolicy
 {
+    use ResolvesCourseAccess;
+
     public function view(User $user, StudentSubmission $submission): bool
     {
-        return $this->owns($user, $submission);
+        return $this->allows($user, $submission->assessment?->course, 'view_student_data');
     }
 
     public function update(User $user, StudentSubmission $submission): bool
     {
-        return $this->owns($user, $submission);
+        return $this->view($user, $submission);
     }
 
     public function delete(User $user, StudentSubmission $submission): bool
     {
-        return $this->owns($user, $submission);
-    }
-
-    protected function owns(User $user, StudentSubmission $submission): bool
-    {
-        if ($user->isAdmin()) {
-            return true;
-        }
-
-        $ownerId = $submission->assessment?->course?->user_id;
-
-        return $ownerId !== null && $ownerId === $user->id;
+        return $this->view($user, $submission);
     }
 }

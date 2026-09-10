@@ -18,6 +18,8 @@ import { AnalysisError } from '@/components/analysis/AnalysisError';
 import { PerformanceOverview } from '@/components/performance/PerformanceOverview';
 import { aiAnalysisService, FullAssessmentAnalysisData } from '@/services/aiAnalysisService';
 import { assessmentService } from '@/services/assessmentService';
+import { useAuth } from '@/context/AuthContext';
+import { CollaborationComments } from '@/components/collaboration/CollaborationComments';
 import { Assessment, RecommendationStatus } from '@/types';
 import {
   FileCheck2,
@@ -26,6 +28,7 @@ import {
 
 export const Analysis: React.FC = () => {
   const { id: paramAssessmentId } = useParams<{ id?: string }>();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   // State management
@@ -328,6 +331,12 @@ export const Analysis: React.FC = () => {
             onStatusUpdate={handleRecommendationStatusChange}
             isUpdatingStatus={isUpdatingStatus}
           />
+
+          {/* STEP 34: Discuss Analysis — faculty discussion never modifies the AI result */}
+          {report?.id && (
+            <CollaborationComments courseId={assessment.course_id} commentableType="analysis_report" commentableId={report.id}
+              currentUserId={user ? Number(user.id) : undefined} title="Discuss Analysis" />
+          )}
         </div>
       )}
 

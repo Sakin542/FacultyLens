@@ -7,6 +7,7 @@ use App\Http\Requests\AssessmentRequest;
 use App\Models\Assessment;
 use App\Models\Course;
 use App\Services\AuditLogService;
+use App\Services\CourseAccessService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -28,7 +29,7 @@ class AssessmentController extends Controller
         $user = $request->user();
 
         if ($course && $course->exists) {
-            if ($course->user_id !== $user->id) {
+            if (!$user->can('view', $course)) {
                 return response()->json([
                     'message' => 'Unauthorized access to course assessments.',
                 ], 403);
@@ -45,9 +46,9 @@ class AssessmentController extends Controller
             ]);
         }
 
-        // Return all assessments for the authenticated faculty across all their courses
+        // Return all assessments across every course the faculty owns or collaborates on (STEP 34)
         $query = Assessment::whereHas('course', function ($q) use ($user) {
-            $q->where('user_id', $user->id);
+            $q->accessibleBy($user);
         })
             ->with(['course', 'questionPaper'])
             ->withCount('questions');
@@ -80,7 +81,7 @@ class AssessmentController extends Controller
      */
     public function store(AssessmentRequest $request, Course $course): JsonResponse
     {
-        if ($course->user_id !== $request->user()->id) {
+        if (!app(CourseAccessService::class)->can($request->user(), $course, 'create_assessment')) {
             return response()->json([
                 'message' => 'Unauthorized access to create assessment for this course.',
             ], 403);
@@ -115,7 +116,7 @@ class AssessmentController extends Controller
      */
     public function show(Request $request, Assessment $assessment): JsonResponse
     {
-        if ($assessment->course->user_id !== $request->user()->id) {
+        if (!$request->user()->can('view', $assessment)) {
             return response()->json([
                 'message' => 'Unauthorized access to assessment.',
             ], 403);
@@ -127,6 +128,10 @@ class AssessmentController extends Controller
             'questions.learningOutcome',
         ])->loadCount('questions');
 
+        $access = app(CourseAccessService::class);
+        $assessment->setAttribute('current_role', $access->roleFor($request->user(), $assessment->course));
+        $assessment->setAttribute('permissions', $access->permissions($request->user(), $assessment->course));
+
         return response()->json([
             'data' => $assessment,
         ]);
@@ -137,15 +142,28 @@ class AssessmentController extends Controller
      */
     public function update(AssessmentRequest $request, Assessment $assessment): JsonResponse
     {
-        if ($assessment->course->user_id !== $request->user()->id) {
+        if (!$request->user()->can('update', $assessment)) {
             return response()->json([
                 'message' => 'Unauthorized access to update assessment.',
             ], 403);
         }
 
+        // STEP 34: version-aware editing — a stale client must not silently overwrite a collaborator's change.
+        $expected = $request->input('expected_updated_at');
+        if ($expected && $assessment->updated_at && !$assessment->updated_at->equalTo(\Carbon\Carbon::parse($expected))) {
+            return response()->json([
+                'message' => 'This assessment was modified by someone else since you loaded it. Reload to see the latest version before saving.',
+                'data' => ['updated_at' => $assessment->updated_at->toIso8601String()],
+            ], 409);
+        }
+
         // Only update validated fields, course_id cannot be changed
         $assessment->update($request->validated());
         $assessment->load(['course', 'questionPaper'])->loadCount('questions');
+
+        $this->auditLogService->log('ASSESSMENT_UPDATED', $assessment, $assessment->id, [
+            'title' => $assessment->title, 'course_id' => $assessment->course_id,
+        ], $request->user());
 
         return response()->json([
             'data' => $assessment,
@@ -158,7 +176,7 @@ class AssessmentController extends Controller
      */
     public function destroy(Request $request, Assessment $assessment): JsonResponse
     {
-        if ($assessment->course->user_id !== $request->user()->id) {
+        if (!$request->user()->can('delete', $assessment)) {
             return response()->json([
                 'message' => 'Unauthorized access to delete assessment.',
             ], 403);
@@ -202,7 +220,7 @@ class AssessmentController extends Controller
         $user = $request->user();
 
         $query = Assessment::whereHas('course', function ($q) use ($user, $request) {
-            $q->where('user_id', $user->id);
+            $q->accessibleBy($user);
             if ($request->filled('academic_year')) {
                 $q->where('academic_year', $request->academic_year);
             }

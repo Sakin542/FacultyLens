@@ -18,7 +18,7 @@ class PreviousQuestionController extends Controller
      */
     public function index(Request $request, Course $course): JsonResponse
     {
-        if ($course->user_id !== $request->user()->id) {
+        if (!$request->user()->can('view', $course)) {
             return response()->json([
                 'message' => 'Unauthorized access to course previous questions.',
             ], 403);
@@ -93,7 +93,7 @@ class PreviousQuestionController extends Controller
      */
     public function store(PreviousQuestionRequest $request, Course $course): JsonResponse
     {
-        if ($course->user_id !== $request->user()->id) {
+        if (!app(\App\Services\CourseAccessService::class)->can($request->user(), $course, 'edit_question')) {
             return response()->json([
                 'message' => 'Unauthorized access to add previous question for this course.',
             ], 403);
@@ -141,7 +141,7 @@ class PreviousQuestionController extends Controller
      */
     public function show(Request $request, PreviousQuestion $previousQuestion): StreamedResponse|JsonResponse
     {
-        if ($previousQuestion->course->user_id !== $request->user()->id) {
+        if (!$request->user()->can('view', $previousQuestion)) {
             return response()->json([
                 'message' => 'Unauthorized access to previous question.',
             ], 403);
@@ -169,7 +169,7 @@ class PreviousQuestionController extends Controller
      */
     public function update(PreviousQuestionRequest $request, PreviousQuestion $previousQuestion): JsonResponse
     {
-        if ($previousQuestion->course->user_id !== $request->user()->id) {
+        if (!$request->user()->can('update', $previousQuestion)) {
             return response()->json([
                 'message' => 'Unauthorized access to update previous question.',
             ], 403);
@@ -209,7 +209,7 @@ class PreviousQuestionController extends Controller
      */
     public function destroy(Request $request, PreviousQuestion $previousQuestion): JsonResponse
     {
-        if ($previousQuestion->course->user_id !== $request->user()->id) {
+        if (!$request->user()->can('delete', $previousQuestion)) {
             return response()->json([
                 'message' => 'Unauthorized access to delete previous question.',
             ], 403);

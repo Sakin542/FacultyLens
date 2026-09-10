@@ -17,7 +17,7 @@ class AssessmentQuestionPaperController extends Controller
      */
     public function show(Request $request, Assessment $assessment): StreamedResponse|JsonResponse
     {
-        if ($assessment->course->user_id !== $request->user()->id) {
+        if (!app(\App\Services\CourseAccessService::class)->can($request->user(), $assessment->course, 'download_documents')) {
             return response()->json([
                 'message' => 'Unauthorized access to assessment question paper.',
             ], 403);
@@ -39,7 +39,7 @@ class AssessmentQuestionPaperController extends Controller
      */
     public function store(QuestionPaperRequest $request, Assessment $assessment): JsonResponse
     {
-        if ($assessment->course->user_id !== $request->user()->id) {
+        if (!$request->user()->can('update', $assessment)) {
             return response()->json([
                 'message' => 'Unauthorized access to upload question paper for this assessment.',
             ], 403);
@@ -85,7 +85,7 @@ class AssessmentQuestionPaperController extends Controller
      */
     public function destroy(Request $request, Assessment $assessment): JsonResponse
     {
-        if ($assessment->course->user_id !== $request->user()->id) {
+        if (!$request->user()->can('update', $assessment)) {
             return response()->json([
                 'message' => 'Unauthorized access to delete question paper.',
             ], 403);

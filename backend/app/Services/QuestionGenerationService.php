@@ -55,7 +55,7 @@ class QuestionGenerationService
     public function createRequest(User $user, array $input): QuestionGenerationRequest
     {
         $course = Course::find($input['course_id'] ?? null);
-        if (!$course || $course->user_id !== $user->id) {
+        if (!$course || !app(CourseAccessService::class)->can($user, $course, 'generate_questions')) {
             throw new HttpException(403, 'Unauthorized access to course.');
         }
 
@@ -331,7 +331,7 @@ class QuestionGenerationService
 
         $request = $question->request;
         $assessment = Assessment::with('course')->find($assessmentId ?? $request->assessment_id);
-        if (!$assessment || !$assessment->course || $assessment->course->user_id !== $user->id) {
+        if (!$assessment || !$assessment->course || !app(CourseAccessService::class)->can($user, $assessment->course, 'edit_question')) {
             throw new HttpException(403, 'Unauthorized access to assessment.');
         }
         if ($assessment->course_id !== $request->course_id) {
@@ -588,7 +588,7 @@ class QuestionGenerationService
         $type = strtoupper((string) ($scope['scope_type'] ?? 'COURSE'));
         if ($type === 'DOCUMENT') {
             $doc = DocumentProcessing::find($scope['document_id'] ?? null);
-            if (!$doc || $doc->user_id !== $user->id || $doc->course_id !== $course->id) {
+            if (!$doc || $doc->course_id !== $course->id || !$user->can('view', $doc)) {
                 throw new HttpException(403, 'Unauthorized access to document.');
             }
 

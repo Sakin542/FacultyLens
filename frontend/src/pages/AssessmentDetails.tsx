@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
+import { CollaborationComments } from '@/components/collaboration/CollaborationComments';
 import { Assessment, QuestionDetail } from '@/types';
 import { assessmentService, AssessmentPayload } from '@/services/assessmentService';
 import { questionPaperService } from '@/services/questionPaperService';
@@ -46,6 +48,7 @@ import {
 
 export const AssessmentDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const [assessment, setAssessment] = useState<Assessment | null>(null);
@@ -451,6 +454,13 @@ export const AssessmentDetails: React.FC = () => {
         error={submissionStatsError}
         onImport={() => setIsImportAnswersOpen(true)}
       />
+
+      {/* STEP 34: assessment discussion thread (permission-aware; API authoritative) */}
+      {assessment && course && (
+        <CollaborationComments courseId={course.id} commentableType="assessment" commentableId={assessment.id}
+          currentUserId={user ? Number(user.id) : undefined} canComment={assessment.permissions ? !!assessment.permissions.comment : undefined}
+          canResolve={!!assessment.permissions?.approve_recommendation} title="Assessment discussion" />
+      )}
 
       {/* Two Column Layout: Question Paper & Questions / Question Bank */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

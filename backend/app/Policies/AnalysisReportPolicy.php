@@ -7,9 +7,10 @@ use App\Models\User;
 
 class AnalysisReportPolicy
 {
+    use ResolvesCourseAccess;
+
     public function view(User $user, AnalysisReport $report): bool
     {
-        return $user->isAdmin() || $report->assessment?->course?->user_id === $user->id;
+        return $this->allows($user, $report->assessment?->course, 'view_analysis');
     }
 }
-

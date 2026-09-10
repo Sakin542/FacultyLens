@@ -113,7 +113,9 @@ class PerformanceController extends Controller
     public function student(Request $request, Student $student, Assessment $assessment): JsonResponse
     {
         $user = $request->user();
-        if (!$this->owns($request, $assessment) || (!$user->isAdmin() && $student->created_by !== $user->id)) {
+        // Student identity/grades: OWNER/EDITOR only, and the student must have a submission in this assessment.
+        if (!$this->owns($request, $assessment, 'view_student_data')
+            || (!$user->isAdmin() && $student->created_by !== $assessment->course->user_id && !$assessment->submissions()->where('student_id', $student->id)->exists())) {
             return $this->forbidden();
         }
 
@@ -156,12 +158,12 @@ class PerformanceController extends Controller
         ];
     }
 
-    protected function owns(Request $request, Assessment $assessment): bool
+    /** STEP 34: aggregate performance needs view_analysis; per-student data needs view_student_data. */
+    protected function owns(Request $request, Assessment $assessment, string $ability = 'view_analysis'): bool
     {
-        $user = $request->user();
         $assessment->loadMissing('course');
 
-        return $user->isAdmin() || $assessment->course?->user_id === $user->id;
+        return app(\App\Services\CourseAccessService::class)->can($request->user(), $assessment->course, $ability);
     }
 
     protected function forbidden(): JsonResponse

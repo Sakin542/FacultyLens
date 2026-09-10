@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\AiImprovementSignal;
 use App\Models\Recommendation;
 use App\Models\RecommendationDecision;
+use App\Services\CourseAccessService;
 use App\Models\RecommendationFeedback;
 use App\Models\User;
 use App\Services\AuditLogService;
@@ -24,12 +25,13 @@ class RecommendationFeedbackService
     /**
      * Authorize that the authenticated user owns the assessment this recommendation belongs to.
      */
-    public function authorizeRecommendationOwner(Recommendation $recommendation, User $user): void
+    public function authorizeRecommendationOwner(Recommendation $recommendation, User $user, string $ability = 'approve_recommendation'): void
     {
         $recommendation->loadMissing('analysisReport.assessment.course');
         $course = $recommendation->analysisReport?->assessment?->course;
 
-        if (!$course || $course->user_id !== $user->id) {
+        // STEP 34: decisions need approve_recommendation (OWNER/EDITOR); reading feedback needs view_analysis.
+        if (!$course || !app(CourseAccessService::class)->can($user, $course, $ability)) {
             throw new Exception('Unauthorized. You do not own the assessment for this recommendation.');
         }
     }
@@ -314,7 +316,7 @@ class RecommendationFeedbackService
      */
     public function getRecommendationFeedback(Recommendation $recommendation, User $user): array
     {
-        $this->authorizeRecommendationOwner($recommendation, $user);
+        $this->authorizeRecommendationOwner($recommendation, $user, 'view_analysis');
 
         return $recommendation->feedback()
             ->where('user_id', $user->id)

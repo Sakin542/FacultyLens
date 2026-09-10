@@ -282,12 +282,12 @@ class StudentSubmissionController extends Controller
 
     // ---------------------------------------------------------------- helpers
 
+    /** STEP 34: student submissions are private academic data — OWNER/EDITOR (view_student_data) only. */
     protected function ownsAssessment(Request $request, Assessment $assessment): bool
     {
-        $user = $request->user();
         $assessment->loadMissing('course');
 
-        return $user->isAdmin() || $assessment->course?->user_id === $user->id;
+        return app(\App\Services\CourseAccessService::class)->can($request->user(), $assessment->course, 'view_student_data');
     }
 
     protected function presentSummary(StudentSubmission $s): array

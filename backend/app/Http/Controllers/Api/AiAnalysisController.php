@@ -132,7 +132,7 @@ class AiAnalysisController extends Controller
         if (!empty($validated['document_id'])) {
             $document = DocumentProcessing::find($validated['document_id']);
 
-            if (!$document || $document->user_id !== $user->id) {
+            if (!$document || !$user->can('view', $document)) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Unauthorized access to document.',
@@ -248,7 +248,7 @@ class AiAnalysisController extends Controller
         $user = $request->user();
 
         // Check faculty ownership
-        if ($assessment->course->user_id !== $user->id) {
+        if (!$user->can('analyze', $assessment)) {
             return response()->json([
                 'message' => 'Unauthorized access to assessment questions.',
             ], 403);
@@ -366,7 +366,7 @@ class AiAnalysisController extends Controller
         $user = $request->user();
 
         // Check faculty authorization
-        if ($assessment->course->user_id !== $user->id) {
+        if (!$user->can('analyze', $assessment)) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Unauthorized access to assessment.',
@@ -559,7 +559,7 @@ class AiAnalysisController extends Controller
         $user = $request->user();
 
         // Check faculty authorization
-        if ($assessment->course->user_id !== $user->id) {
+        if (!$user->can('analyze', $assessment)) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Unauthorized access to assessment.',
@@ -742,7 +742,7 @@ class AiAnalysisController extends Controller
         $user = $request->user();
 
         // Check faculty authorization
-        if ($assessment->course->user_id !== $user->id) {
+        if (!$user->can('analyze', $assessment)) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Unauthorized access to assessment.',
@@ -933,7 +933,7 @@ class AiAnalysisController extends Controller
     public function generateAssessmentRecommendations(Request $request, Assessment $assessment): JsonResponse
     {
         // Multi-tenant check
-        if ($assessment->course->user_id !== $request->user()->id) {
+        if (!$request->user()->can('analyze', $assessment)) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Unauthorized access to this assessment.',
@@ -1180,8 +1180,12 @@ class AiAnalysisController extends Controller
     /**
      * Retrieve persisted recommendations for an assessment.
      */
-    public function getAssessmentRecommendations(Assessment $assessment): JsonResponse
+    public function getAssessmentRecommendations(Request $request, Assessment $assessment): JsonResponse
     {
+        if (!$request->user()->can('viewAnalysis', $assessment)) {
+            return response()->json(['status' => 'error', 'message' => 'Unauthorized access to assessment recommendations.'], 403);
+        }
+
         $report = $assessment->latestAnalysisReport;
         if (!$report) {
             return response()->json([
@@ -1229,7 +1233,7 @@ class AiAnalysisController extends Controller
     {
         // Multi-tenant check
         $assessment = $recommendation->analysisReport?->assessment;
-        if (!$assessment || $assessment->course->user_id !== $request->user()->id) {
+        if (!$assessment || !$request->user()->can('update', $recommendation)) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Unauthorized access to this recommendation.',
@@ -1289,7 +1293,7 @@ class AiAnalysisController extends Controller
                 'latestAnalysisReport.similarityMatches',
             ])->find($assessmentId);
 
-            if (!$assessment || $assessment->course->user_id !== $user->id) {
+            if (!$assessment || !$user->can('analyze', $assessment)) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Unauthorized access to assessment.',
@@ -1687,7 +1691,7 @@ class AiAnalysisController extends Controller
             $user = $request->user();
 
             // Authorization
-            if ($assessment->course->user_id !== $user->id) {
+            if (!$user->can('analyze', $assessment)) {
                 return response()->json([
                     'status'  => 'error',
                     'message' => 'Unauthorized access to assessment.',
@@ -1767,7 +1771,7 @@ class AiAnalysisController extends Controller
         $user = $request->user();
 
         // Check ownership
-        if ($assessment->course->user_id !== $user->id) {
+        if (!$user->can('viewAnalysis', $assessment)) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Unauthorized access to assessment analysis.',
@@ -1973,7 +1977,7 @@ class AiAnalysisController extends Controller
     {
         $user = $request->user();
 
-        if ($assessment->course->user_id !== $user->id) {
+        if (!$user->can('viewAnalysis', $assessment)) {
             return response()->json([
                 'status'  => 'error',
                 'message' => 'Unauthorized access to assessment.',

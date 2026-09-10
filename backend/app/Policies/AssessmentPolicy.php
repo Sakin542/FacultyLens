@@ -7,52 +7,45 @@ use App\Models\User;
 
 class AssessmentPolicy
 {
-    /**
-     * Determine whether the user can view any assessments.
-     */
+    use ResolvesCourseAccess;
+
     public function viewAny(User $user): bool
     {
         return true;
     }
 
-    /**
-     * Determine whether the user can view the assessment.
-     */
     public function view(User $user, Assessment $assessment): bool
     {
-        return $user->isAdmin() || $assessment->course->user_id === $user->id;
+        return $this->allows($user, $assessment->course, 'view');
     }
 
-    /**
-     * Determine whether the user can create assessments.
-     */
     public function create(User $user): bool
     {
         return true;
     }
 
-    /**
-     * Determine whether the user can update the assessment.
-     */
     public function update(User $user, Assessment $assessment): bool
     {
-        return $user->isAdmin() || $assessment->course->user_id === $user->id;
+        return $this->allows($user, $assessment->course, 'edit_assessment');
     }
 
-    /**
-     * Determine whether the user can delete the assessment.
-     */
     public function delete(User $user, Assessment $assessment): bool
     {
-        return $user->isAdmin() || $assessment->course->user_id === $user->id;
+        return $this->allows($user, $assessment->course, 'delete_assessment');
     }
 
-    /**
-     * Determine whether the user can trigger AI analysis on the assessment.
-     */
     public function analyze(User $user, Assessment $assessment): bool
     {
-        return $user->isAdmin() || $assessment->course->user_id === $user->id;
+        return $this->allows($user, $assessment->course, 'run_analysis');
+    }
+
+    public function viewAnalysis(User $user, Assessment $assessment): bool
+    {
+        return $this->allows($user, $assessment->course, 'view_analysis');
+    }
+
+    public function viewStudentData(User $user, Assessment $assessment): bool
+    {
+        return $this->allows($user, $assessment->course, 'view_student_data');
     }
 }
-

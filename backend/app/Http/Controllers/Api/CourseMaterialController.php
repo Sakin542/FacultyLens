@@ -18,7 +18,7 @@ class CourseMaterialController extends Controller
      */
     public function index(Request $request, Course $course): JsonResponse
     {
-        if ($course->user_id !== $request->user()->id) {
+        if (!$request->user()->can('view', $course)) {
             return response()->json([
                 'message' => 'Unauthorized access to course materials.',
             ], 403);
@@ -36,7 +36,7 @@ class CourseMaterialController extends Controller
      */
     public function store(CourseMaterialRequest $request, Course $course): JsonResponse
     {
-        if ($course->user_id !== $request->user()->id) {
+        if (!app(\App\Services\CourseAccessService::class)->can($request->user(), $course, 'upload_documents')) {
             return response()->json([
                 'message' => 'Unauthorized access to course.',
             ], 403);
@@ -71,7 +71,7 @@ class CourseMaterialController extends Controller
      */
     public function show(Request $request, CourseMaterial $material): StreamedResponse|JsonResponse
     {
-        if ($material->course->user_id !== $request->user()->id) {
+        if (!app(\App\Services\CourseAccessService::class)->can($request->user(), $material->course, 'download_documents')) {
             return response()->json([
                 'message' => 'Unauthorized access to course material.',
             ], 403);
@@ -91,7 +91,7 @@ class CourseMaterialController extends Controller
      */
     public function destroy(Request $request, CourseMaterial $material): JsonResponse
     {
-        if ($material->course->user_id !== $request->user()->id) {
+        if (!app(\App\Services\CourseAccessService::class)->can($request->user(), $material->course, 'manage_documents')) {
             return response()->json([
                 'message' => 'Unauthorized access to course material.',
             ], 403);

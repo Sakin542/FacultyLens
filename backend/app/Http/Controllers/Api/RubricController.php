@@ -24,7 +24,7 @@ class RubricController extends Controller
      */
     public function generate(Request $request, Question $question): JsonResponse
     {
-        if (!$this->canAccessQuestion($request, $question)) {
+        if (!$this->canAccessQuestion($request, $question, 'edit_question')) {
             return $this->forbidden('Unauthorized access to this question.');
         }
 
@@ -129,8 +129,12 @@ class RubricController extends Controller
      */
     public function approve(Request $request, Rubric $rubric): JsonResponse
     {
+        // STEP 34: approval is an OWNER/EDITOR decision; reviewers may only view and comment.
         if (!$request->user()->can('view', $rubric)) {
             return $this->forbidden('Unauthorized access to this rubric.');
+        }
+        if (!app(\App\Services\CourseAccessService::class)->can($request->user(), $rubric->question?->assessment?->course ?? $rubric->assessment?->course, 'approve_rubric')) {
+            return $this->forbidden('You do not have permission to approve rubrics for this course.');
         }
 
         try {
@@ -163,12 +167,11 @@ class RubricController extends Controller
         ]);
     }
 
-    protected function canAccessQuestion(Request $request, Question $question): bool
+    protected function canAccessQuestion(Request $request, Question $question, string $ability = 'view'): bool
     {
-        $user = $request->user();
         $question->loadMissing('assessment.course');
 
-        return $user->isAdmin() || $question->assessment?->course?->user_id === $user->id;
+        return app(\App\Services\CourseAccessService::class)->can($request->user(), $question->assessment?->course, $ability);
     }
 
     protected function present(Rubric $rubric): array
