@@ -18,6 +18,8 @@ from app.services.grading_validator import GradingValidationError
 from app.services.rubric_alignment_analyzer import RubricAlignmentAnalyzer
 from app.services.rubric_alignment_validator import RubricAlignmentValidationError
 from app.services.academic_chat import AcademicChatService
+from app.services.question_generator import QuestionGenerator
+from app.schemas.question_generation import GenerateQuestionsRequest, GenerateQuestionsResponse
 from app.services.generation_service import GenerationService, get_generation_service
 from app.services.text_generation_service import TextGenerationService, get_text_generation_service
 from app.utils.text_utils import split_paragraphs, split_sentences
@@ -590,6 +592,32 @@ def chat_academic(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="The academic document assistant could not generate a response.",
+        )
+
+
+@router.post(
+    "/api/v1/generate-questions",
+    response_model=GenerateQuestionsResponse,
+    dependencies=[Depends(verify_api_key)],
+)
+def generate_questions(
+    payload: GenerateQuestionsRequest,
+    hf_service: HuggingFaceService = Depends(get_hf_service),
+    generation_service: GenerationService = Depends(get_generation_service),
+) -> GenerateQuestionsResponse:
+    """
+    STEP 33: Constrained question drafting. Laravel authorizes the course/CO/PO/documents and supplies
+    context; this endpoint drafts questions under the constraints (generation model or template engine),
+    then validates each draft (type/difficulty/Bloom, CO alignment, similarity). Drafts only — faculty review.
+    """
+    try:
+        result = QuestionGenerator(generation_service=generation_service, hf_service=hf_service).generate(payload)
+        return GenerateQuestionsResponse(**result)
+    except Exception as e:
+        logger.error(f"Error generating questions: {type(e).__name__}", exc_info=False)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="The question generator could not produce drafts.",
         )
 
 

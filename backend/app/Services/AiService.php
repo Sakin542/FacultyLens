@@ -1045,6 +1045,42 @@ class AiService
     }
 
     /**
+     * STEP 33: Draft constrained questions via POST /api/v1/generate-questions. Laravel has already
+     * authorized the course/CO/PO/documents; the AI service drafts + validates and returns structured JSON.
+     *
+     * @throws Exception
+     */
+    public function generateQuestions(array $payload): array
+    {
+        try {
+            $response = $this->client()->timeout(180)->post("{$this->baseUrl}/api/v1/generate-questions", $payload);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                if (!is_array($data) || !isset($data['questions']) || !is_array($data['questions'])
+                    || !isset($data['model']) || !isset($data['prompt_version'])) {
+                    throw new Exception('AI Service returned a malformed question generation response.');
+                }
+
+                return $data;
+            }
+
+            if ($response->status() === 422) {
+                $errorData = $response->json();
+                Log::warning('AI Service generate-questions validation error (422).');
+                throw new Exception(is_string($errorData['message'] ?? null) ? $errorData['message'] : 'Validation failed in AI service.');
+            }
+
+            Log::error('AI Service generate-questions error: ' . $response->status());
+            throw new Exception('AI Service failed to generate questions.');
+        } catch (ConnectionException $e) {
+            $this->handleHttpException($e, 'generating questions');
+        } catch (RequestException $e) {
+            $this->handleHttpException($e, 'generating questions');
+        }
+    }
+
+    /**
      * Translate HTTP / Connection / Request exceptions into descriptive domain exceptions with timeout detection.
      *
      * @param Exception $e
