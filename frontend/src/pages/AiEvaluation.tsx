@@ -147,14 +147,14 @@ export const AiEvaluation: React.FC = () => {
   const changeErrorFilter = (t: string) => { setErrorFilter(t); if (activeRun) void loadErrors(activeRun.id, t, 1, false); };
 
   if (loading) {
-    return <div className="flex items-center justify-center min-h-[40vh]" role="status"><div className="h-8 w-8 rounded-full border-4 border-[#111111] border-t-transparent animate-spin" /><span className="sr-only">Loading AI evaluation…</span></div>;
+    return <div className="flex items-center justify-center min-h-[40vh]" role="status"><div className="h-8 w-8 rounded-full border-4 border-sage-700 border-t-transparent animate-spin" /><span className="sr-only">Loading AI evaluation…</span></div>;
   }
 
   return (
     <div className="space-y-6" data-testid="ai-evaluation-page">
       <EvaluationHeader overview={overview} onRefresh={() => void refreshAll()} refreshing={busy} />
       {error && <EvaluationError message={error} onRetry={() => void refreshAll()} />}
-      {notice && <div role="status" className="rounded-lg border border-[#E5E5E5] dark:border-[#2A2A2A] bg-[#FAFAF8] dark:bg-[#1A1A1A] px-3 py-2 text-sm text-[#525252] dark:text-[#A3A3A3]">{notice}</div>}
+      {notice && <div role="status" className="rounded-lg border border-sage-200 dark:border-[#2A2A2A] bg-[#FAFAF8] dark:bg-[#1A1A1A] px-3 py-2 text-sm text-sage-600 dark:text-sage-400">{notice}</div>}
 
       {overview && (overview.run_count > 0 || overview.dataset_count > 0 ? <EvaluationSummary overview={overview} onOpenRun={(r) => void openRun(r)} /> : <EvaluationEmptyState />)}
 
@@ -170,12 +170,12 @@ export const AiEvaluation: React.FC = () => {
       <div ref={detailRef}>
         {activeRun && (activeRun.status === 'PENDING' || activeRun.status === 'RUNNING') && <EvaluationProgress run={activeRun} onCancel={() => void cancelRun()} />}
         {activeRun && activeRun.status === 'FAILED' && <EvaluationError message={`Evaluation run #${activeRun.id} failed: ${activeRun.failure_reason ?? 'unknown reason'}. Results were not recorded.`} />}
-        {activeRun && activeRun.status === 'CANCELLED' && <Card className="p-4 text-sm text-[#737373]">Evaluation run #{activeRun.id} was cancelled.</Card>}
+        {activeRun && activeRun.status === 'CANCELLED' && <Card className="p-4 text-sm text-sage-500">Evaluation run #{activeRun.id} was cancelled.</Card>}
         {activeRun && activeRun.status === 'COMPLETED' && (
           <section aria-label={`Evaluation run ${activeRun.id} results`} data-testid="run-results" className="space-y-4">
             <Card className="p-4 space-y-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <h2 className="text-base font-semibold text-[#111111] dark:text-white">Evaluation run #{activeRun.id}</h2>
+                <h2 className="text-base font-semibold text-sage-800 dark:text-white">Evaluation run #{activeRun.id}</h2>
                 <div className="flex items-center gap-1" role="group" aria-label="Export report">
                   {(['pdf', 'csv', 'json'] as const).map((f) => <Button key={f} size="sm" variant="outline" disabled={busy} onClick={() => void exportRun(f)}><Download className="w-3.5 h-3.5 mr-1" aria-hidden="true" />{f.toUpperCase()}</Button>)}
                 </div>

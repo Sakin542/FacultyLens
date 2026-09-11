@@ -27,11 +27,11 @@ export const Button: React.FC<ButtonProps> = ({
   const baseStyles = 'inline-flex items-center justify-center font-medium transition-all duration-150 rounded-lg select-none disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none focus-visible:outline-2 focus-visible:outline-offset-2';
 
   const variants: Record<ButtonVariant, string> = {
-    primary: 'bg-[#111111] text-white hover:bg-[#262626] active:bg-black focus-visible:outline-[#111111] shadow-subtle',
-    secondary: 'bg-[#E5E5E5] text-[#111111] hover:bg-[#D4D4D4] active:bg-[#CCCCCC] focus-visible:outline-[#737373]',
-    outline: 'border border-[#E5E5E5] bg-white text-[#111111] hover:bg-[#F7F7F5] hover:border-[#CCCCCC] active:bg-[#EAEAEA] focus-visible:outline-[#111111]',
+    primary: 'bg-sage-700 text-white hover:bg-sage-800 active:bg-black focus-visible:outline-sage-700 shadow-subtle',
+    secondary: 'bg-sage-200 text-sage-800 hover:bg-sage-300 active:bg-sage-300 focus-visible:outline-sage-500',
+    outline: 'border border-sage-200 bg-white text-sage-800 hover:bg-sage-100 hover:border-sage-300 active:bg-sage-100 focus-visible:outline-sage-700',
     danger: 'bg-[#DC2626] text-white hover:bg-[#B91C1C] active:bg-[#991B1B] focus-visible:outline-[#DC2626] shadow-subtle',
-    ghost: 'text-[#111111] hover:bg-[#F7F7F5] active:bg-[#EAEAEA] focus-visible:outline-[#111111]',
+    ghost: 'text-sage-800 hover:bg-sage-100 active:bg-sage-100 focus-visible:outline-sage-700',
   };
 
   const sizes: Record<ButtonSize, string> = {

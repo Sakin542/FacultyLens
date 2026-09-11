@@ -51,7 +51,7 @@ export const FacultyGradeEditor: React.FC<FacultyGradeEditorProps> = ({
   if (mode === 'edit') {
     return (
       <div className="space-y-2" data-testid="faculty-grade-editor">
-        <span className="block text-[10px] uppercase tracking-wider font-semibold text-[#737373]">Faculty Final Marks</span>
+        <span className="block text-[10px] uppercase tracking-wider font-semibold text-sage-500">Faculty Final Marks</span>
         <FinalGradeForm
           answerId={answer.id}
           maxMarks={maxMarks}

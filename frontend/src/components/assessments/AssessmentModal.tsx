@@ -126,20 +126,20 @@ export const AssessmentModal: React.FC<AssessmentModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-      <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-[#E5E5E5] dark:border-[#2C2C2E] shadow-xl max-w-lg w-full p-6 space-y-5 animate-in fade-in zoom-in duration-150">
-        <div className="flex items-center justify-between pb-3 border-b border-[#E5E5E5] dark:border-[#2C2C2E]">
+      <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-sage-200 dark:border-[#2C2C2E] shadow-xl max-w-lg w-full p-6 space-y-5 animate-in fade-in zoom-in duration-150">
+        <div className="flex items-center justify-between pb-3 border-b border-sage-200 dark:border-[#2C2C2E]">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#F7F7F5] dark:bg-[#2C2C2E] border border-[#E5E5E5] dark:border-[#3A3A3C] flex items-center justify-center text-[#111111] dark:text-white">
+            <div className="w-8 h-8 rounded-lg bg-sage-100 dark:bg-[#2C2C2E] border border-sage-200 dark:border-[#3A3A3C] flex items-center justify-center text-sage-800 dark:text-white">
               <FileCheck2 className="w-4 h-4" />
             </div>
-            <h3 className="text-lg font-bold text-[#111111] dark:text-white">
+            <h3 className="text-lg font-bold text-sage-800 dark:text-white">
               {assessment ? 'Edit Assessment' : 'Create New Assessment'}
             </h3>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-1 rounded-lg text-[#737373] hover:text-[#111111] dark:hover:text-white hover:bg-[#F7F7F5] dark:hover:bg-[#2C2C2E] transition-colors"
+            className="p-1 rounded-lg text-sage-500 hover:text-sage-800 dark:hover:text-white hover:bg-sage-100 dark:hover:bg-[#2C2C2E] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -156,14 +156,14 @@ export const AssessmentModal: React.FC<AssessmentModalProps> = ({
           {/* Course Selection if not locked / editing */}
           {!preselectedCourseId && !assessment && courses.length > 0 && (
             <div>
-              <label className="block text-xs font-medium uppercase tracking-wider text-[#262626] dark:text-[#E5E5E5] mb-1.5">
+              <label className="block text-xs font-medium uppercase tracking-wider text-sage-700 dark:text-sage-200 mb-1.5">
                 Target Course <span className="text-[#DC2626]">*</span>
               </label>
               <select
                 value={selectedCourseId}
                 onChange={(e) => setSelectedCourseId(e.target.value)}
                 disabled={isSubmitting}
-                className="w-full rounded-lg border border-[#E5E5E5] dark:border-[#2C2C2E] bg-white dark:bg-[#2C2C2E] px-3.5 py-2 text-sm text-[#111111] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#111111] dark:focus:ring-white"
+                className="w-full rounded-lg border border-sage-200 dark:border-[#2C2C2E] bg-white dark:bg-[#2C2C2E] px-3.5 py-2 text-sm text-sage-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sage-600 dark:focus:ring-white"
               >
                 {courses.map((c) => (
                   <option key={c.id} value={c.id}>
@@ -185,14 +185,14 @@ export const AssessmentModal: React.FC<AssessmentModalProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium uppercase tracking-wider text-[#262626] dark:text-[#E5E5E5] mb-1.5">
+              <label className="block text-xs font-medium uppercase tracking-wider text-sage-700 dark:text-sage-200 mb-1.5">
                 Assessment Type <span className="text-[#DC2626]">*</span>
               </label>
               <select
                 value={formData.type}
                 onChange={(e) => setFormData({ ...formData, type: e.target.value as AssessmentType })}
                 disabled={isSubmitting}
-                className="w-full rounded-lg border border-[#E5E5E5] dark:border-[#2C2C2E] bg-white dark:bg-[#2C2C2E] px-3.5 py-2 text-sm text-[#111111] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#111111] dark:focus:ring-white"
+                className="w-full rounded-lg border border-sage-200 dark:border-[#2C2C2E] bg-white dark:bg-[#2C2C2E] px-3.5 py-2 text-sm text-sage-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sage-600 dark:focus:ring-white"
               >
                 {ASSESSMENT_TYPES.map((t) => (
                   <option key={t.value} value={t.value}>
@@ -203,14 +203,14 @@ export const AssessmentModal: React.FC<AssessmentModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-medium uppercase tracking-wider text-[#262626] dark:text-[#E5E5E5] mb-1.5">
+              <label className="block text-xs font-medium uppercase tracking-wider text-sage-700 dark:text-sage-200 mb-1.5">
                 Status <span className="text-[#DC2626]">*</span>
               </label>
               <select
                 value={formData.status}
                 onChange={(e) => setFormData({ ...formData, status: e.target.value as AssessmentStatus })}
                 disabled={isSubmitting}
-                className="w-full rounded-lg border border-[#E5E5E5] dark:border-[#2C2C2E] bg-white dark:bg-[#2C2C2E] px-3.5 py-2 text-sm text-[#111111] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#111111] dark:focus:ring-white"
+                className="w-full rounded-lg border border-sage-200 dark:border-[#2C2C2E] bg-white dark:bg-[#2C2C2E] px-3.5 py-2 text-sm text-sage-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sage-600 dark:focus:ring-white"
               >
                 {ASSESSMENT_STATUSES.map((s) => (
                   <option key={s.value} value={s.value}>
@@ -250,7 +250,7 @@ export const AssessmentModal: React.FC<AssessmentModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-medium uppercase tracking-wider text-[#262626] dark:text-[#E5E5E5] mb-1.5">
+            <label className="block text-xs font-medium uppercase tracking-wider text-sage-700 dark:text-sage-200 mb-1.5">
               Description / Instructions
             </label>
             <textarea
@@ -259,11 +259,11 @@ export const AssessmentModal: React.FC<AssessmentModalProps> = ({
               value={formData.description || ''}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               disabled={isSubmitting}
-              className="w-full rounded-lg border border-[#E5E5E5] dark:border-[#2C2C2E] bg-white dark:bg-[#2C2C2E] px-3.5 py-2 text-sm text-[#111111] dark:text-white placeholder:text-[#A3A3A3] focus:outline-none focus:ring-2 focus:ring-[#111111] dark:focus:ring-white resize-none"
+              className="w-full rounded-lg border border-sage-200 dark:border-[#2C2C2E] bg-white dark:bg-[#2C2C2E] px-3.5 py-2 text-sm text-sage-800 dark:text-white placeholder:text-sage-400 focus:outline-none focus:ring-2 focus:ring-sage-600 dark:focus:ring-white resize-none"
             />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#E5E5E5] dark:border-[#2C2C2E]">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-sage-200 dark:border-[#2C2C2E]">
             <Button
               variant="outline"
               size="sm"

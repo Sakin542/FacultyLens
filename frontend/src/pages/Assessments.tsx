@@ -165,13 +165,13 @@ export const Assessments: React.FC = () => {
       </div>
 
       {/* Filter Toolbar */}
-      <div className="flex flex-wrap items-center gap-3 p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C] text-xs">
+      <div className="flex flex-wrap items-center gap-3 p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl border border-sage-200 dark:border-[#3A3A3C] text-xs">
         <div className="flex items-center gap-1.5">
-          <span className="font-semibold text-[#737373]">Course:</span>
+          <span className="font-semibold text-sage-500">Course:</span>
           <select
             value={selectedCourseId}
             onChange={(e) => setSelectedCourseId(e.target.value)}
-            className="rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-[#111111] dark:text-white"
+            className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white"
           >
             <option value="all">All Courses ({courses.length})</option>
             {courses.map((c) => (
@@ -183,11 +183,11 @@ export const Assessments: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-1.5">
-          <span className="font-semibold text-[#737373]">Type:</span>
+          <span className="font-semibold text-sage-500">Type:</span>
           <select
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
-            className="rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-[#111111] dark:text-white capitalize"
+            className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white capitalize"
           >
             <option value="all">All Types</option>
             <option value="quiz">Quiz</option>
@@ -200,11 +200,11 @@ export const Assessments: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-1.5">
-          <span className="font-semibold text-[#737373]">Status:</span>
+          <span className="font-semibold text-sage-500">Status:</span>
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-[#111111] dark:text-white capitalize"
+            className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white capitalize"
           >
             <option value="all">All Statuses</option>
             <option value="draft">Draft</option>
@@ -217,21 +217,21 @@ export const Assessments: React.FC = () => {
       {/* Content State */}
       {isLoading ? (
         <div className="flex flex-col items-center justify-center min-h-[300px] space-y-4">
-          <Loader2 className="w-8 h-8 animate-spin text-[#111111] dark:text-white" />
-          <p className="text-sm text-[#737373]">Loading assessments...</p>
+          <Loader2 className="w-8 h-8 animate-spin text-sage-800 dark:text-white" />
+          <p className="text-sm text-sage-500">Loading assessments...</p>
         </div>
       ) : filteredAssessments.length === 0 ? (
         <Card variant="default" className="p-12 text-center space-y-4">
-          <div className="w-12 h-12 rounded-xl bg-[#F7F7F5] dark:bg-[#2C2C2E] flex items-center justify-center text-[#111111] dark:text-white mx-auto">
+          <div className="w-12 h-12 rounded-xl bg-sage-100 dark:bg-[#2C2C2E] flex items-center justify-center text-sage-800 dark:text-white mx-auto">
             <FileCheck2 className="w-6 h-6" />
           </div>
           <div className="space-y-1">
-            <h3 className="text-base font-bold text-[#111111] dark:text-white">
+            <h3 className="text-base font-bold text-sage-800 dark:text-white">
               {searchQuery || selectedCourseId !== 'all' || selectedType !== 'all'
                 ? 'No matching assessments found'
                 : 'No assessments created yet'}
             </h3>
-            <p className="text-xs text-[#737373] max-w-sm mx-auto">
+            <p className="text-xs text-sage-500 max-w-sm mx-auto">
               {searchQuery || selectedCourseId !== 'all' || selectedType !== 'all'
                 ? 'Try adjusting your search or filters.'
                 : courses.length === 0
@@ -263,13 +263,13 @@ export const Assessments: React.FC = () => {
               <Card
                 key={asm.id}
                 variant="default"
-                className="flex flex-col justify-between hover:border-[#111111] dark:hover:border-white hover:shadow-card transition-all duration-200"
+                className="flex flex-col justify-between hover:border-sage-700 dark:hover:border-white hover:shadow-card transition-all duration-200"
               >
                 <div className="space-y-4">
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="font-mono text-xs bg-[#F7F7F5] dark:bg-[#2C2C2E]">
+                        <Badge variant="outline" className="font-mono text-xs bg-sage-100 dark:bg-[#2C2C2E]">
                           {courseCode}
                         </Badge>
                         <Badge
@@ -279,29 +279,29 @@ export const Assessments: React.FC = () => {
                           {asm.status}
                         </Badge>
                       </div>
-                      <h3 className="text-base font-bold text-[#111111] dark:text-white mt-2.5 leading-snug">
+                      <h3 className="text-base font-bold text-sage-800 dark:text-white mt-2.5 leading-snug">
                         {asm.title}
                       </h3>
-                      <p className="text-xs text-[#737373] line-clamp-1">{courseTitle}</p>
+                      <p className="text-xs text-sage-500 line-clamp-1">{courseTitle}</p>
                     </div>
 
-                    <div className="w-9 h-9 rounded-lg bg-[#F7F7F5] dark:bg-[#2C2C2E] border border-[#E5E5E5] dark:border-[#3A3A3C] flex items-center justify-center text-[#111111] dark:text-white shrink-0">
+                    <div className="w-9 h-9 rounded-lg bg-sage-100 dark:bg-[#2C2C2E] border border-sage-200 dark:border-[#3A3A3C] flex items-center justify-center text-sage-800 dark:text-white shrink-0">
                       <FileCheck2 className="w-4 h-4" />
                     </div>
                   </div>
 
                   {/* Details Pill Box */}
-                  <div className="p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C] space-y-2 text-xs">
-                    <div className="flex items-center justify-between text-[#737373]">
-                      <span className="capitalize font-semibold text-[#111111] dark:text-white">
+                  <div className="p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl border border-sage-200 dark:border-[#3A3A3C] space-y-2 text-xs">
+                    <div className="flex items-center justify-between text-sage-500">
+                      <span className="capitalize font-semibold text-sage-800 dark:text-white">
                         {asm.type} Exam
                       </span>
-                      <span className="font-mono font-bold text-[#111111] dark:text-white">
+                      <span className="font-mono font-bold text-sage-800 dark:text-white">
                         {asm.total_marks || asm.totalMarks} Marks
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between text-[11px] text-[#737373] pt-1 border-t border-[#E5E5E5] dark:border-[#3A3A3C]">
+                    <div className="flex items-center justify-between text-[11px] text-sage-500 pt-1 border-t border-sage-200 dark:border-[#3A3A3C]">
                       <span className="flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
                         {asm.assessment_date ? asm.assessment_date.split('T')[0] : 'Date TBD'}
@@ -326,7 +326,7 @@ export const Assessments: React.FC = () => {
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-2 pt-4 mt-2 border-t border-[#E5E5E5] dark:border-[#2C2C2E]">
+                <div className="flex items-center gap-2 pt-4 mt-2 border-t border-sage-200 dark:border-[#2C2C2E]">
                   <Button
                     variant="outline"
                     size="sm"
@@ -339,7 +339,7 @@ export const Assessments: React.FC = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="justify-center bg-[#111111] text-white hover:bg-black dark:bg-white dark:text-[#111111] dark:hover:bg-neutral-200"
+                    className="justify-center bg-sage-700 text-white hover:bg-black dark:bg-white dark:text-sage-800 dark:hover:bg-neutral-200"
                     leftIcon={<BrainCircuit className="w-3.5 h-3.5 text-amber-400" />}
                     onClick={() => navigate(`/assessments/${asm.id}/analysis`)}
                     title="AI Analysis Dashboard"

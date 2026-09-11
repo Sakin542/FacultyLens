@@ -13,7 +13,7 @@ interface CreateSubmissionModalProps {
 }
 
 const selectClass =
-  'w-full rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] px-3 py-2 text-xs text-[#111111] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#111111] dark:focus:ring-white';
+  'w-full rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] px-3 py-2 text-xs text-sage-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sage-600 dark:focus:ring-white';
 
 /**
  * Create a student submission. Students can be picked from the faculty's registered list
@@ -103,33 +103,33 @@ export const CreateSubmissionModal: React.FC<CreateSubmissionModalProps> = ({ is
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-      <div className="w-full max-w-lg bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl border border-[#E5E5E5] dark:border-[#2C2C2E] overflow-hidden" role="dialog" aria-modal="true" aria-labelledby="create-submission-title">
-        <div className="flex items-center justify-between p-4 border-b border-[#E5E5E5] dark:border-[#2C2C2E]">
-          <h3 id="create-submission-title" className="text-sm font-bold text-[#111111] dark:text-white flex items-center gap-2">
+      <div className="w-full max-w-lg bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl border border-sage-200 dark:border-[#2C2C2E] overflow-hidden" role="dialog" aria-modal="true" aria-labelledby="create-submission-title">
+        <div className="flex items-center justify-between p-4 border-b border-sage-200 dark:border-[#2C2C2E]">
+          <h3 id="create-submission-title" className="text-sm font-bold text-sage-800 dark:text-white flex items-center gap-2">
             <UserPlus className="w-4 h-4" /> Add Student Submission
           </h3>
-          <button type="button" onClick={onClose} disabled={busy} aria-label="Close" className="p-1 rounded-lg text-[#737373] hover:text-[#111111] dark:hover:text-white">
+          <button type="button" onClick={onClose} disabled={busy} aria-label="Close" className="p-1 rounded-lg text-sage-500 hover:text-sage-800 dark:hover:text-white">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-5 space-y-4 text-xs" noValidate>
           <div className="flex items-center gap-2">
-            <button type="button" onClick={() => setMode('existing')} className={`px-3 py-1.5 rounded-lg border text-xs ${mode === 'existing' ? 'border-[#111111] dark:border-white bg-[#F7F7F5] dark:bg-[#2C2C2E]' : 'border-[#E5E5E5] dark:border-[#3A3A3C]'}`} disabled={busy}>
+            <button type="button" onClick={() => setMode('existing')} className={`px-3 py-1.5 rounded-lg border text-xs ${mode === 'existing' ? 'border-sage-700 dark:border-white bg-sage-100 dark:bg-[#2C2C2E]' : 'border-sage-200 dark:border-[#3A3A3C]'}`} disabled={busy}>
               Registered student
             </button>
-            <button type="button" onClick={() => setMode('new')} className={`px-3 py-1.5 rounded-lg border text-xs ${mode === 'new' ? 'border-[#111111] dark:border-white bg-[#F7F7F5] dark:bg-[#2C2C2E]' : 'border-[#E5E5E5] dark:border-[#3A3A3C]'}`} disabled={busy}>
+            <button type="button" onClick={() => setMode('new')} className={`px-3 py-1.5 rounded-lg border text-xs ${mode === 'new' ? 'border-sage-700 dark:border-white bg-sage-100 dark:bg-[#2C2C2E]' : 'border-sage-200 dark:border-[#3A3A3C]'}`} disabled={busy}>
               New student
             </button>
           </div>
 
           {mode === 'existing' ? (
             <div className="space-y-1.5">
-              <label htmlFor="student-select" className="block text-[10px] font-medium uppercase tracking-wider text-[#262626] dark:text-[#E5E5E5]">Student</label>
+              <label htmlFor="student-select" className="block text-[10px] font-medium uppercase tracking-wider text-sage-700 dark:text-sage-200">Student</label>
               {loadingStudents ? (
-                <div className="flex items-center gap-2 text-[#737373]"><Loader2 className="w-3.5 h-3.5 animate-spin" /> Loading students…</div>
+                <div className="flex items-center gap-2 text-sage-500"><Loader2 className="w-3.5 h-3.5 animate-spin" /> Loading students…</div>
               ) : students.length === 0 ? (
-                <p className="text-[#737373]">No students registered yet. Switch to “New student”.</p>
+                <p className="text-sage-500">No students registered yet. Switch to “New student”.</p>
               ) : (
                 <select id="student-select" value={studentId} onChange={(e) => setStudentId(e.target.value)} className={selectClass} disabled={busy} required>
                   {students.map((s) => (
@@ -152,7 +152,7 @@ export const CreateSubmissionModal: React.FC<CreateSubmissionModalProps> = ({ is
           </div>
 
           <div className="space-y-1.5">
-            <label htmlFor="submission-status" className="block text-[10px] font-medium uppercase tracking-wider text-[#262626] dark:text-[#E5E5E5]">Initial status</label>
+            <label htmlFor="submission-status" className="block text-[10px] font-medium uppercase tracking-wider text-sage-700 dark:text-sage-200">Initial status</label>
             <select id="submission-status" value={status} onChange={(e) => setStatus(e.target.value as 'DRAFT' | 'SUBMITTED')} className={selectClass} disabled={busy}>
               <option value="SUBMITTED">Submitted</option>
               <option value="DRAFT">Draft</option>
@@ -165,9 +165,9 @@ export const CreateSubmissionModal: React.FC<CreateSubmissionModalProps> = ({ is
             </div>
           )}
 
-          <p className="text-[11px] text-[#737373] italic">Student records are private academic data visible only to you.</p>
+          <p className="text-[11px] text-sage-500 italic">Student records are private academic data visible only to you.</p>
 
-          <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#E5E5E5] dark:border-[#2C2C2E]">
+          <div className="flex items-center justify-end gap-2 pt-2 border-t border-sage-200 dark:border-[#2C2C2E]">
             <Button type="button" variant="ghost" size="sm" onClick={onClose} disabled={busy}>Cancel</Button>
             <Button type="submit" variant="primary" size="sm" isLoading={busy} disabled={busy || (mode === 'existing' && !studentId)}>
               Create Submission

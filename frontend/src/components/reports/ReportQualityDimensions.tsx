@@ -25,13 +25,13 @@ export const ReportQualityDimensions: React.FC<ReportQualityDimensionsProps> = (
   };
 
   return (
-    <div className="bg-white border border-[#E5E5E5] rounded-xl p-6 mb-6 shadow-subtle">
+    <div className="bg-white border border-sage-200 rounded-xl p-6 mb-6 shadow-subtle">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-sm font-bold uppercase tracking-wider text-[#111111]">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-sage-800">
             Quality Dimensions Breakdown
           </h3>
-          <p className="text-xs text-[#737373] mt-0.5">
+          <p className="text-xs text-sage-500 mt-0.5">
             Six weighted academic dimensions calibrated against university curriculum benchmarks.
           </p>
         </div>
@@ -41,34 +41,34 @@ export const ReportQualityDimensions: React.FC<ReportQualityDimensionsProps> = (
         {dimensions.map((dim, idx) => (
           <div
             key={idx}
-            className="p-4 rounded-lg bg-[#FAFAFA] border border-[#EBEBEB] flex flex-col justify-between"
+            className="p-4 rounded-lg bg-sage-50 border border-[#EBEBEB] flex flex-col justify-between"
           >
             <div>
               <div className="flex items-center justify-between gap-2 mb-2">
-                <span className="text-xs font-bold text-[#111111]">
+                <span className="text-xs font-bold text-sage-800">
                   {dim.name}
                 </span>
-                <span className="text-[10px] font-mono text-[#737373] bg-[#EEEEEE] px-1.5 py-0.5 rounded">
+                <span className="text-[10px] font-mono text-sage-500 bg-[#EEEEEE] px-1.5 py-0.5 rounded">
                   {dim.weight}
                 </span>
               </div>
 
               <div className="flex items-baseline justify-between mb-2">
-                <span className="text-2xl font-extrabold text-[#111111]">
+                <span className="text-2xl font-extrabold text-sage-800">
                   {Math.round(dim.score * 10) / 10}%
                 </span>
                 {getRatingBadge(dim.rating)}
               </div>
 
               {/* Progress bar */}
-              <div className="w-full bg-[#E5E5E5] h-1.5 rounded-full overflow-hidden mb-2.5">
+              <div className="w-full bg-sage-200 h-1.5 rounded-full overflow-hidden mb-2.5">
                 <div
-                  className="bg-[#111111] h-1.5 rounded-full transition-all duration-300"
+                  className="bg-sage-700 h-1.5 rounded-full transition-all duration-300"
                   style={{ width: `${Math.min(100, Math.max(0, dim.score))}%` }}
                 />
               </div>
 
-              <p className="text-[11px] text-[#525252] leading-relaxed">
+              <p className="text-[11px] text-sage-600 leading-relaxed">
                 {dim.description}
               </p>
             </div>

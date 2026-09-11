@@ -10,11 +10,14 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+// New key: the legacy 'facultylens_theme' value was auto-populated from the OS and must not force dark mode.
+const STORAGE_KEY = 'facultylens_theme_v2';
+
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setThemeState] = useState<Theme>(() => {
-    const saved = localStorage.getItem('facultylens_theme');
-    if (saved === 'dark' || saved === 'light') return saved;
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    // The product palette is cream/sage; dark mode is opt-in only, never inherited from the OS.
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved === 'dark' ? 'dark' : 'light';
   });
 
   useEffect(() => {
@@ -24,7 +27,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     } else {
       root.classList.remove('dark');
     }
-    localStorage.setItem('facultylens_theme', theme);
+    localStorage.setItem(STORAGE_KEY, theme);
+    localStorage.removeItem('facultylens_theme');
   }, [theme]);
 
   const toggleTheme = () => {

@@ -27,7 +27,7 @@ export const GradingDisclaimer: React.FC<GradingDisclaimerProps> = ({ variant = 
     );
   }
   return (
-    <p className={`text-[11px] text-[#737373] italic flex items-center gap-1.5 ${className}`} data-testid="grading-disclaimer">
+    <p className={`text-[11px] text-sage-500 italic flex items-center gap-1.5 ${className}`} data-testid="grading-disclaimer">
       <ShieldAlert className="w-3 h-3 shrink-0" /> {GRADING_DISCLAIMER}
     </p>
   );

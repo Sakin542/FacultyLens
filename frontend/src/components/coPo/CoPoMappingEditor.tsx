@@ -16,7 +16,7 @@ export const CoPoMappingEditor: React.FC<CoPoMappingEditorProps> = ({ matrix, ca
   return (
     <div className="space-y-2" data-testid="co-po-editor">
       <div className="flex items-center justify-between">
-        <h4 className="text-[10px] uppercase tracking-wider font-semibold text-[#737373]">CO → PO Mapping Matrix</h4>
+        <h4 className="text-[10px] uppercase tracking-wider font-semibold text-sage-500">CO → PO Mapping Matrix</h4>
         {canEdit && (
           editing ? (
             <Button variant="outline" size="sm" leftIcon={<Save className="w-3.5 h-3.5" />} onClick={() => setEditing(false)} data-testid="done-editing">Done</Button>
@@ -26,7 +26,7 @@ export const CoPoMappingEditor: React.FC<CoPoMappingEditorProps> = ({ matrix, ca
         )}
       </div>
       <CoPoMappingMatrix matrix={matrix} editable={editing} onChangeLevel={onChangeLevel} />
-      {editing && <p className="text-[11px] text-[#737373] flex items-center gap-1"><X className="w-3 h-3" /> Each change is saved immediately and recorded in the audit log. Analyses become stale until regenerated.</p>}
+      {editing && <p className="text-[11px] text-sage-500 flex items-center gap-1"><X className="w-3 h-3" /> Each change is saved immediately and recorded in the audit log. Analyses become stale until regenerated.</p>}
     </div>
   );
 };

@@ -70,7 +70,7 @@ export const Logo: React.FC<LogoProps> = ({
           sizeMap[size].iconBox,
           isLight
             ? 'bg-[#181818] border border-[#2E2E2E] group-hover:border-[#FFFFFF]/60 group-hover:shadow-[0_0_20px_rgba(255,255,255,0.15)]'
-            : 'bg-[#111111] border border-[#262626] group-hover:border-[#111111] group-hover:shadow-[0_0_20px_rgba(0,0,0,0.2)]'
+            : 'bg-sage-700 border border-sage-600 group-hover:border-sage-700 group-hover:shadow-[0_0_20px_rgba(0,0,0,0.2)]'
         )}
       >
         <svg
@@ -88,7 +88,7 @@ export const Logo: React.FC<LogoProps> = ({
             r="16"
             className={cn(
               'opacity-20 transition-opacity duration-300 group-hover:opacity-40',
-              isLight ? 'fill-white' : 'fill-[#737373]'
+              isLight ? 'fill-white' : 'fill-sage-500'
             )}
           />
 
@@ -99,7 +99,7 @@ export const Logo: React.FC<LogoProps> = ({
             strokeWidth="1.5"
             strokeLinejoin="round"
             className={cn(
-              isLight ? 'text-[#888888]' : 'text-[#A3A3A3]',
+              isLight ? 'text-[#888888]' : 'text-sage-400',
               'origin-center transition-all duration-700',
               animated && 'group-hover:rotate-45'
             )}
@@ -112,7 +112,7 @@ export const Logo: React.FC<LogoProps> = ({
             strokeWidth="1.2"
             strokeLinecap="round"
             className={cn(
-              isLight ? 'text-[#555555]' : 'text-[#525252]',
+              isLight ? 'text-[#555555]' : 'text-sage-600',
               'transition-all duration-300 group-hover:stroke-[1.6]'
             )}
           />
@@ -147,7 +147,7 @@ export const Logo: React.FC<LogoProps> = ({
             cx="24"
             cy="24"
             r="2"
-            fill="#111111"
+            fill="#2F3E2E"
           />
 
           {/* Laser Scanning Sweep Bar */}
@@ -184,7 +184,7 @@ export const Logo: React.FC<LogoProps> = ({
                   : 'animate-font-shimmer-dark'
                 : isLight
                 ? 'text-white'
-                : 'text-[#111111]'
+                : 'text-sage-800'
             )}
           >
             Faculty
@@ -197,7 +197,7 @@ export const Logo: React.FC<LogoProps> = ({
               'font-light italic ml-1 tracking-tight font-sans transition-all duration-300',
               isLight
                 ? 'text-white/90 group-hover:text-white'
-                : 'text-[#404040] group-hover:text-[#111111]'
+                : 'text-[#404040] group-hover:text-sage-800'
             )}
           >
             Lens
@@ -216,7 +216,7 @@ export const Logo: React.FC<LogoProps> = ({
               className={cn(
                 sizeMap[size].sub,
                 'font-mono uppercase font-bold transition-colors',
-                isLight ? 'text-[#888888]' : 'text-[#737373]'
+                isLight ? 'text-[#888888]' : 'text-sage-500'
               )}
             >
               Academic Intelligence Suite

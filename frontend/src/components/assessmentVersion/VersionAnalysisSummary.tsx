@@ -11,11 +11,11 @@ export const VersionAnalysisSummary: React.FC<{ analysis: VersionAnalysis | null
   return (
     <Card data-testid="version-analysis-summary" className="p-4 space-y-2">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 className="text-sm font-semibold text-[#111111] dark:text-white">Analysis for this version</h3>
+        <h3 className="text-sm font-semibold text-sage-800 dark:text-white">Analysis for this version</h3>
         <Badge variant={statusVariant(analysis?.status ?? 'NONE')} dot>{analysis?.status === 'NONE' || !analysis ? 'No analysis' : analysis.status === 'STALE' ? 'Stale' : 'Current'}</Badge>
       </div>
       {!latest ? (
-        <p className="text-sm text-[#737373]">No completed analysis is recorded for this version. <Link to={`/assessments/${assessmentId}/analysis`} className="underline underline-offset-2">Run an analysis</Link> to attach STEP 13 metrics to the current state.</p>
+        <p className="text-sm text-sage-500">No completed analysis is recorded for this version. <Link to={`/assessments/${assessmentId}/analysis`} className="underline underline-offset-2">Run an analysis</Link> to attach STEP 13 metrics to the current state.</p>
       ) : (
         <>
           {analysis?.status === 'STALE' && <p className="text-xs text-[#92400E]">The version content changed after this analysis ran (analysis v{latest.analysis_version}). Re-run the analysis to refresh; historical results are kept.</p>}
@@ -24,10 +24,10 @@ export const VersionAnalysisSummary: React.FC<{ analysis: VersionAnalysis | null
               ['Quality', latest.overall_score], ['Topic coverage', latest.topic_coverage_score], ['LO alignment', latest.learning_outcome_alignment_score], ['Difficulty balance', latest.difficulty_balance_score],
               ['Cognitive diversity', latest.cognitive_level_balance_score], ['Similarity', latest.similarity_score], ['Recommendations', latest.recommendations_count],
             ] as const).map(([l, v]) => (
-              <div key={l} className="rounded-md border border-[#E5E5E5] dark:border-[#2A2A2A] px-2 py-1.5"><dt className="text-[#737373]">{l}</dt><dd className="font-semibold text-[#111111] dark:text-white tabular-nums">{fmtMarks(v)}</dd></div>
+              <div key={l} className="rounded-md border border-sage-200 dark:border-[#2A2A2A] px-2 py-1.5"><dt className="text-sage-500">{l}</dt><dd className="font-semibold text-sage-800 dark:text-white tabular-nums">{fmtMarks(v)}</dd></div>
             ))}
           </dl>
-          <p className="text-[11px] text-[#737373]">Analysis v{latest.analysis_version} · {fmtDate(latest.analyzed_at)} · {analysis?.reports.length} run{analysis?.reports.length === 1 ? '' : 's'} recorded for this version</p>
+          <p className="text-[11px] text-sage-500">Analysis v{latest.analysis_version} · {fmtDate(latest.analyzed_at)} · {analysis?.reports.length} run{analysis?.reports.length === 1 ? '' : 's'} recorded for this version</p>
         </>
       )}
     </Card>

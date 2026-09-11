@@ -100,7 +100,7 @@ export const AcademicAnalytics: React.FC = () => {
       <AnalyticsHeader meta={overview?.meta ?? null} onRefresh={() => void load(true)} onExport={(f) => void exportAnalytics(f)} busy={busy} />
       <AnalyticsFilters options={options} value={filters} onApply={apply} onReset={() => apply({})} disabled={loading} />
       {error && <AnalyticsError message={error} onRetry={() => void load(true)} />}
-      {notice && <div role="status" className="rounded-lg border border-[#E5E5E5] dark:border-[#2A2A2A] bg-[#FAFAF8] dark:bg-[#1A1A1A] px-3 py-2 text-sm text-[#525252] dark:text-[#A3A3A3]">{notice}</div>}
+      {notice && <div role="status" className="rounded-lg border border-sage-200 dark:border-[#2A2A2A] bg-[#FAFAF8] dark:bg-[#1A1A1A] px-3 py-2 text-sm text-sage-600 dark:text-sage-400">{notice}</div>}
       {loading && <AnalyticsLoading />}
       {!loading && overview && (
         <>

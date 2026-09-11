@@ -56,12 +56,12 @@ export const SemanticSimilaritySection: React.FC<SemanticSimilaritySectionProps>
   if (!similarityData) {
     return (
       <Card className="p-6 text-center space-y-3">
-        <div className="w-12 h-12 rounded-2xl bg-[#F7F7F5] border border-[#E5E5E5] flex items-center justify-center mx-auto text-[#737373]">
+        <div className="w-12 h-12 rounded-2xl bg-sage-100 border border-sage-200 flex items-center justify-center mx-auto text-sage-500">
           <CopyCheck className="w-6 h-6" />
         </div>
         <div>
-          <h3 className="text-sm font-bold text-[#111111]">No Similarity Analysis Available</h3>
-          <p className="text-xs text-[#737373] mt-1 max-w-md mx-auto">
+          <h3 className="text-sm font-bold text-sage-800">No Similarity Analysis Available</h3>
+          <p className="text-xs text-sage-500 mt-1 max-w-md mx-auto">
             Cross-reference examination questions against historical archives using dense sentence embeddings to detect duplicate or repeated items.
           </p>
         </div>
@@ -88,8 +88,8 @@ export const SemanticSimilaritySection: React.FC<SemanticSimilaritySectionProps>
         <Card className="p-5 flex flex-col justify-between">
           <div className="flex items-start justify-between">
             <div>
-              <span className="text-xs uppercase font-semibold text-[#737373] tracking-wider">Total Questions</span>
-              <div className="text-3xl font-extrabold text-[#111111] mt-1 font-mono">
+              <span className="text-xs uppercase font-semibold text-sage-500 tracking-wider">Total Questions</span>
+              <div className="text-3xl font-extrabold text-sage-800 mt-1 font-mono">
                 {similarityData.total_current_questions}
               </div>
             </div>
@@ -103,10 +103,10 @@ export const SemanticSimilaritySection: React.FC<SemanticSimilaritySectionProps>
         <Card className={`p-5 flex flex-col justify-between ${similarityData.potential_duplicates_count > 0 ? 'border-[#FECACA] bg-[#FEF2F2]/40' : ''}`}>
           <div className="flex items-start justify-between">
             <div>
-              <span className={`text-xs uppercase font-semibold tracking-wider ${similarityData.potential_duplicates_count > 0 ? 'text-[#991B1B]' : 'text-[#737373]'}`}>
+              <span className={`text-xs uppercase font-semibold tracking-wider ${similarityData.potential_duplicates_count > 0 ? 'text-[#991B1B]' : 'text-sage-500'}`}>
                 Potential Duplicates
               </span>
-              <div className={`text-3xl font-extrabold mt-1 font-mono ${similarityData.potential_duplicates_count > 0 ? 'text-[#DC2626]' : 'text-[#111111]'}`}>
+              <div className={`text-3xl font-extrabold mt-1 font-mono ${similarityData.potential_duplicates_count > 0 ? 'text-[#DC2626]' : 'text-sage-800'}`}>
                 {similarityData.potential_duplicates_count}
               </div>
             </div>
@@ -128,8 +128,8 @@ export const SemanticSimilaritySection: React.FC<SemanticSimilaritySectionProps>
         <Card className="p-5 flex flex-col justify-between">
           <div className="flex items-start justify-between">
             <div>
-              <span className="text-xs uppercase font-semibold text-[#737373] tracking-wider">Highly Similar</span>
-              <div className="text-3xl font-extrabold text-[#111111] mt-1 font-mono">
+              <span className="text-xs uppercase font-semibold text-sage-500 tracking-wider">Highly Similar</span>
+              <div className="text-3xl font-extrabold text-sage-800 mt-1 font-mono">
                 {similarityData.highly_similar_count}
               </div>
             </div>
@@ -149,8 +149,8 @@ export const SemanticSimilaritySection: React.FC<SemanticSimilaritySectionProps>
         <Card className="p-5 flex flex-col justify-between">
           <div className="flex items-start justify-between">
             <div>
-              <span className="text-xs uppercase font-semibold text-[#737373] tracking-wider">Avg Similarity</span>
-              <div className="text-3xl font-extrabold text-[#111111] mt-1 font-mono">
+              <span className="text-xs uppercase font-semibold text-sage-500 tracking-wider">Avg Similarity</span>
+              <div className="text-3xl font-extrabold text-sage-800 mt-1 font-mono">
                 {similarityData.average_similarity_score}%
               </div>
             </div>
@@ -164,15 +164,15 @@ export const SemanticSimilaritySection: React.FC<SemanticSimilaritySectionProps>
 
       {/* Findings */}
       {similarityData.findings && similarityData.findings.length > 0 && (
-        <Card className="p-4 bg-[#F7F7F5] border border-[#E5E5E5] space-y-2">
-          <div className="flex items-center gap-2 text-xs font-bold text-[#111111] uppercase tracking-wider">
+        <Card className="p-4 bg-sage-100 border border-sage-200 space-y-2">
+          <div className="flex items-center gap-2 text-xs font-bold text-sage-800 uppercase tracking-wider">
             <Info className="w-4 h-4" />
             <span>Similarity & Repetition Findings</span>
           </div>
           <ul className="space-y-1.5 text-xs text-[#404040]">
             {similarityData.findings.map((finding, idx) => (
               <li key={idx} className="flex items-start gap-2">
-                <span className="text-[#111111] font-bold font-mono">•</span>
+                <span className="text-sage-800 font-bold font-mono">•</span>
                 <span>{finding}</span>
               </li>
             ))}
@@ -203,11 +203,11 @@ export const SemanticSimilaritySection: React.FC<SemanticSimilaritySectionProps>
                 return (
                   <div
                     key={qKey}
-                    className={`p-4 rounded-xl border transition-colors space-y-3 ${decision === 'accepted' ? 'bg-[#F0FDF4] border-[#86EFAC]' : item.max_similarity_status === 'POTENTIAL_DUPLICATE' ? 'bg-[#FEF2F2]/50 border-[#FECACA]' : 'bg-[#FAFAFA] border-[#E5E5E5]'}`}
+                    className={`p-4 rounded-xl border transition-colors space-y-3 ${decision === 'accepted' ? 'bg-[#F0FDF4] border-[#86EFAC]' : item.max_similarity_status === 'POTENTIAL_DUPLICATE' ? 'bg-[#FEF2F2]/50 border-[#FECACA]' : 'bg-sage-50 border-sage-200'}`}
                   >
                     <div className="flex items-center justify-between gap-3">
                       <div className="flex items-center gap-2">
-                        <span className="px-2 py-0.5 bg-[#111111] text-white rounded text-xs font-mono font-bold">
+                        <span className="px-2 py-0.5 bg-sage-700 text-white rounded text-xs font-mono font-bold">
                           Q{item.current_question_number}
                         </span>
                         {getStatusBadge(item.max_similarity_status)}
@@ -225,25 +225,25 @@ export const SemanticSimilaritySection: React.FC<SemanticSimilaritySectionProps>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
-                      <div className="p-3 bg-white rounded-lg border border-[#E5E5E5] space-y-1.5 shadow-2xs">
-                        <div className="flex items-center justify-between text-[11px] text-[#737373] font-semibold">
+                      <div className="p-3 bg-white rounded-lg border border-sage-200 space-y-1.5 shadow-2xs">
+                        <div className="flex items-center justify-between text-[11px] text-sage-500 font-semibold">
                           <span>CURRENT QUESTION</span>
                           {item.current_cognitive_level && (
                             <span className="font-mono">Bloom: {item.current_cognitive_level}</span>
                           )}
                         </div>
-                        <p className="text-xs text-[#111111] font-medium leading-relaxed">
+                        <p className="text-xs text-sage-800 font-medium leading-relaxed">
                           {item.current_question_text}
                         </p>
                       </div>
 
                       {bestMatch && (
-                        <div className="p-3 bg-[#F7F7F5] rounded-lg border border-[#E5E5E5] space-y-1.5 shadow-2xs">
-                          <div className="flex items-center justify-between text-[11px] text-[#737373] font-semibold">
+                        <div className="p-3 bg-sage-100 rounded-lg border border-sage-200 space-y-1.5 shadow-2xs">
+                          <div className="flex items-center justify-between text-[11px] text-sage-500 font-semibold">
                             <span>HISTORICAL MATCH ({(bestMatch.similarity_score * 100).toFixed(1)}%)</span>
                             <span>{bestMatch.source_year || 'Past'} {bestMatch.source_assessment || 'Exam'}</span>
                           </div>
-                          <p className="text-xs text-[#525252] leading-relaxed">
+                          <p className="text-xs text-sage-600 leading-relaxed">
                             {bestMatch.previous_question_text}
                           </p>
                         </div>
@@ -251,7 +251,7 @@ export const SemanticSimilaritySection: React.FC<SemanticSimilaritySectionProps>
                     </div>
 
                     {item.reasoning && (
-                      <p className="text-[11px] text-[#737373] italic">
+                      <p className="text-[11px] text-sage-500 italic">
                         {item.reasoning}
                       </p>
                     )}
@@ -277,34 +277,34 @@ export const SemanticSimilaritySection: React.FC<SemanticSimilaritySectionProps>
             const bestMatch = item.matches[0];
 
             return (
-              <div key={key} className="p-4 bg-[#FAFAFA] border border-[#E5E5E5] rounded-xl space-y-2">
+              <div key={key} className="p-4 bg-sage-50 border border-sage-200 rounded-xl space-y-2">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-start gap-2.5 flex-1">
-                    <span className="px-2 py-0.5 bg-white border border-[#E5E5E5] rounded text-xs font-mono font-bold text-[#111111] shrink-0">
+                    <span className="px-2 py-0.5 bg-white border border-sage-200 rounded text-xs font-mono font-bold text-sage-800 shrink-0">
                       Q{item.current_question_number}
                     </span>
-                    <p className="text-xs font-medium text-[#111111] leading-relaxed">
+                    <p className="text-xs font-medium text-sage-800 leading-relaxed">
                       {item.current_question_text}
                     </p>
                   </div>
                   <div className="shrink-0 flex items-center gap-2">
                     {getStatusBadge(item.max_similarity_status)}
-                    <span className="font-mono text-xs font-bold text-[#111111]">
+                    <span className="font-mono text-xs font-bold text-sage-800">
                       {(item.max_similarity_score * 100).toFixed(1)}%
                     </span>
                   </div>
                 </div>
 
                 {bestMatch && bestMatch.similarity_score >= 0.50 && (
-                  <div className="p-2.5 bg-white rounded-lg text-xs flex items-center justify-between gap-2 border border-[#E5E5E5]">
+                  <div className="p-2.5 bg-white rounded-lg text-xs flex items-center justify-between gap-2 border border-sage-200">
                     <div className="flex items-center gap-2 truncate">
-                      <ArrowRight className="w-3.5 h-3.5 text-[#737373] shrink-0" />
-                      <span className="text-[#737373] shrink-0 font-medium">
+                      <ArrowRight className="w-3.5 h-3.5 text-sage-500 shrink-0" />
+                      <span className="text-sage-500 shrink-0 font-medium">
                         [{bestMatch.source_year || 'Past'} {bestMatch.source_assessment || 'Exam'}]:
                       </span>
-                      <span className="text-[#525252] truncate">{bestMatch.previous_question_text}</span>
+                      <span className="text-sage-600 truncate">{bestMatch.previous_question_text}</span>
                     </div>
-                    <span className="font-mono text-[11px] font-semibold text-[#111111] shrink-0">
+                    <span className="font-mono text-[11px] font-semibold text-sage-800 shrink-0">
                       {(bestMatch.similarity_score * 100).toFixed(1)}%
                     </span>
                   </div>
@@ -314,20 +314,20 @@ export const SemanticSimilaritySection: React.FC<SemanticSimilaritySectionProps>
                   <div className="pt-0.5">
                     <button
                       onClick={() => toggleExpand(key)}
-                      className="text-[11px] text-[#525252] hover:text-[#111111] flex items-center gap-1 font-medium transition-colors"
+                      className="text-[11px] text-sage-600 hover:text-sage-800 flex items-center gap-1 font-medium transition-colors"
                     >
                       <span>{item.matches.length - 1} more candidate match{item.matches.length > 2 ? 'es' : ''}</span>
                       {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                     </button>
 
                     {isExpanded && (
-                      <div className="mt-2 space-y-1 pl-3 border-l-2 border-[#E5E5E5]">
+                      <div className="mt-2 space-y-1 pl-3 border-l-2 border-sage-200">
                         {item.matches.slice(1).map((alt, altIdx) => (
-                          <div key={altIdx} className="text-[11px] text-[#525252] flex items-center justify-between gap-2">
+                          <div key={altIdx} className="text-[11px] text-sage-600 flex items-center justify-between gap-2">
                             <span className="truncate">
                               <strong>{alt.source_year || 'Past'}:</strong> {alt.previous_question_text}
                             </span>
-                            <span className="font-mono text-[#737373] shrink-0">
+                            <span className="font-mono text-sage-500 shrink-0">
                               {(alt.similarity_score * 100).toFixed(1)}%
                             </span>
                           </div>

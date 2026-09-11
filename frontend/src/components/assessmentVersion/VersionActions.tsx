@@ -32,8 +32,8 @@ export const VersionActions: React.FC<{
       {p.edit && locked && v.status !== 'ARCHIVED' && <Button size="sm" onClick={onNewVersion} disabled={busy} leftIcon={<Plus className="w-3.5 h-3.5" />}>Create new version</Button>}
       {p.restore && (locked || v.status === 'ARCHIVED') && <Button size="sm" variant="outline" onClick={onRestore} disabled={busy} leftIcon={<RotateCcw className="w-3.5 h-3.5" />}>Restore as new version</Button>}
       <Button size="sm" variant="outline" onClick={onCompare} disabled={busy} leftIcon={<GitCompare className="w-3.5 h-3.5" />}>Compare</Button>
-      {p.archive && v.status !== 'ARCHIVED' && <Button size="sm" variant="ghost" onClick={onArchive} disabled={busy} leftIcon={<Archive className="w-3.5 h-3.5" />} className="text-[#737373]">Archive</Button>}
-      {locked && v.status !== 'ARCHIVED' && <span className="text-xs text-[#737373] inline-flex items-center gap-1"><Lock className="w-3 h-3" aria-hidden="true" />{v.has_submissions && v.status !== 'FINALIZED' ? 'Locked: student submissions reference this version.' : `${v.status === 'FINALIZED' ? 'Finalized' : 'Approved'} versions are immutable.`}</span>}
+      {p.archive && v.status !== 'ARCHIVED' && <Button size="sm" variant="ghost" onClick={onArchive} disabled={busy} leftIcon={<Archive className="w-3.5 h-3.5" />} className="text-sage-500">Archive</Button>}
+      {locked && v.status !== 'ARCHIVED' && <span className="text-xs text-sage-500 inline-flex items-center gap-1"><Lock className="w-3 h-3" aria-hidden="true" />{v.has_submissions && v.status !== 'FINALIZED' ? 'Locked: student submissions reference this version.' : `${v.status === 'FINALIZED' ? 'Finalized' : 'Approved'} versions are immutable.`}</span>}
     </div>
   );
 };

@@ -176,7 +176,7 @@ export const RubricGenerator: React.FC<RubricGeneratorProps> = ({ isOpen, onClos
   const renderBody = () => {
     if (isLoading) {
       return (
-        <div className="flex items-center justify-center py-10 text-[#737373]" role="status">
+        <div className="flex items-center justify-center py-10 text-sage-500" role="status">
           <Loader2 className="w-5 h-5 animate-spin" />
         </div>
       );
@@ -186,11 +186,11 @@ export const RubricGenerator: React.FC<RubricGeneratorProps> = ({ isOpen, onClos
     }
     if (!selected) {
       return (
-        <div className="p-8 text-center space-y-4 border border-dashed border-[#E5E5E5] dark:border-[#3A3A3C] rounded-2xl" data-testid="rubric-empty">
-          <ClipboardList className="w-8 h-8 text-[#737373] mx-auto opacity-60" />
+        <div className="p-8 text-center space-y-4 border border-dashed border-sage-200 dark:border-[#3A3A3C] rounded-2xl" data-testid="rubric-empty">
+          <ClipboardList className="w-8 h-8 text-sage-500 mx-auto opacity-60" />
           <div className="space-y-1">
-            <p className="text-sm font-bold text-[#111111] dark:text-white">No rubric yet</p>
-            <p className="text-xs text-[#737373] max-w-sm mx-auto">
+            <p className="text-sm font-bold text-sage-800 dark:text-white">No rubric yet</p>
+            <p className="text-xs text-sage-500 max-w-sm mx-auto">
               FacultyLens can draft a marking rubric from this question&apos;s text, marks, type and learning outcome. You review and approve the final version.
             </p>
           </div>
@@ -240,22 +240,22 @@ export const RubricGenerator: React.FC<RubricGeneratorProps> = ({ isOpen, onClos
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-150">
       <div
-        className="w-full max-w-3xl max-h-[90vh] flex flex-col bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl border border-[#E5E5E5] dark:border-[#2C2C2E] overflow-hidden"
+        className="w-full max-w-3xl max-h-[90vh] flex flex-col bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl border border-sage-200 dark:border-[#2C2C2E] overflow-hidden"
         role="dialog"
         aria-modal="true"
         aria-labelledby="rubric-generator-title"
       >
         {/* Header */}
-        <div className="flex items-start justify-between gap-3 p-4 border-b border-[#E5E5E5] dark:border-[#2C2C2E]">
+        <div className="flex items-start justify-between gap-3 p-4 border-b border-sage-200 dark:border-[#2C2C2E]">
           <div className="space-y-1.5 min-w-0">
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-amber-500" />
-              <h2 id="rubric-generator-title" className="text-sm font-bold text-[#111111] dark:text-white">
+              <h2 id="rubric-generator-title" className="text-sm font-bold text-sage-800 dark:text-white">
                 AI Rubric Generator
               </h2>
             </div>
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-xs font-mono font-bold text-[#111111] dark:text-white">
+              <span className="text-xs font-mono font-bold text-sage-800 dark:text-white">
                 Q{question.question_number || question.questionNumber || ''}
               </span>
               <Badge variant="neutral" className="text-[10px] font-mono">{formatMarks(questionMarks)} marks</Badge>
@@ -278,14 +278,14 @@ export const RubricGenerator: React.FC<RubricGeneratorProps> = ({ isOpen, onClos
                 </Badge>
               )}
             </div>
-            <p className="text-xs text-[#262626] dark:text-[#E5E5E5] leading-relaxed line-clamp-3">{questionText}</p>
+            <p className="text-xs text-sage-700 dark:text-sage-200 leading-relaxed line-clamp-3">{questionText}</p>
           </div>
           <button
             type="button"
             onClick={onClose}
             disabled={busy}
             aria-label="Close rubric generator"
-            className="p-1 rounded-lg text-[#737373] hover:text-[#111111] dark:hover:text-white transition-colors shrink-0"
+            className="p-1 rounded-lg text-sage-500 hover:text-sage-800 dark:hover:text-white transition-colors shrink-0"
           >
             <X className="w-4 h-4" />
           </button>

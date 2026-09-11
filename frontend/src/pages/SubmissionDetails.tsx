@@ -121,8 +121,8 @@ export const SubmissionDetails: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4" role="status">
-        <Loader2 className="w-8 h-8 animate-spin text-[#111111] dark:text-white" />
-        <p className="text-sm text-[#737373]">Loading submission…</p>
+        <Loader2 className="w-8 h-8 animate-spin text-sage-800 dark:text-white" />
+        <p className="text-sm text-sage-500">Loading submission…</p>
       </div>
     );
   }
@@ -130,7 +130,7 @@ export const SubmissionDetails: React.FC = () => {
   if (error && !submission) {
     return (
       <div className="space-y-4">
-        <Link to="/assessments" className="inline-flex items-center gap-2 text-xs font-semibold text-[#737373] hover:text-[#111111] dark:hover:text-white">
+        <Link to="/assessments" className="inline-flex items-center gap-2 text-xs font-semibold text-sage-500 hover:text-sage-800 dark:hover:text-white">
           <ArrowLeft className="w-4 h-4" /> Back to Assessments
         </Link>
         <div className="p-6 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-xl space-y-3" role="alert">
@@ -164,16 +164,16 @@ export const SubmissionDetails: React.FC = () => {
       {/* Breadcrumb + actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs text-[#737373] flex-wrap">
-            <Link to="/assessments" className="hover:text-[#111111] dark:hover:text-white">Assessments</Link>
+          <div className="flex items-center gap-2 text-xs text-sage-500 flex-wrap">
+            <Link to="/assessments" className="hover:text-sage-800 dark:hover:text-white">Assessments</Link>
             <span>/</span>
-            <Link to={`/assessments/${submission.assessment_id}`} className="hover:text-[#111111] dark:hover:text-white">{submission.assessment.title}</Link>
+            <Link to={`/assessments/${submission.assessment_id}`} className="hover:text-sage-800 dark:hover:text-white">{submission.assessment.title}</Link>
             <span>/</span>
-            <Link to={`/assessments/${submission.assessment_id}/submissions`} className="hover:text-[#111111] dark:hover:text-white">Submissions</Link>
+            <Link to={`/assessments/${submission.assessment_id}/submissions`} className="hover:text-sage-800 dark:hover:text-white">Submissions</Link>
             <span>/</span>
-            <span className="font-semibold text-[#111111] dark:text-white font-mono">{submission.submission_identifier || `#${submission.id}`}</span>
+            <span className="font-semibold text-sage-800 dark:text-white font-mono">{submission.submission_identifier || `#${submission.id}`}</span>
           </div>
-          <h1 className="text-2xl font-bold text-[#111111] dark:text-white">Student Submission</h1>
+          <h1 className="text-2xl font-bold text-sage-800 dark:text-white">Student Submission</h1>
         </div>
         <div className="flex items-center gap-2">
           <Link to={`/assessments/${submission.assessment_id}/submissions`}>
@@ -196,13 +196,13 @@ export const SubmissionDetails: React.FC = () => {
       <Card variant="default" className="p-6 space-y-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#F7F7F5] dark:bg-[#2C2C2E] border border-[#E5E5E5] dark:border-[#3A3A3C] flex items-center justify-center text-[#111111] dark:text-white">
+            <div className="w-10 h-10 rounded-xl bg-sage-100 dark:bg-[#2C2C2E] border border-sage-200 dark:border-[#3A3A3C] flex items-center justify-center text-sage-800 dark:text-white">
               <User className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-[#111111] dark:text-white" data-testid="student-name">{submission.student.name}</h2>
-              <p className="text-xs font-mono text-[#737373]">{submission.student.student_identifier}{submission.student.section ? ` · Section ${submission.student.section}` : ''}{submission.student.program ? ` · ${submission.student.program}` : ''}</p>
-              <p className="text-xs text-[#737373] mt-1">
+              <h2 className="text-base font-bold text-sage-800 dark:text-white" data-testid="student-name">{submission.student.name}</h2>
+              <p className="text-xs font-mono text-sage-500">{submission.student.student_identifier}{submission.student.section ? ` · Section ${submission.student.section}` : ''}{submission.student.program ? ` · ${submission.student.program}` : ''}</p>
+              <p className="text-xs text-sage-500 mt-1">
                 {submission.assessment.course?.course_code} — {submission.assessment.course?.course_name} · {submission.assessment.title}
               </p>
             </div>
@@ -213,34 +213,34 @@ export const SubmissionDetails: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-[#E5E5E5] dark:border-[#2C2C2E] text-center">
-          <div className="p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl">
-            <span className="text-[10px] uppercase font-semibold text-[#737373] block">Submitted</span>
-            <span className="text-sm font-bold text-[#111111] dark:text-white flex items-center justify-center gap-1.5 mt-2">
-              <Calendar className="w-3.5 h-3.5 text-[#737373]" /> {formatDate(submission.submitted_at)}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-sage-200 dark:border-[#2C2C2E] text-center">
+          <div className="p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl">
+            <span className="text-[10px] uppercase font-semibold text-sage-500 block">Submitted</span>
+            <span className="text-sm font-bold text-sage-800 dark:text-white flex items-center justify-center gap-1.5 mt-2">
+              <Calendar className="w-3.5 h-3.5 text-sage-500" /> {formatDate(submission.submitted_at)}
             </span>
           </div>
-          <div className="p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl">
-            <span className="text-[10px] uppercase font-semibold text-[#737373] block">Answers</span>
-            <span className="text-lg font-bold text-[#111111] dark:text-white block mt-1">{answered} / {submission.questions.length}</span>
+          <div className="p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl">
+            <span className="text-[10px] uppercase font-semibold text-sage-500 block">Answers</span>
+            <span className="text-lg font-bold text-sage-800 dark:text-white block mt-1">{answered} / {submission.questions.length}</span>
           </div>
-          <div className="p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl">
-            <span className="text-[10px] uppercase font-semibold text-[#737373] block">Marks</span>
-            <span className="text-lg font-bold text-[#111111] dark:text-white flex items-center justify-center gap-1.5 mt-1" data-testid="submission-marks">
-              <Award className="w-4 h-4 text-[#737373]" />
+          <div className="p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl">
+            <span className="text-[10px] uppercase font-semibold text-sage-500 block">Marks</span>
+            <span className="text-lg font-bold text-sage-800 dark:text-white flex items-center justify-center gap-1.5 mt-1" data-testid="submission-marks">
+              <Award className="w-4 h-4 text-sage-500" />
               {submission.awarded_marks !== null && submission.awarded_marks !== undefined ? submission.awarded_marks : 'Not graded'}
-              <span className="text-xs text-[#737373] font-normal">/ {submission.total_marks ?? submission.assessment.total_marks ?? '—'}</span>
+              <span className="text-xs text-sage-500 font-normal">/ {submission.total_marks ?? submission.assessment.total_marks ?? '—'}</span>
             </span>
           </div>
-          <div className="p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl">
-            <span className="text-[10px] uppercase font-semibold text-[#737373] block">Grading</span>
-            <span className="text-sm font-bold text-[#111111] dark:text-white block mt-2">{submission.grading_status.replace(/_/g, ' ')}</span>
+          <div className="p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl">
+            <span className="text-[10px] uppercase font-semibold text-sage-500 block">Grading</span>
+            <span className="text-sm font-bold text-sage-800 dark:text-white block mt-2">{submission.grading_status.replace(/_/g, ' ')}</span>
           </div>
         </div>
 
         {submission.allowed_transitions.length > 0 && (
-          <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-[#E5E5E5] dark:border-[#2C2C2E]">
-            <span className="text-[10px] uppercase tracking-wider text-[#737373] mr-1">Move to</span>
+          <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-sage-200 dark:border-[#2C2C2E]">
+            <span className="text-[10px] uppercase tracking-wider text-sage-500 mr-1">Move to</span>
             {submission.allowed_transitions.map((s) => (
               <Button key={s} variant="outline" size="sm" onClick={() => handleStatus(s)} disabled={isChangingStatus} data-testid={`transition-${s}`}>
                 {formatSubmissionStatus(s)}
@@ -255,7 +255,7 @@ export const SubmissionDetails: React.FC = () => {
 
       {/* Answers */}
       <div className="space-y-3">
-        <h2 className="text-base font-bold text-[#111111] dark:text-white">Answers by Question</h2>
+        <h2 className="text-base font-bold text-sage-800 dark:text-white">Answers by Question</h2>
         <StudentAnswerList
           questions={submission.questions}
           readOnly={isReadOnly}
@@ -266,7 +266,7 @@ export const SubmissionDetails: React.FC = () => {
           onViewRubric={() => navigate(`/assessments/${submission.assessment_id}`)}
           onGradeSaved={async () => { await refresh(); flash('Final marks saved.'); }}
         />
-        <p className="text-[11px] text-[#737373] italic">
+        <p className="text-[11px] text-sage-500 italic">
           AI grading assistance is a decision-support feature. Faculty review and final judgment are required. Student records are private academic data.
         </p>
       </div>

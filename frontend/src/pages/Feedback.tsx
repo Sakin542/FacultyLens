@@ -164,14 +164,14 @@ export const Feedback: React.FC = () => {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-[#111111] dark:bg-white text-white dark:text-[#111111] flex items-center justify-center shadow-xs">
+            <div className="w-9 h-9 rounded-xl bg-sage-700 dark:bg-white text-white dark:text-sage-800 flex items-center justify-center shadow-xs">
               <MessageSquare className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-xl font-bold tracking-tight text-[#111111] dark:text-white">
+              <h1 className="text-xl font-bold tracking-tight text-sage-800 dark:text-white">
                 Faculty Feedback & Decisions
               </h1>
-              <p className="text-xs text-[#737373]">
+              <p className="text-xs text-sage-500">
                 Audit trail of recommendation reviews, usefulness ratings, and AI calibration telemetry
               </p>
             </div>
@@ -186,7 +186,7 @@ export const Feedback: React.FC = () => {
               setSelectedCourseId(e.target.value);
               setPage(1);
             }}
-            className="px-3 py-1.5 rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] text-xs text-[#111111] dark:text-white"
+            className="px-3 py-1.5 rounded-xl border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] text-xs text-sage-800 dark:text-white"
           >
             <option value="all">All Courses</option>
             {courses.map((c) => (
@@ -219,14 +219,14 @@ export const Feedback: React.FC = () => {
       <FeedbackSummaryCards summary={summary} isLoading={isSummaryLoading} />
 
       {/* Sub-Tab Switcher */}
-      <div className="flex items-center gap-2 border-b border-[#E5E5E5] dark:border-[#2C2C2E] pb-2 text-xs">
+      <div className="flex items-center gap-2 border-b border-sage-200 dark:border-[#2C2C2E] pb-2 text-xs">
         <button
           type="button"
           onClick={() => setActiveTab('history')}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium transition-colors ${
             activeTab === 'history'
-              ? 'bg-[#111111] text-white dark:bg-white dark:text-[#111111]'
-              : 'text-[#737373] hover:bg-neutral-100 dark:hover:bg-neutral-800'
+              ? 'bg-sage-700 text-white dark:bg-white dark:text-sage-800'
+              : 'text-sage-500 hover:bg-neutral-100 dark:hover:bg-neutral-800'
           }`}
         >
           <Layers className="w-3.5 h-3.5" />
@@ -238,8 +238,8 @@ export const Feedback: React.FC = () => {
           onClick={() => setActiveTab('signals')}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium transition-colors ${
             activeTab === 'signals'
-              ? 'bg-[#111111] text-white dark:bg-white dark:text-[#111111]'
-              : 'text-[#737373] hover:bg-neutral-100 dark:hover:bg-neutral-800'
+              ? 'bg-sage-700 text-white dark:bg-white dark:text-sage-800'
+              : 'text-sage-500 hover:bg-neutral-100 dark:hover:bg-neutral-800'
           }`}
         >
           <Sparkles className="w-3.5 h-3.5" />

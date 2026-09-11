@@ -42,15 +42,15 @@ export const SimilarQuestionsTable: React.FC<SimilarQuestionsTableProps> = ({
   };
 
   return (
-    <Card className="p-5 bg-white dark:bg-[#1C1C1E] border border-[#E5E5E5] dark:border-[#2C2C2E] shadow-sm space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#E5E5E5] dark:border-[#2C2C2E]">
+    <Card className="p-5 bg-white dark:bg-[#1C1C1E] border border-sage-200 dark:border-[#2C2C2E] shadow-sm space-y-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-sage-200 dark:border-[#2C2C2E]">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-[#F7F7F5] dark:bg-[#2C2C2E] border border-[#E5E5E5] dark:border-[#3A3A3C] flex items-center justify-center text-[#111111] dark:text-white">
+          <div className="w-8 h-8 rounded-lg bg-sage-100 dark:bg-[#2C2C2E] border border-sage-200 dark:border-[#3A3A3C] flex items-center justify-center text-sage-800 dark:text-white">
             <CopyCheck className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-[#111111] dark:text-white">Similar Questions</h3>
-            <p className="text-xs text-[#737373]">Semantic overlap detected against historical question bank</p>
+            <h3 className="text-sm font-bold text-sage-800 dark:text-white">Similar Questions</h3>
+            <p className="text-xs text-sage-500">Semantic overlap detected against historical question bank</p>
           </div>
         </div>
 
@@ -62,21 +62,21 @@ export const SimilarQuestionsTable: React.FC<SimilarQuestionsTableProps> = ({
           <div className="px-2.5 py-1 rounded-lg bg-[#FFFBEB] border border-[#FDE68A] text-[#92400E] text-xs font-semibold">
             Highly Similar: <strong>{highlyCount}</strong>
           </div>
-          <div className="px-2.5 py-1 rounded-lg bg-[#F7F7F5] border border-[#E5E5E5] text-[#737373] text-xs font-semibold">
+          <div className="px-2.5 py-1 rounded-lg bg-sage-100 border border-sage-200 text-sage-500 text-xs font-semibold">
             Somewhat: <strong>{somewhatCount}</strong>
           </div>
         </div>
       </div>
 
       {similarityMatches.length === 0 ? (
-        <div className="p-4 text-center text-xs text-[#737373] italic">
+        <div className="p-4 text-center text-xs text-sage-500 italic">
           No significant semantic similarity detected with past examination questions. All current questions appear original.
         </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="border-b border-[#E5E5E5] dark:border-[#3A3A3C] text-[#737373]">
+              <tr className="border-b border-sage-200 dark:border-[#3A3A3C] text-sage-500">
                 <th className="py-2.5 px-3 font-semibold">Current Question</th>
                 <th className="py-2.5 px-3 font-semibold">Matched Past Question</th>
                 <th className="py-2.5 px-3 font-semibold">Past Assessment</th>
@@ -84,20 +84,20 @@ export const SimilarQuestionsTable: React.FC<SimilarQuestionsTableProps> = ({
                 <th className="py-2.5 px-3 font-semibold">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E5E5E5] dark:divide-[#3A3A3C]">
+            <tbody className="divide-y divide-sage-200 dark:divide-[#3A3A3C]">
               {similarityMatches.map((match) => (
-                <tr key={match.id} className="hover:bg-[#F7F7F5] dark:hover:bg-[#2C2C2E]">
-                  <td className="py-2.5 px-3 font-mono font-bold text-[#111111] dark:text-white">
+                <tr key={match.id} className="hover:bg-sage-100 dark:hover:bg-[#2C2C2E]">
+                  <td className="py-2.5 px-3 font-mono font-bold text-sage-800 dark:text-white">
                     Q#{match.current_question_id}
                   </td>
-                  <td className="py-2.5 px-3 text-[#262626] dark:text-[#D4D4D4] max-w-sm truncate">
+                  <td className="py-2.5 px-3 text-sage-700 dark:text-sage-300 max-w-sm truncate">
                     {match.previous_question_text || `Question #${match.previous_question_id}`}
                   </td>
-                  <td className="py-2.5 px-3 text-[#737373]">
+                  <td className="py-2.5 px-3 text-sage-500">
                     {match.previous_assessment_title || 'Past Exam'}
                     {match.previous_year ? ` (${match.previous_year})` : ''}
                   </td>
-                  <td className="py-2.5 px-3 font-mono font-bold text-[#111111] dark:text-white">
+                  <td className="py-2.5 px-3 font-mono font-bold text-sage-800 dark:text-white">
                     {Math.round(match.similarity_score * 100)}%
                   </td>
                   <td className="py-2.5 px-3">
@@ -110,7 +110,7 @@ export const SimilarQuestionsTable: React.FC<SimilarQuestionsTableProps> = ({
         </div>
       )}
 
-      <div className="p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C] text-[11px] text-[#737373] leading-relaxed">
+      <div className="p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl border border-sage-200 dark:border-[#3A3A3C] text-[11px] text-sage-500 leading-relaxed">
         Semantic similarity is evidence for faculty review, not proof of exact duplication. Verify question contexts before deciding whether revisions are needed.
       </div>
     </Card>

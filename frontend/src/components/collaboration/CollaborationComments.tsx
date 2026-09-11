@@ -17,12 +17,12 @@ export const MentionSelector: React.FC<{ members: MentionableUser[]; selected: n
   if (options.length === 0) return null;
   return (
     <div data-testid="mention-selector" className="flex flex-wrap items-center gap-1.5 text-xs">
-      <AtSign className="w-3.5 h-3.5 text-[#737373]" />
+      <AtSign className="w-3.5 h-3.5 text-sage-500" />
       {options.map((m) => {
         const on = selected.includes(m.id);
         return (
           <button key={m.id} type="button" aria-pressed={on} onClick={() => onChange(on ? selected.filter((x) => x !== m.id) : [...selected, m.id])}
-            className={cn('rounded-full border px-2 py-0.5', on ? 'border-[#111111] dark:border-white bg-[#111111] dark:bg-white text-white dark:text-[#111111]' : 'border-[#E5E5E5] dark:border-[#2A2A2A] text-[#525252] dark:text-[#A3A3A3]')}>
+            className={cn('rounded-full border px-2 py-0.5', on ? 'border-sage-700 dark:border-white bg-sage-700 dark:bg-white text-white dark:text-sage-800' : 'border-sage-200 dark:border-[#2A2A2A] text-sage-600 dark:text-sage-400')}>
             @{m.name}
           </button>
         );
@@ -39,10 +39,10 @@ export const CommentEditor: React.FC<{ onSubmit: (body: string, mentions: number
   return (
     <form data-testid="comment-editor" className="space-y-2" onSubmit={async (e) => { e.preventDefault(); if (!canSend) return; setBusy(true); try { await onSubmit(body.trim(), mentions); setBody(''); setMentions([]); } finally { setBusy(false); } }}>
       <textarea aria-label="Comment" value={body} onChange={(e) => setBody(e.target.value)} rows={compact ? 2 : 3} maxLength={maxLength} placeholder={placeholder}
-        className="w-full rounded-lg border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-3 py-2 text-sm text-[#111111] dark:text-white placeholder:text-[#A3A3A3] focus:outline-none focus:ring-2 focus:ring-[#111111] dark:focus:ring-white" />
+        className="w-full rounded-lg border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-3 py-2 text-sm text-sage-800 dark:text-white placeholder:text-sage-400 focus:outline-none focus:ring-2 focus:ring-sage-600 dark:focus:ring-white" />
       <MentionSelector members={members} selected={mentions} onChange={setMentions} currentUserId={currentUserId} />
       <div className="flex items-center justify-between">
-        <span className="text-[11px] text-[#A3A3A3]">{body.length}/{maxLength}</span>
+        <span className="text-[11px] text-sage-400">{body.length}/{maxLength}</span>
         <div className="flex gap-2">{onCancel && <Button type="button" size="sm" variant="ghost" onClick={onCancel}>Cancel</Button>}<Button type="submit" size="sm" disabled={!canSend} isLoading={busy} data-testid="comment-submit">{submitLabel}</Button></div>
       </div>
     </form>
@@ -55,19 +55,19 @@ const CommentItem: React.FC<{ comment: CommentType; currentUserId?: number; canR
   const mine = c.author?.id === currentUserId;
   const resolved = c.status === 'RESOLVED';
   return (
-    <div data-testid={`comment-${c.id}`} className={cn('rounded-lg border bg-white dark:bg-[#161616] p-3 space-y-2', resolved ? 'border-emerald-200 dark:border-emerald-900/50 opacity-90' : 'border-[#E5E5E5] dark:border-[#2A2A2A]', isReply && 'ml-6')}>
-      <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-[#737373]">
-        <span><strong className="text-[#111111] dark:text-white">{c.author?.name ?? 'Unknown'}</strong>{c.created_at ? ` · ${new Date(c.created_at).toLocaleString()}` : ''}{c.edited_at ? ' · edited' : ''}</span>
+    <div data-testid={`comment-${c.id}`} className={cn('rounded-lg border bg-white dark:bg-[#161616] p-3 space-y-2', resolved ? 'border-emerald-200 dark:border-emerald-900/50 opacity-90' : 'border-sage-200 dark:border-[#2A2A2A]', isReply && 'ml-6')}>
+      <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-sage-500">
+        <span><strong className="text-sage-800 dark:text-white">{c.author?.name ?? 'Unknown'}</strong>{c.created_at ? ` · ${new Date(c.created_at).toLocaleString()}` : ''}{c.edited_at ? ' · edited' : ''}</span>
         <div className="flex items-center gap-1.5">
           {resolved && <Badge variant="Good" data-testid="resolved-badge">Resolved{c.resolved_by ? ` by ${c.resolved_by.name}` : ''}</Badge>}
-          {mine && c.status !== 'DELETED' && <button type="button" aria-label="Edit comment" onClick={() => setEditing(true)} className="hover:text-[#111111]"><Pencil className="w-3.5 h-3.5" /></button>}
+          {mine && c.status !== 'DELETED' && <button type="button" aria-label="Edit comment" onClick={() => setEditing(true)} className="hover:text-sage-800"><Pencil className="w-3.5 h-3.5" /></button>}
           {(mine || canResolve) && c.status !== 'DELETED' && <button type="button" aria-label="Delete comment" onClick={() => void onDelete(c.id)} className="hover:text-red-600"><Trash2 className="w-3.5 h-3.5" /></button>}
         </div>
       </div>
       {editing ? (
         <CommentEditor initialValue={c.body} submitLabel="Save" compact onCancel={() => setEditing(false)} onSubmit={async (b) => { await onEdit(c.id, b); setEditing(false); }} />
       ) : (
-        <p className="text-sm text-[#111111] dark:text-white whitespace-pre-wrap break-words" data-testid="comment-body">{c.body}</p>
+        <p className="text-sm text-sage-800 dark:text-white whitespace-pre-wrap break-words" data-testid="comment-body">{c.body}</p>
       )}
       {!isReply && (
         <div className="flex flex-wrap gap-2">
@@ -121,12 +121,12 @@ export const CollaborationComments: React.FC<CollaborationCommentsProps> = ({ co
   const resolvedCount = comments.length - comments.filter((c) => c.status !== 'RESOLVED').length;
 
   return (
-    <section data-testid="collaboration-comments" className={cn('space-y-3', !compact && 'rounded-xl border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] p-4')}>
+    <section data-testid="collaboration-comments" className={cn('space-y-3', !compact && 'rounded-xl border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] p-4')}>
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-[#111111] dark:text-white flex items-center gap-2"><MessageSquare className="w-4 h-4" /> {title} <span className="text-[#737373] font-normal">({comments.length})</span></h3>
-        {showResolvedToggle && resolvedCount > 0 && <button type="button" className="text-xs underline text-[#737373]" onClick={() => setShowResolved((s) => !s)}>{showResolved ? 'Hide' : 'Show'} {resolvedCount} resolved</button>}
+        <h3 className="text-sm font-semibold text-sage-800 dark:text-white flex items-center gap-2"><MessageSquare className="w-4 h-4" /> {title} <span className="text-sage-500 font-normal">({comments.length})</span></h3>
+        {showResolvedToggle && resolvedCount > 0 && <button type="button" className="text-xs underline text-sage-500" onClick={() => setShowResolved((s) => !s)}>{showResolved ? 'Hide' : 'Show'} {resolvedCount} resolved</button>}
       </div>
-      <p className="text-[11px] text-[#A3A3A3]">Discussion never changes the AI result or the official content; decisions are made through the normal approval actions.</p>
+      <p className="text-[11px] text-sage-400">Discussion never changes the AI result or the official content; decisions are made through the normal approval actions.</p>
       {error && <CollaborationError message={error} onRetry={load} />}
       {loading ? <CollaborationLoading label="Loading discussion…" /> : visible.length === 0 ? (
         <CollaborationEmptyState title="No discussion yet" description={canComment ? 'Start a discussion about this academic resource.' : 'There is no discussion on this resource yet.'} icon={<MessageSquare className="w-6 h-6" />} className="py-6" />

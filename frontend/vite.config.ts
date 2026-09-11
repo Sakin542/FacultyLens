@@ -24,6 +24,10 @@ export default defineConfig({
       },
     },
   },
+  // Same origin as the dev server so the backend CORS / Sanctum stateful domains stay valid for `vite preview`
+  preview: {
+    port: 3000,
+  },
   test: {
     globals: true,
     environment: 'jsdom',

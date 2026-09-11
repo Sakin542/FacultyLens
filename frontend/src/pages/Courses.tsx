@@ -147,7 +147,7 @@ export const Courses: React.FC = () => {
             <select
               value={selectedSemester}
               onChange={(e) => setSelectedSemester(e.target.value)}
-              className="rounded-lg border border-[#E5E5E5] dark:border-[#2C2C2E] bg-white dark:bg-[#2C2C2E] px-3 py-2 text-xs text-[#111111] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#111111]"
+              className="rounded-lg border border-sage-200 dark:border-[#2C2C2E] bg-white dark:bg-[#2C2C2E] px-3 py-2 text-xs text-sage-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sage-600"
             >
               <option value="all">All Semesters</option>
               {uniqueSemesters.map((sem) => (
@@ -173,19 +173,19 @@ export const Courses: React.FC = () => {
       {/* Content State */}
       {isLoading ? (
         <div className="flex flex-col items-center justify-center min-h-[300px] space-y-4">
-          <Loader2 className="w-8 h-8 animate-spin text-[#111111] dark:text-white" />
-          <p className="text-sm text-[#737373]">Loading your courses...</p>
+          <Loader2 className="w-8 h-8 animate-spin text-sage-800 dark:text-white" />
+          <p className="text-sm text-sage-500">Loading your courses...</p>
         </div>
       ) : filteredCourses.length === 0 ? (
         <Card variant="default" className="p-12 text-center space-y-4">
-          <div className="w-12 h-12 rounded-xl bg-[#F7F7F5] dark:bg-[#2C2C2E] flex items-center justify-center text-[#111111] dark:text-white mx-auto">
+          <div className="w-12 h-12 rounded-xl bg-sage-100 dark:bg-[#2C2C2E] flex items-center justify-center text-sage-800 dark:text-white mx-auto">
             <BookOpen className="w-6 h-6" />
           </div>
           <div className="space-y-1">
-            <h3 className="text-base font-bold text-[#111111] dark:text-white">
+            <h3 className="text-base font-bold text-sage-800 dark:text-white">
               {searchQuery ? 'No matching courses found' : 'No courses registered yet'}
             </h3>
-            <p className="text-xs text-[#737373] max-w-sm mx-auto">
+            <p className="text-xs text-sage-500 max-w-sm mx-auto">
               {searchQuery
                 ? `No courses found matching "${searchQuery}". Try a different search term.`
                 : 'Create your first course to begin managing learning outcomes, uploading syllabus documents, and preparing assessments.'}
@@ -218,48 +218,48 @@ export const Courses: React.FC = () => {
               <Card
                 key={course.id}
                 variant="default"
-                className="flex flex-col justify-between hover:border-[#111111] dark:hover:border-white hover:shadow-card transition-all duration-200"
+                className="flex flex-col justify-between hover:border-sage-700 dark:hover:border-white hover:shadow-card transition-all duration-200"
               >
                 <div className="space-y-4">
                   <div className="flex items-start justify-between">
                     <div>
-                      <Badge variant="outline" className="font-mono font-bold text-xs bg-[#F7F7F5] dark:bg-[#2C2C2E]">
+                      <Badge variant="outline" className="font-mono font-bold text-xs bg-sage-100 dark:bg-[#2C2C2E]">
                         {code}
                       </Badge>
-                      <h3 className="text-base font-bold text-[#111111] dark:text-white mt-2 leading-snug line-clamp-2">
+                      <h3 className="text-base font-bold text-sage-800 dark:text-white mt-2 leading-snug line-clamp-2">
                         {title}
                       </h3>
                     </div>
-                    <div className="w-9 h-9 rounded-lg bg-[#F7F7F5] dark:bg-[#2C2C2E] border border-[#E5E5E5] dark:border-[#3A3A3C] flex items-center justify-center text-[#111111] dark:text-white shrink-0">
+                    <div className="w-9 h-9 rounded-lg bg-sage-100 dark:bg-[#2C2C2E] border border-sage-200 dark:border-[#3A3A3C] flex items-center justify-center text-sage-800 dark:text-white shrink-0">
                       <BookOpen className="w-4 h-4" />
                     </div>
                   </div>
 
-                  <div className="text-xs text-[#737373] space-y-1">
+                  <div className="text-xs text-sage-500 space-y-1">
                     <p className="font-mono">{course.semester} {academicYear} • {credits} Credits</p>
                     {course.description && (
-                      <p className="line-clamp-2 text-[#262626] dark:text-[#D4D4D4]">{course.description}</p>
+                      <p className="line-clamp-2 text-sage-700 dark:text-sage-300">{course.description}</p>
                     )}
                   </div>
 
                   {/* Stats pill list */}
-                  <div className="grid grid-cols-3 gap-2 py-3 border-y border-[#E5E5E5] dark:border-[#2C2C2E] text-center">
+                  <div className="grid grid-cols-3 gap-2 py-3 border-y border-sage-200 dark:border-[#2C2C2E] text-center">
                     <div>
-                      <span className="text-[10px] uppercase font-semibold text-[#737373] block">Outcomes</span>
-                      <span className="text-xs font-bold text-[#111111] dark:text-white flex items-center justify-center gap-1 mt-0.5">
-                        <ListChecks className="w-3 h-3 text-[#737373]" /> {cloCount} CLOs
+                      <span className="text-[10px] uppercase font-semibold text-sage-500 block">Outcomes</span>
+                      <span className="text-xs font-bold text-sage-800 dark:text-white flex items-center justify-center gap-1 mt-0.5">
+                        <ListChecks className="w-3 h-3 text-sage-500" /> {cloCount} CLOs
                       </span>
                     </div>
                     <div>
-                      <span className="text-[10px] uppercase font-semibold text-[#737373] block">Materials</span>
-                      <span className="text-xs font-bold text-[#111111] dark:text-white flex items-center justify-center gap-1 mt-0.5">
-                        <Layers className="w-3 h-3 text-[#737373]" /> {matCount} Files
+                      <span className="text-[10px] uppercase font-semibold text-sage-500 block">Materials</span>
+                      <span className="text-xs font-bold text-sage-800 dark:text-white flex items-center justify-center gap-1 mt-0.5">
+                        <Layers className="w-3 h-3 text-sage-500" /> {matCount} Files
                       </span>
                     </div>
                     <div>
-                      <span className="text-[10px] uppercase font-semibold text-[#737373] block">Assessments</span>
-                      <span className="text-xs font-bold text-[#111111] dark:text-white flex items-center justify-center gap-1 mt-0.5">
-                        <FileCheck2 className="w-3 h-3 text-[#737373]" /> {assessCount}
+                      <span className="text-[10px] uppercase font-semibold text-sage-500 block">Assessments</span>
+                      <span className="text-xs font-bold text-sage-800 dark:text-white flex items-center justify-center gap-1 mt-0.5">
+                        <FileCheck2 className="w-3 h-3 text-sage-500" /> {assessCount}
                       </span>
                     </div>
                   </div>

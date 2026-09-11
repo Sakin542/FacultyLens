@@ -27,7 +27,10 @@ return [
         'http://127.0.0.1:3000',
     ]))),
 
-    'allowed_origins_patterns' => [],
+    // Any localhost / 127.0.0.1 port (Vite falls back to 3001, 5174, … when the default port is busy)
+    'allowed_origins_patterns' => array_values(array_filter([
+        env('APP_ENV', 'production') !== 'production' ? '#^https?://(localhost|127\.0\.0\.1)(:\d+)?$#' : null,
+    ])),
 
     'allowed_headers' => ['*'],
 

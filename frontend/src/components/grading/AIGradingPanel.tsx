@@ -163,7 +163,7 @@ export const AIGradingPanel: React.FC<AIGradingPanelProps> = ({
   if (readOnly) return null;
 
   return (
-    <div className="space-y-3 pt-3 border-t border-dashed border-[#E5E5E5] dark:border-[#3A3A3C]" data-testid="ai-grading-panel">
+    <div className="space-y-3 pt-3 border-t border-dashed border-sage-200 dark:border-[#3A3A3C]" data-testid="ai-grading-panel">
       <AIGradingButton
         hasApprovedRubric={Boolean(question.approved_rubric)}
         hasContent={hasContent}
@@ -186,7 +186,7 @@ export const AIGradingPanel: React.FC<AIGradingPanelProps> = ({
         <button
           type="button"
           onClick={() => setShowManual(true)}
-          className="text-[11px] text-[#737373] hover:text-[#111111] dark:hover:text-white underline"
+          className="text-[11px] text-sage-500 hover:text-sage-800 dark:hover:text-white underline"
           data-testid="grade-manually"
         >
           Grade without AI assistance

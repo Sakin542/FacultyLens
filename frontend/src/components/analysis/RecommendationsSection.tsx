@@ -81,25 +81,25 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
   };
 
   return (
-    <Card className="p-5 bg-white dark:bg-[#1C1C1E] border border-[#E5E5E5] dark:border-[#2C2C2E] shadow-sm space-y-5">
+    <Card className="p-5 bg-white dark:bg-[#1C1C1E] border border-sage-200 dark:border-[#2C2C2E] shadow-sm space-y-5">
       {/* Header & Filter Controls */}
-      <div className="space-y-4 pb-4 border-b border-[#E5E5E5] dark:border-[#2C2C2E]">
+      <div className="space-y-4 pb-4 border-b border-sage-200 dark:border-[#2C2C2E]">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#F7F7F5] dark:bg-[#2C2C2E] border border-[#E5E5E5] dark:border-[#3A3A3C] flex items-center justify-center text-[#111111] dark:text-white">
+            <div className="w-8 h-8 rounded-lg bg-sage-100 dark:bg-[#2C2C2E] border border-sage-200 dark:border-[#3A3A3C] flex items-center justify-center text-sage-800 dark:text-white">
               <Lightbulb className="w-4 h-4 text-amber-500" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-[#111111] dark:text-white">
+              <h3 className="text-sm font-bold text-sage-800 dark:text-white">
                 AI Recommendations
               </h3>
-              <p className="text-xs text-[#737373]">
+              <p className="text-xs text-sage-500">
                 Actionable, evidence-based recommendations generated for faculty decision
               </p>
             </div>
           </div>
 
-          <span className="font-mono text-xs font-bold text-[#111111] dark:text-white">
+          <span className="font-mono text-xs font-bold text-sage-800 dark:text-white">
             {filteredRecs.length} of {recommendations.length}
           </span>
         </div>
@@ -108,11 +108,11 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
         <div className="flex flex-wrap items-center gap-2 text-xs">
           {/* Priority filter */}
           <div className="flex items-center gap-1">
-            <span className="text-[#737373] font-medium">Priority:</span>
+            <span className="text-sage-500 font-medium">Priority:</span>
             <select
               value={priorityFilter}
               onChange={(e) => setPriorityFilter(e.target.value)}
-              className="px-2 py-1 rounded-md border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] text-xs text-[#111111] dark:text-white"
+              className="px-2 py-1 rounded-md border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] text-xs text-sage-800 dark:text-white"
             >
               <option value="all">All Priorities</option>
               <option value="HIGH">High</option>
@@ -123,11 +123,11 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
 
           {/* Status filter */}
           <div className="flex items-center gap-1">
-            <span className="text-[#737373] font-medium">Status:</span>
+            <span className="text-sage-500 font-medium">Status:</span>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-2 py-1 rounded-md border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] text-xs text-[#111111] dark:text-white"
+              className="px-2 py-1 rounded-md border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] text-xs text-sage-800 dark:text-white"
             >
               <option value="all">All Statuses</option>
               <option value="pending">Pending</option>
@@ -140,11 +140,11 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
           {/* Category filter */}
           {categories.length > 0 && (
             <div className="flex items-center gap-1">
-              <span className="text-[#737373] font-medium">Category:</span>
+              <span className="text-sage-500 font-medium">Category:</span>
               <select
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
-                className="px-2 py-1 rounded-md border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] text-xs text-[#111111] dark:text-white capitalize"
+                className="px-2 py-1 rounded-md border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] text-xs text-sage-800 dark:text-white capitalize"
               >
                 <option value="all">All Categories</option>
                 {categories.map((c, i) => (
@@ -160,7 +160,7 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
 
       {/* Recommendations List */}
       {filteredRecs.length === 0 ? (
-        <div className="p-6 text-center text-xs text-[#737373] italic">
+        <div className="p-6 text-center text-xs text-sage-500 italic">
           {recommendations.length === 0
             ? 'No recommendations generated yet. Assessment quality profile currently meets balanced targets.'
             : 'No recommendations matching the active filters.'}
@@ -174,17 +174,17 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
             return (
               <div
                 key={rec.id}
-                className="p-4 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C] space-y-3"
+                className="p-4 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl border border-sage-200 dark:border-[#3A3A3C] space-y-3"
               >
                 {/* Top Badge Row */}
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2">
                     {getPriorityBadge(rec.priority)}
-                    <span className="text-[11px] font-semibold text-[#737373] capitalize">
+                    <span className="text-[11px] font-semibold text-sage-500 capitalize">
                       {rec.category?.replace('_', ' ')}
                     </span>
                     {rec.source_metric && (
-                      <span className="text-[10px] text-[#737373]">
+                      <span className="text-[10px] text-sage-500">
                         • {rec.source_metric}
                       </span>
                     )}
@@ -194,22 +194,22 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
 
                 {/* Title / Problem */}
                 <div>
-                  <h4 className="text-sm font-bold text-[#111111] dark:text-white">
+                  <h4 className="text-sm font-bold text-sage-800 dark:text-white">
                     {rec.problem || rec.title}
                   </h4>
                   {rec.explanation && (
-                    <p className="text-xs text-[#737373] mt-1 leading-relaxed">
+                    <p className="text-xs text-sage-500 mt-1 leading-relaxed">
                       <strong>Why this matters:</strong> {rec.explanation}
                     </p>
                   )}
                 </div>
 
                 {/* Actionable Suggestion */}
-                <div className="p-3 bg-white dark:bg-[#1C1C1E] rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] text-xs">
-                  <span className="font-semibold text-[#111111] dark:text-white block">
+                <div className="p-3 bg-white dark:bg-[#1C1C1E] rounded-lg border border-sage-200 dark:border-[#3A3A3C] text-xs">
+                  <span className="font-semibold text-sage-800 dark:text-white block">
                     Recommendation:
                   </span>
-                  <p className="text-[#262626] dark:text-[#D4D4D4] mt-0.5 leading-relaxed">
+                  <p className="text-sage-700 dark:text-sage-300 mt-0.5 leading-relaxed">
                     {rec.recommendation || rec.description}
                   </p>
                 </div>
@@ -220,14 +220,14 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
                     <button
                       type="button"
                       onClick={() => setExpandedEvidenceId(isEvidenceOpen ? null : rec.id)}
-                      className="text-[11px] font-semibold text-[#737373] hover:text-[#111111] dark:hover:text-white flex items-center gap-1"
+                      className="text-[11px] font-semibold text-sage-500 hover:text-sage-800 dark:hover:text-white flex items-center gap-1"
                     >
                       <span>Evidence Details</span>
                       {isEvidenceOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                     </button>
 
                     {isEvidenceOpen && (
-                      <pre className="mt-1.5 p-2.5 rounded-lg bg-white dark:bg-[#1C1C1E] border border-[#E5E5E5] dark:border-[#3A3A3C] text-[11px] font-mono text-[#737373] overflow-x-auto">
+                      <pre className="mt-1.5 p-2.5 rounded-lg bg-white dark:bg-[#1C1C1E] border border-sage-200 dark:border-[#3A3A3C] text-[11px] font-mono text-sage-500 overflow-x-auto">
                         {JSON.stringify(rec.evidence, null, 2)}
                       </pre>
                     )}
@@ -236,20 +236,20 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
 
                 {/* Faculty Notes display */}
                 {rec.faculty_notes && (
-                  <div className="text-[11px] text-[#737373] bg-white dark:bg-[#1C1C1E] p-2 rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C]">
+                  <div className="text-[11px] text-sage-500 bg-white dark:bg-[#1C1C1E] p-2 rounded-lg border border-sage-200 dark:border-[#3A3A3C]">
                     <strong>Faculty Note:</strong> {rec.faculty_notes}
                   </div>
                 )}
 
                 {/* Note input field if reviewing */}
                 {activeNoteId === rec.id && (
-                  <div className="space-y-2 pt-2 border-t border-[#E5E5E5] dark:border-[#3A3A3C]">
+                  <div className="space-y-2 pt-2 border-t border-sage-200 dark:border-[#3A3A3C]">
                     <textarea
                       rows={2}
                       placeholder="Add faculty notes or review comments..."
                       value={noteText}
                       onChange={(e) => setNoteText(e.target.value)}
-                      className="w-full text-xs p-2 rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] text-[#111111] dark:text-white"
+                      className="w-full text-xs p-2 rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] text-sage-800 dark:text-white"
                     />
                     <div className="flex items-center gap-2 justify-end">
                       <Button
@@ -274,8 +274,8 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
                 )}
 
                 {/* Faculty Decision Action Buttons */}
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#E5E5E5] dark:border-[#3A3A3C]">
-                  <span className="text-[11px] text-[#737373] italic">
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-sage-200 dark:border-[#3A3A3C]">
+                  <span className="text-[11px] text-sage-500 italic">
                     Faculty decision support — decisions do not automatically alter assessment questions.
                   </span>
 

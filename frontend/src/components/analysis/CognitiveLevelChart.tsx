@@ -27,20 +27,20 @@ export const CognitiveLevelChart: React.FC<CognitiveLevelChartProps> = ({ cognit
   const displayData = distribution.length > 0 ? distribution : defaultTiers;
 
   return (
-    <Card className="p-5 bg-white dark:bg-[#1C1C1E] border border-[#E5E5E5] dark:border-[#2C2C2E] shadow-sm space-y-4">
-      <div className="flex items-center justify-between pb-3 border-b border-[#E5E5E5] dark:border-[#2C2C2E]">
+    <Card className="p-5 bg-white dark:bg-[#1C1C1E] border border-sage-200 dark:border-[#2C2C2E] shadow-sm space-y-4">
+      <div className="flex items-center justify-between pb-3 border-b border-sage-200 dark:border-[#2C2C2E]">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-[#F7F7F5] dark:bg-[#2C2C2E] border border-[#E5E5E5] dark:border-[#3A3A3C] flex items-center justify-center text-[#111111] dark:text-white">
+          <div className="w-8 h-8 rounded-lg bg-sage-100 dark:bg-[#2C2C2E] border border-sage-200 dark:border-[#3A3A3C] flex items-center justify-center text-sage-800 dark:text-white">
             <BrainCircuit className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-[#111111] dark:text-white">Cognitive-Level Distribution</h3>
-            <p className="text-xs text-[#737373]">Bloom's Revised Taxonomy classification</p>
+            <h3 className="text-sm font-bold text-sage-800 dark:text-white">Cognitive-Level Distribution</h3>
+            <p className="text-xs text-sage-500">Bloom's Revised Taxonomy classification</p>
           </div>
         </div>
 
         {cognitiveAnalysis?.dominant_level && (
-          <span className="font-mono text-xs font-bold text-[#111111] dark:text-white">
+          <span className="font-mono text-xs font-bold text-sage-800 dark:text-white">
             Dominant: {cognitiveAnalysis.dominant_level} ({Math.round(cognitiveAnalysis.dominant_percentage)}%)
           </span>
         )}
@@ -53,25 +53,25 @@ export const CognitiveLevelChart: React.FC<CognitiveLevelChartProps> = ({ cognit
           return (
             <div key={idx} className="space-y-1">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-semibold text-[#111111] dark:text-white w-24">
+                <span className="font-semibold text-sage-800 dark:text-white w-24">
                   {item.level}
                 </span>
 
                 <div className="flex items-center gap-2">
-                  <span className="font-mono font-bold text-[#111111] dark:text-white">
+                  <span className="font-mono font-bold text-sage-800 dark:text-white">
                     {pct}%
                   </span>
                   {item.question_count !== undefined && (
-                    <span className="text-[11px] text-[#737373]">
+                    <span className="text-[11px] text-sage-500">
                       ({item.question_count} {item.question_count === 1 ? 'Q' : 'Qs'})
                     </span>
                   )}
                 </div>
               </div>
 
-              <div className="w-full bg-[#E5E5E5] dark:bg-[#2C2C2E] h-2.5 rounded-full overflow-hidden">
+              <div className="w-full bg-sage-200 dark:bg-[#2C2C2E] h-2.5 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-[#111111] dark:bg-white rounded-full transition-all duration-500"
+                  className="h-full bg-sage-700 dark:bg-white rounded-full transition-all duration-500"
                   style={{ width: `${Math.min(pct, 100)}%` }}
                 />
               </div>
@@ -80,7 +80,7 @@ export const CognitiveLevelChart: React.FC<CognitiveLevelChartProps> = ({ cognit
         })}
       </div>
 
-      <div className="p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C] text-[11px] text-[#737373] leading-relaxed">
+      <div className="p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl border border-sage-200 dark:border-[#3A3A3C] text-[11px] text-sage-500 leading-relaxed">
         Cognitive distribution should be interpreted in relation to the course learning outcomes and assessment purpose rather than assuming higher Bloom tiers are universally preferable.
       </div>
     </Card>

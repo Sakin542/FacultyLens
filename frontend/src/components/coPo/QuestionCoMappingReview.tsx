@@ -33,10 +33,10 @@ export const QuestionCoMappingReviewList: React.FC<QuestionCoMappingReviewProps>
   return (
     <div className="space-y-2" data-testid="question-co-review">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h4 className="text-[10px] uppercase tracking-wider font-semibold text-[#737373]">Question → CO Mapping Review</h4>
+        <h4 className="text-[10px] uppercase tracking-wider font-semibold text-sage-500">Question → CO Mapping Review</h4>
         <div className="flex items-center gap-1 text-[11px]">
           {(['all', 'unmapped', 'pending'] as const).map((f) => (
-            <button key={f} type="button" onClick={() => setFilter(f)} className={`px-2 py-1 rounded-md ${filter === f ? 'bg-[#111111] text-white dark:bg-white dark:text-[#111111]' : 'text-[#737373]'}`} data-testid={`filter-${f}`}>
+            <button key={f} type="button" onClick={() => setFilter(f)} className={`px-2 py-1 rounded-md ${filter === f ? 'bg-sage-700 text-white dark:bg-white dark:text-sage-800' : 'text-sage-500'}`} data-testid={`filter-${f}`}>
               {f === 'all' ? `All (${questions.length})` : f === 'unmapped' ? `Unmapped (${questions.filter((q) => !q.is_mapped).length})` : `AI pending (${pendingCount})`}
             </button>
           ))}
@@ -44,33 +44,33 @@ export const QuestionCoMappingReviewList: React.FC<QuestionCoMappingReviewProps>
       </div>
       {error && <p className="text-xs text-red-600" role="alert">{error}</p>}
       {visible.length === 0 ? (
-        <p className="text-xs text-[#737373] italic">No questions in this view.</p>
+        <p className="text-xs text-sage-500 italic">No questions in this view.</p>
       ) : (
         <ul className="space-y-2">
           {visible.map((q) => (
-            <li key={q.question_id} className="p-3 rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] space-y-2" data-testid="question-co-row">
+            <li key={q.question_id} className="p-3 rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] space-y-2" data-testid="question-co-row">
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
-                  <p className="text-xs font-semibold text-[#111111] dark:text-white">Q{q.question_number ?? q.question_id} <span className="text-[#737373] font-normal">· {q.assessment_title} · {q.marks} marks{q.cognitive_level ? ` · ${q.cognitive_level}` : ''}</span></p>
-                  <p className="text-[11px] text-[#737373] truncate">{q.question_text_excerpt}</p>
+                  <p className="text-xs font-semibold text-sage-800 dark:text-white">Q{q.question_number ?? q.question_id} <span className="text-sage-500 font-normal">· {q.assessment_title} · {q.marks} marks{q.cognitive_level ? ` · ${q.cognitive_level}` : ''}</span></p>
+                  <p className="text-[11px] text-sage-500 truncate">{q.question_text_excerpt}</p>
                 </div>
                 <div className="flex items-center gap-1 shrink-0 flex-wrap justify-end">
                   {q.confirmed.length === 0 ? (
                     <span className="text-[10px] px-2 py-0.5 rounded bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300" data-testid="co-missing">CO mapping missing</span>
                   ) : q.confirmed.map((c) => (
-                    <span key={c.learning_outcome_id} className="text-[10px] px-2 py-0.5 rounded bg-[#F7F7F5] dark:bg-[#2C2C2E] font-mono text-[#111111] dark:text-white" data-testid="co-confirmed">{c.code} <span className="text-[#737373]">· {c.source === 'FACULTY' ? 'Faculty' : c.source.toLowerCase()}</span></span>
+                    <span key={c.learning_outcome_id} className="text-[10px] px-2 py-0.5 rounded bg-sage-100 dark:bg-[#2C2C2E] font-mono text-sage-800 dark:text-white" data-testid="co-confirmed">{c.code} <span className="text-sage-500">· {c.source === 'FACULTY' ? 'Faculty' : c.source.toLowerCase()}</span></span>
                   ))}
                 </div>
               </div>
               {q.ai_suggestions.length > 0 && (
                 <ul className="space-y-1" data-testid="ai-suggestions">
                   {q.ai_suggestions.map((s) => (
-                    <li key={s.learning_outcome_id} className="flex flex-wrap items-center justify-between gap-2 text-xs p-2 rounded-md bg-[#F7F7F5] dark:bg-[#2C2C2E]">
+                    <li key={s.learning_outcome_id} className="flex flex-wrap items-center justify-between gap-2 text-xs p-2 rounded-md bg-sage-100 dark:bg-[#2C2C2E]">
                       <span className="flex items-center gap-2">
                         <Sparkles className="w-3 h-3 text-amber-500" />
-                        <span className="text-[#737373]">AI suggested</span>
-                        <span className="font-mono font-semibold text-[#111111] dark:text-white">{s.code}</span>
-                        <span className="text-[10px] text-[#737373]">similarity {Number(s.similarity_score).toFixed(2)} · {s.alignment.replace(/_/g, ' ').toLowerCase()}</span>
+                        <span className="text-sage-500">AI suggested</span>
+                        <span className="font-mono font-semibold text-sage-800 dark:text-white">{s.code}</span>
+                        <span className="text-[10px] text-sage-500">similarity {Number(s.similarity_score).toFixed(2)} · {s.alignment.replace(/_/g, ' ').toLowerCase()}</span>
                         <MappingStatusBadge kind="question" status={s.status} />
                       </span>
                       {canEdit && s.status !== 'CONFIRMED' && (
@@ -89,7 +89,7 @@ export const QuestionCoMappingReviewList: React.FC<QuestionCoMappingReviewProps>
           ))}
         </ul>
       )}
-      <p className="text-[11px] text-[#737373]">AI similarity is a suggestion only. Faculty confirmation makes a mapping official; the question's own learning outcome (set in Assessment Details) is treated as faculty-confirmed.</p>
+      <p className="text-[11px] text-sage-500">AI similarity is a suggestion only. Faculty confirmation makes a mapping official; the question's own learning outcome (set in Assessment Details) is treated as faculty-confirmed.</p>
     </div>
   );
 };

@@ -6,7 +6,7 @@ import { cn } from '@/utils/cn';
 /** STEP 33: shared state components for the question generator. */
 
 export const GenerationLoading: React.FC<{ label?: string }> = ({ label = 'Drafting questions under your constraints…' }) => (
-  <div data-testid="generation-loading" role="status" className="flex items-center gap-2 rounded-lg border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-4 py-3 text-sm text-[#525252] dark:text-[#A3A3A3]">
+  <div data-testid="generation-loading" role="status" className="flex items-center gap-2 rounded-lg border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-4 py-3 text-sm text-sage-600 dark:text-sage-400">
     <Loader2 className="w-4 h-4 animate-spin" />
     <span>{label}</span>
   </div>
@@ -17,12 +17,12 @@ export const GenerationEmptyState: React.FC<{ title?: string; description?: stri
   description = 'Set your constraints — course outcome, topic, type, difficulty, Bloom level and marks — then generate reviewable drafts.',
   className,
 }) => (
-  <div data-testid="generation-empty-state" className={cn('flex flex-col items-center justify-center text-center py-12 px-6 rounded-xl border border-dashed border-[#E5E5E5] dark:border-[#2A2A2A]', className)}>
-    <div className="w-12 h-12 rounded-full bg-[#F7F7F5] dark:bg-[#1F1F1F] border border-[#E5E5E5] dark:border-[#2A2A2A] flex items-center justify-center text-[#737373] mb-4">
+  <div data-testid="generation-empty-state" className={cn('flex flex-col items-center justify-center text-center py-12 px-6 rounded-xl border border-dashed border-sage-200 dark:border-[#2A2A2A]', className)}>
+    <div className="w-12 h-12 rounded-full bg-sage-100 dark:bg-[#1F1F1F] border border-sage-200 dark:border-[#2A2A2A] flex items-center justify-center text-sage-500 mb-4">
       <Sparkles className="w-6 h-6" />
     </div>
-    <h4 className="text-base font-semibold text-[#111111] dark:text-white mb-1">{title}</h4>
-    <p className="text-sm text-[#737373] max-w-md">{description}</p>
+    <h4 className="text-base font-semibold text-sage-800 dark:text-white mb-1">{title}</h4>
+    <p className="text-sm text-sage-500 max-w-md">{description}</p>
   </div>
 );
 

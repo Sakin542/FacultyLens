@@ -2,21 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Input';
-import { Card } from '@/components/common/Card';
 import { useAuth } from '@/context/AuthContext';
-import {
-  Mail,
-  Lock,
-  User as UserIcon,
-  Building,
-  Award,
-  ArrowRight,
-  Eye,
-  EyeOff,
-  CheckCircle2,
-  AlertCircle,
-  ShieldCheck,
-} from 'lucide-react';
+import { ApiError } from '@/services/api';
+import { isValidEmail } from '@/utils/validation';
+import { AuthAlert, AuthShell, AuthSuccess, authButtonClass, authInputClass, authLinkClass } from '@/components/landing/AuthShell';
+import { Mail, Lock, User as UserIcon, Building, Award, ArrowRight, Eye, EyeOff, ShieldCheck } from 'lucide-react';
 
 export const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -47,7 +37,7 @@ export const Register: React.FC = () => {
   }, [isAuthenticated, loading, navigate]);
 
   const calculatePasswordStrength = (pass: string): { label: string; percent: number; color: string } => {
-    if (!pass) return { label: '', percent: 0, color: 'bg-[#E5E5E5]' };
+    if (!pass) return { label: '', percent: 0, color: 'bg-sage-200' };
     let score = 0;
     if (pass.length >= 6) score += 25;
     if (pass.length >= 8) score += 25;
@@ -56,8 +46,8 @@ export const Register: React.FC = () => {
 
     if (score <= 25) return { label: 'Weak', percent: 25, color: 'bg-[#DC2626]' };
     if (score <= 50) return { label: 'Fair', percent: 50, color: 'bg-[#D97706]' };
-    if (score <= 75) return { label: 'Good', percent: 75, color: 'bg-[#111111]' };
-    return { label: 'Strong', percent: 100, color: 'bg-[#16A34A]' };
+    if (score <= 75) return { label: 'Good', percent: 75, color: 'bg-sage-500' };
+    return { label: 'Strong', percent: 100, color: 'bg-sage-700' };
   };
 
   const strength = calculatePasswordStrength(formData.password);
@@ -79,7 +69,7 @@ export const Register: React.FC = () => {
     if (!formData.fullName.trim()) errs.fullName = 'Full Name is required';
     if (!formData.email.trim()) {
       errs.email = 'University email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    } else if (!isValidEmail(formData.email)) {
       errs.email = 'Valid university email is required';
     }
     if (!formData.department.trim()) errs.department = 'Department is required';
@@ -122,199 +112,83 @@ export const Register: React.FC = () => {
       }, 500);
     } catch (err: unknown) {
       setIsLoading(false);
+      // 422: map Laravel field names back onto the form fields
+      if (err instanceof ApiError && err.status === 422 && err.errors) {
+        const map: Record<string, string> = { name: 'fullName', email: 'email', department: 'department', designation: 'designation', password: 'password', password_confirmation: 'confirmPassword' };
+        const fieldErrors: Record<string, string> = {};
+        Object.entries(err.errors).forEach(([k, v]) => { fieldErrors[map[k] ?? k] = v[0]; });
+        setErrors(fieldErrors);
+        return;
+      }
       const errorMessage = err instanceof Error ? err.message : 'Registration failed. Please check your details.';
       setRegisterError(errorMessage);
     }
   };
 
   return (
-    <div className="min-h-[calc(100vh-14rem)] flex items-center justify-center p-4 sm:p-6 lg:p-12">
-      <Card className="w-full max-w-xl bg-white rounded-2xl border border-[#E5E5E5] shadow-card p-8 sm:p-10 space-y-6">
-        {/* Header without internal logo/name */}
-        <div className="space-y-1 text-left">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-semibold uppercase tracking-wider bg-[#F7F7F5] text-[#737373] border border-[#E5E5E5]">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#111111]" /> Faculty Registration
-            </span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#111111] tracking-tight">Create Faculty Account</h2>
-          <p className="text-xs text-[#737373]">
-            Fill in your university department details to provision your academic dashboard
-          </p>
-        </div>
+    <AuthShell
+      wide
+      eyebrow="Faculty registration"
+      title="Create Faculty Account"
+      subtitle="Add your department details to provision a private academic workspace for your courses."
+      footer={<>Already have an account? <Link to="/login" className={authLinkClass}>Sign in</Link></>}
+    >
+      {registerError && <AuthAlert title="Registration issue" message={registerError} />}
 
-        {registerError && (
-          <div className="p-3.5 rounded-xl bg-[#FEF2F2] border border-[#FECACA] flex items-start gap-2.5 text-xs text-[#991B1B] animate-in fade-in duration-200">
-            <AlertCircle className="w-4 h-4 shrink-0 text-[#DC2626] mt-0.5" />
-            <div className="space-y-1">
-              <span className="font-semibold block">Registration Issue</span>
-              <span className="text-[11px] leading-relaxed block">{registerError}</span>
-            </div>
+      {registerSuccess ? (
+        <AuthSuccess message="Account created. Setting up your dashboard…" />
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <Input label="Full Name" name="fullName" placeholder="Dr. Tariqul Islam" value={formData.fullName} onChange={handleChange} error={errors.fullName} leftIcon={<UserIcon className="w-4 h-4" />} className={authInputClass} required />
+            <Input label="University Email" name="email" type="email" placeholder="faculty@university.edu" value={formData.email} onChange={handleChange} error={errors.email} leftIcon={<Mail className="w-4 h-4" />} className={authInputClass} required />
           </div>
-        )}
 
-        {registerSuccess ? (
-          <div className="p-4 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] flex items-center gap-3 text-xs text-[#166534] font-medium animate-pulse">
-            <CheckCircle2 className="w-5 h-5 shrink-0 text-[#16A34A]" />
-            <span>Account created successfully! Authorizing and redirecting to your dashboard...</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <Input label="Department" name="department" placeholder="Computer Science" value={formData.department} onChange={handleChange} error={errors.department} leftIcon={<Building className="w-4 h-4" />} className={authInputClass} required />
+            <Input label="Designation" name="designation" placeholder="Associate Professor" value={formData.designation} onChange={handleChange} error={errors.designation} leftIcon={<Award className="w-4 h-4" />} className={authInputClass} required />
           </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <Input
-              label="Full Name"
-              name="fullName"
-              placeholder="Dr. Tariqul Islam"
-              value={formData.fullName}
-              onChange={handleChange}
-              error={errors.fullName}
-              leftIcon={<UserIcon className="w-4 h-4" />}
-              required
+              label="Password" name="password" type={showPassword ? 'text' : 'password'} placeholder="••••••••" value={formData.password} onChange={handleChange} error={errors.password}
+              leftIcon={<Lock className="w-4 h-4" />} className={authInputClass} required
+              rightIcon={<button type="button" tabIndex={-1} onClick={() => setShowPassword(!showPassword)} className="text-sage-400 hover:text-sage-800 focus:outline-none" aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}</button>}
             />
-
             <Input
-              label="University Email"
-              name="email"
-              type="email"
-              placeholder="faculty@university.edu"
-              value={formData.email}
-              onChange={handleChange}
-              error={errors.email}
-              leftIcon={<Mail className="w-4 h-4" />}
-              required
+              label="Confirm Password" name="confirmPassword" type={showConfirmPassword ? 'text' : 'password'} placeholder="••••••••" value={formData.confirmPassword} onChange={handleChange} error={errors.confirmPassword}
+              leftIcon={<Lock className="w-4 h-4" />} className={authInputClass} required
+              rightIcon={<button type="button" tabIndex={-1} onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="text-sage-400 hover:text-sage-800 focus:outline-none" aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}>{showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}</button>}
             />
+          </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-              <Input
-                label="Department"
-                name="department"
-                placeholder="Computer Science"
-                value={formData.department}
-                onChange={handleChange}
-                error={errors.department}
-                leftIcon={<Building className="w-4 h-4" />}
-                required
-              />
-
-              <Input
-                label="Designation"
-                name="designation"
-                placeholder="Associate Professor"
-                value={formData.designation}
-                onChange={handleChange}
-                error={errors.designation}
-                leftIcon={<Award className="w-4 h-4" />}
-                required
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-              <Input
-                label="Password"
-                name="password"
-                type={showPassword ? 'text' : 'password'}
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={handleChange}
-                error={errors.password}
-                leftIcon={<Lock className="w-4 h-4" />}
-                rightIcon={
-                  <button
-                    type="button"
-                    tabIndex={-1}
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="text-[#737373] hover:text-[#111111] focus:outline-none"
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                }
-                required
-              />
-
-              <Input
-                label="Confirm Password"
-                name="confirmPassword"
-                type={showConfirmPassword ? 'text' : 'password'}
-                placeholder="••••••••"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                error={errors.confirmPassword}
-                leftIcon={<Lock className="w-4 h-4" />}
-                rightIcon={
-                  <button
-                    type="button"
-                    tabIndex={-1}
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="text-[#737373] hover:text-[#111111] focus:outline-none"
-                    aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
-                  >
-                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                }
-                required
-              />
-            </div>
-
-            {/* Password strength visualizer */}
-            {formData.password && (
-              <div className="space-y-1 pt-0.5">
-                <div className="flex justify-between text-[11px]">
-                  <span className="text-[#737373]">Password Strength:</span>
-                  <span className="font-semibold text-[#111111]">{strength.label}</span>
-                </div>
-                <div className="w-full bg-[#E5E5E5] h-1.5 rounded-full overflow-hidden">
-                  <div
-                    className={`h-full ${strength.color} transition-all duration-300`}
-                    style={{ width: `${strength.percent}%` }}
-                  />
-                </div>
+          {formData.password && (
+            <div className="space-y-1 pt-0.5" aria-live="polite">
+              <div className="flex justify-between text-[11px]">
+                <span className="text-sage-500">Password strength</span>
+                <span className="font-semibold text-sage-800">{strength.label}</span>
               </div>
-            )}
-
-            {/* Terms Checkbox */}
-            <div className="pt-1">
-              <label className="flex items-start gap-2.5 cursor-pointer text-xs text-[#737373]">
-                <input
-                  type="checkbox"
-                  name="agreeTerms"
-                  checked={formData.agreeTerms}
-                  onChange={handleChange}
-                  className="mt-0.5 rounded border-[#E5E5E5] text-[#111111] focus:ring-[#111111]"
-                />
-                <span>
-                  I agree to the University Academic Governance & Faculty AI Usage Guidelines.
-                </span>
-              </label>
-              {errors.agreeTerms && (
-                <p className="text-[11px] text-[#DC2626] font-medium mt-1">{errors.agreeTerms}</p>
-              )}
+              <div className="w-full bg-sage-100 h-1.5 rounded-full overflow-hidden">
+                <div className={`h-full ${strength.color} transition-all duration-500`} style={{ width: `${strength.percent}%` }} />
+              </div>
             </div>
+          )}
 
-            <div className="pt-2">
-              <Button
-                type="submit"
-                variant="primary"
-                size="md"
-                className="w-full justify-center text-sm font-semibold tracking-wide"
-                isLoading={isLoading}
-                disabled={isLoading}
-                rightIcon={<ArrowRight className="w-4 h-4" />}
-              >
-                {isLoading ? 'Creating Account...' : 'Create Account'}
-              </Button>
-            </div>
-          </form>
-        )}
+          <div className="pt-1">
+            <label className="flex items-start gap-2.5 cursor-pointer text-xs text-sage-600">
+              <input type="checkbox" name="agreeTerms" checked={formData.agreeTerms} onChange={handleChange} className="mt-0.5 rounded border-sage-300 text-sage-700 focus:ring-sage-600" />
+              <span>I agree to the University Academic Governance &amp; Faculty AI Usage Guidelines.</span>
+            </label>
+            {errors.agreeTerms && <p className="text-[11px] text-[#DC2626] font-medium mt-1">{errors.agreeTerms}</p>}
+          </div>
 
-        <div className="pt-4 border-t border-[#E5E5E5] text-center">
-          <p className="text-xs text-[#737373]">
-            Already have an account?{' '}
-            <Link to="/login" className="font-bold text-[#111111] hover:underline">
-              Sign In
-            </Link>
-          </p>
-        </div>
-      </Card>
-    </div>
+          <Button type="submit" variant="primary" size="md" className={`${authButtonClass} mt-2`} isLoading={isLoading} disabled={isLoading} rightIcon={<ArrowRight className="w-4 h-4" />}>
+            {isLoading ? 'Creating account…' : 'Create Account'}
+          </Button>
+
+          <p className="flex items-center justify-center gap-1.5 text-[11px] text-sage-400 pt-1"><ShieldCheck className="w-3.5 h-3.5" aria-hidden="true" />AI assists, faculty decides — nothing in your courses changes without you</p>
+        </form>
+      )}
+    </AuthShell>
   );
 };

@@ -17,22 +17,22 @@ export const AnalysisEmptyState: React.FC<AnalysisEmptyStateProps> = ({
   isRunningAnalysis = false,
 }) => {
   return (
-    <Card className="p-12 text-center bg-white dark:bg-[#1C1C1E] border border-[#E5E5E5] dark:border-[#2C2C2E] shadow-sm space-y-6 max-w-2xl mx-auto">
-      <div className="w-16 h-16 rounded-2xl bg-[#F7F7F5] dark:bg-[#2C2C2E] border border-[#E5E5E5] dark:border-[#3A3A3C] flex items-center justify-center mx-auto text-[#111111] dark:text-white shadow-inner">
-        <BrainCircuit className="w-8 h-8 text-[#111111] dark:text-white" />
+    <Card className="p-12 text-center bg-white dark:bg-[#1C1C1E] border border-sage-200 dark:border-[#2C2C2E] shadow-sm space-y-6 max-w-2xl mx-auto">
+      <div className="w-16 h-16 rounded-2xl bg-sage-100 dark:bg-[#2C2C2E] border border-sage-200 dark:border-[#3A3A3C] flex items-center justify-center mx-auto text-sage-800 dark:text-white shadow-inner">
+        <BrainCircuit className="w-8 h-8 text-sage-800 dark:text-white" />
       </div>
 
       <div className="space-y-2">
-        <h2 className="text-xl font-bold text-[#111111] dark:text-white">
+        <h2 className="text-xl font-bold text-sage-800 dark:text-white">
           AI Analysis Has Not Been Run Yet
         </h2>
-        <p className="text-sm text-[#737373] max-w-md mx-auto leading-relaxed">
-          Analyze <strong className="text-[#111111] dark:text-white">{assessmentTitle}</strong> ({courseCode}) to audit evaluation rigor, learning outcome coverage, and item originality.
+        <p className="text-sm text-sage-500 max-w-md mx-auto leading-relaxed">
+          Analyze <strong className="text-sage-800 dark:text-white">{assessmentTitle}</strong> ({courseCode}) to audit evaluation rigor, learning outcome coverage, and item originality.
         </p>
       </div>
 
-      <div className="p-5 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C] text-left text-xs text-[#737373] space-y-2">
-        <span className="font-semibold text-[#111111] dark:text-white block">
+      <div className="p-5 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl border border-sage-200 dark:border-[#3A3A3C] text-left text-xs text-sage-500 space-y-2">
+        <span className="font-semibold text-sage-800 dark:text-white block">
           Running AI Analysis will compute:
         </span>
         <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 list-disc list-inside">
@@ -50,7 +50,7 @@ export const AnalysisEmptyState: React.FC<AnalysisEmptyStateProps> = ({
       <Button
         variant="primary"
         size="md"
-        className="bg-[#111111] text-white hover:bg-black dark:bg-white dark:text-[#111111] dark:hover:bg-neutral-200 gap-2 mx-auto"
+        className="bg-sage-700 text-white hover:bg-black dark:bg-white dark:text-sage-800 dark:hover:bg-neutral-200 gap-2 mx-auto"
         onClick={onRunAnalysis}
         disabled={isRunningAnalysis}
       >

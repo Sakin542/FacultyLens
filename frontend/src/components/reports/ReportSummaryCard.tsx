@@ -49,51 +49,51 @@ export const ReportSummaryCard: React.FC<ReportSummaryCardProps> = ({
       </div>
 
       {/* Executive Summary Card */}
-      <div className="bg-white border border-[#E5E5E5] rounded-xl p-6 shadow-subtle">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-[#F0F0F0]">
+      <div className="bg-white border border-sage-200 rounded-xl p-6 shadow-subtle">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-sage-100">
           <div className="flex items-center gap-6">
-            <div className="flex flex-col items-center justify-center w-28 h-28 rounded-2xl bg-[#F7F7F5] border border-[#E5E5E5] p-3 text-center shrink-0">
-              <span className="text-3xl font-extrabold text-[#111111] tracking-tight">
+            <div className="flex flex-col items-center justify-center w-28 h-28 rounded-2xl bg-sage-100 border border-sage-200 p-3 text-center shrink-0">
+              <span className="text-3xl font-extrabold text-sage-800 tracking-tight">
                 {Math.round(overallQuality.score * 10) / 10}
               </span>
-              <span className="text-[10px] font-semibold text-[#737373] uppercase tracking-wider mt-0.5">
+              <span className="text-[10px] font-semibold text-sage-500 uppercase tracking-wider mt-0.5">
                 Out of 100
               </span>
             </div>
 
             <div>
               <div className="flex items-center gap-2 mb-1.5">
-                <span className="text-xs font-semibold uppercase tracking-wider text-[#737373]">
+                <span className="text-xs font-semibold uppercase tracking-wider text-sage-500">
                   Overall Assessment Index
                 </span>
                 {getRatingBadge(overallQuality.rating)}
               </div>
-              <h2 className="text-lg font-bold text-[#111111]">
+              <h2 className="text-lg font-bold text-sage-800">
                 Academic Quality &amp; Alignment Synthesis
               </h2>
-              <p className="text-xs text-[#525252] max-w-2xl mt-1 leading-relaxed">
+              <p className="text-xs text-sage-600 max-w-2xl mt-1 leading-relaxed">
                 This authoritative score synthesizes syllabus topic breadth (25%), learning outcome alignment (25%), Bloom’s Taxonomy cognitive depth (15%), difficulty distribution (15%), question originality (10%), and marks proportionality (10%).
               </p>
             </div>
           </div>
 
-          <div className="flex flex-col gap-2 text-xs text-[#737373] bg-[#FAFAFA] p-3.5 rounded-lg border border-[#EBEBEB] min-w-[220px]">
+          <div className="flex flex-col gap-2 text-xs text-sage-500 bg-sage-50 p-3.5 rounded-lg border border-[#EBEBEB] min-w-[220px]">
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-[#525252]" />
+                <Calendar className="w-3.5 h-3.5 text-sage-600" />
                 Analyzed Date:
               </span>
-              <span className="font-mono text-[#111111]">{analyzedAt.split(' ')[0]}</span>
+              <span className="font-mono text-sage-800">{analyzedAt.split(' ')[0]}</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-1.5">
-                <Cpu className="w-3.5 h-3.5 text-[#525252]" />
+                <Cpu className="w-3.5 h-3.5 text-sage-600" />
                 System Engine:
               </span>
-              <span className="font-mono text-[#111111]">v{engineMetadata.version}</span>
+              <span className="font-mono text-sage-800">v{engineMetadata.version}</span>
             </div>
             {generatedReport && (
-              <div className="flex items-center justify-between pt-1 border-t border-[#E5E5E5]">
+              <div className="flex items-center justify-between pt-1 border-t border-sage-200">
                 <span className="flex items-center gap-1.5">
                   <Award className="w-3.5 h-3.5 text-emerald-600" />
                   PDF Status:

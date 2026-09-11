@@ -94,7 +94,7 @@ export const AssessmentBlueprintPage: React.FC = () => {
     <div className="space-y-5" data-testid="assessment-blueprint-page">
       <BlueprintHeader assessment={headerAssessment} course={headerCourse} blueprint={bp} />
       {error && <BlueprintError message={error} onRetry={() => void load()} />}
-      {notice && <div role="status" className="rounded-lg border border-[#E5E5E5] dark:border-[#2A2A2A] bg-[#FAFAF8] dark:bg-[#1A1A1A] px-3 py-2 text-sm text-[#525252] dark:text-[#A3A3A3]">{notice}</div>}
+      {notice && <div role="status" className="rounded-lg border border-sage-200 dark:border-[#2A2A2A] bg-[#FAFAF8] dark:bg-[#1A1A1A] px-3 py-2 text-sm text-sage-600 dark:text-sage-400">{notice}</div>}
 
       {!bp && !editing && <BlueprintEmptyState canEdit={canEdit} onCreate={() => setEditing(true)} />}
 

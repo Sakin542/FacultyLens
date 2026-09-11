@@ -8,20 +8,20 @@ export const NotFound: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-[#F7F7F5] text-center">
-      <div className="max-w-md w-full bg-white p-8 sm:p-12 rounded-2xl border border-[#E5E5E5] shadow-card space-y-6">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-sage-100 text-center">
+      <div className="max-w-md w-full bg-white p-8 sm:p-12 rounded-2xl border border-sage-200 shadow-card space-y-6">
         <div className="flex justify-center">
           <Logo size="xl" showSubtitle />
         </div>
 
         <div className="space-y-2 pt-2">
-          <span className="font-mono text-xs uppercase font-bold tracking-widest text-[#737373]">
+          <span className="font-mono text-xs uppercase font-bold tracking-widest text-sage-500">
             404 — Page Not Found
           </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#111111] tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-sage-800 tracking-tight">
             Academic Lens Misaligned
           </h1>
-          <p className="text-xs text-[#737373] leading-relaxed">
+          <p className="text-xs text-sage-500 leading-relaxed">
             The page or assessment route you requested does not exist or has been relocated within the university portal.
           </p>
         </div>

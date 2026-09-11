@@ -111,20 +111,20 @@ export const StudentSubmissions: React.FC = () => {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs text-[#737373]">
-            <Link to="/assessments" className="hover:text-[#111111] dark:hover:text-white">Assessments</Link>
+          <div className="flex items-center gap-2 text-xs text-sage-500">
+            <Link to="/assessments" className="hover:text-sage-800 dark:hover:text-white">Assessments</Link>
             <span>/</span>
-            <Link to={`/assessments/${id}`} className="hover:text-[#111111] dark:hover:text-white font-semibold text-[#111111] dark:text-white">
+            <Link to={`/assessments/${id}`} className="hover:text-sage-800 dark:hover:text-white font-semibold text-sage-800 dark:text-white">
               {assessment?.title ?? `Assessment #${id}`}
             </Link>
             <span>/</span>
             <span>Submissions</span>
           </div>
-          <h1 className="text-2xl font-bold text-[#111111] dark:text-white flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-sage-800 dark:text-white flex items-center gap-2">
             <Users className="w-6 h-6" /> Student Submissions
           </h1>
           {assessment?.course && (
-            <p className="text-xs text-[#737373] font-mono">{assessment.course.course_code} · {assessment.title}</p>
+            <p className="text-xs text-sage-500 font-mono">{assessment.course.course_code} · {assessment.title}</p>
           )}
         </div>
         <div className="flex items-center gap-2">
@@ -151,8 +151,8 @@ export const StudentSubmissions: React.FC = () => {
         </div>
       ) : isLoading ? (
         <div className="flex flex-col items-center justify-center min-h-[300px] space-y-3" role="status">
-          <Loader2 className="w-7 h-7 animate-spin text-[#111111] dark:text-white" />
-          <p className="text-sm text-[#737373]">Loading submissions…</p>
+          <Loader2 className="w-7 h-7 animate-spin text-sage-800 dark:text-white" />
+          <p className="text-sm text-sage-500">Loading submissions…</p>
         </div>
       ) : submissions.length === 0 ? (
         <SubmissionEmptyState

@@ -26,10 +26,10 @@ export const StatCard: React.FC<StatCardProps> = ({
     <Card className={cn('relative overflow-hidden transition-all duration-150 hover:shadow-card', className)}>
       <div className="flex items-start justify-between">
         <div className="space-y-1">
-          <p className="text-xs font-medium uppercase tracking-wider text-[#737373]">{label}</p>
-          <div className="text-3xl font-bold tracking-tight text-[#111111]">{value}</div>
+          <p className="text-xs font-medium uppercase tracking-wider text-sage-500">{label}</p>
+          <div className="text-3xl font-bold tracking-tight text-sage-800">{value}</div>
           {description && (
-            <p className="text-xs text-[#737373] pt-0.5">{description}</p>
+            <p className="text-xs text-sage-500 pt-0.5">{description}</p>
           )}
           {trend && (
             <div className="flex items-center gap-1.5 pt-1">
@@ -43,12 +43,12 @@ export const StatCard: React.FC<StatCardProps> = ({
               >
                 {trend.value}
               </span>
-              <span className="text-xs text-[#737373]">vs previous cycle</span>
+              <span className="text-xs text-sage-500">vs previous cycle</span>
             </div>
           )}
         </div>
         {icon && (
-          <div className="w-10 h-10 rounded-lg bg-[#F7F7F5] border border-[#E5E5E5] flex items-center justify-center text-[#111111]">
+          <div className="w-10 h-10 rounded-lg bg-sage-100 border border-sage-200 flex items-center justify-center text-sage-800">
             {icon}
           </div>
         )}

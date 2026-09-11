@@ -44,6 +44,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Initialize session from Laravel Sanctum on mount / refresh (F5)
   useEffect(() => {
     let isMounted = true;
+    // Keep the boot splash on screen long enough for its reveal sequence (skipped in tests)
+    const minSplashMs = import.meta.env.MODE === 'test' ? 0 : 1500;
+    const startedAt = Date.now();
 
     const initializeAuth = async () => {
       try {
@@ -56,6 +59,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setUser(null);
         }
       } finally {
+        const remaining = Math.max(0, minSplashMs - (Date.now() - startedAt));
+        if (remaining > 0) {
+          await new Promise((resolve) => setTimeout(resolve, remaining));
+        }
         if (isMounted) {
           setLoading(false);
         }

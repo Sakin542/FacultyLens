@@ -23,7 +23,7 @@ export const AnalysisHistoryTable: React.FC<AnalysisHistoryTableProps> = ({
   onViewReport,
 }) => {
   const getScoreColor = (score: number | null) => {
-    if (score === null) return 'text-[#737373]';
+    if (score === null) return 'text-sage-500';
     if (score >= 80) return 'text-emerald-600 dark:text-emerald-400';
     if (score >= 60) return 'text-blue-600 dark:text-blue-400';
     if (score >= 40) return 'text-amber-600 dark:text-amber-400';
@@ -31,10 +31,10 @@ export const AnalysisHistoryTable: React.FC<AnalysisHistoryTableProps> = ({
   };
 
   return (
-    <div className="overflow-x-auto bg-white dark:bg-[#1C1C1E] rounded-xl border border-[#E5E5E5] dark:border-[#2C2C2E] shadow-sm">
+    <div className="overflow-x-auto bg-white dark:bg-[#1C1C1E] rounded-xl border border-sage-200 dark:border-[#2C2C2E] shadow-sm">
       <table className="w-full text-left border-collapse text-xs">
         <thead>
-          <tr className="border-b border-[#E5E5E5] dark:border-[#2C2C2E] bg-[#F7F7F5] dark:bg-[#2C2C2E]/60 text-[#737373] uppercase text-[10px] tracking-wider font-semibold">
+          <tr className="border-b border-sage-200 dark:border-[#2C2C2E] bg-sage-100 dark:bg-[#2C2C2E]/60 text-sage-500 uppercase text-[10px] tracking-wider font-semibold">
             <th className="py-3 px-4 w-10 text-center">Compare</th>
             <th className="py-3 px-4">Assessment & Course</th>
             <th className="py-3 px-4">Version</th>
@@ -44,7 +44,7 @@ export const AnalysisHistoryTable: React.FC<AnalysisHistoryTableProps> = ({
             <th className="py-3 px-4 text-right">Actions</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-[#E5E5E5] dark:divide-[#2C2C2E]">
+        <tbody className="divide-y divide-sage-200 dark:divide-[#2C2C2E]">
           {items.map((item) => {
             const isSelected = selectedForCompare.includes(item.id);
             const course = item.course || item.assessment?.course;
@@ -52,7 +52,7 @@ export const AnalysisHistoryTable: React.FC<AnalysisHistoryTableProps> = ({
             return (
               <tr
                 key={item.id}
-                className={`transition-colors hover:bg-[#F7F7F5]/80 dark:hover:bg-[#2C2C2E]/40 ${
+                className={`transition-colors hover:bg-sage-100/80 dark:hover:bg-[#2C2C2E]/40 ${
                   isSelected ? 'bg-blue-50/50 dark:bg-blue-950/20' : ''
                 }`}
               >
@@ -62,7 +62,7 @@ export const AnalysisHistoryTable: React.FC<AnalysisHistoryTableProps> = ({
                     type="checkbox"
                     checked={isSelected}
                     onChange={() => onToggleCompare(item)}
-                    className="w-4 h-4 rounded border-[#D4D4D4] dark:border-[#52525B] text-blue-600 focus:ring-blue-500 cursor-pointer"
+                    className="w-4 h-4 rounded border-sage-300 dark:border-[#52525B] text-blue-600 focus:ring-blue-500 cursor-pointer"
                     title="Select for comparison (max 2)"
                   />
                 </td>
@@ -70,7 +70,7 @@ export const AnalysisHistoryTable: React.FC<AnalysisHistoryTableProps> = ({
                 {/* Assessment & Course */}
                 <td className="py-3.5 px-4">
                   <div className="space-y-0.5">
-                    <div className="font-bold text-[#111111] dark:text-white flex items-center gap-2">
+                    <div className="font-bold text-sage-800 dark:text-white flex items-center gap-2">
                       <span
                         onClick={() => onViewAssessment(item.assessment_id)}
                         className="hover:underline cursor-pointer"
@@ -86,7 +86,7 @@ export const AnalysisHistoryTable: React.FC<AnalysisHistoryTableProps> = ({
                         </Badge>
                       )}
                     </div>
-                    <div className="text-[11px] text-[#737373]">
+                    <div className="text-[11px] text-sage-500">
                       {course?.course_code} — {course?.course_name}
                       {course?.academic_year && ` (AY ${course.academic_year})`}
                     </div>
@@ -113,13 +113,13 @@ export const AnalysisHistoryTable: React.FC<AnalysisHistoryTableProps> = ({
                       >
                         {item.overall_score.toFixed(1)}
                       </span>
-                      <span className="text-[10px] text-[#737373]">/100</span>
-                      <span className="text-[10px] font-semibold text-[#737373] bg-[#F7F7F5] dark:bg-[#2C2C2E] px-1.5 py-0.5 rounded">
+                      <span className="text-[10px] text-sage-500">/100</span>
+                      <span className="text-[10px] font-semibold text-sage-500 bg-sage-100 dark:bg-[#2C2C2E] px-1.5 py-0.5 rounded">
                         {item.rating}
                       </span>
                     </div>
                   ) : (
-                    <span className="text-[#737373] italic">—</span>
+                    <span className="text-sage-500 italic">—</span>
                   )}
                 </td>
 
@@ -127,19 +127,19 @@ export const AnalysisHistoryTable: React.FC<AnalysisHistoryTableProps> = ({
                 <td className="py-3.5 px-4 hidden md:table-cell">
                   <div className="flex items-center gap-2 text-[11px] font-mono">
                     <span
-                      className="px-1.5 py-0.5 rounded bg-[#F7F7F5] dark:bg-[#2C2C2E] border border-[#E5E5E5] dark:border-[#3A3A3C]"
+                      className="px-1.5 py-0.5 rounded bg-sage-100 dark:bg-[#2C2C2E] border border-sage-200 dark:border-[#3A3A3C]"
                       title="Topic Coverage"
                     >
                       T: {item.topic_coverage_score ?? '—'}%
                     </span>
                     <span
-                      className="px-1.5 py-0.5 rounded bg-[#F7F7F5] dark:bg-[#2C2C2E] border border-[#E5E5E5] dark:border-[#3A3A3C]"
+                      className="px-1.5 py-0.5 rounded bg-sage-100 dark:bg-[#2C2C2E] border border-sage-200 dark:border-[#3A3A3C]"
                       title="LO Alignment"
                     >
                       LO: {item.learning_outcome_alignment_score ?? '—'}%
                     </span>
                     <span
-                      className="px-1.5 py-0.5 rounded bg-[#F7F7F5] dark:bg-[#2C2C2E] border border-[#E5E5E5] dark:border-[#3A3A3C]"
+                      className="px-1.5 py-0.5 rounded bg-sage-100 dark:bg-[#2C2C2E] border border-sage-200 dark:border-[#3A3A3C]"
                       title="Difficulty Balance"
                     >
                       D: {item.difficulty_balance_score ?? '—'}%
@@ -148,7 +148,7 @@ export const AnalysisHistoryTable: React.FC<AnalysisHistoryTableProps> = ({
                 </td>
 
                 {/* Analyzed At */}
-                <td className="py-3.5 px-4 whitespace-nowrap text-[#737373]">
+                <td className="py-3.5 px-4 whitespace-nowrap text-sage-500">
                   <div className="flex items-center gap-1">
                     <Clock className="w-3 h-3" />
                     <span>
@@ -169,10 +169,10 @@ export const AnalysisHistoryTable: React.FC<AnalysisHistoryTableProps> = ({
                       variant="ghost"
                       size="sm"
                       onClick={() => onViewSnapshot(item.id)}
-                      className="text-xs h-7 px-2 text-[#111111] dark:text-white hover:bg-[#E5E5E5] dark:hover:bg-[#2C2C2E]"
+                      className="text-xs h-7 px-2 text-sage-800 dark:text-white hover:bg-sage-200 dark:hover:bg-[#2C2C2E]"
                       title="View Historical Snapshot"
                     >
-                      <Eye className="w-3.5 h-3.5 mr-1 text-[#737373]" />
+                      <Eye className="w-3.5 h-3.5 mr-1 text-sage-500" />
                       Snapshot
                     </Button>
 

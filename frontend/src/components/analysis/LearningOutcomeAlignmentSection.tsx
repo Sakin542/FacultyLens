@@ -32,12 +32,12 @@ export const LearningOutcomeAlignmentSection: React.FC<LearningOutcomeAlignmentS
   if (!alignmentData) {
     return (
       <Card className="p-6 text-center space-y-3">
-        <div className="w-12 h-12 rounded-2xl bg-[#F7F7F5] border border-[#E5E5E5] flex items-center justify-center mx-auto text-[#737373]">
+        <div className="w-12 h-12 rounded-2xl bg-sage-100 border border-sage-200 flex items-center justify-center mx-auto text-sage-500">
           <Target className="w-6 h-6" />
         </div>
         <div>
-          <h3 className="text-sm font-bold text-[#111111]">No Alignment Analysis Available</h3>
-          <p className="text-xs text-[#737373] mt-1 max-w-md mx-auto">
+          <h3 className="text-sm font-bold text-sage-800">No Alignment Analysis Available</h3>
+          <p className="text-xs text-sage-500 mt-1 max-w-md mx-auto">
             Analyze examination questions against defined Course Learning Outcomes using dense sentence embeddings.
           </p>
         </div>
@@ -64,8 +64,8 @@ export const LearningOutcomeAlignmentSection: React.FC<LearningOutcomeAlignmentS
         <Card className="p-5 flex flex-col justify-between">
           <div className="flex items-start justify-between">
             <div>
-              <span className="text-xs uppercase font-semibold text-[#737373] tracking-wider">Overall LO Score</span>
-              <div className="text-3xl font-extrabold text-[#111111] mt-1 font-mono">
+              <span className="text-xs uppercase font-semibold text-sage-500 tracking-wider">Overall LO Score</span>
+              <div className="text-3xl font-extrabold text-sage-800 mt-1 font-mono">
                 {alignmentData.overall_alignment_score}%
               </div>
             </div>
@@ -81,8 +81,8 @@ export const LearningOutcomeAlignmentSection: React.FC<LearningOutcomeAlignmentS
         <Card className="p-5 flex flex-col justify-between">
           <div className="flex items-start justify-between">
             <div>
-              <span className="text-xs uppercase font-semibold text-[#737373] tracking-wider">LO Coverage</span>
-              <div className="text-3xl font-extrabold text-[#111111] mt-1 font-mono">
+              <span className="text-xs uppercase font-semibold text-sage-500 tracking-wider">LO Coverage</span>
+              <div className="text-3xl font-extrabold text-sage-800 mt-1 font-mono">
                 {alignmentData.covered_learning_outcomes_count} / {alignmentData.total_learning_outcomes}
               </div>
             </div>
@@ -100,8 +100,8 @@ export const LearningOutcomeAlignmentSection: React.FC<LearningOutcomeAlignmentS
         <Card className="p-5 flex flex-col justify-between">
           <div className="flex items-start justify-between">
             <div>
-              <span className="text-xs uppercase font-semibold text-[#737373] tracking-wider">Aligned Questions</span>
-              <div className="text-3xl font-extrabold text-[#111111] mt-1 font-mono">
+              <span className="text-xs uppercase font-semibold text-sage-500 tracking-wider">Aligned Questions</span>
+              <div className="text-3xl font-extrabold text-sage-800 mt-1 font-mono">
                 {alignmentData.aligned_questions_count} / {alignmentData.total_questions}
               </div>
             </div>
@@ -119,15 +119,15 @@ export const LearningOutcomeAlignmentSection: React.FC<LearningOutcomeAlignmentS
 
       {/* Structured Findings */}
       {alignmentData.findings && alignmentData.findings.length > 0 && (
-        <Card className="p-4 bg-[#F7F7F5] border border-[#E5E5E5] space-y-2">
-          <div className="flex items-center gap-2 text-xs font-bold text-[#111111] uppercase tracking-wider">
+        <Card className="p-4 bg-sage-100 border border-sage-200 space-y-2">
+          <div className="flex items-center gap-2 text-xs font-bold text-sage-800 uppercase tracking-wider">
             <Info className="w-4 h-4" />
             <span>Semantic Alignment Insights</span>
           </div>
           <ul className="space-y-1.5 text-xs text-[#404040]">
             {alignmentData.findings.map((finding, idx) => (
               <li key={idx} className="flex items-start gap-2">
-                <span className="text-[#111111] font-bold font-mono">•</span>
+                <span className="text-sage-800 font-bold font-mono">•</span>
                 <span>{finding}</span>
               </li>
             ))}
@@ -150,20 +150,20 @@ export const LearningOutcomeAlignmentSection: React.FC<LearningOutcomeAlignmentS
             return (
               <div
                 key={idx}
-                className="p-3.5 bg-white border border-[#E5E5E5] rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs"
+                className="p-3.5 bg-white border border-sage-200 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs"
               >
                 <div className="space-y-1 flex-1">
                   <div className="flex items-center gap-2">
                     {lo.code && (
-                      <span className="px-2 py-0.5 bg-[#111111] text-white rounded font-mono text-[11px] font-semibold">
+                      <span className="px-2 py-0.5 bg-sage-700 text-white rounded font-mono text-[11px] font-semibold">
                         {lo.code}
                       </span>
                     )}
-                    <span className="text-xs font-semibold text-[#111111]">{lo.description}</span>
+                    <span className="text-xs font-semibold text-sage-800">{lo.description}</span>
                   </div>
                   {lo.matching_questions_count > 0 && (
-                    <div className="text-[11px] text-[#737373]">
-                      Represented in questions: <strong className="text-[#111111]">{lo.matching_question_numbers.map(n => `Q${n}`).join(', ')}</strong> (Peak similarity: {(lo.max_similarity * 100).toFixed(1)}%)
+                    <div className="text-[11px] text-sage-500">
+                      Represented in questions: <strong className="text-sage-800">{lo.matching_question_numbers.map(n => `Q${n}`).join(', ')}</strong> (Peak similarity: {(lo.max_similarity * 100).toFixed(1)}%)
                     </div>
                   )}
                 </div>
@@ -198,13 +198,13 @@ export const LearningOutcomeAlignmentSection: React.FC<LearningOutcomeAlignmentS
             const matchedLo = qa.matched_learning_outcome;
 
             return (
-              <div key={key} className="p-4 bg-[#FAFAFA] border border-[#E5E5E5] rounded-xl space-y-2">
+              <div key={key} className="p-4 bg-sage-50 border border-sage-200 rounded-xl space-y-2">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-start gap-2.5 flex-1">
-                    <span className="px-2 py-0.5 bg-white border border-[#E5E5E5] rounded text-xs font-mono font-bold text-[#111111] shrink-0">
+                    <span className="px-2 py-0.5 bg-white border border-sage-200 rounded text-xs font-mono font-bold text-sage-800 shrink-0">
                       Q{qa.question_number || idx + 1}
                     </span>
-                    <p className="text-xs font-medium text-[#111111] leading-relaxed">
+                    <p className="text-xs font-medium text-sage-800 leading-relaxed">
                       {qa.question_text}
                     </p>
                   </div>
@@ -220,42 +220,42 @@ export const LearningOutcomeAlignmentSection: React.FC<LearningOutcomeAlignmentS
                 </div>
 
                 {matchedLo && (
-                  <div className="p-2.5 bg-white rounded-lg text-xs flex items-center justify-between gap-2 border border-[#E5E5E5]">
+                  <div className="p-2.5 bg-white rounded-lg text-xs flex items-center justify-between gap-2 border border-sage-200">
                     <div className="flex items-center gap-2 truncate">
-                      <Target className="w-3.5 h-3.5 text-[#737373] shrink-0" />
-                      <span className="font-mono font-bold text-[#111111]">
+                      <Target className="w-3.5 h-3.5 text-sage-500 shrink-0" />
+                      <span className="font-mono font-bold text-sage-800">
                         {matchedLo.code ? `[${matchedLo.code}]` : 'Matched:'}
                       </span>
-                      <span className="text-[#525252] truncate">{matchedLo.description}</span>
+                      <span className="text-sage-600 truncate">{matchedLo.description}</span>
                     </div>
-                    <span className="font-mono text-[11px] font-semibold text-[#111111] shrink-0">
+                    <span className="font-mono text-[11px] font-semibold text-sage-800 shrink-0">
                       {(qa.similarity_score * 100).toFixed(1)}% Sim
                     </span>
                   </div>
                 )}
 
                 {qa.reasoning && (
-                  <p className="text-[11px] text-[#737373] italic">{qa.reasoning}</p>
+                  <p className="text-[11px] text-sage-500 italic">{qa.reasoning}</p>
                 )}
 
                 {qa.alternative_matches && qa.alternative_matches.length > 0 && (
                   <div className="pt-1">
                     <button
                       onClick={() => toggleQuestion(key)}
-                      className="text-[11px] text-[#525252] hover:text-[#111111] flex items-center gap-1 font-medium transition-colors"
+                      className="text-[11px] text-sage-600 hover:text-sage-800 flex items-center gap-1 font-medium transition-colors"
                     >
                       <span>{qa.alternative_matches.length} Alternative Match{qa.alternative_matches.length > 1 ? 'es' : ''}</span>
                       {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                     </button>
 
                     {isExpanded && (
-                      <div className="mt-2 space-y-1 pl-3 border-l-2 border-[#E5E5E5]">
+                      <div className="mt-2 space-y-1 pl-3 border-l-2 border-sage-200">
                         {qa.alternative_matches.map((alt, altIdx) => (
-                          <div key={altIdx} className="text-[11px] text-[#525252] flex items-center justify-between">
+                          <div key={altIdx} className="text-[11px] text-sage-600 flex items-center justify-between">
                             <span>
                               <strong>{alt.code || 'LO'}:</strong> {alt.description.substring(0, 70)}...
                             </span>
-                            <span className="font-mono text-[#737373]">
+                            <span className="font-mono text-sage-500">
                               {(alt.similarity * 100).toFixed(1)}%
                             </span>
                           </div>

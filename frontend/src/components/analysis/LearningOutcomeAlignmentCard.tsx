@@ -40,30 +40,30 @@ export const LearningOutcomeAlignmentCard: React.FC<LearningOutcomeAlignmentCard
   };
 
   return (
-    <Card className="p-5 bg-white dark:bg-[#1C1C1E] border border-[#E5E5E5] dark:border-[#2C2C2E] shadow-sm space-y-4">
-      <div className="flex items-center justify-between pb-3 border-b border-[#E5E5E5] dark:border-[#2C2C2E]">
+    <Card className="p-5 bg-white dark:bg-[#1C1C1E] border border-sage-200 dark:border-[#2C2C2E] shadow-sm space-y-4">
+      <div className="flex items-center justify-between pb-3 border-b border-sage-200 dark:border-[#2C2C2E]">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-[#F7F7F5] dark:bg-[#2C2C2E] border border-[#E5E5E5] dark:border-[#3A3A3C] flex items-center justify-center text-[#111111] dark:text-white">
+          <div className="w-8 h-8 rounded-lg bg-sage-100 dark:bg-[#2C2C2E] border border-sage-200 dark:border-[#3A3A3C] flex items-center justify-center text-sage-800 dark:text-white">
             <Target className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-[#111111] dark:text-white">
+            <h3 className="text-sm font-bold text-sage-800 dark:text-white">
               Learning Outcome Alignment
             </h3>
-            <p className="text-xs text-[#737373]">Semantic mapping to course learning outcomes</p>
+            <p className="text-xs text-sage-500">Semantic mapping to course learning outcomes</p>
           </div>
         </div>
 
         <div className="text-right">
-          <span className="text-xs text-[#737373] block">Overall Alignment</span>
-          <span className="text-lg font-extrabold font-mono text-[#111111] dark:text-white">
+          <span className="text-xs text-sage-500 block">Overall Alignment</span>
+          <span className="text-lg font-extrabold font-mono text-sage-800 dark:text-white">
             {score !== null && score !== undefined ? `${Math.round(score)}%` : '—'}
           </span>
         </div>
       </div>
 
       {coverage.length === 0 && alignmentsList.length === 0 ? (
-        <div className="p-4 text-center text-xs text-[#737373] italic">
+        <div className="p-4 text-center text-xs text-sage-500 italic">
           Learning outcome analysis unavailable. Define course learning outcomes in course settings to enable semantic alignment scoring.
         </div>
       ) : (
@@ -73,19 +73,19 @@ export const LearningOutcomeAlignmentCard: React.FC<LearningOutcomeAlignmentCard
             {coverage.map((lo, idx) => (
               <div
                 key={idx}
-                className="p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C] flex items-center justify-between gap-3 text-xs"
+                className="p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl border border-sage-200 dark:border-[#3A3A3C] flex items-center justify-between gap-3 text-xs"
               >
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono font-bold text-xs text-[#111111] dark:text-white">
+                    <span className="font-mono font-bold text-xs text-sage-800 dark:text-white">
                       {lo.code}
                     </span>
-                    <span className="text-[11px] text-[#737373]">
+                    <span className="text-[11px] text-sage-500">
                       {lo.matching_questions_count} {lo.matching_questions_count === 1 ? 'question' : 'questions'}
                     </span>
                   </div>
                   {lo.description && (
-                    <p className="text-[11px] text-[#737373] mt-0.5 truncate max-w-md">
+                    <p className="text-[11px] text-sage-500 mt-0.5 truncate max-w-md">
                       {lo.description}
                     </p>
                   )}
@@ -93,7 +93,7 @@ export const LearningOutcomeAlignmentCard: React.FC<LearningOutcomeAlignmentCard
 
                 <div className="shrink-0 flex items-center gap-2">
                   {lo.max_similarity !== undefined && (
-                    <span className="font-mono text-[11px] text-[#737373]">
+                    <span className="font-mono text-[11px] text-sage-500">
                       Semantic similarity: {lo.max_similarity.toFixed(2)}
                     </span>
                   )}
@@ -105,11 +105,11 @@ export const LearningOutcomeAlignmentCard: React.FC<LearningOutcomeAlignmentCard
 
           {/* Question -> LO Mapping Toggle */}
           {alignmentsList.length > 0 && (
-            <div className="pt-2 border-t border-[#E5E5E5] dark:border-[#2C2C2E]">
+            <div className="pt-2 border-t border-sage-200 dark:border-[#2C2C2E]">
               <button
                 type="button"
                 onClick={() => setShowMappingTable(!showMappingTable)}
-                className="flex items-center justify-between w-full text-xs font-semibold text-[#111111] dark:text-white hover:text-[#737373] transition-colors py-1"
+                className="flex items-center justify-between w-full text-xs font-semibold text-sage-800 dark:text-white hover:text-sage-500 transition-colors py-1"
               >
                 <span>Question → Learning Outcome Mapping ({alignmentsList.length})</span>
                 {showMappingTable ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -119,23 +119,23 @@ export const LearningOutcomeAlignmentCard: React.FC<LearningOutcomeAlignmentCard
                 <div className="mt-2.5 overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
-                      <tr className="border-b border-[#E5E5E5] dark:border-[#3A3A3C] text-[#737373]">
+                      <tr className="border-b border-sage-200 dark:border-[#3A3A3C] text-sage-500">
                         <th className="py-2 px-2.5 font-semibold">Question ID</th>
                         <th className="py-2 px-2.5 font-semibold">Target LO</th>
                         <th className="py-2 px-2.5 font-semibold">Semantic Similarity</th>
                         <th className="py-2 px-2.5 font-semibold">Alignment</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#E5E5E5] dark:divide-[#3A3A3C]">
+                    <tbody className="divide-y divide-sage-200 dark:divide-[#3A3A3C]">
                       {alignmentsList.map((item) => (
-                        <tr key={item.id} className="hover:bg-[#F7F7F5] dark:hover:bg-[#2C2C2E]">
-                          <td className="py-2 px-2.5 font-mono text-[11px] text-[#111111] dark:text-white">
+                        <tr key={item.id} className="hover:bg-sage-100 dark:hover:bg-[#2C2C2E]">
+                          <td className="py-2 px-2.5 font-mono text-[11px] text-sage-800 dark:text-white">
                             #{item.question_id}
                           </td>
-                          <td className="py-2 px-2.5 font-mono text-[11px] text-[#111111] dark:text-white">
+                          <td className="py-2 px-2.5 font-mono text-[11px] text-sage-800 dark:text-white">
                             {item.learning_outcome_code || `LO #${item.learning_outcome_id}`}
                           </td>
-                          <td className="py-2 px-2.5 font-mono text-[11px] text-[#737373]">
+                          <td className="py-2 px-2.5 font-mono text-[11px] text-sage-500">
                             {item.similarity_score.toFixed(2)}
                           </td>
                           <td className="py-2 px-2.5">

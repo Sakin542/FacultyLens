@@ -39,16 +39,16 @@ export function getBlueprintErrorMessage(err: unknown): string {
 
 export const BlueprintHeader: React.FC<{ assessment: { id: number; title: string; type: string } | null; course: { id: number; code: string; name: string } | null; blueprint: AssessmentBlueprint | null }> = ({ assessment, course, blueprint }) => (
   <header data-testid="blueprint-header" className="space-y-1">
-    <nav aria-label="Breadcrumb" className="text-xs text-[#737373] flex gap-1">
+    <nav aria-label="Breadcrumb" className="text-xs text-sage-500 flex gap-1">
       <Link to="/assessments" className="hover:underline">Assessments</Link><span>/</span>
       {assessment && <Link to={`/assessments/${assessment.id}`} className="hover:underline">{assessment.title}</Link>}<span>/</span><span>Blueprint</span>
     </nav>
     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-      <div className="flex items-center gap-2"><ClipboardList className="w-5 h-5" aria-hidden="true" /><h1 className="text-2xl font-bold text-[#111111] dark:text-white">Assessment Blueprint</h1>
+      <div className="flex items-center gap-2"><ClipboardList className="w-5 h-5" aria-hidden="true" /><h1 className="text-2xl font-bold text-sage-800 dark:text-white">Assessment Blueprint</h1>
         {blueprint && <Badge variant={statusVariant(blueprint.status)} dot size="md">{humanize(blueprint.status)} · v{blueprint.version}</Badge>}</div>
-      {course && assessment && <p className="text-sm text-[#737373]">{course.code} — {course.name} · {assessment.title} ({humanize(assessment.type)})</p>}
+      {course && assessment && <p className="text-sm text-sage-500">{course.code} — {course.name} · {assessment.title} ({humanize(assessment.type)})</p>}
     </div>
-    <p className="text-xs text-[#737373] max-w-3xl">Plan and validate the structure before selecting or generating questions. The blueprint never publishes or finalizes the assessment, and it never changes questions automatically.</p>
+    <p className="text-xs text-sage-500 max-w-3xl">Plan and validate the structure before selecting or generating questions. The blueprint never publishes or finalizes the assessment, and it never changes questions automatically.</p>
   </header>
 );
 
@@ -60,10 +60,10 @@ export const BlueprintSummary: React.FC<{ blueprint: AssessmentBlueprint; valida
       ['Validation', validation ? humanize(validation.status) : 'Not validated'],
       ['Blueprint Completeness', validation ? `${validation.completeness.score}%` : (blueprint.blueprint_completeness !== null ? `${blueprint.blueprint_completeness}%` : '—')],
     ] as const).map(([l, v]) => (
-      <div key={l} className="rounded-lg border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-4 py-3">
-        <dt className="text-xs uppercase tracking-wide text-[#737373]">{l}</dt>
-        <dd className="text-xl font-semibold text-[#111111] dark:text-white mt-1 tabular-nums">{v}</dd>
-        {l === 'Blueprint Completeness' && <p className="text-[10px] text-[#A3A3A3]">Planning indicator, not assessment quality</p>}
+      <div key={l} className="rounded-lg border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-4 py-3">
+        <dt className="text-xs uppercase tracking-wide text-sage-500">{l}</dt>
+        <dd className="text-xl font-semibold text-sage-800 dark:text-white mt-1 tabular-nums">{v}</dd>
+        {l === 'Blueprint Completeness' && <p className="text-[10px] text-sage-400">Planning indicator, not assessment quality</p>}
       </div>
     ))}
   </dl>
@@ -91,16 +91,16 @@ export const BlueprintActions: React.FC<{
 export const BlueprintVersions: React.FC<{ versions: BlueprintVersion[] }> = ({ versions }) => (
   versions.length <= 1 ? null : (
     <Card data-testid="blueprint-versions" className="p-4">
-      <h3 className="text-sm font-semibold text-[#111111] dark:text-white mb-2">Versions</h3>
-      <ul className="text-sm divide-y divide-[#F0F0F0] dark:divide-[#2A2A2A]">
-        {versions.map((v) => <li key={v.id} className="py-1 flex flex-wrap items-center gap-2"><span className="font-medium">Version {v.version}</span><Badge variant={statusVariant(v.status)} size="sm">{humanize(v.status)}</Badge><span className="text-xs text-[#737373]">{v.total_questions} questions / {fmtMarks(v.total_marks)} marks{v.finalized_at ? ` · finalized ${new Date(v.finalized_at).toLocaleDateString()}` : ''}{v.is_current ? ' · current' : ''}</span></li>)}
+      <h3 className="text-sm font-semibold text-sage-800 dark:text-white mb-2">Versions</h3>
+      <ul className="text-sm divide-y divide-sage-100 dark:divide-[#2A2A2A]">
+        {versions.map((v) => <li key={v.id} className="py-1 flex flex-wrap items-center gap-2"><span className="font-medium">Version {v.version}</span><Badge variant={statusVariant(v.status)} size="sm">{humanize(v.status)}</Badge><span className="text-xs text-sage-500">{v.total_questions} questions / {fmtMarks(v.total_marks)} marks{v.finalized_at ? ` · finalized ${new Date(v.finalized_at).toLocaleDateString()}` : ''}{v.is_current ? ' · current' : ''}</span></li>)}
       </ul>
     </Card>
   )
 );
 
 export const BlueprintLoading: React.FC<{ label?: string }> = ({ label = 'Loading blueprint…' }) => (
-  <div data-testid="blueprint-loading" role="status" className="flex items-center gap-2 rounded-lg border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-4 py-6 text-sm text-[#525252] dark:text-[#A3A3A3]"><Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" /><span>{label}</span></div>
+  <div data-testid="blueprint-loading" role="status" className="flex items-center gap-2 rounded-lg border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-4 py-6 text-sm text-sage-600 dark:text-sage-400"><Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" /><span>{label}</span></div>
 );
 
 export const BlueprintError: React.FC<{ message: string; onRetry?: () => void; className?: string }> = ({ message, onRetry, className }) => (
@@ -111,10 +111,10 @@ export const BlueprintError: React.FC<{ message: string; onRetry?: () => void; c
 );
 
 export const BlueprintEmptyState: React.FC<{ canEdit: boolean; onCreate: () => void }> = ({ canEdit, onCreate }) => (
-  <div data-testid="blueprint-empty-state" className="flex flex-col items-center justify-center text-center py-12 px-6 rounded-xl border border-dashed border-[#E5E5E5] dark:border-[#2A2A2A]">
-    <div className="w-12 h-12 rounded-full bg-[#F7F7F5] dark:bg-[#1F1F1F] border border-[#E5E5E5] dark:border-[#2A2A2A] flex items-center justify-center text-[#737373] mb-4"><ClipboardList className="w-6 h-6" aria-hidden="true" /></div>
-    <h4 className="text-base font-semibold text-[#111111] dark:text-white mb-1">No blueprint yet</h4>
-    <p className="text-sm text-[#737373] max-w-md">Define marks, sections, difficulty, Bloom, CO/PO and topic targets, then validate the plan before generating or selecting questions.</p>
+  <div data-testid="blueprint-empty-state" className="flex flex-col items-center justify-center text-center py-12 px-6 rounded-xl border border-dashed border-sage-200 dark:border-[#2A2A2A]">
+    <div className="w-12 h-12 rounded-full bg-sage-100 dark:bg-[#1F1F1F] border border-sage-200 dark:border-[#2A2A2A] flex items-center justify-center text-sage-500 mb-4"><ClipboardList className="w-6 h-6" aria-hidden="true" /></div>
+    <h4 className="text-base font-semibold text-sage-800 dark:text-white mb-1">No blueprint yet</h4>
+    <p className="text-sm text-sage-500 max-w-md">Define marks, sections, difficulty, Bloom, CO/PO and topic targets, then validate the plan before generating or selecting questions.</p>
     {canEdit && <Button className="mt-4" size="sm" onClick={onCreate}>Create blueprint</Button>}
   </div>
 );

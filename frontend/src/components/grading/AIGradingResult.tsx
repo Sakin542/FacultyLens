@@ -44,12 +44,12 @@ export const AIGradingResult: React.FC<AIGradingResultProps> = ({
   alignment,
 }) => (
   <section
-    className="rounded-xl border border-[#E5E5E5] dark:border-[#2C2C2E] bg-white dark:bg-[#1C1C1E] p-4 space-y-4"
+    className="rounded-xl border border-sage-200 dark:border-[#2C2C2E] bg-white dark:bg-[#1C1C1E] p-4 space-y-4"
     data-testid="ai-grading-result"
     aria-label="AI grading assistance"
   >
     <header className="flex flex-wrap items-center justify-between gap-2">
-      <h4 className="text-xs font-bold uppercase tracking-wider text-[#111111] dark:text-white flex items-center gap-2">
+      <h4 className="text-xs font-bold uppercase tracking-wider text-sage-800 dark:text-white flex items-center gap-2">
         <Sparkles className="w-3.5 h-3.5 text-amber-500" /> AI Grading Assistance
       </h4>
       <div className="flex items-center gap-2 flex-wrap">
@@ -88,45 +88,45 @@ export const AIGradingResult: React.FC<AIGradingResultProps> = ({
 
     {result.overall_feedback && (
       <div className="space-y-1">
-        <span className="block text-[10px] uppercase tracking-wider font-semibold text-[#737373]">AI Assessment</span>
-        <p className="text-xs text-[#262626] dark:text-[#E5E5E5] leading-relaxed" data-testid="ai-feedback">{result.overall_feedback}</p>
+        <span className="block text-[10px] uppercase tracking-wider font-semibold text-sage-500">AI Assessment</span>
+        <p className="text-xs text-sage-700 dark:text-sage-200 leading-relaxed" data-testid="ai-feedback">{result.overall_feedback}</p>
       </div>
     )}
 
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
       <div className="space-y-1">
-        <span className="block text-[10px] uppercase tracking-wider font-semibold text-[#737373]">Strengths</span>
+        <span className="block text-[10px] uppercase tracking-wider font-semibold text-sage-500">Strengths</span>
         {result.strengths.length > 0 ? (
           <ul className="space-y-1" data-testid="ai-strengths">
             {result.strengths.map((s, i) => (
-              <li key={i} className="flex items-start gap-1.5 text-xs text-[#262626] dark:text-[#E5E5E5]">
+              <li key={i} className="flex items-start gap-1.5 text-xs text-sage-700 dark:text-sage-200">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" /> {s}
               </li>
             ))}
           </ul>
-        ) : <p className="text-xs text-[#737373] italic">No specific strengths were identified.</p>}
+        ) : <p className="text-xs text-sage-500 italic">No specific strengths were identified.</p>}
       </div>
       <div className="space-y-1">
-        <span className="block text-[10px] uppercase tracking-wider font-semibold text-[#737373]">Missing</span>
+        <span className="block text-[10px] uppercase tracking-wider font-semibold text-sage-500">Missing</span>
         {result.missing_elements.length > 0 ? (
           <ul className="space-y-1" data-testid="ai-missing">
             {result.missing_elements.map((m, i) => (
-              <li key={i} className="flex items-start gap-1.5 text-xs text-[#262626] dark:text-[#E5E5E5]">
+              <li key={i} className="flex items-start gap-1.5 text-xs text-sage-700 dark:text-sage-200">
                 <MinusCircle className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" /> {m}
               </li>
             ))}
           </ul>
-        ) : <p className="text-xs text-[#737373] italic">No missing elements were identified.</p>}
+        ) : <p className="text-xs text-sage-500 italic">No missing elements were identified.</p>}
       </div>
     </div>
 
     <CriterionGradingBreakdown criteria={result.criterion_results} />
 
     {result.evaluation_summary && (
-      <p className="text-[11px] text-[#737373] leading-relaxed" data-testid="ai-summary">{result.evaluation_summary}</p>
+      <p className="text-[11px] text-sage-500 leading-relaxed" data-testid="ai-summary">{result.evaluation_summary}</p>
     )}
 
-    <div className="pt-3 border-t border-[#E5E5E5] dark:border-[#2C2C2E] space-y-3">
+    <div className="pt-3 border-t border-sage-200 dark:border-[#2C2C2E] space-y-3">
       <GradingDisclaimer variant="block" />
       <FacultyGradeEditor
         answer={answer}
@@ -139,7 +139,7 @@ export const AIGradingResult: React.FC<AIGradingResultProps> = ({
     </div>
 
     {result.model_name && (
-      <p className="text-[10px] text-[#737373]">
+      <p className="text-[10px] text-sage-500">
         Engine: {result.model_name}{result.model_version ? ` v${result.model_version}` : ''}{result.generation_method ? ` · ${result.generation_method.replace(/_/g, ' ')}` : ''}
       </p>
     )}

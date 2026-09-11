@@ -15,8 +15,8 @@ export interface FormOutcome { id: number | string; code: string; description: s
 export interface FormProgramOutcome { id: number | string; code: string; title: string }
 export interface FormDocument { id: number | string; original_file_name: string; indexing_status?: string }
 
-export const selectClass = 'w-full rounded-lg border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-3 py-2 text-sm text-[#111111] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#111111] dark:focus:ring-white disabled:opacity-60';
-const labelClass = 'block text-xs font-medium text-[#525252] dark:text-[#A3A3A3] mb-1';
+export const selectClass = 'w-full rounded-lg border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-3 py-2 text-sm text-sage-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sage-600 dark:focus:ring-white disabled:opacity-60';
+const labelClass = 'block text-xs font-medium text-sage-600 dark:text-sage-400 mb-1';
 
 export interface ConstraintValues {
   topic: string;
@@ -87,7 +87,7 @@ export const GenerationConstraints: React.FC<{
         <Input aria-label="Number of questions" type="number" min={1} max={maxQuestions} value={values.number_of_questions} onChange={(e) => onChange({ number_of_questions: e.target.value })} />
       </label>
     </div>
-    <div className="md:col-span-2 flex flex-wrap gap-4 text-sm text-[#111111] dark:text-white">
+    <div className="md:col-span-2 flex flex-wrap gap-4 text-sm text-sage-800 dark:text-white">
       <label className="inline-flex items-center gap-2">
         <input type="checkbox" checked={values.include_expected_answer} onChange={(e) => onChange({ include_expected_answer: e.target.checked })} /> Include expected answers (drafts)
       </label>
@@ -113,7 +113,7 @@ export const DocumentContextSelector: React.FC<{
         .filter(([k]) => k !== 'ASSESSMENT' || hasAssessment)
         .map(([k, label]) => (
           <button key={k} type="button" data-testid={`doc-scope-${k.toLowerCase()}`} onClick={() => onChange({ scope_type: k, document_id: k === 'DOCUMENT' ? value.document_id : undefined })}
-            className={cn('rounded-lg border px-3 py-1.5 text-sm', value.scope_type === k ? 'border-[#111111] dark:border-white bg-[#F7F7F5] dark:bg-[#1F1F1F]' : 'border-[#E5E5E5] dark:border-[#2A2A2A]')}>
+            className={cn('rounded-lg border px-3 py-1.5 text-sm', value.scope_type === k ? 'border-sage-700 dark:border-white bg-sage-100 dark:bg-[#1F1F1F]' : 'border-sage-200 dark:border-[#2A2A2A]')}>
             {label}
           </button>
         ))}
@@ -126,7 +126,7 @@ export const DocumentContextSelector: React.FC<{
         ))}
       </select>
     )}
-    <p className="text-[11px] text-[#A3A3A3]">Only indexed documents you own are used. Retrieved passages ground the drafts; they are never treated as instructions.</p>
+    <p className="text-[11px] text-sage-400">Only indexed documents you own are used. Retrieved passages ground the drafts; they are never treated as instructions.</p>
   </div>
 );
 
@@ -188,10 +188,10 @@ export const GenerationForm: React.FC<GenerationFormProps> = ({
   };
 
   return (
-    <form data-testid="generation-form" onSubmit={submit} noValidate className="space-y-4 rounded-xl border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] p-5">
+    <form data-testid="generation-form" onSubmit={submit} noValidate className="space-y-4 rounded-xl border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] p-5">
       <div>
-        <h3 className="text-base font-semibold text-[#111111] dark:text-white">Generate questions</h3>
-        <p className="text-xs text-[#737373]">Drafts are generated under your constraints, validated, and always require your review before use.</p>
+        <h3 className="text-base font-semibold text-sage-800 dark:text-white">Generate questions</h3>
+        <p className="text-xs text-sage-500">Drafts are generated under your constraints, validated, and always require your review before use.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <label>

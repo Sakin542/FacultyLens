@@ -31,34 +31,34 @@ export const RubricAlignmentSummary: React.FC<RubricAlignmentSummaryProps> = ({ 
           {([
             ['Strong', counts.strong, 'text-emerald-700 dark:text-emerald-400'],
             ['Partial', counts.partial, 'text-amber-700 dark:text-amber-400'],
-            ['Weak', counts.weak, 'text-[#737373]'],
+            ['Weak', counts.weak, 'text-sage-500'],
             ['Not aligned', counts.not_aligned, 'text-red-700 dark:text-red-400'],
           ] as const).map(([label, value, cls]) => (
-            <div key={label} className="p-2 rounded-lg bg-[#F7F7F5] dark:bg-[#2C2C2E]">
+            <div key={label} className="p-2 rounded-lg bg-sage-100 dark:bg-[#2C2C2E]">
               <span className={`block text-lg font-bold font-mono ${cls}`}>{value}</span>
-              <span className="block text-[10px] uppercase tracking-wider text-[#737373]">{label}</span>
+              <span className="block text-[10px] uppercase tracking-wider text-sage-500">{label}</span>
             </div>
           ))}
         </div>
       </div>
 
       {alignment.summary && (
-        <p className="text-xs text-[#262626] dark:text-[#E5E5E5] leading-relaxed" data-testid="alignment-summary-text">{alignment.summary}</p>
+        <p className="text-xs text-sage-700 dark:text-sage-200 leading-relaxed" data-testid="alignment-summary-text">{alignment.summary}</p>
       )}
 
       {gradingReady && (
-        <div className="p-3 rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] space-y-2" data-testid="signal-comparison">
-          <span className="text-[10px] uppercase tracking-wider font-semibold text-[#737373] flex items-center gap-1.5">
+        <div className="p-3 rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] space-y-2" data-testid="signal-comparison">
+          <span className="text-[10px] uppercase tracking-wider font-semibold text-sage-500 flex items-center gap-1.5">
             <Scale className="w-3 h-3" /> Two different signals
           </span>
           <div className="grid grid-cols-2 gap-3 text-xs">
             <div>
-              <span className="block text-[10px] text-[#737373]">AI Suggested Marks</span>
-              <span className="font-mono font-bold text-[#111111] dark:text-white">{fmt(aiGrading!.suggested_marks as number)} / {fmt(aiGrading!.maximum_marks)}</span>
+              <span className="block text-[10px] text-sage-500">AI Suggested Marks</span>
+              <span className="font-mono font-bold text-sage-800 dark:text-white">{fmt(aiGrading!.suggested_marks as number)} / {fmt(aiGrading!.maximum_marks)}</span>
             </div>
             <div>
-              <span className="block text-[10px] text-[#737373]">Answer ↔ Rubric Alignment</span>
-              <span className="font-mono font-bold text-[#111111] dark:text-white">{formatPercent(alignment.overall_alignment_score)}</span>
+              <span className="block text-[10px] text-sage-500">Answer ↔ Rubric Alignment</span>
+              <span className="font-mono font-bold text-sage-800 dark:text-white">{formatPercent(alignment.overall_alignment_score)}</span>
             </div>
           </div>
           {inconsistent ? (
@@ -70,7 +70,7 @@ export const RubricAlignmentSummary: React.FC<RubricAlignmentSummaryProps> = ({ 
               </div>
             </div>
           ) : (
-            <p className="text-[10px] text-[#737373]">Alignment is not a grade; the two signals are shown for comparison only.</p>
+            <p className="text-[10px] text-sage-500">Alignment is not a grade; the two signals are shown for comparison only.</p>
           )}
         </div>
       )}

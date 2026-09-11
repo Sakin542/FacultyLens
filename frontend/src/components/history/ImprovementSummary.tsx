@@ -31,7 +31,7 @@ export const ImprovementSummary: React.FC<ImprovementSummaryProps> = ({ summary 
       );
     }
     return (
-      <span className="inline-flex items-center text-[#737373] font-bold font-mono">
+      <span className="inline-flex items-center text-sage-500 font-bold font-mono">
         <Minus className="w-3.5 h-3.5 mr-0.5" />
         0.0 pts
       </span>
@@ -53,10 +53,10 @@ export const ImprovementSummary: React.FC<ImprovementSummaryProps> = ({ summary 
             <Sparkles className="w-4 h-4" />
           </div>
           <div>
-            <h4 className="text-sm font-bold text-[#111111] dark:text-white">
+            <h4 className="text-sm font-bold text-sage-800 dark:text-white">
               Quality Indicator Evolution
             </h4>
-            <p className="text-xs text-[#737373] flex items-center gap-1.5">
+            <p className="text-xs text-sage-500 flex items-center gap-1.5">
               <Calendar className="w-3 h-3" />
               Timeline: {baseline_date} → {latest_date}
             </p>
@@ -64,8 +64,8 @@ export const ImprovementSummary: React.FC<ImprovementSummaryProps> = ({ summary 
         </div>
 
         {/* Overall Delta Badge */}
-        <div className="flex items-center gap-2 bg-white dark:bg-[#2C2C2E] px-3 py-1.5 rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C] shadow-xs">
-          <span className="text-xs text-[#737373]">Overall Delta:</span>
+        <div className="flex items-center gap-2 bg-white dark:bg-[#2C2C2E] px-3 py-1.5 rounded-xl border border-sage-200 dark:border-[#3A3A3C] shadow-xs">
+          <span className="text-xs text-sage-500">Overall Delta:</span>
           <div className="text-sm">
             {renderDelta(improvements.overall_score)}
           </div>
@@ -77,9 +77,9 @@ export const ImprovementSummary: React.FC<ImprovementSummaryProps> = ({ summary 
         {dimensions.map((dim) => (
           <div
             key={dim.key}
-            className="p-3 bg-white dark:bg-[#1C1C1E] rounded-xl border border-[#E5E5E5] dark:border-[#2C2C2E] shadow-xs space-y-1"
+            className="p-3 bg-white dark:bg-[#1C1C1E] rounded-xl border border-sage-200 dark:border-[#2C2C2E] shadow-xs space-y-1"
           >
-            <div className="text-[11px] font-medium text-[#737373]">
+            <div className="text-[11px] font-medium text-sage-500">
               {dim.label}
             </div>
             <div className="text-xs">
@@ -89,7 +89,7 @@ export const ImprovementSummary: React.FC<ImprovementSummaryProps> = ({ summary 
         ))}
       </div>
 
-      <p className="text-[11px] text-[#737373] italic">
+      <p className="text-[11px] text-sage-500 italic">
         * Metrics reflect relative point differences between earliest baseline and latest recorded analysis to assist faculty decision-making.
       </p>
     </Card>

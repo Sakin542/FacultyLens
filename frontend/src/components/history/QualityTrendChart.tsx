@@ -22,7 +22,7 @@ export const QualityTrendChart: React.FC<QualityTrendChartProps> = ({ trendData 
 
   if (series.length === 0) {
     return (
-      <Card className="p-6 bg-white dark:bg-[#1C1C1E] border border-[#E5E5E5] dark:border-[#2C2C2E] text-center text-[#737373] text-sm">
+      <Card className="p-6 bg-white dark:bg-[#1C1C1E] border border-sage-200 dark:border-[#2C2C2E] text-center text-sage-500 text-sm">
         No completed analyses recorded yet for trend visualization.
       </Card>
     );
@@ -69,19 +69,19 @@ export const QualityTrendChart: React.FC<QualityTrendChartProps> = ({ trendData 
       : `${pathD} L ${points[points.length - 1].x} ${chartHeight - paddingY} L ${points[0].x} ${chartHeight - paddingY} Z`;
 
   return (
-    <Card className="p-5 bg-white dark:bg-[#1C1C1E] border border-[#E5E5E5] dark:border-[#2C2C2E] shadow-sm space-y-4">
+    <Card className="p-5 bg-white dark:bg-[#1C1C1E] border border-sage-200 dark:border-[#2C2C2E] shadow-sm space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#E5E5E5] dark:border-[#2C2C2E]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-sage-200 dark:border-[#2C2C2E]">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 flex items-center justify-center text-blue-600 dark:text-blue-400">
             <TrendingUp className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-[#111111] dark:text-white">
+            <h3 className="text-sm font-bold text-sage-800 dark:text-white">
               Quality Trajectory over Time
             </h3>
-            <p className="text-xs text-[#737373]">
-              Course: <span className="font-semibold text-[#111111] dark:text-white">{trendData.course?.code} — {trendData.course?.name}</span> ({trendData.total_data_points} analyses)
+            <p className="text-xs text-sage-500">
+              Course: <span className="font-semibold text-sage-800 dark:text-white">{trendData.course?.code} — {trendData.course?.name}</span> ({trendData.total_data_points} analyses)
             </p>
           </div>
         </div>
@@ -97,8 +97,8 @@ export const QualityTrendChart: React.FC<QualityTrendChartProps> = ({ trendData 
                 onClick={() => setActiveMetric(key as any)}
                 className={`px-2.5 py-1 rounded-lg font-medium transition-all text-xs ${
                   isActive
-                    ? 'bg-[#111111] text-white dark:bg-white dark:text-[#111111] shadow-sm'
-                    : 'bg-[#F7F7F5] dark:bg-[#2C2C2E] text-[#737373] hover:text-[#111111] dark:hover:text-white'
+                    ? 'bg-sage-700 text-white dark:bg-white dark:text-sage-800 shadow-sm'
+                    : 'bg-sage-100 dark:bg-[#2C2C2E] text-sage-500 hover:text-sage-800 dark:hover:text-white'
                 }`}
               >
                 {config.label}
@@ -125,14 +125,14 @@ export const QualityTrendChart: React.FC<QualityTrendChartProps> = ({ trendData 
                   x2={chartWidth - paddingX}
                   y2={y}
                   stroke="currentColor"
-                  className="text-[#E5E5E5] dark:text-[#2C2C2E]"
+                  className="text-sage-200 dark:text-[#2C2C2E]"
                   strokeDasharray="4 4"
                 />
                 <text
                   x={paddingX - 6}
                   y={y + 3}
                   textAnchor="end"
-                  className="text-[9px] fill-[#737373] font-mono"
+                  className="text-[9px] fill-sage-500 font-mono"
                 >
                   {score}
                 </text>
@@ -185,7 +185,7 @@ export const QualityTrendChart: React.FC<QualityTrendChartProps> = ({ trendData 
                   x={p.x}
                   y={chartHeight - 6}
                   textAnchor="middle"
-                  className="text-[9px] fill-[#737373] font-mono"
+                  className="text-[9px] fill-sage-500 font-mono"
                 >
                   {p.item.analyzed_at}
                 </text>
@@ -197,7 +197,7 @@ export const QualityTrendChart: React.FC<QualityTrendChartProps> = ({ trendData 
         {/* Tooltip Overlay */}
         {hoveredIndex !== null && points[hoveredIndex] && (
           <div
-            className="absolute z-10 -translate-x-1/2 bg-[#111111] text-white p-2 rounded-lg text-xs shadow-lg pointer-events-none"
+            className="absolute z-10 -translate-x-1/2 bg-sage-700 text-white p-2 rounded-lg text-xs shadow-lg pointer-events-none"
             style={{
               left: `${(points[hoveredIndex].x / chartWidth) * 100}%`,
               top: `${Math.max(10, (points[hoveredIndex].y / chartHeight) * 100 - 35)}%`,
@@ -215,10 +215,10 @@ export const QualityTrendChart: React.FC<QualityTrendChartProps> = ({ trendData 
       </div>
 
       {/* Accessible Trend Summary */}
-      <div className="flex items-start gap-2 p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C] text-xs text-[#737373] dark:text-[#A1A1AA]">
-        <Info className="w-4 h-4 text-[#737373] shrink-0 mt-0.5" />
+      <div className="flex items-start gap-2 p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl border border-sage-200 dark:border-[#3A3A3C] text-xs text-sage-500 dark:text-[#A1A1AA]">
+        <Info className="w-4 h-4 text-sage-500 shrink-0 mt-0.5" />
         <div>
-          <span className="font-semibold text-[#111111] dark:text-white">Summary Trajectory: </span>
+          <span className="font-semibold text-sage-800 dark:text-white">Summary Trajectory: </span>
           {trendData.summary_text}
         </div>
       </div>

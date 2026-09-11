@@ -39,7 +39,7 @@ export const PendingInvitations: React.FC = () => {
 
   return (
     <div className="space-y-4 max-w-3xl" data-testid="pending-invitations-page">
-      <div><h1 className="text-2xl font-bold text-[#111111] dark:text-white">Pending Invitations</h1><p className="text-sm text-[#737373]">Courses other faculty have invited you to collaborate on.</p></div>
+      <div><h1 className="text-2xl font-bold text-sage-800 dark:text-white">Pending Invitations</h1><p className="text-sm text-sage-500">Courses other faculty have invited you to collaborate on.</p></div>
       {error && <CollaborationError message={error} onRetry={load} />}
       {notice && <p className="text-sm text-emerald-700 dark:text-emerald-300">{notice}</p>}
       {loading ? <CollaborationLoading /> : items.length === 0 ? (
@@ -83,17 +83,17 @@ export const InvitationLanding: React.FC = () => {
 
   return (
     <div className="min-h-[60vh] flex items-center justify-center p-6" data-testid="invitation-landing">
-      <div className="w-full max-w-lg rounded-xl border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] p-6 space-y-4">
-        <h1 className="text-xl font-bold text-[#111111] dark:text-white flex items-center gap-2"><Mail className="w-5 h-5" /> Collaboration invitation</h1>
+      <div className="w-full max-w-lg rounded-xl border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] p-6 space-y-4">
+        <h1 className="text-xl font-bold text-sage-800 dark:text-white flex items-center gap-2"><Mail className="w-5 h-5" /> Collaboration invitation</h1>
         {error && <CollaborationError message={error} />}
         {!invitation && !error && <CollaborationLoading label="Checking invitation…" />}
         {invitation && (
           <>
-            <div className="rounded-lg bg-[#F7F7F5] dark:bg-[#1F1F1F] p-4 text-sm space-y-1" data-testid="invitation-preview">
-              <p className="text-[#111111] dark:text-white font-medium">{courseLabel}</p>
-              <p className="text-[#525252] dark:text-[#A3A3A3]">Invited by {invitation.invited_by?.name ?? 'a faculty member'} · Role: <strong>{ROLE_LABELS[invitation.role]}</strong></p>
-              <p className="text-xs text-[#737373]">{ROLE_DESCRIPTIONS[invitation.role]}</p>
-              {invitation.expires_at && <p className="text-xs text-[#737373]">Expires {new Date(invitation.expires_at).toLocaleString()}</p>}
+            <div className="rounded-lg bg-sage-100 dark:bg-[#1F1F1F] p-4 text-sm space-y-1" data-testid="invitation-preview">
+              <p className="text-sage-800 dark:text-white font-medium">{courseLabel}</p>
+              <p className="text-sage-600 dark:text-sage-400">Invited by {invitation.invited_by?.name ?? 'a faculty member'} · Role: <strong>{ROLE_LABELS[invitation.role]}</strong></p>
+              <p className="text-xs text-sage-500">{ROLE_DESCRIPTIONS[invitation.role]}</p>
+              {invitation.expires_at && <p className="text-xs text-sage-500">Expires {new Date(invitation.expires_at).toLocaleString()}</p>}
               {invitation.status !== 'PENDING' && <p className="text-xs text-red-600">This invitation is {invitation.status.toLowerCase()}.</p>}
             </div>
             {done ? <p className="text-sm text-emerald-700 dark:text-emerald-300" data-testid="invitation-done">{done}</p> : invitation.status === 'PENDING' && (
@@ -104,14 +104,14 @@ export const InvitationLanding: React.FC = () => {
                 </div>
               ) : (
                 <div className="space-y-2 text-sm">
-                  <p className="text-[#525252] dark:text-[#A3A3A3]">Sign in with the invited faculty account to accept or decline.</p>
+                  <p className="text-sage-600 dark:text-sage-400">Sign in with the invited faculty account to accept or decline.</p>
                   <Link to={`/login?redirect=${encodeURIComponent(`/collaboration/invitations/${token}`)}`}><Button>Sign in to continue</Button></Link>
                 </div>
               )
             )}
           </>
         )}
-        <p className="text-[11px] text-[#A3A3A3]">No course content is shared until you accept. Invitations are single-use and expire automatically.</p>
+        <p className="text-[11px] text-sage-400">No course content is shared until you accept. Invitations are single-use and expire automatically.</p>
       </div>
     </div>
   );

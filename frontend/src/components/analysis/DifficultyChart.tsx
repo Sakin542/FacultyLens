@@ -29,24 +29,24 @@ export const DifficultyChart: React.FC<DifficultyChartProps> = ({ difficultyAnal
     const l = level.toLowerCase();
     if (l === 'easy') return 'bg-[#16A34A]';
     if (l === 'hard') return 'bg-[#DC2626]';
-    return 'bg-[#111111] dark:bg-white';
+    return 'bg-sage-700 dark:bg-white';
   };
 
   return (
-    <Card className="p-5 bg-white dark:bg-[#1C1C1E] border border-[#E5E5E5] dark:border-[#2C2C2E] shadow-sm space-y-4">
-      <div className="flex items-center justify-between pb-3 border-b border-[#E5E5E5] dark:border-[#2C2C2E]">
+    <Card className="p-5 bg-white dark:bg-[#1C1C1E] border border-sage-200 dark:border-[#2C2C2E] shadow-sm space-y-4">
+      <div className="flex items-center justify-between pb-3 border-b border-sage-200 dark:border-[#2C2C2E]">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-[#F7F7F5] dark:bg-[#2C2C2E] border border-[#E5E5E5] dark:border-[#3A3A3C] flex items-center justify-center text-[#111111] dark:text-white">
+          <div className="w-8 h-8 rounded-lg bg-sage-100 dark:bg-[#2C2C2E] border border-sage-200 dark:border-[#3A3A3C] flex items-center justify-center text-sage-800 dark:text-white">
             <BarChart3 className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-[#111111] dark:text-white">Difficulty Distribution</h3>
-            <p className="text-xs text-[#737373]">Distribution compared with configured FacultyLens target</p>
+            <h3 className="text-sm font-bold text-sage-800 dark:text-white">Difficulty Distribution</h3>
+            <p className="text-xs text-sage-500">Distribution compared with configured FacultyLens target</p>
           </div>
         </div>
 
         {difficultyAnalysis?.score !== null && difficultyAnalysis?.score !== undefined && (
-          <span className="font-mono text-xs font-bold text-[#111111] dark:text-white">
+          <span className="font-mono text-xs font-bold text-sage-800 dark:text-white">
             Balance: {Math.round(difficultyAnalysis.score)}%
           </span>
         )}
@@ -61,20 +61,20 @@ export const DifficultyChart: React.FC<DifficultyChartProps> = ({ difficultyAnal
             <div key={idx} className="space-y-1.5">
               <div className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-[#111111] dark:text-white w-16">
+                  <span className="font-semibold text-sage-800 dark:text-white w-16">
                     {item.level}
                   </span>
-                  <span className="text-[#737373] text-[11px]">
+                  <span className="text-sage-500 text-[11px]">
                     Target: {targetPct}%
                   </span>
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <span className="font-mono font-bold text-[#111111] dark:text-white">
+                  <span className="font-mono font-bold text-sage-800 dark:text-white">
                     {actualPct}%
                   </span>
                   {item.question_count !== undefined && (
-                    <span className="text-[11px] text-[#737373]">
+                    <span className="text-[11px] text-sage-500">
                       ({item.question_count} {item.question_count === 1 ? 'Q' : 'Qs'})
                     </span>
                   )}
@@ -82,10 +82,10 @@ export const DifficultyChart: React.FC<DifficultyChartProps> = ({ difficultyAnal
               </div>
 
               {/* Stacked comparison bar */}
-              <div className="w-full bg-[#E5E5E5] dark:bg-[#2C2C2E] h-3 rounded-full overflow-hidden relative">
+              <div className="w-full bg-sage-200 dark:bg-[#2C2C2E] h-3 rounded-full overflow-hidden relative">
                 {/* Target marker */}
                 <div
-                  className="absolute top-0 bottom-0 w-0.5 bg-[#737373] z-10"
+                  className="absolute top-0 bottom-0 w-0.5 bg-sage-400 z-10"
                   style={{ left: `${Math.min(targetPct, 100)}%` }}
                   title={`Target: ${targetPct}%`}
                 />
@@ -100,7 +100,7 @@ export const DifficultyChart: React.FC<DifficultyChartProps> = ({ difficultyAnal
         })}
       </div>
 
-      <div className="p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C] text-[11px] text-[#737373] leading-relaxed">
+      <div className="p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl border border-sage-200 dark:border-[#3A3A3C] text-[11px] text-sage-500 leading-relaxed">
         Configured initial target benchmark (30% Easy, 50% Medium, 20% Hard) serves as guidance. Ideal difficulty balance depends on course objectives and faculty assessment design.
       </div>
     </Card>

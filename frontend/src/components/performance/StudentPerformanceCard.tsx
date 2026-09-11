@@ -32,61 +32,61 @@ export const StudentPerformanceCard: React.FC<StudentPerformanceCardProps> = ({ 
 
   return (
     <Card variant="default" className="p-5 space-y-3" data-testid="student-performance-card">
-      <h3 className="text-sm font-bold text-[#111111] dark:text-white flex items-center gap-2">
-        <UserCheck className="w-4 h-4 text-[#737373]" /> Performance in this assessment
+      <h3 className="text-sm font-bold text-sage-800 dark:text-white flex items-center gap-2">
+        <UserCheck className="w-4 h-4 text-sage-500" /> Performance in this assessment
       </h3>
       {isLoading ? (
-        <p className="text-xs text-[#737373] flex items-center gap-2" role="status"><Loader2 className="w-3.5 h-3.5 animate-spin" /> Loading…</p>
+        <p className="text-xs text-sage-500 flex items-center gap-2" role="status"><Loader2 className="w-3.5 h-3.5 animate-spin" /> Loading…</p>
       ) : error ? (
         <PerformanceError error={error} />
       ) : data && (
         <>
           <div className="grid grid-cols-3 gap-3 text-center">
-            <div className="p-3 rounded-xl bg-[#F7F7F5] dark:bg-[#2C2C2E]">
-              <span className="block text-[10px] uppercase font-semibold text-[#737373]">Overall</span>
-              <span className="block text-lg font-bold font-mono text-[#111111] dark:text-white" data-testid="student-overall">{data.has_finalized_grades ? formatPct(data.overall_percentage) : 'Not finalized'}</span>
-              {data.has_finalized_grades && <span className="block text-[10px] text-[#737373]">{data.total_awarded_marks} / {data.total_maximum_marks} marks</span>}
+            <div className="p-3 rounded-xl bg-sage-100 dark:bg-[#2C2C2E]">
+              <span className="block text-[10px] uppercase font-semibold text-sage-500">Overall</span>
+              <span className="block text-lg font-bold font-mono text-sage-800 dark:text-white" data-testid="student-overall">{data.has_finalized_grades ? formatPct(data.overall_percentage) : 'Not finalized'}</span>
+              {data.has_finalized_grades && <span className="block text-[10px] text-sage-500">{data.total_awarded_marks} / {data.total_maximum_marks} marks</span>}
             </div>
-            <div className="p-3 rounded-xl bg-[#F7F7F5] dark:bg-[#2C2C2E]">
-              <span className="block text-[10px] uppercase font-semibold text-[#737373]">Finalized</span>
-              <span className="block text-lg font-bold font-mono text-[#111111] dark:text-white">{data.finalized_question_count} / {data.question_count}</span>
-              <span className="block text-[10px] text-[#737373]">questions</span>
+            <div className="p-3 rounded-xl bg-sage-100 dark:bg-[#2C2C2E]">
+              <span className="block text-[10px] uppercase font-semibold text-sage-500">Finalized</span>
+              <span className="block text-lg font-bold font-mono text-sage-800 dark:text-white">{data.finalized_question_count} / {data.question_count}</span>
+              <span className="block text-[10px] text-sage-500">questions</span>
             </div>
-            <div className="p-3 rounded-xl bg-[#F7F7F5] dark:bg-[#2C2C2E]">
-              <span className="block text-[10px] uppercase font-semibold text-[#737373]">Expected</span>
-              <span className="block text-lg font-bold font-mono text-[#111111] dark:text-white">{formatPct(data.expected_performance_percent)}</span>
-              <span className="block text-[10px] text-[#737373]">benchmark</span>
+            <div className="p-3 rounded-xl bg-sage-100 dark:bg-[#2C2C2E]">
+              <span className="block text-[10px] uppercase font-semibold text-sage-500">Expected</span>
+              <span className="block text-lg font-bold font-mono text-sage-800 dark:text-white">{formatPct(data.expected_performance_percent)}</span>
+              <span className="block text-[10px] text-sage-500">benchmark</span>
             </div>
           </div>
 
-          <ul className="divide-y divide-[#E5E5E5] dark:divide-[#2C2C2E] text-xs" data-testid="student-questions">
+          <ul className="divide-y divide-sage-200 dark:divide-[#2C2C2E] text-xs" data-testid="student-questions">
             {data.questions.map((q) => (
               <li key={q.question_id} className="py-1.5 flex items-center justify-between gap-2">
-                <span className="font-mono font-semibold text-[#111111] dark:text-white">Q{q.question_number ?? q.question_id}</span>
-                <span className="text-[#737373] truncate flex-1">{q.question_text_excerpt}</span>
-                <span className="font-mono text-[#111111] dark:text-white shrink-0">
+                <span className="font-mono font-semibold text-sage-800 dark:text-white">Q{q.question_number ?? q.question_id}</span>
+                <span className="text-sage-500 truncate flex-1">{q.question_text_excerpt}</span>
+                <span className="font-mono text-sage-800 dark:text-white shrink-0">
                   {!q.answered ? 'No answer' : q.awarded_marks === null ? 'Not graded' : `${q.awarded_marks} / ${q.maximum_marks}`}
-                  {q.answered && q.awarded_marks !== null && !q.is_finalized && <span className="text-[10px] text-[#737373] ml-1">(not finalized)</span>}
+                  {q.answered && q.awarded_marks !== null && !q.is_finalized && <span className="text-[10px] text-sage-500 ml-1">(not finalized)</span>}
                 </span>
               </li>
             ))}
           </ul>
 
           <div data-testid="areas-for-review">
-            <span className="block text-[10px] uppercase tracking-wider font-semibold text-[#737373] mb-1">Potential areas for review</span>
+            <span className="block text-[10px] uppercase tracking-wider font-semibold text-sage-500 mb-1">Potential areas for review</span>
             {data.areas_for_review.length === 0 ? (
-              <p className="text-xs text-[#737373] italic">{data.has_finalized_grades ? 'No areas below the benchmark in the finalized questions.' : 'Available once grades are finalized.'}</p>
+              <p className="text-xs text-sage-500 italic">{data.has_finalized_grades ? 'No areas below the benchmark in the finalized questions.' : 'Available once grades are finalized.'}</p>
             ) : (
               <ul className="flex flex-wrap gap-1.5">
                 {data.areas_for_review.map((a) => (
-                  <li key={`${a.type}-${a.label}`} className="px-2 py-1 rounded-md bg-[#F7F7F5] dark:bg-[#2C2C2E] text-xs text-[#262626] dark:text-[#E5E5E5]">
-                    {a.label} <span className="font-mono text-[#737373]">{formatPct(a.percentage)}</span>
+                  <li key={`${a.type}-${a.label}`} className="px-2 py-1 rounded-md bg-sage-100 dark:bg-[#2C2C2E] text-xs text-sage-700 dark:text-sage-200">
+                    {a.label} <span className="font-mono text-sage-500">{formatPct(a.percentage)}</span>
                   </li>
                 ))}
               </ul>
             )}
           </div>
-          <p className="text-[11px] text-[#737373] italic">{data.note}</p>
+          <p className="text-[11px] text-sage-500 italic">{data.note}</p>
         </>
       )}
     </Card>

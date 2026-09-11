@@ -43,9 +43,9 @@ export const RubricEditor: React.FC<RubricEditorProps> = ({ rubric, questionMark
   return (
     <form onSubmit={handleSubmit} className="space-y-4" data-testid="rubric-editor" noValidate>
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-bold text-[#111111] dark:text-white">Edit Rubric Draft</h3>
+        <h3 className="text-sm font-bold text-sage-800 dark:text-white">Edit Rubric Draft</h3>
         <div className="text-right">
-          <p className="text-[10px] uppercase tracking-wider text-[#737373]">Total Criterion Marks</p>
+          <p className="text-[10px] uppercase tracking-wider text-sage-500">Total Criterion Marks</p>
           <p
             className={`text-sm font-mono font-bold ${isConsistent ? 'text-emerald-700 dark:text-emerald-400' : 'text-red-600'}`}
             data-testid="editor-total"
@@ -68,7 +68,7 @@ export const RubricEditor: React.FC<RubricEditorProps> = ({ rubric, questionMark
       <RubricCriteriaEditor criteria={criteria} onChange={setCriteria} disabled={isSaving} />
 
       <div className="space-y-1.5">
-        <label htmlFor="rubric-general-guidance" className="block text-[10px] font-medium uppercase tracking-wider text-[#262626] dark:text-[#E5E5E5]">
+        <label htmlFor="rubric-general-guidance" className="block text-[10px] font-medium uppercase tracking-wider text-sage-700 dark:text-sage-200">
           General guidance
         </label>
         <textarea
@@ -79,7 +79,7 @@ export const RubricEditor: React.FC<RubricEditorProps> = ({ rubric, questionMark
           onChange={(e) => setGeneralGuidance(e.target.value)}
           disabled={isSaving}
           placeholder="Overall marking notes for this question"
-          className="w-full rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] px-3 py-2 text-xs text-[#111111] dark:text-white placeholder:text-[#A3A3A3] focus:outline-none focus:ring-2 focus:ring-[#111111] dark:focus:ring-white focus:border-transparent"
+          className="w-full rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] px-3 py-2 text-xs text-sage-800 dark:text-white placeholder:text-sage-400 focus:outline-none focus:ring-2 focus:ring-sage-600 dark:focus:ring-white focus:border-transparent"
         />
       </div>
 
@@ -103,11 +103,11 @@ export const RubricEditor: React.FC<RubricEditorProps> = ({ rubric, questionMark
         </ul>
       )}
 
-      <p className="text-[11px] text-[#737373] italic">
+      <p className="text-[11px] text-sage-500 italic">
         AI-generated rubric. Review and adjust before use.
       </p>
 
-      <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#E5E5E5] dark:border-[#2C2C2E]">
+      <div className="flex items-center justify-end gap-2 pt-2 border-t border-sage-200 dark:border-[#2C2C2E]">
         <Button type="button" variant="ghost" size="sm" leftIcon={<X className="w-3.5 h-3.5" />} onClick={onCancel} disabled={isSaving}>
           Cancel
         </Button>

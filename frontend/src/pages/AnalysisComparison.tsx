@@ -79,7 +79,7 @@ export const AnalysisComparison: React.FC = () => {
           <button
             type="button"
             onClick={() => navigate('/history')}
-            className="inline-flex items-center gap-1.5 text-xs text-[#737373] hover:text-[#111111] dark:hover:text-white mb-2 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs text-sage-500 hover:text-sage-800 dark:hover:text-white mb-2 transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             Back to Analysis History
@@ -89,10 +89,10 @@ export const AnalysisComparison: React.FC = () => {
               <GitCompare className="w-4 h-4" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-[#111111] dark:text-white">
+              <h1 className="text-2xl font-bold tracking-tight text-sage-800 dark:text-white">
                 Compare Assessment Analyses
               </h1>
-              <p className="text-xs text-[#737373]">
+              <p className="text-xs text-sage-500">
                 Side-by-side comparative inspection of assessment quality indicator shifts.
               </p>
             </div>
@@ -101,21 +101,21 @@ export const AnalysisComparison: React.FC = () => {
       </div>
 
       {/* Comparison Selector Bar */}
-      <Card className="p-4 bg-white dark:bg-[#1C1C1E] border border-[#E5E5E5] dark:border-[#2C2C2E] shadow-sm space-y-3">
-        <h4 className="text-xs font-bold text-[#111111] dark:text-white uppercase tracking-wider">
+      <Card className="p-4 bg-white dark:bg-[#1C1C1E] border border-sage-200 dark:border-[#2C2C2E] shadow-sm space-y-3">
+        <h4 className="text-xs font-bold text-sage-800 dark:text-white uppercase tracking-wider">
           Select Analyses to Compare
         </h4>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
           {/* Left Selection */}
           <div className="space-y-1">
-            <label className="font-semibold text-[#737373]">
+            <label className="font-semibold text-sage-500">
               Baseline Analysis (A):
             </label>
             <select
               value={selectedLeft}
               onChange={(e) => setSelectedLeft(e.target.value)}
-              className="w-full rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-[#F7F7F5] dark:bg-[#2C2C2E] p-2 text-xs text-[#111111] dark:text-white focus:outline-none"
+              className="w-full rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-sage-100 dark:bg-[#2C2C2E] p-2 text-xs text-sage-800 dark:text-white focus:outline-none"
             >
               <option value="">-- Choose Baseline --</option>
               {availableAnalyses.map((item) => (
@@ -133,13 +133,13 @@ export const AnalysisComparison: React.FC = () => {
 
           {/* Right Selection */}
           <div className="space-y-1">
-            <label className="font-semibold text-[#737373]">
+            <label className="font-semibold text-sage-500">
               Comparison Target (B):
             </label>
             <select
               value={selectedRight}
               onChange={(e) => setSelectedRight(e.target.value)}
-              className="w-full rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-[#F7F7F5] dark:bg-[#2C2C2E] p-2 text-xs text-[#111111] dark:text-white focus:outline-none"
+              className="w-full rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-sage-100 dark:bg-[#2C2C2E] p-2 text-xs text-sage-800 dark:text-white focus:outline-none"
             >
               <option value="">-- Choose Target --</option>
               {availableAnalyses.map((item) => (
@@ -187,9 +187,9 @@ export const AnalysisComparison: React.FC = () => {
           onBack={() => navigate('/history')}
         />
       ) : (
-        <Card className="p-12 text-center bg-white dark:bg-[#1C1C1E] border border-[#E5E5E5] dark:border-[#2C2C2E] text-xs text-[#737373] space-y-2">
-          <GitCompare className="w-8 h-8 text-[#737373] mx-auto opacity-50" />
-          <p className="font-semibold text-[#111111] dark:text-white">
+        <Card className="p-12 text-center bg-white dark:bg-[#1C1C1E] border border-sage-200 dark:border-[#2C2C2E] text-xs text-sage-500 space-y-2">
+          <GitCompare className="w-8 h-8 text-sage-500 mx-auto opacity-50" />
+          <p className="font-semibold text-sage-800 dark:text-white">
             Select two analyses above to run comparative evaluation
           </p>
           <p>

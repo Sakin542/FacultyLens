@@ -50,21 +50,21 @@ export const AssessmentVersionCompare: React.FC = () => {
       <VersionHeader assessment={list ? { id: list.assessment.id, title: list.assessment.title, type: list.assessment.type } : null} title="Compare Versions"
         subtitle="Changed, added and removed questions, marks, CO/Bloom/difficulty, blueprint distributions and STEP 13 analysis metrics are detected deterministically — no AI is involved." />
       <div className="flex flex-wrap items-end gap-2" data-testid="compare-controls">
-        <label className="text-xs font-medium uppercase tracking-wider text-[#262626] dark:text-[#D4D4D4]">From
-          <select aria-label="From version" value={versionId ?? ''} onChange={(e) => navigate(`/assessments/${assessmentId}/versions/${e.target.value}/compare${withId ? `?with=${withId}` : ''}`)} className="mt-1 block rounded-lg border border-[#E5E5E5] bg-white dark:bg-[#111111] px-3 py-2 text-sm font-normal normal-case tracking-normal">
+        <label className="text-xs font-medium uppercase tracking-wider text-sage-700 dark:text-sage-300">From
+          <select aria-label="From version" value={versionId ?? ''} onChange={(e) => navigate(`/assessments/${assessmentId}/versions/${e.target.value}/compare${withId ? `?with=${withId}` : ''}`)} className="mt-1 block rounded-lg border border-sage-200 bg-white dark:bg-sage-700 px-3 py-2 text-sm font-normal normal-case tracking-normal">
             {versions.map((v) => <option key={v.id} value={v.id}>{v.version_label} · {v.status.replace('_', ' ').toLowerCase()}</option>)}
           </select>
         </label>
         <Button type="button" size="sm" variant="ghost" onClick={swap} disabled={!withId} aria-label="Swap versions"><ArrowLeftRight className="w-4 h-4" /></Button>
-        <label className="text-xs font-medium uppercase tracking-wider text-[#262626] dark:text-[#D4D4D4]">To
-          <select aria-label="To version" value={withId ?? ''} onChange={(e) => setParams(e.target.value ? { with: e.target.value } : {})} className="mt-1 block rounded-lg border border-[#E5E5E5] bg-white dark:bg-[#111111] px-3 py-2 text-sm font-normal normal-case tracking-normal">
+        <label className="text-xs font-medium uppercase tracking-wider text-sage-700 dark:text-sage-300">To
+          <select aria-label="To version" value={withId ?? ''} onChange={(e) => setParams(e.target.value ? { with: e.target.value } : {})} className="mt-1 block rounded-lg border border-sage-200 bg-white dark:bg-sage-700 px-3 py-2 text-sm font-normal normal-case tracking-normal">
             <option value="">Select a version…</option>
             {versions.filter((v) => String(v.id) !== versionId).map((v) => <option key={v.id} value={v.id}>{v.version_label} · {v.status.replace('_', ' ').toLowerCase()}</option>)}
           </select>
         </label>
       </div>
       {error && <VersionError message={error} onRetry={load} />}
-      {loading ? <VersionLoading label="Comparing versions…" /> : !withId ? <p className="text-sm text-[#737373]" data-testid="compare-prompt">Choose a second version to compare against.</p> : comparison && <VersionComparison comparison={comparison} />}
+      {loading ? <VersionLoading label="Comparing versions…" /> : !withId ? <p className="text-sm text-sage-500" data-testid="compare-prompt">Choose a second version to compare against.</p> : comparison && <VersionComparison comparison={comparison} />}
     </div>
   );
 };

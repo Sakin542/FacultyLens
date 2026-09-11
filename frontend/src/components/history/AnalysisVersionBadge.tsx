@@ -31,7 +31,7 @@ export const AnalysisVersionBadge: React.FC<AnalysisVersionBadgeProps> = ({
     <div className="inline-flex items-center gap-2">
       {/* Version Tag */}
       <span
-        className={`inline-flex items-center gap-1 font-mono font-bold rounded-md bg-[#F7F7F5] dark:bg-[#2C2C2E] border border-[#E5E5E5] dark:border-[#3A3A3C] text-[#111111] dark:text-white ${
+        className={`inline-flex items-center gap-1 font-mono font-bold rounded-md bg-sage-100 dark:bg-[#2C2C2E] border border-sage-200 dark:border-[#3A3A3C] text-sage-800 dark:text-white ${
           size === 'sm'
             ? 'text-[11px] px-1.5 py-0.5'
             : size === 'lg'
@@ -39,7 +39,7 @@ export const AnalysisVersionBadge: React.FC<AnalysisVersionBadgeProps> = ({
             : 'text-xs px-2 py-0.5'
         }`}
       >
-        <History className={size === 'sm' ? 'w-3 h-3 text-[#737373]' : 'w-3.5 h-3.5 text-[#737373]'} />
+        <History className={size === 'sm' ? 'w-3 h-3 text-sage-500' : 'w-3.5 h-3.5 text-sage-500'} />
         v{version}
       </span>
 
@@ -55,7 +55,7 @@ export const AnalysisVersionBadge: React.FC<AnalysisVersionBadgeProps> = ({
       ) : (
         <Badge
           variant="neutral"
-          className="inline-flex items-center gap-1 text-[11px] font-medium text-[#737373] dark:text-[#A1A1AA]"
+          className="inline-flex items-center gap-1 text-[11px] font-medium text-sage-500 dark:text-[#A1A1AA]"
         >
           Historical
         </Badge>
@@ -63,7 +63,7 @@ export const AnalysisVersionBadge: React.FC<AnalysisVersionBadgeProps> = ({
 
       {/* Optional Timestamp */}
       {showTimestamp && formattedDate && (
-        <span className="inline-flex items-center gap-1 text-xs text-[#737373] font-normal">
+        <span className="inline-flex items-center gap-1 text-xs text-sage-500 font-normal">
           <Clock className="w-3 h-3" />
           {formattedDate}
         </span>

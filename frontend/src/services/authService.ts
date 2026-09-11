@@ -22,6 +22,18 @@ export interface AuthResponse {
   user?: User;
 }
 
+export interface UpdateProfilePayload {
+  name: string;
+  department: string;
+  designation: string;
+}
+
+export interface ChangePasswordPayload {
+  current_password: string;
+  password: string;
+  password_confirmation: string;
+}
+
 export const authService = {
   /**
    * Request Sanctum CSRF cookie initialization
@@ -58,6 +70,28 @@ export const authService = {
   getCurrentUser: async (): Promise<AuthResponse> => {
     return apiClient<AuthResponse>('/auth/user', {
       method: 'GET',
+    });
+  },
+
+  /**
+   * Update editable profile fields (email is fixed and never sent)
+   */
+  updateProfile: async (data: UpdateProfilePayload): Promise<AuthResponse> => {
+    await getCsrfCookie();
+    return apiClient<AuthResponse>('/auth/user', {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  },
+
+  /**
+   * Change password; requires the current password
+   */
+  changePassword: async (data: ChangePasswordPayload): Promise<AuthResponse> => {
+    await getCsrfCookie();
+    return apiClient<AuthResponse>('/auth/change-password', {
+      method: 'POST',
+      body: JSON.stringify(data),
     });
   },
 

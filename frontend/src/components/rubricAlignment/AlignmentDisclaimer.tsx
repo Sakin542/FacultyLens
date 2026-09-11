@@ -9,7 +9,7 @@ export const ALIGNMENT_NOT_CORRECTNESS =
 
 /** Concise, non-intrusive limitation notice. */
 export const AlignmentDisclaimer: React.FC<{ className?: string }> = ({ className = '' }) => (
-  <p className={`text-[11px] text-[#737373] italic flex items-start gap-1.5 ${className}`} data-testid="alignment-disclaimer">
+  <p className={`text-[11px] text-sage-500 italic flex items-start gap-1.5 ${className}`} data-testid="alignment-disclaimer">
     <Info className="w-3 h-3 shrink-0 mt-0.5" /> {ALIGNMENT_DISCLAIMER}
   </p>
 );

@@ -40,8 +40,8 @@ export const Explain: React.FC<{ text?: string; label?: string }> = ({ text, lab
   if (!text) return null;
   return (
     <span className="relative inline-flex group align-middle ml-1">
-      <button type="button" aria-label={label} className="text-[#A3A3A3] hover:text-[#111111] dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-[#111111] rounded-full"><Info className="w-3.5 h-3.5" aria-hidden="true" /></button>
-      <span role="tooltip" className="pointer-events-none absolute z-20 left-1/2 -translate-x-1/2 top-full mt-1 hidden group-hover:block group-focus-within:block w-64 rounded-md border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] p-2 text-xs text-left text-[#525252] dark:text-[#A3A3A3] shadow-lg">{text}</span>
+      <button type="button" aria-label={label} className="text-sage-400 hover:text-sage-800 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-sage-600 rounded-full"><Info className="w-3.5 h-3.5" aria-hidden="true" /></button>
+      <span role="tooltip" className="pointer-events-none absolute z-20 left-1/2 -translate-x-1/2 top-full mt-1 hidden group-hover:block group-focus-within:block w-64 rounded-md border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] p-2 text-xs text-left text-sage-600 dark:text-sage-400 shadow-lg">{text}</span>
     </span>
   );
 };
@@ -49,7 +49,7 @@ export const Explain: React.FC<{ text?: string; label?: string }> = ({ text, lab
 export const Section: React.FC<{ title: string; explanation?: string; testId: string; children: React.ReactNode; actions?: React.ReactNode; className?: string; subtitle?: string }> = ({ title, explanation, testId, children, actions, className, subtitle }) => (
   <Card data-testid={testId} className={cn('p-4 space-y-3', className)}>
     <div className="flex items-start justify-between gap-2">
-      <div><h3 className="text-sm font-semibold text-[#111111] dark:text-white inline-flex items-center">{title}<Explain text={explanation} /></h3>{subtitle && <p className="text-xs text-[#737373] mt-0.5">{subtitle}</p>}</div>
+      <div><h3 className="text-sm font-semibold text-sage-800 dark:text-white inline-flex items-center">{title}<Explain text={explanation} /></h3>{subtitle && <p className="text-xs text-sage-500 mt-0.5">{subtitle}</p>}</div>
       {actions}
     </div>
     {children}
@@ -57,9 +57,9 @@ export const Section: React.FC<{ title: string; explanation?: string; testId: st
 );
 
 export const SectionEmpty: React.FC<{ title: string; description: string }> = ({ title, description }) => (
-  <div data-testid="section-empty" className="rounded-lg border border-dashed border-[#E5E5E5] dark:border-[#2A2A2A] px-4 py-6 text-center">
-    <p className="text-sm font-medium text-[#111111] dark:text-white">{title}</p>
-    <p className="text-xs text-[#737373] mt-1 max-w-md mx-auto">{description}</p>
+  <div data-testid="section-empty" className="rounded-lg border border-dashed border-sage-200 dark:border-[#2A2A2A] px-4 py-6 text-center">
+    <p className="text-sm font-medium text-sage-800 dark:text-white">{title}</p>
+    <p className="text-xs text-sage-500 mt-1 max-w-md mx-auto">{description}</p>
   </div>
 );
 
@@ -68,15 +68,15 @@ export const Bars: React.FC<{ rows: { label: string; value: number | null; displ
   <ul aria-label={ariaLabel} className="space-y-1.5">
     {rows.map((r) => {
       const pct = r.value === null ? 0 : Math.min(100, Math.max(0, (r.value / max) * 100));
-      const tone = r.tone === 'good' ? 'bg-[#16A34A]' : r.tone === 'warn' ? 'bg-amber-500' : r.tone === 'bad' ? 'bg-[#DC2626]' : 'bg-[#111111] dark:bg-white';
+      const tone = r.tone === 'good' ? 'bg-[#16A34A]' : r.tone === 'warn' ? 'bg-amber-500' : r.tone === 'bad' ? 'bg-[#DC2626]' : 'bg-sage-700 dark:bg-white';
       return (
         <li key={r.label} className="grid grid-cols-[7rem_1fr_5rem] items-center gap-2 text-sm">
           <span className="truncate" title={r.label}>{r.label}</span>
-          <span className="relative h-3 rounded bg-[#F0F0F0] dark:bg-[#2A2A2A]" aria-hidden="true">
+          <span className="relative h-3 rounded bg-sage-100 dark:bg-[#2A2A2A]" aria-hidden="true">
             <span className={cn('absolute left-0 top-0 h-3 rounded', tone)} style={{ width: `${pct}%` }} />
-            {r.target !== null && r.target !== undefined && <span className="absolute top-[-2px] h-4 w-0.5 bg-[#737373]" style={{ left: `${Math.min(100, (r.target / max) * 100)}%` }} title={`Target ${r.target}%`} />}
+            {r.target !== null && r.target !== undefined && <span className="absolute top-[-2px] h-4 w-0.5 bg-sage-400" style={{ left: `${Math.min(100, (r.target / max) * 100)}%` }} title={`Target ${r.target}%`} />}
           </span>
-          <span className="text-right tabular-nums text-xs">{r.display ?? (r.value === null ? 'N/A' : `${r.value.toFixed(1)}%`)}{r.count !== undefined && <span className="text-[#A3A3A3]"> ({r.count})</span>}</span>
+          <span className="text-right tabular-nums text-xs">{r.display ?? (r.value === null ? 'N/A' : `${r.value.toFixed(1)}%`)}{r.count !== undefined && <span className="text-sage-400"> ({r.count})</span>}</span>
         </li>
       );
     })}
@@ -92,20 +92,20 @@ export const LineChart: React.FC<{ points: { label: string; date: string | null;
   const path = points.map((p, i) => (p.value === null ? null : `${x(i)},${y(p.value)}`)).filter(Boolean).join(' ');
   return (
     <div>
-      {valid.length === 0 ? <p className="text-xs text-[#737373]">No dated data points.</p> : (
+      {valid.length === 0 ? <p className="text-xs text-sage-500">No dated data points.</p> : (
         <svg viewBox={`0 0 ${w} ${h}`} role="img" aria-label={ariaLabel} className="w-full h-40">
-          <line x1={pad} y1={h - pad} x2={w - pad} y2={h - pad} stroke="#E5E5E5" />
-          <line x1={pad} y1={pad} x2={pad} y2={h - pad} stroke="#E5E5E5" />
-          {benchmark !== null && benchmark !== undefined && <line x1={pad} y1={y(benchmark)} x2={w - pad} y2={y(benchmark)} stroke="#A3A3A3" strokeDasharray="4 4" />}
-          {path && <polyline points={path} fill="none" stroke="#111111" strokeWidth="2" className="dark:stroke-white" />}
-          {points.map((p, i) => (p.value === null ? null : <circle key={i} cx={x(i)} cy={y(p.value)} r="3.5" fill={p.note ? '#A3A3A3' : '#111111'} className="dark:fill-white"><title>{`${p.label}${p.date ? ` (${p.date})` : ''}: ${p.value}${unit}${p.note ? ` — ${p.note}` : ''}`}</title></circle>))}
+          <line x1={pad} y1={h - pad} x2={w - pad} y2={h - pad} stroke="#E8ECE3" />
+          <line x1={pad} y1={pad} x2={pad} y2={h - pad} stroke="#E8ECE3" />
+          {benchmark !== null && benchmark !== undefined && <line x1={pad} y1={y(benchmark)} x2={w - pad} y2={y(benchmark)} stroke="#8C9A82" strokeDasharray="4 4" />}
+          {path && <polyline points={path} fill="none" stroke="#2F3E2E" strokeWidth="2" className="dark:stroke-white" />}
+          {points.map((p, i) => (p.value === null ? null : <circle key={i} cx={x(i)} cy={y(p.value)} r="3.5" fill={p.note ? '#8C9A82' : '#2F3E2E'} className="dark:fill-white"><title>{`${p.label}${p.date ? ` (${p.date})` : ''}: ${p.value}${unit}${p.note ? ` — ${p.note}` : ''}`}</title></circle>))}
         </svg>
       )}
       <details className="mt-1">
-        <summary className="text-xs text-[#737373] cursor-pointer">Data table</summary>
+        <summary className="text-xs text-sage-500 cursor-pointer">Data table</summary>
         <table className="w-full text-xs mt-1"><caption className="sr-only">{ariaLabel}</caption>
-          <thead><tr className="text-left text-[#737373]"><th className="py-0.5 pr-2">Item</th><th className="py-0.5 pr-2">Date</th><th className="py-0.5 pr-2 text-right">Value</th><th className="py-0.5">Note</th></tr></thead>
-          <tbody>{points.map((p, i) => <tr key={i} className="border-t border-[#F0F0F0] dark:border-[#2A2A2A]"><td className="py-0.5 pr-2">{p.label}</td><td className="py-0.5 pr-2">{p.date ?? 'No date'}</td><td className="py-0.5 pr-2 text-right tabular-nums">{p.value === null ? 'N/A' : `${p.value}${unit}`}</td><td className="py-0.5 text-[#737373]">{p.note ?? ''}</td></tr>)}</tbody>
+          <thead><tr className="text-left text-sage-500"><th className="py-0.5 pr-2">Item</th><th className="py-0.5 pr-2">Date</th><th className="py-0.5 pr-2 text-right">Value</th><th className="py-0.5">Note</th></tr></thead>
+          <tbody>{points.map((p, i) => <tr key={i} className="border-t border-sage-100 dark:border-[#2A2A2A]"><td className="py-0.5 pr-2">{p.label}</td><td className="py-0.5 pr-2">{p.date ?? 'No date'}</td><td className="py-0.5 pr-2 text-right tabular-nums">{p.value === null ? 'N/A' : `${p.value}${unit}`}</td><td className="py-0.5 text-sage-500">{p.note ?? ''}</td></tr>)}</tbody>
         </table>
       </details>
     </div>
@@ -126,7 +126,7 @@ export const periodStart = (p: TrendPeriod, now = new Date()): Date | null => {
 };
 export const PeriodPicker: React.FC<{ value: TrendPeriod; onChange: (p: TrendPeriod) => void; label: string }> = ({ value, onChange, label }) => (
   <div role="group" aria-label={label} className="flex gap-1">
-    {PERIODS.map((p) => <button key={p} type="button" aria-pressed={value === p} onClick={() => onChange(p)} className={cn('px-2 py-0.5 rounded text-xs border', value === p ? 'bg-[#111111] text-white border-[#111111] dark:bg-white dark:text-black' : 'border-[#E5E5E5] dark:border-[#2A2A2A] text-[#525252] dark:text-[#A3A3A3]')}>{p}</button>)}
+    {PERIODS.map((p) => <button key={p} type="button" aria-pressed={value === p} onClick={() => onChange(p)} className={cn('px-2 py-0.5 rounded text-xs border', value === p ? 'bg-sage-700 text-white border-sage-700 dark:bg-white dark:text-black' : 'border-sage-200 dark:border-[#2A2A2A] text-sage-600 dark:text-sage-400')}>{p}</button>)}
   </div>
 );
 
@@ -142,9 +142,9 @@ export const freshness = (meta: AnalyticsMeta | null | undefined): string => {
 export const AnalyticsHeader: React.FC<{ meta: AnalyticsMeta | null; onRefresh: () => void; onExport: (f: 'pdf' | 'csv') => void; busy?: boolean }> = ({ meta, onRefresh, onExport, busy }) => (
   <header data-testid="analytics-header" className="flex flex-col md:flex-row md:items-start md:justify-between gap-3">
     <div>
-      <div className="flex items-center gap-2 mb-1"><BarChart3 className="w-5 h-5" aria-hidden="true" /><h1 className="text-2xl font-bold text-[#111111] dark:text-white">Academic Analytics</h1></div>
-      <p className="text-sm text-[#737373] max-w-2xl">Evidence, trends and signals from your assessments, outcomes, student performance and AI activity. Analytics never change assessments, grades, mappings or models.</p>
-      {meta && <p className="text-xs text-[#A3A3A3] mt-1" data-testid="freshness" role="status">{freshness(meta)}</p>}
+      <div className="flex items-center gap-2 mb-1"><BarChart3 className="w-5 h-5" aria-hidden="true" /><h1 className="text-2xl font-bold text-sage-800 dark:text-white">Academic Analytics</h1></div>
+      <p className="text-sm text-sage-500 max-w-2xl">Evidence, trends and signals from your assessments, outcomes, student performance and AI activity. Analytics never change assessments, grades, mappings or models.</p>
+      {meta && <p className="text-xs text-sage-400 mt-1" data-testid="freshness" role="status">{freshness(meta)}</p>}
     </div>
     <div className="flex items-center gap-2">
       <Button variant="outline" size="sm" onClick={() => onExport('pdf')} disabled={busy}><Download className="w-3.5 h-3.5 mr-1" aria-hidden="true" />PDF</Button>
@@ -156,8 +156,8 @@ export const AnalyticsHeader: React.FC<{ meta: AnalyticsMeta | null; onRefresh: 
 
 const Select: React.FC<{ id: string; label: string; value: string; onChange: (v: string) => void; options: { value: string; label: string }[]; allLabel: string }> = ({ id, label, value, onChange, options, allLabel }) => (
   <div className="space-y-1">
-    <label htmlFor={id} className="block text-xs font-medium uppercase tracking-wider text-[#525252] dark:text-[#A3A3A3]">{label}</label>
-    <select id={id} value={value} onChange={(e) => onChange(e.target.value)} className="w-full rounded-md border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-2 py-1.5 text-sm">
+    <label htmlFor={id} className="block text-xs font-medium uppercase tracking-wider text-sage-600 dark:text-sage-400">{label}</label>
+    <select id={id} value={value} onChange={(e) => onChange(e.target.value)} className="w-full rounded-md border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-2 py-1.5 text-sm">
       <option value="">{allLabel}</option>{options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
     </select>
   </div>
@@ -170,7 +170,7 @@ export const AnalyticsFilters: React.FC<{ options: FilterOptions | null; value: 
   const courseId = draft.course_id ? Number(draft.course_id) : null;
   const assessments = (options?.assessments ?? []).filter((a) => !courseId || a.course_id === courseId);
   return (
-    <form data-testid="analytics-filters" noValidate aria-label="Analytics filters" onSubmit={(e) => { e.preventDefault(); onApply(draft); }} className="rounded-xl border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] p-4">
+    <form data-testid="analytics-filters" noValidate aria-label="Analytics filters" onSubmit={(e) => { e.preventDefault(); onApply(draft); }} className="rounded-xl border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] p-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-3">
         <Select id={`${id}-course`} label="Course" value={draft.course_id ? String(draft.course_id) : ''} onChange={(v) => setDraft({ ...draft, course_id: v ? Number(v) : '', assessment_id: '' })} allLabel="All Courses"
           options={(options?.courses ?? []).map((c) => ({ value: String(c.id), label: `${c.code} · ${c.name}${c.semester ? ` (${c.semester} ${c.academic_year ?? ''})` : ''}` }))} />
@@ -179,8 +179,8 @@ export const AnalyticsFilters: React.FC<{ options: FilterOptions | null; value: 
         <Select id={`${id}-semester`} label="Semester" value={draft.semester ?? ''} onChange={(v) => setDraft({ ...draft, semester: v })} allLabel="All Semesters" options={(options?.semesters ?? []).map((s) => ({ value: s, label: s }))} />
         <Select id={`${id}-year`} label="Academic Year" value={draft.academic_year ?? ''} onChange={(v) => setDraft({ ...draft, academic_year: v })} allLabel="All Years" options={(options?.academic_years ?? []).map((s) => ({ value: s, label: s }))} />
         <Select id={`${id}-type`} label="Assessment Type" value={draft.assessment_type ?? ''} onChange={(v) => setDraft({ ...draft, assessment_type: v })} allLabel="All Types" options={(options?.assessment_types ?? []).map((s) => ({ value: s, label: humanize(s) }))} />
-        <div className="space-y-1"><label htmlFor={`${id}-start`} className="block text-xs font-medium uppercase tracking-wider text-[#525252] dark:text-[#A3A3A3]">Start</label><input id={`${id}-start`} type="date" value={draft.start_date ?? ''} onChange={(e) => setDraft({ ...draft, start_date: e.target.value })} className="w-full rounded-md border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-2 py-1.5 text-sm" /></div>
-        <div className="space-y-1"><label htmlFor={`${id}-end`} className="block text-xs font-medium uppercase tracking-wider text-[#525252] dark:text-[#A3A3A3]">End</label><input id={`${id}-end`} type="date" value={draft.end_date ?? ''} onChange={(e) => setDraft({ ...draft, end_date: e.target.value })} className="w-full rounded-md border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-2 py-1.5 text-sm" /></div>
+        <div className="space-y-1"><label htmlFor={`${id}-start`} className="block text-xs font-medium uppercase tracking-wider text-sage-600 dark:text-sage-400">Start</label><input id={`${id}-start`} type="date" value={draft.start_date ?? ''} onChange={(e) => setDraft({ ...draft, start_date: e.target.value })} className="w-full rounded-md border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-2 py-1.5 text-sm" /></div>
+        <div className="space-y-1"><label htmlFor={`${id}-end`} className="block text-xs font-medium uppercase tracking-wider text-sage-600 dark:text-sage-400">End</label><input id={`${id}-end`} type="date" value={draft.end_date ?? ''} onChange={(e) => setDraft({ ...draft, end_date: e.target.value })} className="w-full rounded-md border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-2 py-1.5 text-sm" /></div>
       </div>
       <div className="flex justify-end gap-2 mt-3">
         <Button type="button" variant="ghost" size="sm" onClick={() => { setDraft({}); onReset(); }} disabled={disabled}>Reset</Button>
@@ -191,7 +191,7 @@ export const AnalyticsFilters: React.FC<{ options: FilterOptions | null; value: 
 };
 
 export const AnalyticsLoading: React.FC<{ label?: string }> = ({ label = 'Loading analytics…' }) => (
-  <div data-testid="analytics-loading" role="status" className="flex items-center gap-2 rounded-lg border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-4 py-6 text-sm text-[#525252] dark:text-[#A3A3A3]">
+  <div data-testid="analytics-loading" role="status" className="flex items-center gap-2 rounded-lg border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-4 py-6 text-sm text-sage-600 dark:text-sage-400">
     <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" /><span>{label}</span>
   </div>
 );
@@ -204,11 +204,11 @@ export const AnalyticsError: React.FC<{ message: string; onRetry?: () => void; c
 );
 
 export const AnalyticsEmptyState: React.FC<{ title?: string; description?: string }> = ({ title = 'No assessment data available.', description = 'Create and analyze an assessment to see academic quality analytics here.' }) => (
-  <div data-testid="analytics-empty-state" className="flex flex-col items-center justify-center text-center py-12 px-6 rounded-xl border border-dashed border-[#E5E5E5] dark:border-[#2A2A2A]">
-    <div className="w-12 h-12 rounded-full bg-[#F7F7F5] dark:bg-[#1F1F1F] border border-[#E5E5E5] dark:border-[#2A2A2A] flex items-center justify-center text-[#737373] mb-4"><BarChart3 className="w-6 h-6" aria-hidden="true" /></div>
-    <h4 className="text-base font-semibold text-[#111111] dark:text-white mb-1">{title}</h4>
-    <p className="text-sm text-[#737373] max-w-md">{description}</p>
+  <div data-testid="analytics-empty-state" className="flex flex-col items-center justify-center text-center py-12 px-6 rounded-xl border border-dashed border-sage-200 dark:border-[#2A2A2A]">
+    <div className="w-12 h-12 rounded-full bg-sage-100 dark:bg-[#1F1F1F] border border-sage-200 dark:border-[#2A2A2A] flex items-center justify-center text-sage-500 mb-4"><BarChart3 className="w-6 h-6" aria-hidden="true" /></div>
+    <h4 className="text-base font-semibold text-sage-800 dark:text-white mb-1">{title}</h4>
+    <p className="text-sm text-sage-500 max-w-md">{description}</p>
   </div>
 );
 
-export const StatusBadge: React.FC<{ status: string | null | undefined }> = ({ status }) => (status ? <Badge variant={statusVariant(status)} size="sm">{humanize(status)}</Badge> : <span className="text-xs text-[#A3A3A3]">N/A</span>);
+export const StatusBadge: React.FC<{ status: string | null | undefined }> = ({ status }) => (status ? <Badge variant={statusVariant(status)} size="sm">{humanize(status)}</Badge> : <span className="text-xs text-sage-400">N/A</span>);

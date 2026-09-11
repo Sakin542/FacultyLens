@@ -150,4 +150,48 @@ class AuthTest extends TestCase
         $response->assertStatus(200)
             ->assertJson(['status' => 'success', 'message' => 'Logout successful']);
     }
+
+    public function test_profile_update_changes_name_department_designation_but_never_email(): void
+    {
+        $user = User::factory()->create(['email' => 'fixed@aust.edu', 'name' => 'Old Name', 'department' => 'CSE', 'designation' => 'Lecturer']);
+
+        $response = $this->actingAs($user, 'sanctum')->patchJson('/api/auth/user', [
+            'name' => 'Dr. New Name', 'department' => 'EEE', 'designation' => 'Associate Professor', 'email' => 'hijack@evil.com', 'role' => 'ADMIN',
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJsonPath('user.name', 'Dr. New Name')
+            ->assertJsonPath('user.department', 'EEE')
+            ->assertJsonPath('user.designation', 'Associate Professor')
+            ->assertJsonPath('user.email', 'fixed@aust.edu')
+            ->assertJsonPath('user.role', 'FACULTY');
+        $this->assertSame('fixed@aust.edu', $user->fresh()->email);
+        $this->assertDatabaseHas('audit_logs', ['action' => 'PROFILE_UPDATED', 'user_id' => $user->id]);
+    }
+
+    public function test_password_change_requires_the_correct_current_password(): void
+    {
+        $user = User::factory()->create(['password' => Hash::make('OldPass123!')]);
+
+        $this->actingAs($user, 'sanctum')->postJson('/api/auth/change-password', [
+            'current_password' => 'wrong-password', 'password' => 'NewPass456!', 'password_confirmation' => 'NewPass456!',
+        ])->assertStatus(422)->assertJsonPath('errors.current_password.0', 'The current password is incorrect.');
+
+        $this->actingAs($user, 'sanctum')->postJson('/api/auth/change-password', [
+            'current_password' => 'OldPass123!', 'password' => 'short', 'password_confirmation' => 'short',
+        ])->assertStatus(422)->assertJsonValidationErrors(['password']);
+
+        $this->actingAs($user, 'sanctum')->postJson('/api/auth/change-password', [
+            'current_password' => 'OldPass123!', 'password' => 'NewPass456!', 'password_confirmation' => 'NewPass456!',
+        ])->assertStatus(200)->assertJsonPath('status', 'success');
+
+        $this->assertTrue(Hash::check('NewPass456!', $user->fresh()->password));
+        $this->assertFalse(Hash::check('OldPass123!', $user->fresh()->password));
+        $this->assertDatabaseHas('audit_logs', ['action' => 'PASSWORD_CHANGED', 'user_id' => $user->id]);
+    }
+
+    public function test_guest_cannot_change_password(): void
+    {
+        $this->postJson('/api/auth/change-password', ['current_password' => 'x', 'password' => 'NewPass456!', 'password_confirmation' => 'NewPass456!'])->assertStatus(401);
+    }
 }
