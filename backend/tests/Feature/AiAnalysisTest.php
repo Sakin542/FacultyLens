@@ -122,16 +122,7 @@ class AiAnalysisTest extends TestCase
 
     public function test_end_to_end_real_academic_text_with_live_service(): void
     {
-        // Check if live AI service is available
-        $baseUrl = config('services.ai.url', 'http://127.0.0.1:8001');
-        try {
-            $healthCheck = @file_get_contents("{$baseUrl}/health");
-            if ($healthCheck === false) {
-                $this->markTestSkipped('Live AI service is not reachable on ' . $baseUrl);
-            }
-        } catch (\Throwable $e) {
-            $this->markTestSkipped('Live AI service is not reachable: ' . $e->getMessage());
-        }
+        $this->requireLiveAiService();
 
         $academicText = "1. Explain database normalization.\n2. Describe the difference between SQL and NoSQL databases.\n3. Compare relational and non-relational database systems.";
 

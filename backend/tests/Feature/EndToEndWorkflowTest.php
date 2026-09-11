@@ -18,6 +18,7 @@ class EndToEndWorkflowTest extends TestCase
 
     public function test_complete_end_to_end_academic_workflow(): void
     {
+        $this->requireLiveAiService();
         // 1. Faculty Registration & Login
         $regResponse = $this->postJson('/api/auth/register', [
             'name' => 'Prof. Charles Babbage',

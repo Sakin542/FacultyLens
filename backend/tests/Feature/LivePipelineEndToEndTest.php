@@ -20,6 +20,7 @@ class LivePipelineEndToEndTest extends TestCase
 
     public function test_complete_live_pipeline_e2e_with_real_ai_service(): void
     {
+        $this->requireLiveAiService();
         // 1. Authenticate Faculty
         $faculty = User::factory()->create([
             'name' => 'Prof. Edgar Codd',
@@ -27,7 +28,7 @@ class LivePipelineEndToEndTest extends TestCase
             'role' => 'FACULTY',
         ]);
 
-        // 2. Create Course: CSE101 — Database Systems
+        // 2. Create Course: CSE101 ï¿½ Database Systems
         $course = Course::create([
             'user_id' => $faculty->id,
             'course_code' => 'CSE101',
