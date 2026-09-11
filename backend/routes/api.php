@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AcademicChatController;
 use App\Http\Controllers\Api\AiEvaluationController;
+use App\Http\Controllers\Api\AcademicAnalyticsController;
 use App\Http\Controllers\Api\CollaborationCommentController;
 use App\Http\Controllers\Api\CollaborationController;
 use App\Http\Controllers\Api\NotificationController;
@@ -284,6 +285,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead']);
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markRead']);
+
+    // STEP 36: Academic Analytics Dashboard (read-only aggregates; authorization enforced in the scope service)
+    Route::prefix('analytics')->group(function () {
+        Route::get('/overview', [AcademicAnalyticsController::class, 'overview']);
+        Route::get('/filters', [AcademicAnalyticsController::class, 'filters']);
+        Route::get('/compare', [AcademicAnalyticsController::class, 'compare']);
+        Route::get('/export', [AcademicAnalyticsController::class, 'export']);
+        Route::get('/courses/{course}', [AcademicAnalyticsController::class, 'course']);
+        Route::get('/courses/{course}/{section}', [AcademicAnalyticsController::class, 'courseSection'])->whereIn('section', ['assessments', 'performance', 'outcomes', 'ai', 'similarity', 'history']);
+    });
 
     // STEP 35: AI Evaluation & Model Performance (evaluation is separate from production AI)
     Route::prefix('ai/evaluation')->group(function () {

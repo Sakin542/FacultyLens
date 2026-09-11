@@ -37,6 +37,7 @@ const CourseCollaboration = lazy(() => import('@/pages/CourseCollaboration').the
 const PendingInvitations = lazy(() => import('@/pages/Invitations').then(m => ({ default: m.PendingInvitations })));
 const InvitationLanding  = lazy(() => import('@/pages/Invitations').then(m => ({ default: m.InvitationLanding })));
 const AiEvaluation       = lazy(() => import('@/pages/AiEvaluation').then(m => ({ default: m.AiEvaluation })));
+const AcademicAnalytics  = lazy(() => import('@/pages/AcademicAnalytics').then(m => ({ default: m.AcademicAnalytics })));
 
 /**
  * Lightweight fallback shown while a lazy page chunk loads.
@@ -76,6 +77,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="/courses/:courseId/question-generator" element={<QuestionGenerator />} />
             <Route path="/question-generator" element={<QuestionGenerator />} />
             <Route path="/ai-evaluation" element={<AiEvaluation />} />
+            <Route path="/analytics" element={<AcademicAnalytics />} />
             <Route path="/courses/:courseId/collaboration" element={<CourseCollaboration />} />
             <Route path="/collaboration/invitations" element={<PendingInvitations />} />
             <Route path="/courses/:courseId/question-bank" element={<QuestionBank />} />
