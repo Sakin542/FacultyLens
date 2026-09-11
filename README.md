@@ -729,6 +729,37 @@ assessment or changes questions automatically. See [docs/assessment-blueprint.md
 
 ---
 
+## Assessment Versioning
+
+FacultyLens preserves assessment history through immutable
+assessment versions.
+
+Versioning supports:
+
+- draft revisions
+- question snapshots
+- blueprint snapshots
+- version comparison
+- approval/finalization
+- restore-as-new-version
+- historical analysis
+- student submission protection
+- audit history
+
+Open `/assessments/:assessmentId/versions` to create **v1.0** (a snapshot of the current questions, STEP 37 blueprint and
+approved STEP 25 rubrics), edit drafts, and follow `DRAFT → IN_REVIEW → APPROVED → FINALIZED`. Version numbers and labels
+(`v1.0`, `v1.1`, `v2.0`) are generated server-side and never reused. Finalized, approved and student-referenced versions are
+immutable: the primary action is always **Create new version** or **Restore as new version** (restoring `v3.0` while `v5.0` is
+current produces `v6.0` with `based_on_version_id = v3`). Comparison is deterministic — questions are matched by
+`original_question_id`, then by number — and reports `MODIFIED` / `ADDED` / `REMOVED` / `UNCHANGED`, marks and CO/Bloom/
+difficulty changes, blueprint distribution deltas in percentage points and STEP 13 metric differences. Analyses (STEP 19),
+reports (STEP 18), analytics (STEP 36) and new student submissions/answers (STEP 26) record the exact
+`assessment_version_id`; an analysis becomes `STALE` when a draft changes after it ran. Finalization runs deterministic
+validation (marks, metadata, CO/PO mappings, blueprint compliance) and never fixes problems automatically. See
+[docs/assessment-versioning.md](docs/assessment-versioning.md).
+
+---
+
 #  MVP Scope
 
 The core FacultyLens workflow is:

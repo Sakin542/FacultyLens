@@ -13,6 +13,7 @@ class AssessmentReport extends Model
     protected $fillable = [
         'assessment_id',
         'analysis_report_id',
+        'assessment_version_id',
         'report_uuid',
         'file_name',
         'file_path',
@@ -45,6 +46,12 @@ class AssessmentReport extends Model
     public function assessment(): BelongsTo
     {
         return $this->belongsTo(Assessment::class);
+    }
+
+    /** STEP 38: the assessment version this report was rendered from (null for legacy reports). */
+    public function assessmentVersion(): BelongsTo
+    {
+        return $this->belongsTo(AssessmentVersion::class);
     }
 
     /**

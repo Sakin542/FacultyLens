@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AcademicChatController;
 use App\Http\Controllers\Api\AiEvaluationController;
 use App\Http\Controllers\Api\AcademicAnalyticsController;
 use App\Http\Controllers\Api\AssessmentBlueprintController;
+use App\Http\Controllers\Api\AssessmentVersionController;
 use App\Http\Controllers\Api\CollaborationCommentController;
 use App\Http\Controllers\Api\CollaborationController;
 use App\Http\Controllers\Api\NotificationController;
@@ -298,6 +299,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/blueprints/{blueprint}/comparison', [AssessmentBlueprintController::class, 'comparison']);
     Route::post('/blueprints/{blueprint}/generate-questions', [AssessmentBlueprintController::class, 'generateQuestions'])->middleware('throttle:ai-analysis');
     Route::post('/blueprints/{blueprint}/validate-questions', [AssessmentBlueprintController::class, 'validateQuestions']);
+
+    // STEP 38: Assessment Versioning (immutable historical snapshots; finalized versions are never edited in place)
+    Route::get('/assessments/{assessment}/versions', [AssessmentVersionController::class, 'index']);
+    Route::post('/assessments/{assessment}/versions', [AssessmentVersionController::class, 'store']);
+    Route::get('/assessments/{assessment}/versions/{version}', [AssessmentVersionController::class, 'show']);
+    Route::put('/assessment-versions/{version}', [AssessmentVersionController::class, 'update']);
+    Route::post('/assessment-versions/{version}/submit-review', [AssessmentVersionController::class, 'submitReview']);
+    Route::post('/assessment-versions/{version}/approve', [AssessmentVersionController::class, 'approve']);
+    Route::post('/assessment-versions/{version}/finalize', [AssessmentVersionController::class, 'finalize']);
+    Route::post('/assessment-versions/{version}/archive', [AssessmentVersionController::class, 'archive']);
+    Route::post('/assessment-versions/{version}/restore', [AssessmentVersionController::class, 'restore']);
+    Route::post('/assessment-versions/{version}/validate', [AssessmentVersionController::class, 'validateVersion']);
+    Route::get('/assessment-versions/{version}/compare/{otherVersion}', [AssessmentVersionController::class, 'compare']);
+    Route::get('/assessment-versions/{version}/analysis', [AssessmentVersionController::class, 'analysis']);
+    Route::get('/assessment-versions/{version}/blueprint', [AssessmentVersionController::class, 'blueprint']);
 
     // STEP 36: Academic Analytics Dashboard (read-only aggregates; authorization enforced in the scope service)
     Route::prefix('analytics')->group(function () {

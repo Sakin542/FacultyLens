@@ -165,14 +165,20 @@ class AssessmentAnalyticsService
         $reports = $this->scope->currentReportsQuery($assessmentIds)->get()->keyBy('assessment_id');
         $questionStats = Question::whereIn('assessment_id', $assessmentIds)->selectRaw('assessment_id, COUNT(*) AS c')->groupBy('assessment_id')->pluck('c', 'assessment_id');
         $perf = $this->scope->currentPerformanceRunsQuery($assessmentIds)->get()->keyBy('assessment_id');
+        // STEP 38: current version per assessment (latest FINALIZED, else latest non-archived) so dashboards never mix states
+        $versions = \App\Models\AssessmentVersion::whereIn('assessment_id', $assessmentIds)->orderByDesc('version_number')->get(['id', 'assessment_id', 'version_number', 'version_label', 'status'])->groupBy('assessment_id');
         $rows = [];
         foreach ($assessments as $a) {
             $r = $reports[$a->id] ?? null;
             $p = $perf[$a->id] ?? null;
+            $vs = $versions->get($a->id, collect());
+            $cur = $vs->firstWhere('status', 'FINALIZED') ?? $vs->first(fn ($v) => $v->status !== 'ARCHIVED');
             $rows[] = [
                 'assessment_id' => $a->id, 'title' => $a->title, 'type' => $a->type, 'status' => $a->status, 'date' => optional($a->assessment_date)->toDateString(),
                 'course' => $a->course ? ['id' => $a->course->id, 'code' => $a->course->course_code, 'name' => $a->course->course_name, 'semester' => $a->course->semester, 'academic_year' => $a->course->academic_year] : null,
                 'questions' => (int) ($questionStats[$a->id] ?? 0),
+                'current_version' => $cur ? ['id' => $cur->id, 'version_number' => $cur->version_number, 'version_label' => $cur->version_label, 'status' => $cur->status] : null,
+                'version_count' => $vs->count(), 'historical_version_ids' => $vs->filter(fn ($v) => !$cur || $v->id !== $cur->id)->pluck('id')->values()->all(),
                 'quality_score' => $r ? round((float) $r->overall_score, 2) : null, 'quality_rating' => $r ? $this->reports->getRatingLabel((float) $r->overall_score) : null,
                 'difficulty_balance_score' => $r?->difficulty_balance_score !== null ? round((float) $r->difficulty_balance_score, 2) : null,
                 'cognitive_balance_score' => $r?->cognitive_level_balance_score !== null ? round((float) $r->cognitive_level_balance_score, 2) : null,

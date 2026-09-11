@@ -53,6 +53,7 @@ class StudentSubmission extends Model
 
     protected $fillable = [
         'assessment_id',
+        'assessment_version_id',
         'student_id',
         'submission_identifier',
         'submitted_at',
@@ -74,6 +75,12 @@ class StudentSubmission extends Model
     public function assessment(): BelongsTo
     {
         return $this->belongsTo(Assessment::class);
+    }
+
+    /** STEP 38: the exact assessment version the student answered (null for legacy submissions). */
+    public function assessmentVersion(): BelongsTo
+    {
+        return $this->belongsTo(AssessmentVersion::class);
     }
 
     public function student(): BelongsTo

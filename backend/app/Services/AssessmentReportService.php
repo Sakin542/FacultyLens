@@ -102,6 +102,18 @@ class AssessmentReportService
             'generated_at' => now()->format('Y-m-d H:i:s'),
         ];
 
+        // STEP 38: the report identifies the exact assessment version (the analysis' own version first, else the current one)
+        $versionService = app(AssessmentVersionService::class);
+        $analysisVersion = $report->assessment_version_id ? \App\Models\AssessmentVersion::find($report->assessment_version_id) : null;
+        $assessmentVersion = $analysisVersion
+            ? ['id' => $analysisVersion->id, 'version_number' => $analysisVersion->version_number, 'version_label' => $analysisVersion->version_label, 'status' => $analysisVersion->status, 'version_type' => $analysisVersion->version_type,
+                'question_count' => $analysisVersion->question_count, 'total_marks' => (float) $analysisVersion->total_marks, 'blueprint_version' => $analysisVersion->blueprint?->blueprint_version, 'analysis_version' => $report->analysis_version,
+                'analysis_status' => $report->version_content_hash === $analysisVersion->content_hash ? 'CURRENT' : 'STALE', 'created_at' => $analysisVersion->created_at?->toISOString(), 'finalized_at' => $analysisVersion->finalized_at?->toISOString(),
+                'total_versions' => \App\Models\AssessmentVersion::where('assessment_id', $assessment->id)->count()]
+            : $versionService->reportSection($assessment);
+        $assessmentInfo['version_label'] = $assessmentVersion['version_label'] ?? null;
+        $assessmentInfo['version_status'] = $assessmentVersion['status'] ?? null;
+
         // 2. Overall Quality Score & 6 Dimensions
         $overallScore = $report->overall_score !== null ? (float) $report->overall_score : 0.0;
         $overallRating = $this->getRatingLabel($overallScore);
@@ -416,6 +428,7 @@ class AssessmentReportService
             'student_performance' => $this->buildStudentPerformanceSection($assessment),
             'co_po_mapping' => $this->buildCoPoSection($assessment),
             'assessment_blueprint' => app(AssessmentBlueprintService::class)->reportSection($assessment),
+            'assessment_version' => $assessmentVersion,
             'generated_report' => $latestReportModel ? [
                 'id' => $latestReportModel->id,
                 'uuid' => $latestReportModel->report_uuid,
@@ -533,6 +546,7 @@ class AssessmentReportService
         $reportRecord = AssessmentReport::create([
             'assessment_id' => $assessment->id,
             'analysis_report_id' => $assessment->latestAnalysisReport->id,
+            'assessment_version_id' => $data['assessment_version']['id'] ?? null,
             'report_uuid' => $uuid,
             'file_name' => $fileName,
             'file_path' => $filePath,
@@ -547,6 +561,8 @@ class AssessmentReportService
                 'rating' => $data['overall_quality']['rating'],
                 'course_code' => $data['assessment']['course_code'],
                 'assessment_title' => $data['assessment']['title'],
+                'assessment_version_label' => $data['assessment']['version_label'] ?? null,
+                'assessment_version_status' => $data['assessment']['version_status'] ?? null,
             ],
         ]);
 
