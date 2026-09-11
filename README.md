@@ -760,6 +760,59 @@ validation (marks, metadata, CO/PO mappings, blueprint compliance) and never fix
 
 ---
 
+## Institutional Export & Reporting
+
+FacultyLens provides authorized academic reporting and
+institutional export capabilities.
+
+Supported formats:
+
+- PDF
+- CSV
+- XLSX
+
+Reports include:
+
+- Assessment quality
+- Assessment blueprint
+- Version history
+- CO/PO coverage
+- Student performance
+- Learning gaps
+- Rubrics
+- Grading
+- Inter-grader consistency
+- AI evaluation
+- Academic analytics
+- Institutional summaries
+
+Open `/reports` for **My Reports** and `/reports/create` for the builder: choose a report type, a scope, the applicable
+filters and a format, **Preview** the data (record count, metadata, summary, first rows of every table), then **Generate**
+and **Download**. Every report follows `Preview → Validate access → Generate → Export → Download → Audit`.
+
+- **Report permissions** — the server decides scope from the STEP 34 course matrix and `User::role`; client scope claims
+  are never trusted. Faculty may report on their own and shared courses (`FACULTY`, `COURSE`, `ASSESSMENT`,
+  `ASSESSMENT_VERSION`); `DEPARTMENT` and `INSTITUTION` scopes and the Institutional Summary are limited to the roles in
+  `config/institutional_reports.php` (`ADMIN` by default). Student-data reports (performance, gaps, grading, inter-grader)
+  additionally require `view_student_data` on every course in scope.
+- **Privacy controls** — student reports are aggregates from finalized faculty grades only (average, median, min, max,
+  counts, distributions); no student names, identifiers, e-mails or individual answers are exported, and PDFs/CSVs carry a
+  privacy footer. Insufficient data is labelled `INSUFFICIENT_DATA`, never converted into a gap claim; PO sections read
+  “not configured” instead of fabricating values; AI metrics read “Not evaluated” instead of zero.
+- **Version traceability** — a report generated for `v3.0` stores `assessment_version_id = v3` and its exact filter
+  snapshot; it is built from the version’s question snapshot and the analysis of that content, and is never reinterpreted
+  with a later version. Generated files are immutable; regenerating produces a new report.
+- **Report expiration** — files live on the private disk and are streamed only through `GET /api/reports/{id}/download`
+  after a policy check; they expire after `REPORTS_EXPIRATION_DAYS` (default 7). `php artisan reports:purge-expired`
+  (scheduled daily) removes expired files while keeping the report record and the audit trail (`REPORT_PREVIEWED`,
+  `REPORT_REQUESTED`, `REPORT_GENERATION_*`, `REPORT_DOWNLOADED`, `REPORT_DELETED`). Department/institution scopes and
+  datasets above `REPORTS_ASYNC_THRESHOLD` records are generated on the queue (`GenerateInstitutionalReportJob`).
+
+Reports are evidence artifacts — they never change grades, assessments, CO/PO mappings or approvals, rank faculty, or make
+accreditation claims. See [docs/institutional-reporting.md](docs/institutional-reporting.md).
+
+---
+
 #  MVP Scope
 
 The core FacultyLens workflow is:

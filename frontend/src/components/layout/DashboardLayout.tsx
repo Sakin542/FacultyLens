@@ -13,6 +13,7 @@ const TITLES: Record<string, { title: string; subtitle: string }> = {
   'question-bank': { title: 'Question Bank', subtitle: 'Reusable questions across semesters' },
   analysis: { title: 'Assessment Analysis', subtitle: 'Explainable quality, alignment and similarity checks' },
   analytics: { title: 'Academic Analytics', subtitle: 'Trends and signals across your courses' },
+  reports: { title: 'Institutional Reports', subtitle: 'Authorized exports: PDF, CSV and XLSX evidence for institutional use' },
   history: { title: 'Analysis History', subtitle: 'Every analysis, attached to the version it examined' },
   'academic-chat': { title: 'Document Chat', subtitle: 'Answers grounded in your own course materials' },
   'question-generator': { title: 'Question Generator', subtitle: 'Drafts stay drafts until you approve them' },

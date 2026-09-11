@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AiEvaluationController;
 use App\Http\Controllers\Api\AcademicAnalyticsController;
 use App\Http\Controllers\Api\AssessmentBlueprintController;
 use App\Http\Controllers\Api\AssessmentVersionController;
+use App\Http\Controllers\Api\InstitutionalReportController;
 use App\Http\Controllers\Api\CollaborationCommentController;
 use App\Http\Controllers\Api\CollaborationController;
 use App\Http\Controllers\Api\NotificationController;
@@ -348,6 +349,18 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/runs/{run}/export', [AiEvaluationController::class, 'export']);
         Route::post('/runs/{run}/cancel', [AiEvaluationController::class, 'cancel']);
         Route::post('/ratings', [AiEvaluationController::class, 'rate']);
+    });
+
+    // STEP 39: Institutional Export & Reporting (authorization + scoping resolved server-side; private downloads)
+    Route::prefix('reports')->group(function () {
+        Route::get('/types', [InstitutionalReportController::class, 'types']);
+        Route::get('/filters', [InstitutionalReportController::class, 'filters']);
+        Route::get('/', [InstitutionalReportController::class, 'index']);
+        Route::post('/preview', [InstitutionalReportController::class, 'preview'])->middleware('throttle:ai-analysis');
+        Route::post('/', [InstitutionalReportController::class, 'store'])->middleware('throttle:ai-analysis');
+        Route::get('/{report}', [InstitutionalReportController::class, 'show'])->whereNumber('report');
+        Route::get('/{report}/download', [InstitutionalReportController::class, 'download'])->whereNumber('report');
+        Route::delete('/{report}', [InstitutionalReportController::class, 'destroy'])->whereNumber('report');
     });
 });
 
