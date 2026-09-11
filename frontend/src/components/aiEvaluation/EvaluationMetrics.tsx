@@ -10,7 +10,7 @@ import { formatMetric, GateList, metricLabel, statusText, statusVariant } from '
 
 const Section: React.FC<{ title: string; description?: string; children: React.ReactNode; testId: string }> = ({ title, description, children, testId }) => (
   <Card data-testid={testId} className="p-4 space-y-3">
-    <div><h3 className="text-sm font-semibold text-[#111111] dark:text-white">{title}</h3>{description && <p className="text-xs text-[#737373] mt-0.5">{description}</p>}</div>
+    <div><h3 className="text-sm font-semibold text-sage-800 dark:text-white">{title}</h3>{description && <p className="text-xs text-sage-500 mt-0.5">{description}</p>}</div>
     {children}
   </Card>
 );
@@ -18,9 +18,9 @@ const Section: React.FC<{ title: string; description?: string; children: React.R
 const ScalarGrid: React.FC<{ scalars: Record<string, number>; keys: string[] }> = ({ scalars, keys }) => (
   <dl className="grid grid-cols-2 md:grid-cols-4 gap-3">
     {keys.filter((k) => scalars[k] !== undefined).map((k) => (
-      <div key={k} className="rounded-md border border-[#F0F0F0] dark:border-[#2A2A2A] px-3 py-2">
-        <dt className="text-xs text-[#737373]">{metricLabel(k)}</dt>
-        <dd className="text-lg font-semibold tabular-nums text-[#111111] dark:text-white">{formatMetric(k, scalars[k])}</dd>
+      <div key={k} className="rounded-md border border-sage-100 dark:border-[#2A2A2A] px-3 py-2">
+        <dt className="text-xs text-sage-500">{metricLabel(k)}</dt>
+        <dd className="text-lg font-semibold tabular-nums text-sage-800 dark:text-white">{formatMetric(k, scalars[k])}</dd>
       </div>
     ))}
   </dl>
@@ -31,9 +31,9 @@ export const ConfusionMatrix: React.FC<{ data: ConfusionMatrixData; title?: stri
   return (
     <div data-testid="confusion-matrix" className="overflow-x-auto">
       <table className="text-sm border-collapse">
-        <caption className="text-xs text-[#737373] text-left mb-1">{title} — rows: actual, columns: predicted</caption>
+        <caption className="text-xs text-sage-500 text-left mb-1">{title} — rows: actual, columns: predicted</caption>
         <thead>
-          <tr><th scope="col" className="p-2 text-xs text-[#737373] text-left">Actual \ Predicted</th>{data.labels.map((l) => <th key={l} scope="col" className="p-2 text-xs font-medium">{l}</th>)}</tr>
+          <tr><th scope="col" className="p-2 text-xs text-sage-500 text-left">Actual \ Predicted</th>{data.labels.map((l) => <th key={l} scope="col" className="p-2 text-xs font-medium">{l}</th>)}</tr>
         </thead>
         <tbody>
           {data.matrix.map((row, i) => (
@@ -42,7 +42,7 @@ export const ConfusionMatrix: React.FC<{ data: ConfusionMatrixData; title?: stri
               {row.map((v, j) => {
                 const shade = v === 0 ? 0 : 0.15 + 0.6 * (v / max);
                 return (
-                  <td key={j} className={cn('p-2 text-center tabular-nums border border-[#F0F0F0] dark:border-[#2A2A2A]', i === j && 'font-semibold')}
+                  <td key={j} className={cn('p-2 text-center tabular-nums border border-sage-100 dark:border-[#2A2A2A]', i === j && 'font-semibold')}
                     style={{ backgroundColor: v ? `rgba(17,17,17,${shade})` : undefined, color: shade > 0.45 ? '#fff' : undefined }}
                     aria-label={`Actual ${data.labels[i]}, predicted ${data.labels[j]}: ${v}`}>{v}</td>
                 );
@@ -59,10 +59,10 @@ export const PerClassMetrics: React.FC<{ rows: PerClassMetric[] }> = ({ rows }) 
   <div data-testid="per-class-metrics" className="overflow-x-auto">
     <table className="w-full text-sm">
       <caption className="sr-only">Per-class precision, recall, F1 and support</caption>
-      <thead><tr className="text-left text-xs uppercase text-[#737373]"><th className="py-1 pr-3">Class</th><th className="py-1 pr-3">Precision</th><th className="py-1 pr-3">Recall</th><th className="py-1 pr-3">F1</th><th className="py-1 pr-3">Support</th></tr></thead>
+      <thead><tr className="text-left text-xs uppercase text-sage-500"><th className="py-1 pr-3">Class</th><th className="py-1 pr-3">Precision</th><th className="py-1 pr-3">Recall</th><th className="py-1 pr-3">F1</th><th className="py-1 pr-3">Support</th></tr></thead>
       <tbody>
         {rows.map((r) => (
-          <tr key={r.label} className="border-t border-[#F0F0F0] dark:border-[#2A2A2A]">
+          <tr key={r.label} className="border-t border-sage-100 dark:border-[#2A2A2A]">
             <td className="py-1 pr-3 font-medium">{r.label}</td><td className="py-1 pr-3 tabular-nums">{r.precision.toFixed(2)}</td><td className="py-1 pr-3 tabular-nums">{r.recall.toFixed(2)}</td>
             <td className="py-1 pr-3 tabular-nums">{r.f1.toFixed(2)}</td><td className="py-1 pr-3 tabular-nums">{r.support}</td>
           </tr>
@@ -103,12 +103,12 @@ export const SimilarityMetrics: React.FC<{ metrics: EvaluationMetrics }> = ({ me
       {sweep && (
         <div data-testid="threshold-sweep" className="overflow-x-auto">
           <table className="w-full text-sm">
-            <caption className="text-xs text-[#737373] text-left mb-1">Threshold analysis for {sweep.positive} (evaluation-only; production threshold {sweep.production_threshold} is unchanged)</caption>
-            <thead><tr className="text-left text-xs uppercase text-[#737373]"><th className="py-1 pr-3">Threshold</th><th className="py-1 pr-3">Precision</th><th className="py-1 pr-3">Recall</th><th className="py-1 pr-3">F1</th></tr></thead>
+            <caption className="text-xs text-sage-500 text-left mb-1">Threshold analysis for {sweep.positive} (evaluation-only; production threshold {sweep.production_threshold} is unchanged)</caption>
+            <thead><tr className="text-left text-xs uppercase text-sage-500"><th className="py-1 pr-3">Threshold</th><th className="py-1 pr-3">Precision</th><th className="py-1 pr-3">Recall</th><th className="py-1 pr-3">F1</th></tr></thead>
             <tbody>
               {sweep.rows.map((r) => (
-                <tr key={r.threshold} className={cn('border-t border-[#F0F0F0] dark:border-[#2A2A2A]', r.threshold === sweep.production_threshold && 'font-semibold')}>
-                  <td className="py-1 pr-3 tabular-nums">{r.threshold.toFixed(2)}{r.threshold === sweep.production_threshold && <span className="ml-1 text-xs text-[#737373]">(production)</span>}</td>
+                <tr key={r.threshold} className={cn('border-t border-sage-100 dark:border-[#2A2A2A]', r.threshold === sweep.production_threshold && 'font-semibold')}>
+                  <td className="py-1 pr-3 tabular-nums">{r.threshold.toFixed(2)}{r.threshold === sweep.production_threshold && <span className="ml-1 text-xs text-sage-500">(production)</span>}</td>
                   <td className="py-1 pr-3 tabular-nums">{r.precision.toFixed(2)}</td><td className="py-1 pr-3 tabular-nums">{r.recall.toFixed(2)}</td><td className="py-1 pr-3 tabular-nums">{r.f1.toFixed(2)}</td>
                 </tr>
               ))}
@@ -130,10 +130,10 @@ export const GradingMetrics: React.FC<{ metrics: EvaluationMetrics }> = ({ metri
       {groups.length > 0 && (
         <div data-testid="grading-bias" className="overflow-x-auto">
           <table className="w-full text-sm">
-            <caption className="text-xs text-[#737373] text-left mb-1">Error by academic group (question type / difficulty / Bloom level). Positive signed error = AI over-scores.</caption>
-            <thead><tr className="text-left text-xs uppercase text-[#737373]"><th className="py-1 pr-3">Dimension</th><th className="py-1 pr-3">Group</th><th className="py-1 pr-3">Answers</th><th className="py-1 pr-3">MAE</th><th className="py-1 pr-3">Signed error</th></tr></thead>
+            <caption className="text-xs text-sage-500 text-left mb-1">Error by academic group (question type / difficulty / Bloom level). Positive signed error = AI over-scores.</caption>
+            <thead><tr className="text-left text-xs uppercase text-sage-500"><th className="py-1 pr-3">Dimension</th><th className="py-1 pr-3">Group</th><th className="py-1 pr-3">Answers</th><th className="py-1 pr-3">MAE</th><th className="py-1 pr-3">Signed error</th></tr></thead>
             <tbody>{groups.map((g) => (
-              <tr key={`${g.dimension}-${g.group}`} className="border-t border-[#F0F0F0] dark:border-[#2A2A2A]"><td className="py-1 pr-3">{g.dimension}</td><td className="py-1 pr-3">{g.group}</td><td className="py-1 pr-3 tabular-nums">{g.count}</td><td className="py-1 pr-3 tabular-nums">{g.mae.toFixed(2)}</td><td className="py-1 pr-3 tabular-nums">{g.mean_signed_error > 0 ? '+' : ''}{g.mean_signed_error.toFixed(2)}</td></tr>
+              <tr key={`${g.dimension}-${g.group}`} className="border-t border-sage-100 dark:border-[#2A2A2A]"><td className="py-1 pr-3">{g.dimension}</td><td className="py-1 pr-3">{g.group}</td><td className="py-1 pr-3 tabular-nums">{g.count}</td><td className="py-1 pr-3 tabular-nums">{g.mae.toFixed(2)}</td><td className="py-1 pr-3 tabular-nums">{g.mean_signed_error > 0 ? '+' : ''}{g.mean_signed_error.toFixed(2)}</td></tr>
             ))}</tbody>
           </table>
         </div>
@@ -149,7 +149,7 @@ export const RubricEvaluation: React.FC<{ metrics: EvaluationMetrics }> = ({ met
       <ScalarGrid scalars={metrics.scalars} keys={['marks_validity_rate', 'generated_count', 'valid_rubric_count', 'invalid_rubric_count', 'mean_rating', 'median_rating', 'rating_std_dev', 'rated_count', 'acceptance_rate', 'revision_rate', 'rejection_rate']} />
       {Object.keys(dims).length > 0 && (
         <dl className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
-          {Object.entries(dims).map(([d, v]) => <div key={d} className="flex justify-between border-b border-[#F0F0F0] dark:border-[#2A2A2A] py-1"><dt className="text-[#737373]">{statusText(d)}</dt><dd className="tabular-nums">{v.toFixed(2)} / 5</dd></div>)}
+          {Object.entries(dims).map(([d, v]) => <div key={d} className="flex justify-between border-b border-sage-100 dark:border-[#2A2A2A] py-1"><dt className="text-sage-500">{statusText(d)}</dt><dd className="tabular-nums">{v.toFixed(2)} / 5</dd></div>)}
         </dl>
       )}
     </Section>
@@ -165,10 +165,10 @@ export const RagEvaluation: React.FC<{ metrics: EvaluationMetrics }> = ({ metric
 export const ConstraintSatisfaction: React.FC<{ rows: PerConstraint[] }> = ({ rows }) => (
   <div data-testid="constraint-satisfaction" className="overflow-x-auto">
     <table className="w-full text-sm">
-      <caption className="text-xs text-[#737373] text-left mb-1">Per-constraint satisfaction</caption>
-      <thead><tr className="text-left text-xs uppercase text-[#737373]"><th className="py-1 pr-3">Constraint</th><th className="py-1 pr-3">Satisfied</th><th className="py-1 pr-3">Checked</th><th className="py-1 pr-3">Rate</th></tr></thead>
+      <caption className="text-xs text-sage-500 text-left mb-1">Per-constraint satisfaction</caption>
+      <thead><tr className="text-left text-xs uppercase text-sage-500"><th className="py-1 pr-3">Constraint</th><th className="py-1 pr-3">Satisfied</th><th className="py-1 pr-3">Checked</th><th className="py-1 pr-3">Rate</th></tr></thead>
       <tbody>{rows.map((r) => (
-        <tr key={r.constraint} className="border-t border-[#F0F0F0] dark:border-[#2A2A2A]"><td className="py-1 pr-3">{statusText(r.constraint)}</td><td className="py-1 pr-3 tabular-nums">{r.satisfied}</td><td className="py-1 pr-3 tabular-nums">{r.total}</td><td className="py-1 pr-3 tabular-nums">{r.rate === null ? '—' : `${(r.rate * 100).toFixed(1)}%`}</td></tr>
+        <tr key={r.constraint} className="border-t border-sage-100 dark:border-[#2A2A2A]"><td className="py-1 pr-3">{statusText(r.constraint)}</td><td className="py-1 pr-3 tabular-nums">{r.satisfied}</td><td className="py-1 pr-3 tabular-nums">{r.total}</td><td className="py-1 pr-3 tabular-nums">{r.rate === null ? '—' : `${(r.rate * 100).toFixed(1)}%`}</td></tr>
       ))}</tbody>
     </table>
   </div>
@@ -202,9 +202,9 @@ export const RunGates: React.FC<{ run: RunDetail }> = ({ run }) => (
       {run.summary?.regression?.regression && <Badge variant="Critical" size="md" data-testid="regression-badge">Performance regression detected</Badge>}</div>
     <GateList gates={run.metrics.gates} warnings={run.summary?.warnings} />
     {run.summary?.regression && run.summary.regression.previous_run_id && (
-      <p className="text-xs text-[#737373]">Compared with run #{run.summary.regression.previous_run_id}: {metricLabel(run.summary.regression.metric)} {formatMetric(run.summary.regression.metric, run.summary.regression.previous)} → {formatMetric(run.summary.regression.metric, run.summary.regression.current)}</p>
+      <p className="text-xs text-sage-500">Compared with run #{run.summary.regression.previous_run_id}: {metricLabel(run.summary.regression.metric)} {formatMetric(run.summary.regression.metric, run.summary.regression.previous)} → {formatMetric(run.summary.regression.metric, run.summary.regression.current)}</p>
     )}
-    {run.limitations.length > 0 && <ul className="list-disc pl-5 text-xs text-[#525252] dark:text-[#A3A3A3]">{run.limitations.map((l) => <li key={l}>{l}</li>)}</ul>}
+    {run.limitations.length > 0 && <ul className="list-disc pl-5 text-xs text-sage-600 dark:text-sage-400">{run.limitations.map((l) => <li key={l}>{l}</li>)}</ul>}
   </Section>
 );
 
@@ -222,16 +222,16 @@ export const ErrorAnalysis: React.FC<{ items: ErrorAnalysisItem[]; breakdown: Re
       <Button size="sm" variant={filter === '' ? 'primary' : 'outline'} onClick={() => onFilter('')}>All errors</Button>
       {Object.entries(breakdown).map(([t, c]) => <Button key={t} size="sm" variant={filter === t ? 'primary' : 'outline'} onClick={() => onFilter(t)}>{t} ({c})</Button>)}
     </div>
-    {items.length === 0 && !loading && <p className="text-sm text-[#737373]">No errors recorded for this run.</p>}
+    {items.length === 0 && !loading && <p className="text-sm text-sage-500">No errors recorded for this run.</p>}
     {items.length > 0 && (
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <caption className="sr-only">Example-level evaluation errors</caption>
-          <thead><tr className="text-left text-xs uppercase text-[#737373]"><th className="py-1 pr-3">Example</th><th className="py-1 pr-3">Input</th><th className="py-1 pr-3">Expected</th><th className="py-1 pr-3">Predicted</th><th className="py-1 pr-3">Error</th></tr></thead>
+          <thead><tr className="text-left text-xs uppercase text-sage-500"><th className="py-1 pr-3">Example</th><th className="py-1 pr-3">Input</th><th className="py-1 pr-3">Expected</th><th className="py-1 pr-3">Predicted</th><th className="py-1 pr-3">Error</th></tr></thead>
           <tbody>{items.map((it) => (
-            <tr key={it.id} className="border-t border-[#F0F0F0] dark:border-[#2A2A2A] align-top">
+            <tr key={it.id} className="border-t border-sage-100 dark:border-[#2A2A2A] align-top">
               <td className="py-1 pr-3 tabular-nums">#{it.example_id}</td>
-              <td className="py-1 pr-3 max-w-xs text-xs text-[#525252] dark:text-[#A3A3A3]">{summarize(it.input.question ?? it.input.question_a ?? it.input.answer ?? it.input)}</td>
+              <td className="py-1 pr-3 max-w-xs text-xs text-sage-600 dark:text-sage-400">{summarize(it.input.question ?? it.input.question_a ?? it.input.answer ?? it.input)}</td>
               <td className="py-1 pr-3 text-xs font-mono">{summarize(it.expected_output)}</td>
               <td className="py-1 pr-3 text-xs font-mono">{summarize(it.prediction)}</td>
               <td className="py-1 pr-3"><Badge variant="Attention" size="sm">{it.error_type ?? 'OTHER'}</Badge></td>
@@ -246,14 +246,14 @@ export const ErrorAnalysis: React.FC<{ items: ErrorAnalysisItem[]; breakdown: Re
 
 export const RunMeta: React.FC<{ run: RunDetail }> = ({ run }) => (
   <dl data-testid="run-meta" className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-    <div><dt className="text-xs text-[#737373]">Task</dt><dd className="font-medium">{TASK_LABELS[run.task]}</dd></div>
-    <div><dt className="text-xs text-[#737373]">Dataset</dt><dd className="font-medium">{run.dataset ? `${run.dataset.name} (${run.dataset.version})` : '—'}</dd></div>
-    <div><dt className="text-xs text-[#737373]">Model</dt><dd className="font-medium font-mono text-xs break-all">{run.model ? `${run.model.name} · ${run.model.version}` : 'No model registered'}</dd></div>
-    <div><dt className="text-xs text-[#737373]">Prompt version</dt><dd className="font-medium">{run.prompt_version ? `${run.prompt_version.feature} ${run.prompt_version.version}` : '—'}</dd></div>
-    <div><dt className="text-xs text-[#737373]">Examples</dt><dd className="font-medium tabular-nums">{run.example_count} <span className="text-xs text-[#737373]">({run.summary?.size_category?.replace('_', ' ').toLowerCase() ?? '—'})</span></dd></div>
-    <div><dt className="text-xs text-[#737373]">Inference time</dt><dd className="font-medium tabular-nums">{run.inference_ms !== null ? `${(run.inference_ms / 1000).toFixed(1)} s` : '—'}</dd></div>
-    <div><dt className="text-xs text-[#737373]">Completed</dt><dd className="font-medium">{run.completed_at ? new Date(run.completed_at).toLocaleString() : '—'}</dd></div>
-    <div><dt className="text-xs text-[#737373]">Status</dt><dd><Badge variant={statusVariant(run.status)} size="sm">{statusText(run.status)}</Badge></dd></div>
+    <div><dt className="text-xs text-sage-500">Task</dt><dd className="font-medium">{TASK_LABELS[run.task]}</dd></div>
+    <div><dt className="text-xs text-sage-500">Dataset</dt><dd className="font-medium">{run.dataset ? `${run.dataset.name} (${run.dataset.version})` : '—'}</dd></div>
+    <div><dt className="text-xs text-sage-500">Model</dt><dd className="font-medium font-mono text-xs break-all">{run.model ? `${run.model.name} · ${run.model.version}` : 'No model registered'}</dd></div>
+    <div><dt className="text-xs text-sage-500">Prompt version</dt><dd className="font-medium">{run.prompt_version ? `${run.prompt_version.feature} ${run.prompt_version.version}` : '—'}</dd></div>
+    <div><dt className="text-xs text-sage-500">Examples</dt><dd className="font-medium tabular-nums">{run.example_count} <span className="text-xs text-sage-500">({run.summary?.size_category?.replace('_', ' ').toLowerCase() ?? '—'})</span></dd></div>
+    <div><dt className="text-xs text-sage-500">Inference time</dt><dd className="font-medium tabular-nums">{run.inference_ms !== null ? `${(run.inference_ms / 1000).toFixed(1)} s` : '—'}</dd></div>
+    <div><dt className="text-xs text-sage-500">Completed</dt><dd className="font-medium">{run.completed_at ? new Date(run.completed_at).toLocaleString() : '—'}</dd></div>
+    <div><dt className="text-xs text-sage-500">Status</dt><dd><Badge variant={statusVariant(run.status)} size="sm">{statusText(run.status)}</Badge></dd></div>
   </dl>
 );
 
@@ -262,8 +262,8 @@ export const TaskPicker: React.FC<{ tasks: RunDetail['task'][]; value: RunDetail
   const [id] = useState(() => `task-picker-${Math.random().toString(36).slice(2, 8)}`);
   return (
     <div className="flex items-center gap-2">
-      <label htmlFor={id} className="text-xs text-[#737373]">{label}</label>
-      <select id={id} value={value} onChange={(e) => onChange(e.target.value as RunDetail['task'] | '')} className="rounded-md border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-2 py-1 text-sm">
+      <label htmlFor={id} className="text-xs text-sage-500">{label}</label>
+      <select id={id} value={value} onChange={(e) => onChange(e.target.value as RunDetail['task'] | '')} className="rounded-md border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-2 py-1 text-sm">
         <option value="">All tasks</option>
         {tasks.map((t) => <option key={t} value={t}>{TASK_LABELS[t]}</option>)}
       </select>

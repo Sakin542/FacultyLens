@@ -114,13 +114,13 @@ export const CoPoMapping: React.FC = () => {
       {notice && <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl text-emerald-700 dark:text-emerald-300 text-sm font-medium">{notice}</div>}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs text-[#737373]">
-            <Link to="/courses" className="hover:text-[#111111] dark:hover:text-white">Courses</Link><span>/</span>
-            <Link to={`/courses/${overview.course.id}`} className="hover:text-[#111111] dark:hover:text-white">{overview.course.course_code}</Link><span>/</span>
-            <span className="font-semibold text-[#111111] dark:text-white">CO / PO Mapping</span>
+          <div className="flex items-center gap-2 text-xs text-sage-500">
+            <Link to="/courses" className="hover:text-sage-800 dark:hover:text-white">Courses</Link><span>/</span>
+            <Link to={`/courses/${overview.course.id}`} className="hover:text-sage-800 dark:hover:text-white">{overview.course.course_code}</Link><span>/</span>
+            <span className="font-semibold text-sage-800 dark:text-white">CO / PO Mapping</span>
           </div>
-          <h1 className="text-2xl font-bold text-[#111111] dark:text-white flex items-center gap-2"><Grid3X3 className="w-5 h-5 text-[#737373]" /> CO / PO Mapping</h1>
-          <p className="text-xs text-[#737373]">
+          <h1 className="text-2xl font-bold text-sage-800 dark:text-white flex items-center gap-2"><Grid3X3 className="w-5 h-5 text-sage-500" /> CO / PO Mapping</h1>
+          <p className="text-xs text-sage-500">
             Course: <strong>{overview.course.course_code} — {overview.course.course_name}</strong> · Program: <strong data-testid="program-name">{overview.program ? `${overview.program.code} — ${overview.program.name}` : 'Not assigned'}</strong>
           </p>
         </div>
@@ -136,8 +136,8 @@ export const CoPoMapping: React.FC = () => {
 
       {!overview.program && (
         <Card variant="default" className="p-5 space-y-3" data-testid="program-setup">
-          <h3 className="text-sm font-bold text-[#111111] dark:text-white">Assign a program</h3>
-          <p className="text-xs text-[#737373]">CO → PO mapping needs program outcomes. Choose one of your programs or create a new one; define its POs with your institution's wording.</p>
+          <h3 className="text-sm font-bold text-sage-800 dark:text-white">Assign a program</h3>
+          <p className="text-xs text-sage-500">CO → PO mapping needs program outcomes. Choose one of your programs or create a new one; define its POs with your institution's wording.</p>
           {programs.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {programs.map((p) => <Button key={p.id} variant="outline" size="sm" onClick={() => assignProgram(p.id)} data-testid="assign-program">{p.code} — {p.name}</Button>)}

@@ -54,8 +54,8 @@ export const AnswerUpload: React.FC<AnswerUploadProps> = ({ file, onChange, onEr
       onDrop={(e) => { e.preventDefault(); setDragging(false); if (!disabled) pick(e.dataTransfer.files?.[0]); }}
       className={`flex flex-col items-center justify-center rounded-xl border-2 border-dashed text-center cursor-pointer transition-colors ${compact ? 'p-3' : 'p-6'} ${
         file || dragging
-          ? 'border-[#111111] dark:border-white bg-[#F7F7F5] dark:bg-[#2C2C2E]'
-          : 'border-[#E5E5E5] dark:border-[#3A3A3C] hover:border-[#CCCCCC]'
+          ? 'border-sage-700 dark:border-white bg-sage-100 dark:bg-[#2C2C2E]'
+          : 'border-sage-200 dark:border-[#3A3A3C] hover:border-sage-300'
       } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
       data-testid="answer-upload"
     >
@@ -71,14 +71,14 @@ export const AnswerUpload: React.FC<AnswerUploadProps> = ({ file, onChange, onEr
       {file ? (
         <div className="flex items-center gap-2 text-xs">
           <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-          <span className="font-medium text-[#111111] dark:text-white truncate max-w-[220px]">{file.name}</span>
-          <span className="text-[#737373]">{(file.size / 1024).toFixed(0)} KB</span>
+          <span className="font-medium text-sage-800 dark:text-white truncate max-w-[220px]">{file.name}</span>
+          <span className="text-sage-500">{(file.size / 1024).toFixed(0)} KB</span>
         </div>
       ) : (
         <div className="space-y-1">
-          <UploadCloud className="w-5 h-5 text-[#737373] mx-auto" />
-          <p className="text-xs font-medium text-[#262626] dark:text-[#E5E5E5]">Click or drop an answer file</p>
-          <p className="text-[10px] text-[#737373]">PDF, DOCX, TXT, PNG, JPG · up to {ANSWER_FILE_MAX_MB} MB</p>
+          <UploadCloud className="w-5 h-5 text-sage-500 mx-auto" />
+          <p className="text-xs font-medium text-sage-700 dark:text-sage-200">Click or drop an answer file</p>
+          <p className="text-[10px] text-sage-500">PDF, DOCX, TXT, PNG, JPG · up to {ANSWER_FILE_MAX_MB} MB</p>
         </div>
       )}
     </div>

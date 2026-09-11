@@ -85,10 +85,10 @@ export const FeedbackSummaryCards: React.FC<FeedbackSummaryCardsProps> = ({
         return (
           <Card
             key={i}
-            className="p-4 bg-white dark:bg-[#1C1C1E] border border-[#E5E5E5] dark:border-[#2C2C2E] shadow-xs flex flex-col justify-between"
+            className="p-4 bg-white dark:bg-[#1C1C1E] border border-sage-200 dark:border-[#2C2C2E] shadow-xs flex flex-col justify-between"
           >
             <div className="flex items-center justify-between gap-2">
-              <span className="text-xs font-medium text-[#737373] tracking-tight">
+              <span className="text-xs font-medium text-sage-500 tracking-tight">
                 {stat.title}
               </span>
               <div
@@ -99,10 +99,10 @@ export const FeedbackSummaryCards: React.FC<FeedbackSummaryCardsProps> = ({
             </div>
 
             <div className="mt-2">
-              <span className="text-xl font-bold font-mono text-[#111111] dark:text-white block">
+              <span className="text-xl font-bold font-mono text-sage-800 dark:text-white block">
                 {stat.value}
               </span>
-              <span className="text-[11px] text-[#737373] mt-0.5 block truncate">
+              <span className="text-[11px] text-sage-500 mt-0.5 block truncate">
                 {stat.subtitle}
               </span>
             </div>

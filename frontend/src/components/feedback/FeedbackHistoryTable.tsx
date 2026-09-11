@@ -79,7 +79,7 @@ export const FeedbackHistoryTable: React.FC<FeedbackHistoryTableProps> = ({
   };
 
   const renderStars = (rating: number | null) => {
-    if (!rating) return <span className="text-[#737373] text-[11px] italic">Not rated</span>;
+    if (!rating) return <span className="text-sage-500 text-[11px] italic">Not rated</span>;
     return (
       <div className="flex items-center gap-0.5">
         {[1, 2, 3, 4, 5].map((s) => (
@@ -92,24 +92,24 @@ export const FeedbackHistoryTable: React.FC<FeedbackHistoryTableProps> = ({
             }`}
           />
         ))}
-        <span className="text-[11px] font-mono text-[#737373] ml-1">({rating})</span>
+        <span className="text-[11px] font-mono text-sage-500 ml-1">({rating})</span>
       </div>
     );
   };
 
   return (
-    <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-[#E5E5E5] dark:border-[#2C2C2E] shadow-xs overflow-hidden">
+    <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-sage-200 dark:border-[#2C2C2E] shadow-xs overflow-hidden">
       {/* Search & Filter Header */}
-      <div className="p-4 border-b border-[#E5E5E5] dark:border-[#2C2C2E] flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+      <div className="p-4 border-b border-sage-200 dark:border-[#2C2C2E] flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
         {/* Search */}
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-[#737373] absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-sage-500 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search feedback notes, reasons, or recommendations..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-[#F7F7F5] dark:bg-[#2C2C2E] text-xs text-[#111111] dark:text-white placeholder-[#8E8E93] focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white"
+            className="w-full pl-9 pr-3 py-1.5 rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-sage-100 dark:bg-[#2C2C2E] text-xs text-sage-800 dark:text-white placeholder-[#8E8E93] focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white"
           />
         </div>
 
@@ -118,7 +118,7 @@ export const FeedbackHistoryTable: React.FC<FeedbackHistoryTableProps> = ({
           <select
             value={decisionFilter}
             onChange={(e) => onDecisionFilterChange(e.target.value)}
-            className="px-2.5 py-1.5 rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] text-xs text-[#111111] dark:text-white"
+            className="px-2.5 py-1.5 rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] text-xs text-sage-800 dark:text-white"
           >
             <option value="all">All Decisions</option>
             <option value="ACCEPTED">Accepted</option>
@@ -129,7 +129,7 @@ export const FeedbackHistoryTable: React.FC<FeedbackHistoryTableProps> = ({
           <select
             value={ratingFilter}
             onChange={(e) => onRatingFilterChange(e.target.value)}
-            className="px-2.5 py-1.5 rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] text-xs text-[#111111] dark:text-white"
+            className="px-2.5 py-1.5 rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] text-xs text-sage-800 dark:text-white"
           >
             <option value="all">All Ratings</option>
             <option value="5">5 Stars</option>
@@ -144,7 +144,7 @@ export const FeedbackHistoryTable: React.FC<FeedbackHistoryTableProps> = ({
       {/* Table Content */}
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs">
-          <thead className="bg-[#F7F7F5] dark:bg-[#2C2C2E] text-[#737373] border-b border-[#E5E5E5] dark:border-[#3A3A3C]">
+          <thead className="bg-sage-100 dark:bg-[#2C2C2E] text-sage-500 border-b border-sage-200 dark:border-[#3A3A3C]">
             <tr>
               <th className="py-3 px-4 font-semibold">Recommendation</th>
               <th className="py-3 px-4 font-semibold">Assessment / Course</th>
@@ -155,7 +155,7 @@ export const FeedbackHistoryTable: React.FC<FeedbackHistoryTableProps> = ({
               <th className="py-3 px-4 font-semibold">Date</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#E5E5E5] dark:divide-[#2C2C2E]">
+          <tbody className="divide-y divide-sage-200 dark:divide-[#2C2C2E]">
             {isLoading ? (
               [...Array(5)].map((_, i) => (
                 <tr key={i} className="animate-pulse">
@@ -166,7 +166,7 @@ export const FeedbackHistoryTable: React.FC<FeedbackHistoryTableProps> = ({
               ))
             ) : items.length === 0 ? (
               <tr>
-                <td colSpan={7} className="py-12 text-center text-[#737373] italic">
+                <td colSpan={7} className="py-12 text-center text-sage-500 italic">
                   No feedback entries match the criteria.
                 </td>
               </tr>
@@ -187,11 +187,11 @@ export const FeedbackHistoryTable: React.FC<FeedbackHistoryTableProps> = ({
                               {item.recommendation.priority}
                             </Badge>
                           )}
-                          <span className="text-[10px] uppercase font-mono text-[#737373]">
+                          <span className="text-[10px] uppercase font-mono text-sage-500">
                             {item.recommendation?.category?.replace(/_/g, ' ')}
                           </span>
                         </div>
-                        <p className="font-medium text-[#111111] dark:text-white line-clamp-2">
+                        <p className="font-medium text-sage-800 dark:text-white line-clamp-2">
                           {item.recommendation?.problem || 'Recommendation #' + item.recommendation_id}
                         </p>
                       </div>
@@ -200,10 +200,10 @@ export const FeedbackHistoryTable: React.FC<FeedbackHistoryTableProps> = ({
                     {/* Assessment / Course */}
                     <td className="py-3.5 px-4 max-w-[180px]">
                       <div className="space-y-0.5">
-                        <p className="font-semibold text-[#111111] dark:text-white truncate">
+                        <p className="font-semibold text-sage-800 dark:text-white truncate">
                           {item.assessment?.title || 'Assessment'}
                         </p>
-                        <p className="text-[11px] text-[#737373] font-mono truncate">
+                        <p className="text-[11px] text-sage-500 font-mono truncate">
                           {item.course?.code || ''} {item.course?.name ? `• ${item.course.name}` : ''}
                         </p>
                       </div>
@@ -222,11 +222,11 @@ export const FeedbackHistoryTable: React.FC<FeedbackHistoryTableProps> = ({
                     {/* Reason */}
                     <td className="py-3.5 px-4 whitespace-nowrap">
                       {item.reason ? (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-100 dark:bg-neutral-800 text-[#737373]">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-100 dark:bg-neutral-800 text-sage-500">
                           {formatReason(item.reason)}
                         </span>
                       ) : (
-                        <span className="text-[#737373] text-[11px] italic">—</span>
+                        <span className="text-sage-500 text-[11px] italic">—</span>
                       )}
                     </td>
 
@@ -235,7 +235,7 @@ export const FeedbackHistoryTable: React.FC<FeedbackHistoryTableProps> = ({
                       {item.comment ? (
                         <div>
                           <p
-                            className={`text-[#737373] text-[11px] leading-relaxed ${
+                            className={`text-sage-500 text-[11px] leading-relaxed ${
                               !isCommentOpen ? 'line-clamp-2' : ''
                             }`}
                           >
@@ -260,12 +260,12 @@ export const FeedbackHistoryTable: React.FC<FeedbackHistoryTableProps> = ({
                           )}
                         </div>
                       ) : (
-                        <span className="text-[#737373] text-[11px] italic">No comment</span>
+                        <span className="text-sage-500 text-[11px] italic">No comment</span>
                       )}
                     </td>
 
                     {/* Date */}
-                    <td className="py-3.5 px-4 whitespace-nowrap font-mono text-[11px] text-[#737373]">
+                    <td className="py-3.5 px-4 whitespace-nowrap font-mono text-[11px] text-sage-500">
                       {new Date(item.created_at).toLocaleDateString(undefined, {
                         month: 'short',
                         day: 'numeric',
@@ -282,13 +282,13 @@ export const FeedbackHistoryTable: React.FC<FeedbackHistoryTableProps> = ({
 
       {/* Pagination Footer */}
       {meta.total > 0 && (
-        <div className="p-3.5 border-t border-[#E5E5E5] dark:border-[#2C2C2E] flex items-center justify-between text-xs text-[#737373]">
+        <div className="p-3.5 border-t border-sage-200 dark:border-[#2C2C2E] flex items-center justify-between text-xs text-sage-500">
           <div>
-            Showing <span className="font-mono font-medium text-[#111111] dark:text-white">
+            Showing <span className="font-mono font-medium text-sage-800 dark:text-white">
               {Math.min((meta.current_page - 1) * meta.per_page + 1, meta.total)}
-            </span> to <span className="font-mono font-medium text-[#111111] dark:text-white">
+            </span> to <span className="font-mono font-medium text-sage-800 dark:text-white">
               {Math.min(meta.current_page * meta.per_page, meta.total)}
-            </span> of <span className="font-mono font-medium text-[#111111] dark:text-white">{meta.total}</span> entries
+            </span> of <span className="font-mono font-medium text-sage-800 dark:text-white">{meta.total}</span> entries
           </div>
 
           <div className="flex items-center gap-1.5">

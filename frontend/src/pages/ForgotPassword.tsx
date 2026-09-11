@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Input';
-import { Mail, ArrowLeft, CheckCircle2, KeyRound } from 'lucide-react';
+import { Mail, ArrowLeft, KeyRound } from 'lucide-react';
+import { AuthShell, AuthSuccess, authButtonClass, authInputClass, authLinkClass } from '@/components/landing/AuthShell';
 
 export const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -30,79 +31,20 @@ export const ForgotPassword: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4 sm:p-6 lg:p-8">
-      <div className="w-full max-w-md bg-white rounded-2xl border border-[#E5E5E5] shadow-card p-8 sm:p-10">
-        <div className="w-12 h-12 rounded-xl bg-[#F7F7F5] border border-[#E5E5E5] flex items-center justify-center text-[#111111] mb-6">
-          <KeyRound className="w-6 h-6" />
-        </div>
-
-        {isSubmitted ? (
-          <div className="space-y-6 text-left">
-            <div className="flex items-center gap-2 text-[#166534] bg-[#F0FDF4] border border-[#BBF7D0] p-3 rounded-lg text-xs">
-              <CheckCircle2 className="w-4 h-4 shrink-0" />
-              <span>Reset link sent to <strong>{email}</strong></span>
-            </div>
-
-            <div className="space-y-2">
-              <h2 className="text-xl font-bold text-[#111111]">Check Your University Inbox</h2>
-              <p className="text-xs text-[#737373] leading-relaxed">
-                If an account exists with this email, you will receive password reset instructions shortly.
-              </p>
-            </div>
-
-            <div className="pt-2">
-              <Link to="/login">
-                <Button variant="outline" size="md" className="w-full justify-center" leftIcon={<ArrowLeft className="w-4 h-4" />}>
-                  Back to Login
-                </Button>
-              </Link>
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            <div className="space-y-1">
-              <h2 className="text-2xl font-bold text-[#111111] tracking-tight">Forgot Password?</h2>
-              <p className="text-xs text-[#737373] leading-relaxed">
-                Enter your university email and we&apos;ll send you a password reset link.
-              </p>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-              <Input
-                label="Email"
-                type="email"
-                placeholder="faculty@university.edu"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                error={error}
-                leftIcon={<Mail className="w-4 h-4" />}
-                required
-              />
-
-              <Button
-                type="submit"
-                variant="primary"
-                size="md"
-                className="w-full justify-center"
-                isLoading={isLoading}
-              >
-                Send Reset Link
-              </Button>
-            </form>
-
-            <div className="pt-4 border-t border-[#E5E5E5] text-center">
-              <Link
-                to="/login"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#111111] hover:underline"
-              >
-                <ArrowLeft className="w-3.5 h-3.5" />
-                <span>Back to Login</span>
-              </Link>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+    <AuthShell
+      eyebrow="Account recovery"
+      title={isSubmitted ? 'Check your inbox.' : 'Forgot your password?'}
+      subtitle={isSubmitted ? 'If an account exists with this email, password reset instructions are on their way.' : 'Enter your university email and we\u2019ll send you a password reset link.'}
+      footer={<Link to="/login" className={`${authLinkClass} inline-flex items-center gap-1.5`}><ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />Back to sign in</Link>}
+    >
+      {isSubmitted ? (
+        <AuthSuccess message={`Reset link sent to ${email}`} />
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+          <Input label="University Email" type="email" placeholder="faculty@university.edu" value={email} onChange={(e) => setEmail(e.target.value)} error={error} leftIcon={<Mail className="w-4 h-4" />} className={authInputClass} required />
+          <Button type="submit" variant="primary" size="md" className={authButtonClass} isLoading={isLoading} rightIcon={<KeyRound className="w-4 h-4" />}>Send reset link</Button>
+        </form>
+      )}
+    </AuthShell>
   );
 };
-

@@ -5,22 +5,22 @@ import { ApiError } from '@/services/api';
 import { CO_PO_DISCLAIMER } from '@/types/coPo';
 
 export const MappingDisclaimer: React.FC<{ className?: string }> = ({ className = '' }) => (
-  <p className={`text-[11px] text-[#737373] italic flex items-start gap-1.5 ${className}`} data-testid="mapping-disclaimer">
+  <p className={`text-[11px] text-sage-500 italic flex items-start gap-1.5 ${className}`} data-testid="mapping-disclaimer">
     <Info className="w-3 h-3 shrink-0 mt-0.5" /> {CO_PO_DISCLAIMER}
   </p>
 );
 
 export const MappingLoading: React.FC<{ text?: string }> = ({ text = 'Loading CO/PO mapping…' }) => (
-  <div className="p-6 rounded-xl bg-[#F7F7F5] dark:bg-[#2C2C2E] border border-[#E5E5E5] dark:border-[#3A3A3C] flex items-center gap-3 text-xs text-[#737373]" role="status" data-testid="mapping-loading">
+  <div className="p-6 rounded-xl bg-sage-100 dark:bg-[#2C2C2E] border border-sage-200 dark:border-[#3A3A3C] flex items-center gap-3 text-xs text-sage-500" role="status" data-testid="mapping-loading">
     <Loader2 className="w-4 h-4 animate-spin" /> {text}
   </div>
 );
 
 export const MappingEmptyState: React.FC<{ title: string; description: string; action?: React.ReactNode }> = ({ title, description, action }) => (
-  <div className="p-6 rounded-xl border border-dashed border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] text-center space-y-2" data-testid="mapping-empty">
-    <div className="w-10 h-10 rounded-lg bg-[#F7F7F5] dark:bg-[#2C2C2E] flex items-center justify-center mx-auto"><Grid3X3 className="w-5 h-5 text-[#737373]" /></div>
-    <h4 className="text-sm font-bold text-[#111111] dark:text-white">{title}</h4>
-    <p className="text-xs text-[#737373] max-w-md mx-auto">{description}</p>
+  <div className="p-6 rounded-xl border border-dashed border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] text-center space-y-2" data-testid="mapping-empty">
+    <div className="w-10 h-10 rounded-lg bg-sage-100 dark:bg-[#2C2C2E] flex items-center justify-center mx-auto"><Grid3X3 className="w-5 h-5 text-sage-500" /></div>
+    <h4 className="text-sm font-bold text-sage-800 dark:text-white">{title}</h4>
+    <p className="text-xs text-sage-500 max-w-md mx-auto">{description}</p>
     {action}
   </div>
 );

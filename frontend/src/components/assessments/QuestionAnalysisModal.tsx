@@ -143,18 +143,18 @@ export const QuestionAnalysisModal: React.FC<QuestionAnalysisModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
-      <div className="bg-white dark:bg-[#1C1C1E] border border-[#E5E5E5] dark:border-[#2C2C2E] rounded-2xl shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden">
+      <div className="bg-white dark:bg-[#1C1C1E] border border-sage-200 dark:border-[#2C2C2E] rounded-2xl shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#E5E5E5] dark:border-[#2C2C2E]">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-sage-200 dark:border-[#2C2C2E]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#111111] dark:bg-white text-white dark:text-[#111111] flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-sage-700 dark:bg-white text-white dark:text-sage-800 flex items-center justify-center">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-[#111111] dark:text-white">
+              <h3 className="text-base font-bold text-sage-800 dark:text-white">
                 Hugging Face AI Question Analysis
               </h3>
-              <p className="text-xs text-[#737373]">
+              <p className="text-xs text-sage-500">
                 {assessmentTitle ? `Evaluating: ${assessmentTitle}` : 'Intelligent classification, Bloom taxonomy, difficulty & topic detection'}
               </p>
             </div>
@@ -162,22 +162,22 @@ export const QuestionAnalysisModal: React.FC<QuestionAnalysisModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-[#737373] hover:text-[#111111] dark:hover:text-white hover:bg-[#F7F7F5] dark:hover:bg-[#2C2C2E] transition-colors"
+            className="p-1.5 rounded-lg text-sage-500 hover:text-sage-800 dark:hover:text-white hover:bg-sage-100 dark:hover:bg-[#2C2C2E] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Tab Selection */}
-        <div className="flex items-center gap-2 px-6 pt-3 border-b border-[#E5E5E5] dark:border-[#2C2C2E] text-xs">
+        <div className="flex items-center gap-2 px-6 pt-3 border-b border-sage-200 dark:border-[#2C2C2E] text-xs">
           {assessmentId && (
             <button
               type="button"
               onClick={() => setActiveTab('assessment')}
               className={`px-4 py-2 font-semibold border-b-2 transition-colors ${
                 activeTab === 'assessment'
-                  ? 'border-[#111111] dark:border-white text-[#111111] dark:text-white'
-                  : 'border-transparent text-[#737373] hover:text-[#111111] dark:hover:text-white'
+                  ? 'border-sage-700 dark:border-white text-sage-800 dark:text-white'
+                  : 'border-transparent text-sage-500 hover:text-sage-800 dark:hover:text-white'
               }`}
             >
               Assessment Analysis
@@ -188,8 +188,8 @@ export const QuestionAnalysisModal: React.FC<QuestionAnalysisModalProps> = ({
             onClick={() => setActiveTab('tester')}
             className={`px-4 py-2 font-semibold border-b-2 transition-colors ${
               activeTab === 'tester'
-                ? 'border-[#111111] dark:border-white text-[#111111] dark:text-white'
-                : 'border-transparent text-[#737373] hover:text-[#111111] dark:hover:text-white'
+                ? 'border-sage-700 dark:border-white text-sage-800 dark:text-white'
+                : 'border-transparent text-sage-500 hover:text-sage-800 dark:hover:text-white'
             }`}
           >
             Interactive Question Sandbox
@@ -201,12 +201,12 @@ export const QuestionAnalysisModal: React.FC<QuestionAnalysisModalProps> = ({
           {/* Assessment Batch Analysis Tab */}
           {activeTab === 'assessment' && assessmentId && (
             <div className="space-y-5">
-              <div className="p-4 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="p-4 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl border border-sage-200 dark:border-[#3A3A3C] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="space-y-1">
-                  <h4 className="text-sm font-bold text-[#111111] dark:text-white flex items-center gap-2">
+                  <h4 className="text-sm font-bold text-sage-800 dark:text-white flex items-center gap-2">
                     <BrainCircuit className="w-4 h-4" /> Run Full AI Analysis on Assessment
                   </h4>
-                  <p className="text-xs text-[#737373]">
+                  <p className="text-xs text-sage-500">
                     Analyzes all questions using Hugging Face NLP, tags Bloom&apos;s levels &amp; difficulty, and saves predictions into the database.
                   </p>
                 </div>
@@ -232,30 +232,30 @@ export const QuestionAnalysisModal: React.FC<QuestionAnalysisModalProps> = ({
                 <div className="space-y-6 animate-in fade-in">
                   {/* Summary Metric Ribbon */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div className="p-4 bg-white dark:bg-[#1C1C1E] rounded-xl border border-[#E5E5E5] dark:border-[#2C2C2E] space-y-1">
-                      <span className="text-[10px] uppercase font-semibold text-[#737373] flex items-center gap-1">
+                    <div className="p-4 bg-white dark:bg-[#1C1C1E] rounded-xl border border-sage-200 dark:border-[#2C2C2E] space-y-1">
+                      <span className="text-[10px] uppercase font-semibold text-sage-500 flex items-center gap-1">
                         <Layers className="w-3.5 h-3.5" /> Total Questions Analyzed
                       </span>
-                      <span className="text-2xl font-bold font-mono text-[#111111] dark:text-white">
+                      <span className="text-2xl font-bold font-mono text-sage-800 dark:text-white">
                         {batchResult.total_questions}
                       </span>
                     </div>
 
-                    <div className="p-4 bg-white dark:bg-[#1C1C1E] rounded-xl border border-[#E5E5E5] dark:border-[#2C2C2E] space-y-1">
-                      <span className="text-[10px] uppercase font-semibold text-[#737373] flex items-center gap-1">
+                    <div className="p-4 bg-white dark:bg-[#1C1C1E] rounded-xl border border-sage-200 dark:border-[#2C2C2E] space-y-1">
+                      <span className="text-[10px] uppercase font-semibold text-sage-500 flex items-center gap-1">
                         <Target className="w-3.5 h-3.5" /> Difficulty Spread
                       </span>
                       <div className="flex items-center gap-2 pt-1">
                         {Object.entries(batchResult.summary?.difficulty_distribution || {}).map(([diff, count]) => (
-                          <span key={diff} className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-[#F7F7F5] dark:bg-[#2C2C2E] border border-[#E5E5E5] dark:border-[#3A3A3C]">
+                          <span key={diff} className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-sage-100 dark:bg-[#2C2C2E] border border-sage-200 dark:border-[#3A3A3C]">
                             {diff}: {count}
                           </span>
                         ))}
                       </div>
                     </div>
 
-                    <div className="p-4 bg-white dark:bg-[#1C1C1E] rounded-xl border border-[#E5E5E5] dark:border-[#2C2C2E] space-y-1">
-                      <span className="text-[10px] uppercase font-semibold text-[#737373] flex items-center gap-1">
+                    <div className="p-4 bg-white dark:bg-[#1C1C1E] rounded-xl border border-sage-200 dark:border-[#2C2C2E] space-y-1">
+                      <span className="text-[10px] uppercase font-semibold text-sage-500 flex items-center gap-1">
                         <GraduationCap className="w-3.5 h-3.5" /> Top Bloom Levels
                       </span>
                       <div className="flex flex-wrap items-center gap-1.5 pt-1">
@@ -270,7 +270,7 @@ export const QuestionAnalysisModal: React.FC<QuestionAnalysisModalProps> = ({
 
                   {/* Question Breakdown List */}
                   <div className="space-y-3">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-[#737373] flex items-center gap-1.5">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-sage-500 flex items-center gap-1.5">
                       <BarChart3 className="w-4 h-4" /> Analyzed Questions Detail
                     </h4>
 
@@ -278,11 +278,11 @@ export const QuestionAnalysisModal: React.FC<QuestionAnalysisModalProps> = ({
                       {batchResult.questions.map((q: AnalyzedQuestionDetail, idx: number) => (
                         <div
                           key={idx}
-                          className="p-4 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C] space-y-3"
+                          className="p-4 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl border border-sage-200 dark:border-[#3A3A3C] space-y-3"
                         >
                           <div className="flex flex-wrap items-center justify-between gap-2">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <span className="font-mono font-bold text-xs text-[#111111] dark:text-white">
+                              <span className="font-mono font-bold text-xs text-sage-800 dark:text-white">
                                 Q{q.number || idx + 1}
                               </span>
                               <Badge variant="neutral" className="text-[10px] uppercase">
@@ -293,16 +293,16 @@ export const QuestionAnalysisModal: React.FC<QuestionAnalysisModalProps> = ({
                             </div>
 
                             {q.topics && q.topics.length > 0 && (
-                              <div className="flex items-center gap-1 text-[11px] text-[#737373]">
+                              <div className="flex items-center gap-1 text-[11px] text-sage-500">
                                 <span className="font-medium">Topic:</span>
-                                <span className="font-semibold text-[#111111] dark:text-white">
+                                <span className="font-semibold text-sage-800 dark:text-white">
                                   {q.topics[0].name} ({(q.topics[0].confidence * 100).toFixed(0)}%)
                                 </span>
                               </div>
                             )}
                           </div>
 
-                          <p className="text-xs text-[#262626] dark:text-[#E5E5E5] leading-relaxed">
+                          <p className="text-xs text-sage-700 dark:text-sage-200 leading-relaxed">
                             {q.question}
                           </p>
                         </div>
@@ -319,7 +319,7 @@ export const QuestionAnalysisModal: React.FC<QuestionAnalysisModalProps> = ({
             <div className="space-y-5">
               <div className="space-y-3">
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-[#111111] dark:text-white">
+                  <label className="text-xs font-bold text-sage-800 dark:text-white">
                     Question Text
                   </label>
                   <textarea
@@ -327,12 +327,12 @@ export const QuestionAnalysisModal: React.FC<QuestionAnalysisModalProps> = ({
                     value={testQuestion}
                     onChange={(e) => setTestQuestion(e.target.value)}
                     placeholder="Enter academic question to test NLP model..."
-                    className="w-full rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] px-3.5 py-2.5 text-xs text-[#111111] dark:text-white placeholder-[#737373] focus:outline-none focus:ring-2 focus:ring-[#111111]"
+                    className="w-full rounded-xl border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] px-3.5 py-2.5 text-xs text-sage-800 dark:text-white placeholder-sage-400 focus:outline-none focus:ring-2 focus:ring-sage-600"
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-[#111111] dark:text-white">
+                  <label className="text-xs font-bold text-sage-800 dark:text-white">
                     Course Topics / Syllabus Context (comma-separated)
                   </label>
                   <input
@@ -340,7 +340,7 @@ export const QuestionAnalysisModal: React.FC<QuestionAnalysisModalProps> = ({
                     value={topicsInput}
                     onChange={(e) => setTopicsInput(e.target.value)}
                     placeholder="e.g. Relational Design, Normalization, SQL, Transactions"
-                    className="w-full rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] px-3.5 py-2 text-xs text-[#111111] dark:text-white placeholder-[#737373] focus:outline-none focus:ring-2 focus:ring-[#111111]"
+                    className="w-full rounded-xl border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] px-3.5 py-2 text-xs text-sage-800 dark:text-white placeholder-sage-400 focus:outline-none focus:ring-2 focus:ring-sage-600"
                   />
                 </div>
 
@@ -363,34 +363,34 @@ export const QuestionAnalysisModal: React.FC<QuestionAnalysisModalProps> = ({
               )}
 
               {singleResult && (
-                <div className="p-5 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C] space-y-4 animate-in fade-in">
-                  <div className="flex items-center justify-between pb-3 border-b border-[#E5E5E5] dark:border-[#3A3A3C]">
-                    <span className="text-xs font-bold uppercase tracking-wider text-[#737373]">
+                <div className="p-5 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl border border-sage-200 dark:border-[#3A3A3C] space-y-4 animate-in fade-in">
+                  <div className="flex items-center justify-between pb-3 border-b border-sage-200 dark:border-[#3A3A3C]">
+                    <span className="text-xs font-bold uppercase tracking-wider text-sage-500">
                       AI Prediction Results
                     </span>
                     <Badge variant="Good" dot>Model Inferred</Badge>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div className="p-3 bg-white dark:bg-[#1C1C1E] rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] space-y-1">
-                      <span className="text-[10px] uppercase font-semibold text-[#737373]">Question Type</span>
+                    <div className="p-3 bg-white dark:bg-[#1C1C1E] rounded-lg border border-sage-200 dark:border-[#3A3A3C] space-y-1">
+                      <span className="text-[10px] uppercase font-semibold text-sage-500">Question Type</span>
                       <div className="flex items-center gap-1.5">
-                        <span className="font-bold text-sm text-[#111111] dark:text-white">
+                        <span className="font-bold text-sm text-sage-800 dark:text-white">
                           {singleResult.classification?.question_type}
                         </span>
-                        <span className="text-[10px] text-[#737373] font-mono">
+                        <span className="text-[10px] text-sage-500 font-mono">
                           ({((singleResult.classification?.confidence || 0) * 100).toFixed(0)}%)
                         </span>
                       </div>
                     </div>
 
-                    <div className="p-3 bg-white dark:bg-[#1C1C1E] rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] space-y-1">
-                      <span className="text-[10px] uppercase font-semibold text-[#737373]">Difficulty Level</span>
+                    <div className="p-3 bg-white dark:bg-[#1C1C1E] rounded-lg border border-sage-200 dark:border-[#3A3A3C] space-y-1">
+                      <span className="text-[10px] uppercase font-semibold text-sage-500">Difficulty Level</span>
                       <div>{getDifficultyBadge(singleResult.difficulty?.level)}</div>
                     </div>
 
-                    <div className="p-3 bg-white dark:bg-[#1C1C1E] rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] space-y-1">
-                      <span className="text-[10px] uppercase font-semibold text-[#737373]">Cognitive Level</span>
+                    <div className="p-3 bg-white dark:bg-[#1C1C1E] rounded-lg border border-sage-200 dark:border-[#3A3A3C] space-y-1">
+                      <span className="text-[10px] uppercase font-semibold text-sage-500">Cognitive Level</span>
                       <div>{getBloomBadge(singleResult.cognitive_level?.level)}</div>
                     </div>
                   </div>
@@ -398,16 +398,16 @@ export const QuestionAnalysisModal: React.FC<QuestionAnalysisModalProps> = ({
                   {/* Topic Semantic Matches */}
                   {singleResult.topics && singleResult.topics.length > 0 && (
                     <div className="space-y-2 pt-2">
-                      <span className="text-xs font-bold text-[#111111] dark:text-white flex items-center gap-1.5">
+                      <span className="text-xs font-bold text-sage-800 dark:text-white flex items-center gap-1.5">
                         <Target className="w-3.5 h-3.5" /> Matched Syllabus Topics (Cosine Similarity)
                       </span>
                       <div className="flex flex-wrap gap-2">
                         {singleResult.topics.map((t: { name: string; confidence: number }, idx: number) => (
                           <div
                             key={idx}
-                            className="px-3 py-1 bg-white dark:bg-[#1C1C1E] rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] text-xs flex items-center gap-2"
+                            className="px-3 py-1 bg-white dark:bg-[#1C1C1E] rounded-lg border border-sage-200 dark:border-[#3A3A3C] text-xs flex items-center gap-2"
                           >
-                            <span className="font-medium text-[#111111] dark:text-white">{t.name}</span>
+                            <span className="font-medium text-sage-800 dark:text-white">{t.name}</span>
                             <span className="font-mono text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">
                               {(t.confidence * 100).toFixed(1)}%
                             </span>
@@ -423,7 +423,7 @@ export const QuestionAnalysisModal: React.FC<QuestionAnalysisModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3 border-t border-[#E5E5E5] dark:border-[#2C2C2E] flex items-center justify-between bg-[#FAFAFA] dark:bg-[#1C1C1E] text-xs text-[#737373]">
+        <div className="px-6 py-3 border-t border-sage-200 dark:border-[#2C2C2E] flex items-center justify-between bg-sage-50 dark:bg-[#1C1C1E] text-xs text-sage-500">
           <div className="flex items-center gap-1.5">
             <HelpCircle className="w-3.5 h-3.5" />
             <span>FastAPI + sentence-transformers/all-MiniLM-L6-v2 pipeline</span>

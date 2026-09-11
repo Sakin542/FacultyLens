@@ -177,15 +177,15 @@ export const Analysis: React.FC = () => {
   // If faculty has zero assessments created
   if (!selectedAssessmentId || !analysisData) {
     return (
-      <Card className="p-12 text-center bg-white dark:bg-[#1C1C1E] border border-[#E5E5E5] dark:border-[#2C2C2E] shadow-sm space-y-4 max-w-lg mx-auto">
-        <div className="w-12 h-12 rounded-xl bg-[#F7F7F5] dark:bg-[#2C2C2E] flex items-center justify-center text-[#111111] dark:text-white mx-auto">
+      <Card className="p-12 text-center bg-white dark:bg-[#1C1C1E] border border-sage-200 dark:border-[#2C2C2E] shadow-sm space-y-4 max-w-lg mx-auto">
+        <div className="w-12 h-12 rounded-xl bg-sage-100 dark:bg-[#2C2C2E] flex items-center justify-center text-sage-800 dark:text-white mx-auto">
           <FileCheck2 className="w-6 h-6" />
         </div>
         <div className="space-y-1">
-          <h3 className="text-base font-bold text-[#111111] dark:text-white">
+          <h3 className="text-base font-bold text-sage-800 dark:text-white">
             No Assessments Found
           </h3>
-          <p className="text-xs text-[#737373]">
+          <p className="text-xs text-sage-500">
             Create an examination or quiz assessment first to evaluate questions using AI.
           </p>
         </div>
@@ -230,9 +230,9 @@ export const Analysis: React.FC = () => {
 
       {/* Assessment Selector Bar (when multiple assessments available) */}
       {assessmentsList.length > 1 && (
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-white dark:bg-[#1C1C1E] rounded-xl border border-[#E5E5E5] dark:border-[#2C2C2E] text-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-white dark:bg-[#1C1C1E] rounded-xl border border-sage-200 dark:border-[#2C2C2E] text-xs">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-[#737373]">Select Assessment:</span>
+            <span className="font-semibold text-sage-500">Select Assessment:</span>
             <select
               value={selectedAssessmentId}
               onChange={(e) => {
@@ -240,7 +240,7 @@ export const Analysis: React.FC = () => {
                 setSelectedAssessmentId(newId);
                 navigate(`/assessments/${newId}/analysis`);
               }}
-              className="rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-[#F7F7F5] dark:bg-[#2C2C2E] px-2.5 py-1.5 font-medium text-[#111111] dark:text-white"
+              className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-sage-100 dark:bg-[#2C2C2E] px-2.5 py-1.5 font-medium text-sage-800 dark:text-white"
             >
               {assessmentsList.map((asm) => (
                 <option key={asm.id} value={asm.id}>
@@ -251,7 +251,7 @@ export const Analysis: React.FC = () => {
             </select>
           </div>
 
-          <div className="text-[11px] text-[#737373] hidden sm:block font-mono">
+          <div className="text-[11px] text-sage-500 hidden sm:block font-mono">
             ID: {assessment.id} • {assessment.total_questions} Questions
           </div>
         </div>

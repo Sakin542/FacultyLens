@@ -12,9 +12,9 @@ interface RubricCriteriaEditorProps {
 }
 
 const textareaClass =
-  'w-full rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] px-3 py-2 text-xs text-[#111111] dark:text-white placeholder:text-[#A3A3A3] focus:outline-none focus:ring-2 focus:ring-[#111111] dark:focus:ring-white focus:border-transparent disabled:bg-[#F7F7F5] disabled:cursor-not-allowed';
+  'w-full rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] px-3 py-2 text-xs text-sage-800 dark:text-white placeholder:text-sage-400 focus:outline-none focus:ring-2 focus:ring-sage-600 dark:focus:ring-white focus:border-transparent disabled:bg-sage-100 disabled:cursor-not-allowed';
 
-const labelClass = 'block text-[10px] font-medium uppercase tracking-wider text-[#262626] dark:text-[#E5E5E5]';
+const labelClass = 'block text-[10px] font-medium uppercase tracking-wider text-sage-700 dark:text-sage-200';
 
 export const RubricCriteriaEditor: React.FC<RubricCriteriaEditorProps> = ({ criteria, onChange, disabled = false }) => {
   const [indicatorDrafts, setIndicatorDrafts] = useState<Record<string, string>>({});
@@ -54,12 +54,12 @@ export const RubricCriteriaEditor: React.FC<RubricCriteriaEditorProps> = ({ crit
       {criteria.map((c, index) => (
         <fieldset
           key={c.key}
-          className="p-3 rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] space-y-3"
+          className="p-3 rounded-xl border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] space-y-3"
           data-testid="criterion-editor"
           disabled={disabled}
         >
           <div className="flex items-center justify-between">
-            <legend className="text-[10px] uppercase tracking-wider text-[#737373] font-semibold">
+            <legend className="text-[10px] uppercase tracking-wider text-sage-500 font-semibold">
               Criterion {index + 1}
             </legend>
             <div className="flex items-center gap-1">
@@ -68,7 +68,7 @@ export const RubricCriteriaEditor: React.FC<RubricCriteriaEditorProps> = ({ crit
                 onClick={() => move(index, -1)}
                 disabled={disabled || index === 0}
                 aria-label={`Move criterion ${index + 1} up`}
-                className="p-1 rounded text-[#737373] hover:text-[#111111] dark:hover:text-white disabled:opacity-30"
+                className="p-1 rounded text-sage-500 hover:text-sage-800 dark:hover:text-white disabled:opacity-30"
               >
                 <ArrowUp className="w-3.5 h-3.5" />
               </button>
@@ -77,7 +77,7 @@ export const RubricCriteriaEditor: React.FC<RubricCriteriaEditorProps> = ({ crit
                 onClick={() => move(index, 1)}
                 disabled={disabled || index === criteria.length - 1}
                 aria-label={`Move criterion ${index + 1} down`}
-                className="p-1 rounded text-[#737373] hover:text-[#111111] dark:hover:text-white disabled:opacity-30"
+                className="p-1 rounded text-sage-500 hover:text-sage-800 dark:hover:text-white disabled:opacity-30"
               >
                 <ArrowDown className="w-3.5 h-3.5" />
               </button>
@@ -86,7 +86,7 @@ export const RubricCriteriaEditor: React.FC<RubricCriteriaEditorProps> = ({ crit
                 onClick={() => remove(index)}
                 disabled={disabled}
                 aria-label={`Remove criterion ${index + 1}`}
-                className="p-1 rounded text-[#737373] hover:text-red-600 disabled:opacity-30"
+                className="p-1 rounded text-sage-500 hover:text-red-600 disabled:opacity-30"
               >
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
@@ -157,7 +157,7 @@ export const RubricCriteriaEditor: React.FC<RubricCriteriaEditorProps> = ({ crit
               {c.expected_indicators.map((ind, indIdx) => (
                 <span
                   key={indIdx}
-                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#F7F7F5] dark:bg-[#2C2C2E] border border-[#E5E5E5] dark:border-[#3A3A3C] text-[11px] text-[#262626] dark:text-[#E5E5E5]"
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-sage-100 dark:bg-[#2C2C2E] border border-sage-200 dark:border-[#3A3A3C] text-[11px] text-sage-700 dark:text-sage-200"
                 >
                   {ind}
                   <button
@@ -165,7 +165,7 @@ export const RubricCriteriaEditor: React.FC<RubricCriteriaEditorProps> = ({ crit
                     onClick={() => removeIndicator(index, indIdx)}
                     disabled={disabled}
                     aria-label={`Remove indicator ${ind}`}
-                    className="text-[#737373] hover:text-red-600"
+                    className="text-sage-500 hover:text-red-600"
                   >
                     <X className="w-3 h-3" />
                   </button>
@@ -187,7 +187,7 @@ export const RubricCriteriaEditor: React.FC<RubricCriteriaEditorProps> = ({ crit
                 maxLength={255}
                 aria-label={`New indicator for criterion ${index + 1}`}
                 disabled={disabled}
-                className="flex-1 rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] px-3 py-1.5 text-xs text-[#111111] dark:text-white placeholder:text-[#A3A3A3] focus:outline-none focus:ring-2 focus:ring-[#111111] dark:focus:ring-white"
+                className="flex-1 rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] px-3 py-1.5 text-xs text-sage-800 dark:text-white placeholder:text-sage-400 focus:outline-none focus:ring-2 focus:ring-sage-600 dark:focus:ring-white"
               />
               <Button type="button" variant="outline" size="sm" onClick={() => addIndicator(index)} disabled={disabled}>
                 Add

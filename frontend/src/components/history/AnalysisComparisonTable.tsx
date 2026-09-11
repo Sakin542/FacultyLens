@@ -33,7 +33,7 @@ export const AnalysisComparisonTable: React.FC<AnalysisComparisonTableProps> = (
         text: '—',
         direction: 'neutral',
         icon: Minus,
-        color: 'text-[#737373]',
+        color: 'text-sage-500',
         badge: undefined,
         badgeVariant: 'neutral' as BadgeVariant,
       };
@@ -44,7 +44,7 @@ export const AnalysisComparisonTable: React.FC<AnalysisComparisonTableProps> = (
         text: '0.0 pts',
         direction: 'neutral',
         icon: Minus,
-        color: 'text-[#737373]',
+        color: 'text-sage-500',
         badge: 'Identical',
         badgeVariant: 'neutral' as BadgeVariant,
       };
@@ -144,9 +144,9 @@ export const AnalysisComparisonTable: React.FC<AnalysisComparisonTableProps> = (
       {/* Header Cards: Left vs Right Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Baseline (Left) */}
-        <Card className="p-5 bg-white dark:bg-[#1C1C1E] border border-[#E5E5E5] dark:border-[#2C2C2E] shadow-sm space-y-3">
+        <Card className="p-5 bg-white dark:bg-[#1C1C1E] border border-sage-200 dark:border-[#2C2C2E] shadow-sm space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs uppercase font-mono tracking-wider font-semibold text-[#737373]">
+            <span className="text-xs uppercase font-mono tracking-wider font-semibold text-sage-500">
               Baseline Analysis (A)
             </span>
             <AnalysisVersionBadge
@@ -157,20 +157,20 @@ export const AnalysisComparisonTable: React.FC<AnalysisComparisonTableProps> = (
           </div>
 
           <div>
-            <h3 className="text-base font-bold text-[#111111] dark:text-white">
+            <h3 className="text-base font-bold text-sage-800 dark:text-white">
               {left.assessment_title}
             </h3>
-            <p className="text-xs text-[#737373]">
+            <p className="text-xs text-sage-500">
               {left.course_code} — {left.course_name} ({left.assessment_type})
             </p>
           </div>
 
-          <div className="pt-2 border-t border-[#E5E5E5] dark:border-[#2C2C2E] flex items-center justify-between text-xs">
-            <span className="text-[#737373] flex items-center gap-1">
+          <div className="pt-2 border-t border-sage-200 dark:border-[#2C2C2E] flex items-center justify-between text-xs">
+            <span className="text-sage-500 flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5" />
               {left.analyzed_at}
             </span>
-            <span className="font-mono text-sm font-bold text-[#111111] dark:text-white">
+            <span className="font-mono text-sm font-bold text-sage-800 dark:text-white">
               Overall: {left.overall_score ?? '—'} / 100
             </span>
           </div>
@@ -190,16 +190,16 @@ export const AnalysisComparisonTable: React.FC<AnalysisComparisonTableProps> = (
           </div>
 
           <div>
-            <h3 className="text-base font-bold text-[#111111] dark:text-white">
+            <h3 className="text-base font-bold text-sage-800 dark:text-white">
               {right.assessment_title}
             </h3>
-            <p className="text-xs text-[#737373]">
+            <p className="text-xs text-sage-500">
               {right.course_code} — {right.course_name} ({right.assessment_type})
             </p>
           </div>
 
-          <div className="pt-2 border-t border-[#E5E5E5] dark:border-[#2C2C2E] flex items-center justify-between text-xs">
-            <span className="text-[#737373] flex items-center gap-1">
+          <div className="pt-2 border-t border-sage-200 dark:border-[#2C2C2E] flex items-center justify-between text-xs">
+            <span className="text-sage-500 flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5" />
               {right.analyzed_at}
             </span>
@@ -211,15 +211,15 @@ export const AnalysisComparisonTable: React.FC<AnalysisComparisonTableProps> = (
       </div>
 
       {/* Side-by-Side Comparison Matrix Table */}
-      <Card className="overflow-hidden bg-white dark:bg-[#1C1C1E] border border-[#E5E5E5] dark:border-[#2C2C2E] shadow-sm">
-        <div className="p-4 bg-[#F7F7F5] dark:bg-[#2C2C2E] border-b border-[#E5E5E5] dark:border-[#3A3A3C] flex items-center justify-between">
+      <Card className="overflow-hidden bg-white dark:bg-[#1C1C1E] border border-sage-200 dark:border-[#2C2C2E] shadow-sm">
+        <div className="p-4 bg-sage-100 dark:bg-[#2C2C2E] border-b border-sage-200 dark:border-[#3A3A3C] flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <GitCompare className="w-4 h-4 text-[#737373]" />
-            <h4 className="text-xs font-bold text-[#111111] dark:text-white uppercase tracking-wider">
+            <GitCompare className="w-4 h-4 text-sage-500" />
+            <h4 className="text-xs font-bold text-sage-800 dark:text-white uppercase tracking-wider">
               Metric-by-Metric Delta Matrix
             </h4>
           </div>
-          <span className="text-[11px] text-[#737373]">
+          <span className="text-[11px] text-sage-500">
             Calculated as: Target (B) − Baseline (A)
           </span>
         </div>
@@ -227,7 +227,7 @@ export const AnalysisComparisonTable: React.FC<AnalysisComparisonTableProps> = (
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="border-b border-[#E5E5E5] dark:border-[#2C2C2E] bg-white dark:bg-[#1C1C1E] text-[#737373] text-[11px] font-semibold">
+              <tr className="border-b border-sage-200 dark:border-[#2C2C2E] bg-white dark:bg-[#1C1C1E] text-sage-500 text-[11px] font-semibold">
                 <th className="py-3 px-4">Evaluation Dimension</th>
                 <th className="py-3 px-4 text-center">Baseline (A)</th>
                 <th className="py-3 px-4 text-center">Target (B)</th>
@@ -235,7 +235,7 @@ export const AnalysisComparisonTable: React.FC<AnalysisComparisonTableProps> = (
                 <th className="py-3 px-4 text-right">Indicator State</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E5E5E5] dark:divide-[#2C2C2E]">
+            <tbody className="divide-y divide-sage-200 dark:divide-[#2C2C2E]">
               {metricRows.map((row) => {
                 const diffInfo = getMetricDifference(row.key, row.isInverse);
                 const DiffIcon = diffInfo.icon;
@@ -243,13 +243,13 @@ export const AnalysisComparisonTable: React.FC<AnalysisComparisonTableProps> = (
                 return (
                   <tr
                     key={row.key}
-                    className="hover:bg-[#F7F7F5]/60 dark:hover:bg-[#2C2C2E]/40 transition-colors"
+                    className="hover:bg-sage-100/60 dark:hover:bg-[#2C2C2E]/40 transition-colors"
                   >
                     <td className="py-3 px-4">
-                      <div className="font-semibold text-[#111111] dark:text-white">
+                      <div className="font-semibold text-sage-800 dark:text-white">
                         {row.label}
                       </div>
-                      <div className="text-[10px] text-[#737373]">{row.weight}</div>
+                      <div className="text-[10px] text-sage-500">{row.weight}</div>
                     </td>
 
                     <td className="py-3 px-4 text-center font-mono font-medium">
@@ -287,8 +287,8 @@ export const AnalysisComparisonTable: React.FC<AnalysisComparisonTableProps> = (
 
       {/* Semantic Decision-Support Interpretations */}
       {interpretations && interpretations.length > 0 && (
-        <Card className="p-5 bg-white dark:bg-[#1C1C1E] border border-[#E5E5E5] dark:border-[#2C2C2E] shadow-sm space-y-3">
-          <h4 className="text-xs font-bold uppercase tracking-wider text-[#111111] dark:text-white flex items-center gap-2">
+        <Card className="p-5 bg-white dark:bg-[#1C1C1E] border border-sage-200 dark:border-[#2C2C2E] shadow-sm space-y-3">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-sage-800 dark:text-white flex items-center gap-2">
             <Info className="w-4 h-4 text-blue-500" />
             Decision-Support Interpretations
           </h4>
@@ -297,14 +297,14 @@ export const AnalysisComparisonTable: React.FC<AnalysisComparisonTableProps> = (
             {interpretations.map((interp, idx) => (
               <div
                 key={idx}
-                className="p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C] text-xs text-[#111111] dark:text-white"
+                className="p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl border border-sage-200 dark:border-[#3A3A3C] text-xs text-sage-800 dark:text-white"
               >
                 {interp}
               </div>
             ))}
           </div>
 
-          <p className="text-[11px] text-[#737373] italic pt-2">
+          <p className="text-[11px] text-sage-500 italic pt-2">
             * Comparative analysis provides quantitative structural comparisons across assessment versions. Pedagogical choices remain under faculty purview.
           </p>
         </Card>

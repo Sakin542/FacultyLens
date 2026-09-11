@@ -163,9 +163,9 @@ export const RubricAlignmentPanel: React.FC<RubricAlignmentPanelProps> = ({
   else if (!hasContent) blocked = 'This answer has no content to analyze.';
 
   return (
-    <div className="space-y-2 pt-3 border-t border-dashed border-[#E5E5E5] dark:border-[#3A3A3C]" data-testid="rubric-alignment-panel">
+    <div className="space-y-2 pt-3 border-t border-dashed border-sage-200 dark:border-[#3A3A3C]" data-testid="rubric-alignment-panel">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="text-[11px] text-[#737373]">
+        <div className="text-[11px] text-sage-500">
           {question.approved_rubric ? (
             <span data-testid="alignment-rubric-info">Approved rubric v{question.approved_rubric.version} · {question.marks} marks</span>
           ) : (

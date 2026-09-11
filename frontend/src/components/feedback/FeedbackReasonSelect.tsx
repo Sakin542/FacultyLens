@@ -34,7 +34,7 @@ export const FeedbackReasonSelect: React.FC<FeedbackReasonSelectProps> = ({
 
   return (
     <div className="space-y-1.5">
-      <label className="text-xs font-semibold text-[#111111] dark:text-white block">
+      <label className="text-xs font-semibold text-sage-800 dark:text-white block">
         {labelText}
       </label>
 
@@ -42,7 +42,7 @@ export const FeedbackReasonSelect: React.FC<FeedbackReasonSelectProps> = ({
         value={value || ''}
         disabled={disabled}
         onChange={(e) => onChange(e.target.value as FeedbackReason)}
-        className="w-full rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] p-2.5 text-xs text-[#111111] dark:text-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white"
+        className="w-full rounded-xl border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] p-2.5 text-xs text-sage-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white"
       >
         <option value="">-- Select structured reason --</option>
         {reasonOptions.map((opt) => (

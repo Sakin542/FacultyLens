@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { ProtectedRoute } from '@/components/common/ProtectedRoute';
+import { ScrollToTop } from '@/components/common/PageTransition';
 
 // Eagerly loaded — small, frequently visited
 import { Home } from '@/pages/Home';
@@ -47,14 +48,15 @@ const AssessmentVersionCompare = lazy(() => import('@/pages/AssessmentVersionCom
  * Lightweight fallback shown while a lazy page chunk loads.
  */
 const PageLoader: React.FC = () => (
-  <div className="flex items-center justify-center min-h-[60vh]">
-    <div className="h-8 w-8 rounded-full border-4 border-blue-600 border-t-transparent animate-spin" />
+  <div className="flex items-center justify-center min-h-[60vh] page-enter" role="status" aria-label="Loading">
+    <div className="h-8 w-8 rounded-full border-[3px] border-sage-300 border-t-sage-700 animate-spin" />
   </div>
 );
 
 export const AppRoutes: React.FC = () => {
   return (
     <Suspense fallback={<PageLoader />}>
+      <ScrollToTop />
       <Routes>
         {/* Public Pages */}
         <Route element={<PublicLayout />}>

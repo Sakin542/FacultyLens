@@ -4,38 +4,65 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/com
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Input';
 import { Badge } from '@/components/common/Badge';
-import { useTheme } from '@/context/ThemeContext';
 import { useAuth } from '@/context/AuthContext';
+import { authService } from '@/services/authService';
+import { ApiError } from '@/services/api';
+import { ConfirmSignOutDialog } from '@/components/common/ConfirmSignOutDialog';
 import {
   User,
   LogOut,
   Save,
   CheckCircle2,
+  AlertCircle,
   Lock,
   Mail,
   Building,
   Award,
-  Sun,
-  Moon,
 } from 'lucide-react';
+
+const MIN_PASSWORD_LENGTH = 6;
+
+type FieldErrors = Record<string, string>;
+
+const extractApiError = (err: unknown, fallback: string): { message: string; fields: FieldErrors } => {
+  const fields: FieldErrors = {};
+  if (err instanceof ApiError) {
+    Object.entries(err.errors ?? {}).forEach(([key, msgs]) => {
+      if (msgs?.[0]) fields[key] = msgs[0];
+    });
+    return { message: err.message || fallback, fields };
+  }
+  return { message: err instanceof Error && err.message ? err.message : fallback, fields };
+};
+
+const StatusNote: React.FC<{ tone: 'success' | 'error'; children: React.ReactNode }> = ({ tone, children }) => (
+  <span
+    role={tone === 'error' ? 'alert' : 'status'}
+    className={
+      tone === 'success'
+        ? 'text-xs text-[#166534] font-medium flex items-center gap-1.5 bg-[#F0FDF4] px-3 py-1.5 rounded-lg border border-[#BBF7D0]'
+        : 'text-xs text-[#991B1B] font-medium flex items-center gap-1.5 bg-[#FEF2F2] px-3 py-1.5 rounded-lg border border-[#FECACA]'
+    }
+  >
+    {tone === 'success' ? <CheckCircle2 className="w-4 h-4 shrink-0" /> : <AlertCircle className="w-4 h-4 shrink-0" />}
+    {children}
+  </span>
+);
 
 export const Settings: React.FC = () => {
   const navigate = useNavigate();
-  const { theme, setTheme } = useTheme();
-  const { user, logout } = useAuth();
+  const { user, logout, refreshUser } = useAuth();
 
   const [profile, setProfile] = useState({
-    fullName: user?.name || user?.fullName || 'Dr. Faculty Member',
-    email: user?.email || '',
-    department: user?.department || 'Computer Science',
-    designation: user?.designation || 'Lecturer',
+    fullName: user?.name || user?.fullName || '',
+    department: user?.department || '',
+    designation: user?.designation || '',
   });
 
   useEffect(() => {
     if (user) {
       setProfile({
         fullName: user.name || user.fullName || '',
-        email: user.email || '',
         department: user.department || '',
         designation: user.designation || '',
       });
@@ -48,80 +75,103 @@ export const Settings: React.FC = () => {
     confirmPassword: '',
   });
 
-  const [saveSuccess, setSaveSuccess] = useState(false);
-  const [passwordSuccess, setPasswordSuccess] = useState(false);
+  const [profileSaving, setProfileSaving] = useState(false);
+  const [profileSuccess, setProfileSuccess] = useState<string | null>(null);
+  const [profileError, setProfileError] = useState<string | null>(null);
+  const [profileFieldErrors, setProfileFieldErrors] = useState<FieldErrors>({});
 
-  const handleSaveProfile = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSaveSuccess(true);
-    setTimeout(() => setSaveSuccess(false), 3000);
-  };
+  const [passwordSaving, setPasswordSaving] = useState(false);
+  const [passwordSuccess, setPasswordSuccess] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [passwordFieldErrors, setPasswordFieldErrors] = useState<FieldErrors>({});
 
-  const handleChangePassword = (e: React.FormEvent) => {
+  const profileDirty =
+    profile.fullName.trim() !== (user?.name || user?.fullName || '') ||
+    profile.department.trim() !== (user?.department || '') ||
+    profile.designation.trim() !== (user?.designation || '');
+
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!passwords.newPassword || passwords.newPassword !== passwords.confirmPassword) {
-      alert('Please check your password inputs.');
-      return;
+    setProfileSuccess(null);
+    setProfileError(null);
+
+    const name = profile.fullName.trim();
+    const department = profile.department.trim();
+    const designation = profile.designation.trim();
+    const fieldErrors: FieldErrors = {};
+    if (!name) fieldErrors.name = 'Full name is required.';
+    if (!department) fieldErrors.department = 'Department is required.';
+    if (!designation) fieldErrors.designation = 'Designation is required.';
+    setProfileFieldErrors(fieldErrors);
+    if (Object.keys(fieldErrors).length > 0) return;
+
+    setProfileSaving(true);
+    try {
+      const response = await authService.updateProfile({ name, department, designation });
+      await refreshUser();
+      setProfileSuccess(response.message || 'Profile details updated successfully');
+    } catch (err) {
+      const { message, fields } = extractApiError(err, 'Could not update your profile. Please try again.');
+      setProfileError(message);
+      setProfileFieldErrors(fields);
+    } finally {
+      setProfileSaving(false);
     }
-    setPasswordSuccess(true);
-    setPasswords({ currentPassword: '', newPassword: '', confirmPassword: '' });
-    setTimeout(() => setPasswordSuccess(false), 3000);
   };
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordSuccess(null);
+    setPasswordError(null);
+
+    const fieldErrors: FieldErrors = {};
+    if (!passwords.currentPassword) fieldErrors.current_password = 'Enter your current password.';
+    if (passwords.newPassword.length < MIN_PASSWORD_LENGTH) {
+      fieldErrors.password = `New password must be at least ${MIN_PASSWORD_LENGTH} characters.`;
+    } else if (passwords.currentPassword && passwords.newPassword === passwords.currentPassword) {
+      fieldErrors.password = 'New password must be different from the current password.';
+    }
+    if (passwords.confirmPassword !== passwords.newPassword) {
+      fieldErrors.password_confirmation = 'Passwords do not match.';
+    }
+    setPasswordFieldErrors(fieldErrors);
+    if (Object.keys(fieldErrors).length > 0) return;
+
+    setPasswordSaving(true);
+    try {
+      const response = await authService.changePassword({
+        current_password: passwords.currentPassword,
+        password: passwords.newPassword,
+        password_confirmation: passwords.confirmPassword,
+      });
+      setPasswords({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      setPasswordSuccess(response.message || 'Password updated successfully');
+    } catch (err) {
+      const { message, fields } = extractApiError(err, 'Could not update your password. Please try again.');
+      setPasswordError(message);
+      setPasswordFieldErrors(fields);
+    } finally {
+      setPasswordSaving(false);
+    }
+  };
+
+  const [signOutOpen, setSignOutOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
 
   const handleLogout = async () => {
-    await logout();
+    setSigningOut(true);
+    try {
+      await logout();
+    } finally {
+      setSigningOut(false);
+      setSignOutOpen(false);
+    }
     navigate('/login', { replace: true });
   };
 
   return (
     <div className="space-y-8 max-w-4xl">
-      {/* Appearance Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Appearance & Theme</CardTitle>
-          <CardDescription>Customize the interface look and feel for optimal academic workflow comfort</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <button
-              type="button"
-              onClick={() => setTheme('light')}
-              className={`p-4 rounded-xl border flex items-center gap-4 transition-all text-left ${
-                theme === 'light'
-                  ? 'border-[#111111] dark:border-white bg-[#F7F7F5] dark:bg-[#262626] ring-2 ring-[#111111] dark:ring-white'
-                  : 'border-[#E5E5E5] dark:border-[#262626] bg-white dark:bg-[#1A1A1A] hover:border-[#111111] dark:hover:border-white'
-              }`}
-            >
-              <div className="w-10 h-10 rounded-lg bg-white border border-[#E5E5E5] flex items-center justify-center text-[#111111] shrink-0 shadow-xs">
-                <Sun className="w-5 h-5" />
-              </div>
-              <div>
-                <h4 className="text-sm font-bold text-[#111111] dark:text-white">Academic Light</h4>
-                <p className="text-xs text-[#737373] dark:text-[#A3A3A3]">Crisp high-contrast black on off-white</p>
-              </div>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setTheme('dark')}
-              className={`p-4 rounded-xl border flex items-center gap-4 transition-all text-left ${
-                theme === 'dark'
-                  ? 'border-white dark:border-white bg-[#F7F7F5] dark:bg-[#262626] ring-2 ring-[#111111] dark:ring-white'
-                  : 'border-[#E5E5E5] dark:border-[#262626] bg-white dark:bg-[#1A1A1A] hover:border-[#111111] dark:hover:border-white'
-              }`}
-            >
-              <div className="w-10 h-10 rounded-lg bg-[#111111] border border-[#262626] flex items-center justify-center text-white shrink-0 shadow-xs">
-                <Moon className="w-5 h-5" />
-              </div>
-              <div>
-                <h4 className="text-sm font-bold text-[#111111] dark:text-white">Obsidian Dark</h4>
-                <p className="text-xs text-[#737373] dark:text-[#A3A3A3]">Deep carbon background with white typography</p>
-              </div>
-            </button>
-          </div>
-        </CardContent>
-      </Card>
-
+      <ConfirmSignOutDialog open={signOutOpen} busy={signingOut} email={user?.email} onConfirm={handleLogout} onCancel={() => setSignOutOpen(false)} />
       {/* Profile Section */}
       <Card>
         <CardHeader>
@@ -130,62 +180,84 @@ export const Settings: React.FC = () => {
               <CardTitle>Faculty Profile</CardTitle>
               <CardDescription>Manage your institutional identification and department details</CardDescription>
             </div>
-            <Badge variant="outline" className="font-mono">Faculty ID: {user?.id || 'FL-8820'}</Badge>
+            <Badge variant="outline" className="font-mono">Faculty ID: {user?.id ?? '—'}</Badge>
           </div>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSaveProfile} className="space-y-4">
+          <form onSubmit={handleSaveProfile} className="space-y-4" noValidate>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
                 label="Full Name"
+                name="name"
+                autoComplete="name"
                 value={profile.fullName}
-                onChange={(e) => setProfile({ ...profile, fullName: e.target.value })}
+                onChange={(e) => {
+                  setProfile({ ...profile, fullName: e.target.value });
+                  setProfileSuccess(null);
+                }}
                 leftIcon={<User className="w-4 h-4" />}
+                error={profileFieldErrors.name}
                 required
               />
 
               <Input
                 label="University Email"
                 type="email"
-                value={profile.email}
-                onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                name="email"
+                value={user?.email || ''}
+                readOnly
+                disabled
                 leftIcon={<Mail className="w-4 h-4" />}
-                required
+                helperText="Your email is your institutional identity and cannot be changed."
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
                 label="Department"
+                name="department"
+                autoComplete="organization"
                 value={profile.department}
-                onChange={(e) => setProfile({ ...profile, department: e.target.value })}
+                onChange={(e) => {
+                  setProfile({ ...profile, department: e.target.value });
+                  setProfileSuccess(null);
+                }}
                 leftIcon={<Building className="w-4 h-4" />}
+                error={profileFieldErrors.department}
                 required
               />
 
               <Input
                 label="Designation"
+                name="designation"
+                autoComplete="organization-title"
                 value={profile.designation}
-                onChange={(e) => setProfile({ ...profile, designation: e.target.value })}
+                onChange={(e) => {
+                  setProfile({ ...profile, designation: e.target.value });
+                  setProfileSuccess(null);
+                }}
                 leftIcon={<Award className="w-4 h-4" />}
+                error={profileFieldErrors.designation}
                 required
               />
             </div>
 
-            <div className="pt-3 flex items-center justify-between">
-              {saveSuccess ? (
-                <span className="text-xs text-[#166534] font-medium flex items-center gap-1.5 bg-[#F0FDF4] px-3 py-1.5 rounded-lg border border-[#BBF7D0]">
-                  <CheckCircle2 className="w-4 h-4" /> Profile details updated successfully
-                </span>
-              ) : <div />}
+            <div className="pt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div className="min-w-0">
+                {profileSuccess && <StatusNote tone="success">{profileSuccess}</StatusNote>}
+                {profileError && <StatusNote tone="error">{profileError}</StatusNote>}
+              </div>
 
               <Button
                 type="submit"
                 variant="primary"
                 size="sm"
+                isLoading={profileSaving}
+                disabled={!profileDirty}
                 leftIcon={<Save className="w-4 h-4" />}
+                className="self-end sm:self-auto"
               >
-                Save Changes
+                {profileSaving ? 'Saving…' : 'Save Changes'}
               </Button>
             </div>
           </form>
@@ -199,49 +271,73 @@ export const Settings: React.FC = () => {
           <CardDescription>Update your institutional password and manage login credentials</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleChangePassword} className="space-y-4">
+          <form onSubmit={handleChangePassword} className="space-y-4" noValidate>
             <Input
               label="Current Password"
               type="password"
+              name="current_password"
+              autoComplete="current-password"
               placeholder="••••••••"
               value={passwords.currentPassword}
-              onChange={(e) => setPasswords({ ...passwords, currentPassword: e.target.value })}
+              onChange={(e) => {
+                setPasswords({ ...passwords, currentPassword: e.target.value });
+                setPasswordSuccess(null);
+              }}
               leftIcon={<Lock className="w-4 h-4" />}
+              error={passwordFieldErrors.current_password}
+              required
             />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
                 label="New Password"
                 type="password"
+                name="password"
+                autoComplete="new-password"
                 placeholder="••••••••"
                 value={passwords.newPassword}
-                onChange={(e) => setPasswords({ ...passwords, newPassword: e.target.value })}
+                onChange={(e) => {
+                  setPasswords({ ...passwords, newPassword: e.target.value });
+                  setPasswordSuccess(null);
+                }}
                 leftIcon={<Lock className="w-4 h-4" />}
+                error={passwordFieldErrors.password}
+                helperText={`At least ${MIN_PASSWORD_LENGTH} characters.`}
+                required
               />
 
               <Input
                 label="Confirm New Password"
                 type="password"
+                name="password_confirmation"
+                autoComplete="new-password"
                 placeholder="••••••••"
                 value={passwords.confirmPassword}
-                onChange={(e) => setPasswords({ ...passwords, confirmPassword: e.target.value })}
+                onChange={(e) => {
+                  setPasswords({ ...passwords, confirmPassword: e.target.value });
+                  setPasswordSuccess(null);
+                }}
                 leftIcon={<Lock className="w-4 h-4" />}
+                error={passwordFieldErrors.password_confirmation}
+                required
               />
             </div>
 
-            <div className="pt-3 flex items-center justify-between">
-              {passwordSuccess ? (
-                <span className="text-xs text-[#166534] font-medium flex items-center gap-1.5 bg-[#F0FDF4] px-3 py-1.5 rounded-lg border border-[#BBF7D0]">
-                  <CheckCircle2 className="w-4 h-4" /> Password updated successfully
-                </span>
-              ) : <div />}
+            <div className="pt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div className="min-w-0">
+                {passwordSuccess && <StatusNote tone="success">{passwordSuccess}</StatusNote>}
+                {passwordError && <StatusNote tone="error">{passwordError}</StatusNote>}
+              </div>
 
               <Button
                 type="submit"
                 variant="outline"
                 size="sm"
+                isLoading={passwordSaving}
+                disabled={!passwords.currentPassword || !passwords.newPassword || !passwords.confirmPassword}
+                className="self-end sm:self-auto"
               >
-                Update Password
+                {passwordSaving ? 'Updating…' : 'Update Password'}
               </Button>
             </div>
           </form>
@@ -255,14 +351,14 @@ export const Settings: React.FC = () => {
           <CardDescription>Log out of your FacultyLens account on this device</CardDescription>
         </CardHeader>
         <CardContent className="flex items-center justify-between pt-2">
-          <p className="text-xs text-[#737373]">
+          <p className="text-xs text-sage-500">
             You are signed in as <strong>{user?.email || 'faculty account'}</strong>
           </p>
           <Button
             variant="danger"
             size="sm"
             leftIcon={<LogOut className="w-4 h-4" />}
-            onClick={handleLogout}
+            onClick={() => setSignOutOpen(true)}
           >
             Sign Out
           </Button>

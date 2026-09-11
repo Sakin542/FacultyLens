@@ -189,22 +189,22 @@ export const QuestionBank: React.FC = () => {
       {/* Header & Course Switcher */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs text-[#737373]">
-            <Link to="/courses" className="hover:text-[#111111] dark:hover:text-white transition-colors">
+          <div className="flex items-center gap-2 text-xs text-sage-500">
+            <Link to="/courses" className="hover:text-sage-800 dark:hover:text-white transition-colors">
               Courses
             </Link>
             <span>/</span>
             {activeCourse && (
               <>
-                <Link to={`/courses/${activeCourse.id}`} className="font-mono hover:text-[#111111] dark:hover:text-white transition-colors">
+                <Link to={`/courses/${activeCourse.id}`} className="font-mono hover:text-sage-800 dark:hover:text-white transition-colors">
                   {activeCourse.course_code || activeCourse.code}
                 </Link>
                 <span>/</span>
               </>
             )}
-            <span className="font-semibold text-[#111111] dark:text-white">Question Bank</span>
+            <span className="font-semibold text-sage-800 dark:text-white">Question Bank</span>
           </div>
-          <h1 className="text-2xl font-bold text-[#111111] dark:text-white flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-sage-800 dark:text-white flex items-center gap-2">
             <HelpCircle className="w-6 h-6" /> Course Question Bank
           </h1>
         </div>
@@ -240,17 +240,17 @@ export const QuestionBank: React.FC = () => {
       </div>
 
       {/* Course Selector Bar */}
-      <div className="p-4 bg-white dark:bg-[#1C1C1E] rounded-xl border border-[#E5E5E5] dark:border-[#2C2C2E] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="p-4 bg-white dark:bg-[#1C1C1E] rounded-xl border border-sage-200 dark:border-[#2C2C2E] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <BookOpen className="w-4 h-4 text-[#737373]" />
-          <span className="text-xs font-semibold text-[#737373]">Selected Course:</span>
+          <BookOpen className="w-4 h-4 text-sage-500" />
+          <span className="text-xs font-semibold text-sage-500">Selected Course:</span>
           <select
             value={selectedCourseId}
             onChange={(e) => {
               setSelectedCourseId(e.target.value);
               setCurrentPage(1);
             }}
-            className="rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] px-3 py-1.5 text-xs font-bold text-[#111111] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#111111]"
+            className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] px-3 py-1.5 text-xs font-bold text-sage-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sage-600"
           >
             {courses.map((c) => (
               <option key={c.id} value={c.id}>
@@ -260,8 +260,8 @@ export const QuestionBank: React.FC = () => {
           </select>
         </div>
 
-        <div className="text-xs text-[#737373]">
-          Total in Bank: <span className="font-bold text-[#111111] dark:text-white font-mono">{paginatedData.total}</span> Questions
+        <div className="text-xs text-sage-500">
+          Total in Bank: <span className="font-bold text-sage-800 dark:text-white font-mono">{paginatedData.total}</span> Questions
         </div>
       </div>
 
@@ -281,16 +281,16 @@ export const QuestionBank: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 text-xs p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C]">
+        <div className="flex flex-wrap items-center gap-2 text-xs p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl border border-sage-200 dark:border-[#3A3A3C]">
           <div className="flex items-center gap-1">
-            <span className="font-semibold text-[#737373]">Type:</span>
+            <span className="font-semibold text-sage-500">Type:</span>
             <select
               value={selectedType}
               onChange={(e) => {
                 setSelectedType(e.target.value);
                 setCurrentPage(1);
               }}
-              className="rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-[#111111] dark:text-white"
+              className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white"
             >
               <option value="all">All Types</option>
               <option value="descriptive">Descriptive</option>
@@ -302,14 +302,14 @@ export const QuestionBank: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-1">
-            <span className="font-semibold text-[#737373]">Difficulty:</span>
+            <span className="font-semibold text-sage-500">Difficulty:</span>
             <select
               value={selectedDifficulty}
               onChange={(e) => {
                 setSelectedDifficulty(e.target.value);
                 setCurrentPage(1);
               }}
-              className="rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-[#111111] dark:text-white"
+              className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white"
             >
               <option value="all">All Difficulties</option>
               <option value="easy">Easy</option>
@@ -319,14 +319,14 @@ export const QuestionBank: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-1">
-            <span className="font-semibold text-[#737373]">Bloom Level:</span>
+            <span className="font-semibold text-sage-500">Bloom Level:</span>
             <select
               value={selectedCognitive}
               onChange={(e) => {
                 setSelectedCognitive(e.target.value);
                 setCurrentPage(1);
               }}
-              className="rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-[#111111] dark:text-white"
+              className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white"
             >
               <option value="all">All Levels</option>
               <option value="Remember">Remember</option>
@@ -339,14 +339,14 @@ export const QuestionBank: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-1">
-            <span className="font-semibold text-[#737373]">Year:</span>
+            <span className="font-semibold text-sage-500">Year:</span>
             <select
               value={selectedYear}
               onChange={(e) => {
                 setSelectedYear(e.target.value);
                 setCurrentPage(1);
               }}
-              className="rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-[#111111] dark:text-white"
+              className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white"
             >
               <option value="all">All Years</option>
               <option value="2026">2026</option>
@@ -358,14 +358,14 @@ export const QuestionBank: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-1">
-            <span className="font-semibold text-[#737373]">Sort By:</span>
+            <span className="font-semibold text-sage-500">Sort By:</span>
             <select
               value={sortBy}
               onChange={(e) => {
                 setSortBy(e.target.value);
                 setCurrentPage(1);
               }}
-              className="rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-[#111111] dark:text-white"
+              className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white"
             >
               <option value="newest">Newest</option>
               <option value="oldest">Oldest</option>
@@ -393,19 +393,19 @@ export const QuestionBank: React.FC = () => {
       {/* Content List */}
       {isLoading ? (
         <div className="flex flex-col items-center justify-center min-h-[300px] space-y-4">
-          <Loader2 className="w-8 h-8 animate-spin text-[#111111] dark:text-white" />
-          <p className="text-sm text-[#737373]">Loading questions from repository...</p>
+          <Loader2 className="w-8 h-8 animate-spin text-sage-800 dark:text-white" />
+          <p className="text-sm text-sage-500">Loading questions from repository...</p>
         </div>
       ) : paginatedData.data.length === 0 ? (
         <Card variant="default" className="p-12 text-center space-y-4">
-          <HelpCircle className="w-12 h-12 text-[#737373] mx-auto opacity-50" />
+          <HelpCircle className="w-12 h-12 text-sage-500 mx-auto opacity-50" />
           <div className="space-y-1">
-            <h3 className="text-base font-bold text-[#111111] dark:text-white">
+            <h3 className="text-base font-bold text-sage-800 dark:text-white">
               {searchQuery || selectedType !== 'all' || selectedDifficulty !== 'all'
                 ? 'No questions match the filter criteria'
                 : 'Question Bank is empty for this course'}
             </h3>
-            <p className="text-xs text-[#737373] max-w-sm mx-auto">
+            <p className="text-xs text-sage-500 max-w-sm mx-auto">
               Add individual questions manually or upload historical question papers to build your course repository.
             </p>
           </div>
@@ -438,11 +438,11 @@ export const QuestionBank: React.FC = () => {
                 <Card
                   key={q.id}
                   variant="default"
-                  className="p-5 space-y-3 hover:border-[#111111] dark:hover:border-white transition-colors"
+                  className="p-5 space-y-3 hover:border-sage-700 dark:hover:border-white transition-colors"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-mono font-bold text-xs text-[#737373]">#{itemNumber}</span>
+                      <span className="font-mono font-bold text-xs text-sage-500">#{itemNumber}</span>
                       {q.difficulty_level && (
                         <Badge variant="neutral" className="text-[10px] capitalize">
                           {q.difficulty_level}
@@ -459,7 +459,7 @@ export const QuestionBank: React.FC = () => {
                         </Badge>
                       )}
                       {q.marks && (
-                        <span className="text-xs font-mono font-bold text-[#111111] dark:text-white">
+                        <span className="text-xs font-mono font-bold text-sage-800 dark:text-white">
                           {q.marks} Marks
                         </span>
                       )}
@@ -494,11 +494,11 @@ export const QuestionBank: React.FC = () => {
                     </div>
                   </div>
 
-                  <p className="text-sm text-[#111111] dark:text-[#E5E5E5] leading-relaxed whitespace-pre-line">
+                  <p className="text-sm text-sage-800 dark:text-sage-200 leading-relaxed whitespace-pre-line">
                     {q.question_text}
                   </p>
 
-                  <div className="flex flex-wrap items-center justify-between text-[11px] text-[#737373] pt-2 border-t border-[#E5E5E5] dark:border-[#2C2C2E]">
+                  <div className="flex flex-wrap items-center justify-between text-[11px] text-sage-500 pt-2 border-t border-sage-200 dark:border-[#2C2C2E]">
                     <div className="flex items-center gap-2">
                       {q.source_assessment && <span>Exam: {q.source_assessment}</span>}
                       {q.source_year && <span>• Year: {q.source_year}</span>}
@@ -519,8 +519,8 @@ export const QuestionBank: React.FC = () => {
 
           {/* Pagination Footer */}
           {paginatedData.last_page > 1 && (
-            <div className="flex items-center justify-between pt-4 border-t border-[#E5E5E5] dark:border-[#2C2C2E] text-xs">
-              <span className="text-[#737373]">
+            <div className="flex items-center justify-between pt-4 border-t border-sage-200 dark:border-[#2C2C2E] text-xs">
+              <span className="text-sage-500">
                 Showing {paginatedData.from} - {paginatedData.to} of {paginatedData.total} questions
               </span>
 
@@ -535,7 +535,7 @@ export const QuestionBank: React.FC = () => {
                   Previous
                 </Button>
 
-                <div className="px-3 py-1 font-mono font-bold bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-lg text-[#111111] dark:text-white">
+                <div className="px-3 py-1 font-mono font-bold bg-sage-100 dark:bg-[#2C2C2E] rounded-lg text-sage-800 dark:text-white">
                   Page {paginatedData.current_page} of {paginatedData.last_page}
                 </div>
 

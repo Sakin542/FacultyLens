@@ -51,16 +51,16 @@ export const AnalysisHeader: React.FC<AnalysisHeaderProps> = ({
     : null;
 
   return (
-    <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-[#E5E5E5] dark:border-[#2C2C2E] p-6 shadow-sm space-y-5">
+    <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-sage-200 dark:border-[#2C2C2E] p-6 shadow-sm space-y-5">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Course & Assessment Identification */}
         <div className="space-y-1.5">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-md bg-[#F7F7F5] dark:bg-[#2C2C2E] border border-[#E5E5E5] dark:border-[#3A3A3C] text-[#111111] dark:text-white">
+            <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-md bg-sage-100 dark:bg-[#2C2C2E] border border-sage-200 dark:border-[#3A3A3C] text-sage-800 dark:text-white">
               {assessment.course_code}
             </span>
-            <span className="text-xs text-[#737373]">•</span>
-            <span className="text-xs font-medium text-[#737373]">{assessment.course_name}</span>
+            <span className="text-xs text-sage-500">•</span>
+            <span className="text-xs font-medium text-sage-500">{assessment.course_name}</span>
             {analysisStatus && (
               <Badge
                 variant={
@@ -80,12 +80,12 @@ export const AnalysisHeader: React.FC<AnalysisHeaderProps> = ({
             )}
           </div>
 
-          <h1 className="text-2xl font-extrabold text-[#111111] dark:text-white tracking-tight">
+          <h1 className="text-2xl font-extrabold text-sage-800 dark:text-white tracking-tight">
             {assessment.title}
           </h1>
 
-          <div className="flex flex-wrap items-center gap-3 text-xs text-[#737373] pt-1">
-            <span className="capitalize font-semibold text-[#111111] dark:text-white">
+          <div className="flex flex-wrap items-center gap-3 text-xs text-sage-500 pt-1">
+            <span className="capitalize font-semibold text-sage-800 dark:text-white">
               {assessment.type} Assessment
             </span>
             <span>•</span>
@@ -141,7 +141,7 @@ export const AnalysisHeader: React.FC<AnalysisHeaderProps> = ({
           <Button
             variant="primary"
             size="sm"
-            className="bg-[#111111] text-white hover:bg-black dark:bg-white dark:text-[#111111] dark:hover:bg-neutral-200 shadow-sm"
+            className="bg-sage-700 text-white hover:bg-black dark:bg-white dark:text-sage-800 dark:hover:bg-neutral-200 shadow-sm"
             leftIcon={
               isRunningAnalysis ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />

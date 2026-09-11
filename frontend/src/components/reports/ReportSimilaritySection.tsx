@@ -17,20 +17,20 @@ export const ReportSimilaritySection: React.FC<ReportSimilaritySectionProps> = (
   ];
 
   return (
-    <div className="bg-white border border-[#E5E5E5] rounded-xl p-6 mb-6 shadow-subtle">
+    <div className="bg-white border border-sage-200 rounded-xl p-6 mb-6 shadow-subtle">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5">
         <div>
-          <h3 className="text-base font-bold text-[#111111]">
+          <h3 className="text-base font-bold text-sage-800">
             4. Question Similarity &amp; Historical Overlap
           </h3>
-          <p className="text-xs text-[#737373] mt-0.5">
+          <p className="text-xs text-sage-500 mt-0.5">
             Cross-checks assessment questions against stored historical question banks to detect repetition and preserve examination freshness.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-xs text-[#737373]">Question Diversity Rating:</span>
-          <span className="text-sm font-bold text-[#111111] bg-[#F7F7F5] px-2.5 py-1 rounded border border-[#E5E5E5]">
+          <span className="text-xs text-sage-500">Question Diversity Rating:</span>
+          <span className="text-sm font-bold text-sage-800 bg-sage-100 px-2.5 py-1 rounded border border-sage-200">
             {similarQuestions.rating}
           </span>
         </div>
@@ -38,9 +38,9 @@ export const ReportSimilaritySection: React.FC<ReportSimilaritySectionProps> = (
 
       {/* Summary counters */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
-        <div className="p-3 bg-[#FAFAFA] border border-[#EBEBEB] rounded-lg text-center">
-          <div className="text-xs text-[#737373]">Total Comparisons</div>
-          <div className="text-lg font-bold text-[#111111] mt-0.5">{similarQuestions.total_matches}</div>
+        <div className="p-3 bg-sage-50 border border-[#EBEBEB] rounded-lg text-center">
+          <div className="text-xs text-sage-500">Total Comparisons</div>
+          <div className="text-lg font-bold text-sage-800 mt-0.5">{similarQuestions.total_matches}</div>
         </div>
         <div className="p-3 bg-[#FEF2F2] border border-[#FECACA] rounded-lg text-center">
           <div className="text-xs text-[#991B1B]">Potential Duplicates (&ge;85%)</div>
@@ -57,9 +57,9 @@ export const ReportSimilaritySection: React.FC<ReportSimilaritySectionProps> = (
       </div>
 
       {allMatches.length > 0 ? (
-        <div className="border border-[#E5E5E5] rounded-lg overflow-hidden">
+        <div className="border border-sage-200 rounded-lg overflow-hidden">
           <table className="w-full text-left text-xs border-collapse">
-            <thead className="bg-[#F7F7F5] border-b border-[#E5E5E5] text-[#262626] font-semibold">
+            <thead className="bg-sage-100 border-b border-sage-200 text-sage-700 font-semibold">
               <tr>
                 <th className="py-2.5 px-3 text-center w-12">Q#</th>
                 <th className="py-2.5 px-4 w-1/3">Current Assessment Question</th>
@@ -74,17 +74,17 @@ export const ReportSimilaritySection: React.FC<ReportSimilaritySectionProps> = (
                 const badgeVariant = score >= 0.85 ? 'Critical' : score >= 0.70 ? 'Attention' : 'Good';
 
                 return (
-                  <tr key={idx} className="hover:bg-[#FAFAFA] transition-colors">
-                    <td className="py-2.5 px-3 text-center font-bold text-[#111111]">
+                  <tr key={idx} className="hover:bg-sage-50 transition-colors">
+                    <td className="py-2.5 px-3 text-center font-bold text-sage-800">
                       Q{m.current_question_number}
                     </td>
-                    <td className="py-2.5 px-4 text-[#262626] font-medium leading-relaxed">
+                    <td className="py-2.5 px-4 text-sage-700 font-medium leading-relaxed">
                       {m.current_question_text}
                     </td>
-                    <td className="py-2.5 px-4 text-[#525252] leading-relaxed">
+                    <td className="py-2.5 px-4 text-sage-600 leading-relaxed">
                       {m.previous_question_text}
                     </td>
-                    <td className="py-2.5 px-3 text-[#737373] text-[11px]">
+                    <td className="py-2.5 px-3 text-sage-500 text-[11px]">
                       <div>{m.previous_assessment_title}</div>
                       <div className="font-mono text-[10px]">{m.previous_year}</div>
                     </td>

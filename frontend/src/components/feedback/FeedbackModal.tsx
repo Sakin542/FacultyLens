@@ -105,7 +105,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
           icon: XCircle,
           iconColor: 'text-neutral-500',
           confirmText: 'Confirm & Dismiss',
-          btnClass: 'bg-[#111111] dark:bg-white text-white dark:text-[#111111]',
+          btnClass: 'bg-sage-700 dark:bg-white text-white dark:text-sage-800',
         };
       case 'REVIEWED':
         return {
@@ -124,15 +124,15 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-150">
       <div
-        className="w-full max-w-lg bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl border border-[#E5E5E5] dark:border-[#2C2C2E] overflow-hidden space-y-0"
+        className="w-full max-w-lg bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl border border-sage-200 dark:border-[#2C2C2E] overflow-hidden space-y-0"
         role="dialog"
         aria-modal="true"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-[#E5E5E5] dark:border-[#2C2C2E]">
+        <div className="flex items-center justify-between p-4 border-b border-sage-200 dark:border-[#2C2C2E]">
           <div className="flex items-center gap-2">
             <TitleIcon className={`w-5 h-5 ${theme.iconColor}`} />
-            <h3 className="text-sm font-bold text-[#111111] dark:text-white">
+            <h3 className="text-sm font-bold text-sage-800 dark:text-white">
               {theme.title}
             </h3>
           </div>
@@ -140,7 +140,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
             type="button"
             onClick={onClose}
             disabled={isSubmitting}
-            className="p-1 rounded-lg text-[#737373] hover:text-[#111111] dark:hover:text-white transition-colors"
+            className="p-1 rounded-lg text-sage-500 hover:text-sage-800 dark:hover:text-white transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -149,19 +149,19 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
         {/* Content Form */}
         <form onSubmit={handleSubmit} className="p-5 space-y-4 text-xs">
           {/* Recommendation Summary Card */}
-          <div className="p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C] space-y-1">
+          <div className="p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl border border-sage-200 dark:border-[#3A3A3C] space-y-1">
             <div className="flex items-center justify-between">
-              <span className="font-semibold text-[11px] text-[#737373] uppercase font-mono">
+              <span className="font-semibold text-[11px] text-sage-500 uppercase font-mono">
                 {recommendation.category?.replace('_', ' ')}
               </span>
               <Badge variant="neutral" className="text-[10px]">
                 {recommendation.priority} Priority
               </Badge>
             </div>
-            <p className="font-bold text-[#111111] dark:text-white">
+            <p className="font-bold text-sage-800 dark:text-white">
               {recommendation.problem || recommendation.title}
             </p>
-            <p className="text-[#737373] text-[11px]">
+            <p className="text-sage-500 text-[11px]">
               {recommendation.recommendation || recommendation.description}
             </p>
           </div>
@@ -184,10 +184,10 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
           {/* Comments Field */}
           <div className="space-y-1">
             <div className="flex items-center justify-between">
-              <label className="font-semibold text-[#111111] dark:text-white">
+              <label className="font-semibold text-sage-800 dark:text-white">
                 Faculty Comments (Optional):
               </label>
-              <span className="text-[10px] text-[#737373] font-mono">
+              <span className="text-[10px] text-sage-500 font-mono">
                 {comment.length}/2000
               </span>
             </div>
@@ -198,7 +198,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
               placeholder="Provide context, observations, or implementation plans..."
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              className="w-full rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] p-2.5 text-xs text-[#111111] dark:text-white placeholder-[#8E8E93] focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white"
+              className="w-full rounded-xl border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] p-2.5 text-xs text-sage-800 dark:text-white placeholder-[#8E8E93] focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white"
             />
           </div>
 
@@ -211,12 +211,12 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
           )}
 
           {/* Decision Support Disclaimer */}
-          <p className="text-[11px] text-[#737373] italic">
+          <p className="text-[11px] text-sage-500 italic">
             * Human decision support signal: your feedback will be archived and converted into structured improvement signals without altering assessment questions or historical analysis scores.
           </p>
 
           {/* Modal Footer Actions */}
-          <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#E5E5E5] dark:border-[#2C2C2E]">
+          <div className="flex items-center justify-end gap-2 pt-2 border-t border-sage-200 dark:border-[#2C2C2E]">
             <Button
               type="button"
               variant="ghost"

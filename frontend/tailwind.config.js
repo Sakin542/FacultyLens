@@ -1,5 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  // Dark variants only apply when ThemeContext adds the `dark` class — never from the OS setting.
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -35,6 +37,18 @@ export default {
             text: "#991B1B",
           },
         },
+        // Landing page palette (cream + sage)
+        sage: {
+          50: "#FAF9F6",
+          100: "#F3F4EE",
+          200: "#E8ECE3",
+          300: "#C3CBB9",
+          400: "#8C9A82",
+          500: "#5A6B52",
+          600: "#4A5D45",
+          700: "#2F3E2E",
+          800: "#1E261D",
+        },
       },
       fontFamily: {
         sans: [
@@ -45,6 +59,12 @@ export default {
           '"Segoe UI"',
           'Roboto',
           'sans-serif',
+        ],
+        serif: [
+          '"Instrument Serif"',
+          'Georgia',
+          '"Times New Roman"',
+          'serif',
         ],
         mono: [
           '"JetBrains Mono"',

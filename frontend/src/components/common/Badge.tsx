@@ -47,16 +47,16 @@ export const Badge: React.FC<BadgeProps> = ({
       dot: 'bg-[#DC2626]',
     },
     default: {
-      container: 'bg-[#111111] text-white border border-[#111111]',
+      container: 'bg-sage-700 text-white border border-sage-700',
       dot: 'bg-white',
     },
     neutral: {
-      container: 'bg-[#F7F7F5] text-[#262626] border border-[#E5E5E5]',
-      dot: 'bg-[#737373]',
+      container: 'bg-sage-100 text-sage-700 border border-sage-200',
+      dot: 'bg-sage-400',
     },
     outline: {
-      container: 'bg-transparent text-[#262626] border border-[#E5E5E5]',
-      dot: 'bg-[#111111]',
+      container: 'bg-transparent text-sage-700 border border-sage-200',
+      dot: 'bg-sage-700',
     },
   };
 

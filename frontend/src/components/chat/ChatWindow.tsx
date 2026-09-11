@@ -19,7 +19,7 @@ export const ChatMessage: React.FC<{ message: ChatMessageType }> = ({ message })
       <div
         className={cn(
           'w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0',
-          isUser ? 'bg-[#111111] dark:bg-white text-white dark:text-[#111111]' : 'bg-[#F7F7F5] dark:bg-[#1F1F1F] border border-[#E5E5E5] dark:border-[#2A2A2A] text-[#525252] dark:text-[#A3A3A3]'
+          isUser ? 'bg-sage-700 dark:bg-white text-white dark:text-sage-800' : 'bg-sage-100 dark:bg-[#1F1F1F] border border-sage-200 dark:border-[#2A2A2A] text-sage-600 dark:text-sage-400'
         )}
       >
         {isUser ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
@@ -29,14 +29,14 @@ export const ChatMessage: React.FC<{ message: ChatMessageType }> = ({ message })
           className={cn(
             'rounded-2xl px-4 py-2.5 text-sm whitespace-pre-wrap break-words',
             isUser
-              ? 'bg-[#111111] dark:bg-white text-white dark:text-[#111111] rounded-tr-sm'
-              : 'bg-[#F7F7F5] dark:bg-[#1F1F1F] text-[#111111] dark:text-white border border-[#E5E5E5] dark:border-[#2A2A2A] rounded-tl-sm'
+              ? 'bg-sage-700 dark:bg-white text-white dark:text-sage-800 rounded-tr-sm'
+              : 'bg-sage-100 dark:bg-[#1F1F1F] text-sage-800 dark:text-white border border-sage-200 dark:border-[#2A2A2A] rounded-tl-sm'
           )}
         >
           {message.content}
         </div>
         {!isUser && (
-          <div className="flex flex-wrap items-center gap-2 text-xs text-[#737373]">
+          <div className="flex flex-wrap items-center gap-2 text-xs text-sage-500">
             {message.grounded ? (
               <Badge variant="Good" data-testid="grounded-badge">Grounded in documents</Badge>
             ) : (
@@ -73,7 +73,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled, maxLengt
   return (
     <form
       data-testid="chat-input"
-      className="flex items-end gap-2 border-t border-[#E5E5E5] dark:border-[#2A2A2A] p-3 bg-white dark:bg-[#111111]"
+      className="flex items-end gap-2 border-t border-sage-200 dark:border-[#2A2A2A] p-3 bg-white dark:bg-sage-700"
       onSubmit={(e) => {
         e.preventDefault();
         void submit();
@@ -94,9 +94,9 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled, maxLengt
               void submit();
             }
           }}
-          className="w-full resize-none rounded-lg border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-3 py-2 text-sm text-[#111111] dark:text-white placeholder:text-[#A3A3A3] focus:outline-none focus:ring-2 focus:ring-[#111111] dark:focus:ring-white disabled:opacity-60"
+          className="w-full resize-none rounded-lg border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-3 py-2 text-sm text-sage-800 dark:text-white placeholder:text-sage-400 focus:outline-none focus:ring-2 focus:ring-sage-600 dark:focus:ring-white disabled:opacity-60"
         />
-        <div className="mt-1 flex justify-between text-[11px] text-[#A3A3A3]">
+        <div className="mt-1 flex justify-between text-[11px] text-sage-400">
           <span>Enter to send · Shift+Enter for a new line</span>
           <span className={cn(trimmed.length > maxLength && 'text-red-600')}>{value.length}/{maxLength}</span>
         </div>

@@ -57,10 +57,10 @@ export const EvaluationHeader: React.FC<{ overview: EvaluationOverview | null; o
   <header data-testid="evaluation-header" className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
     <div>
       <div className="flex items-center gap-2 mb-1">
-        <Gauge className="w-5 h-5 text-[#111111] dark:text-white" aria-hidden="true" />
-        <h1 className="text-2xl font-bold text-[#111111] dark:text-white">AI Evaluation &amp; Model Performance</h1>
+        <Gauge className="w-5 h-5 text-sage-800 dark:text-white" aria-hidden="true" />
+        <h1 className="text-2xl font-bold text-sage-800 dark:text-white">AI Evaluation &amp; Model Performance</h1>
       </div>
-      <p className="text-sm text-[#737373] max-w-2xl">
+      <p className="text-sm text-sage-500 max-w-2xl">
         Measures FacultyLens AI features against faculty-validated datasets. Evaluation is monitoring only — it never retrains models, changes thresholds, or promotes a model automatically.
       </p>
     </div>
@@ -76,13 +76,13 @@ export const EvaluationHeader: React.FC<{ overview: EvaluationOverview | null; o
 );
 
 export const MetricCard: React.FC<{ label: string; value: string; hint?: string; status?: GateStatus | null; className?: string; 'data-testid'?: string }> = ({ label, value, hint, status, className, ...rest }) => (
-  <div data-testid={rest['data-testid'] ?? 'metric-card'} className={cn('rounded-lg border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-4 py-3', className)}>
-    <p className="text-xs uppercase tracking-wide text-[#737373]">{label}</p>
-    <p className="text-2xl font-semibold text-[#111111] dark:text-white mt-1 tabular-nums">{value}</p>
+  <div data-testid={rest['data-testid'] ?? 'metric-card'} className={cn('rounded-lg border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-4 py-3', className)}>
+    <p className="text-xs uppercase tracking-wide text-sage-500">{label}</p>
+    <p className="text-2xl font-semibold text-sage-800 dark:text-white mt-1 tabular-nums">{value}</p>
     {(hint || status) && (
       <div className="flex items-center gap-2 mt-1">
         {status && <Badge variant={statusVariant(status)} size="sm">{statusText(status)}</Badge>}
-        {hint && <p className="text-xs text-[#737373]">{hint}</p>}
+        {hint && <p className="text-xs text-sage-500">{hint}</p>}
       </div>
     )}
   </div>
@@ -91,20 +91,20 @@ export const MetricCard: React.FC<{ label: string; value: string; hint?: string;
 export const ModelPerformanceCard: React.FC<{ item: TaskOverview; onOpen?: (run: EvaluationRun) => void }> = ({ item, onOpen }) => (
   <Card data-testid="model-performance-card" className="p-4 flex flex-col gap-2">
     <div className="flex items-start justify-between gap-2">
-      <h3 className="text-sm font-semibold text-[#111111] dark:text-white">{TASK_LABELS[item.task]}</h3>
+      <h3 className="text-sm font-semibold text-sage-800 dark:text-white">{TASK_LABELS[item.task]}</h3>
       {item.evaluated ? <Badge variant={statusVariant(item.gate_status)} size="sm">{statusText(item.gate_status)}</Badge> : <Badge variant="neutral" size="sm">Not evaluated yet</Badge>}
     </div>
     {item.evaluated ? (
       <>
-        <p className="text-2xl font-semibold tabular-nums text-[#111111] dark:text-white">{formatMetric(item.headline_metric, item.headline_value)}</p>
-        <p className="text-xs text-[#737373]">{metricLabel(item.headline_metric)} · {item.run?.example_count ?? 0} examples · {item.size_category?.replace('_', ' ').toLowerCase()}</p>
-        {item.run?.model && <p className="text-xs text-[#737373] truncate" title={item.run.model.name}>Model: {item.run.model.name} ({item.run.model.version})</p>}
+        <p className="text-2xl font-semibold tabular-nums text-sage-800 dark:text-white">{formatMetric(item.headline_metric, item.headline_value)}</p>
+        <p className="text-xs text-sage-500">{metricLabel(item.headline_metric)} · {item.run?.example_count ?? 0} examples · {item.size_category?.replace('_', ' ').toLowerCase()}</p>
+        {item.run?.model && <p className="text-xs text-sage-500 truncate" title={item.run.model.name}>Model: {item.run.model.name} ({item.run.model.version})</p>}
         {item.regression && <p className="text-xs text-red-700 dark:text-red-300 flex items-center gap-1"><AlertTriangle className="w-3 h-3" aria-hidden="true" /> Performance regression detected</p>}
         {item.warnings.length > 0 && <p className="text-xs text-amber-800 dark:text-amber-300">{item.warnings[0]}</p>}
         {item.run && onOpen && <button type="button" onClick={() => onOpen(item.run as EvaluationRun)} className="text-xs font-medium underline underline-offset-2 text-left">View run #{item.run.id}</button>}
       </>
     ) : (
-      <p className="text-sm text-[#737373]">Not evaluated yet. Create a {TASK_LABELS[item.task].toLowerCase()} dataset and run an evaluation to see real metrics.</p>
+      <p className="text-sm text-sage-500">Not evaluated yet. Create a {TASK_LABELS[item.task].toLowerCase()} dataset and run an evaluation to see real metrics.</p>
     )}
   </Card>
 );
@@ -125,14 +125,14 @@ export const EvaluationSummary: React.FC<{ overview: EvaluationOverview; onOpenR
       </div>
       {models.length > 0 && (
         <Card className="p-4">
-          <h3 className="text-sm font-semibold text-[#111111] dark:text-white mb-2">Model information</h3>
+          <h3 className="text-sm font-semibold text-sage-800 dark:text-white mb-2">Model information</h3>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <caption className="sr-only">Registered AI models</caption>
-              <thead><tr className="text-left text-xs uppercase text-[#737373]"><th className="py-1 pr-3">Model</th><th className="py-1 pr-3">Provider</th><th className="py-1 pr-3">Type</th><th className="py-1 pr-3">Task</th><th className="py-1 pr-3">Version</th></tr></thead>
+              <thead><tr className="text-left text-xs uppercase text-sage-500"><th className="py-1 pr-3">Model</th><th className="py-1 pr-3">Provider</th><th className="py-1 pr-3">Type</th><th className="py-1 pr-3">Task</th><th className="py-1 pr-3">Version</th></tr></thead>
               <tbody>
                 {models.map((m) => (
-                  <tr key={m.id} className="border-t border-[#F0F0F0] dark:border-[#2A2A2A]">
+                  <tr key={m.id} className="border-t border-sage-100 dark:border-[#2A2A2A]">
                     <td className="py-1 pr-3 font-mono text-xs">{m.model_name}</td><td className="py-1 pr-3">{m.provider ?? '—'}</td><td className="py-1 pr-3">{m.model_type ?? '—'}</td>
                     <td className="py-1 pr-3">{TASK_LABELS[m.task] ?? m.task}</td><td className="py-1 pr-3">{m.version}</td>
                   </tr>
@@ -141,28 +141,28 @@ export const EvaluationSummary: React.FC<{ overview: EvaluationOverview; onOpenR
             </table>
           </div>
           {overview.prompt_versions.length > 0 && (
-            <p className="text-xs text-[#737373] mt-2">Prompt versions: {overview.prompt_versions.map((p) => `${p.feature} ${p.version}`).join(', ')}</p>
+            <p className="text-xs text-sage-500 mt-2">Prompt versions: {overview.prompt_versions.map((p) => `${p.feature} ${p.version}`).join(', ')}</p>
           )}
         </Card>
       )}
       <Card className="p-4">
-        <h3 className="text-sm font-semibold text-[#111111] dark:text-white mb-1">Faculty interaction signals</h3>
-        <p className="text-xs text-[#737373] mb-2">{overview.faculty_signals.note}</p>
+        <h3 className="text-sm font-semibold text-sage-800 dark:text-white mb-1">Faculty interaction signals</h3>
+        <p className="text-xs text-sage-500 mb-2">{overview.faculty_signals.note}</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
           {(['recommendations', 'generated_questions', 'rubrics', 'grading'] as const).map((k) => {
             const entries = Object.entries(overview.faculty_signals[k] ?? {});
             return (
               <div key={k}>
-                <p className="text-xs uppercase text-[#737373] mb-1">{k.replace('_', ' ')}</p>
-                {entries.length === 0 ? <p className="text-xs text-[#A3A3A3]">No signals yet</p> : entries.map(([d, c]) => <p key={d} className="flex justify-between"><span>{statusText(d)}</span><span className="tabular-nums">{c}</span></p>)}
+                <p className="text-xs uppercase text-sage-500 mb-1">{k.replace('_', ' ')}</p>
+                {entries.length === 0 ? <p className="text-xs text-sage-400">No signals yet</p> : entries.map(([d, c]) => <p key={d} className="flex justify-between"><span>{statusText(d)}</span><span className="tabular-nums">{c}</span></p>)}
               </div>
             );
           })}
         </div>
       </Card>
-      <div className="rounded-lg border border-[#E5E5E5] dark:border-[#2A2A2A] bg-[#FAFAF8] dark:bg-[#1A1A1A] p-4">
-        <h3 className="text-sm font-semibold text-[#111111] dark:text-white mb-1">Known limitations</h3>
-        <ul className="list-disc pl-5 text-xs text-[#525252] dark:text-[#A3A3A3] space-y-0.5">{overview.limitations.map((l) => <li key={l}>{l}</li>)}</ul>
+      <div className="rounded-lg border border-sage-200 dark:border-[#2A2A2A] bg-[#FAFAF8] dark:bg-[#1A1A1A] p-4">
+        <h3 className="text-sm font-semibold text-sage-800 dark:text-white mb-1">Known limitations</h3>
+        <ul className="list-disc pl-5 text-xs text-sage-600 dark:text-sage-400 space-y-0.5">{overview.limitations.map((l) => <li key={l}>{l}</li>)}</ul>
       </div>
     </section>
   );
@@ -171,13 +171,13 @@ export const EvaluationSummary: React.FC<{ overview: EvaluationOverview; onOpenR
 export const EvaluationProgress: React.FC<{ run: EvaluationRun; onCancel?: () => void }> = ({ run, onCancel }) => {
   const pct = run.example_count ? Math.round((run.processed_count / run.example_count) * 100) : 0;
   return (
-    <div data-testid="evaluation-progress" role="status" aria-live="polite" className="rounded-lg border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] p-4">
+    <div data-testid="evaluation-progress" role="status" aria-live="polite" className="rounded-lg border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] p-4">
       <div className="flex items-center justify-between gap-2 mb-2">
         <p className="text-sm font-medium flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" /> Evaluation run #{run.id} is {run.status.toLowerCase()}…</p>
         {onCancel && <Button size="sm" variant="ghost" onClick={onCancel}>Cancel</Button>}
       </div>
-      <div className="h-2 w-full rounded bg-[#F0F0F0] dark:bg-[#2A2A2A]" aria-hidden="true"><div className="h-2 rounded bg-[#111111] dark:bg-white transition-all" style={{ width: `${pct}%` }} /></div>
-      <p className="text-xs text-[#737373] mt-1">{run.processed_count} of {run.example_count} examples processed ({pct}%)</p>
+      <div className="h-2 w-full rounded bg-sage-100 dark:bg-[#2A2A2A]" aria-hidden="true"><div className="h-2 rounded bg-sage-700 dark:bg-white transition-all" style={{ width: `${pct}%` }} /></div>
+      <p className="text-xs text-sage-500 mt-1">{run.processed_count} of {run.example_count} examples processed ({pct}%)</p>
     </div>
   );
 };
@@ -185,10 +185,10 @@ export const EvaluationProgress: React.FC<{ run: EvaluationRun; onCancel?: () =>
 export const EvaluationEmptyState: React.FC<{ title?: string; description?: string; action?: React.ReactNode }> = ({
   title = 'Not evaluated yet', description = 'No evaluation has been run. Create a dataset with faculty-validated examples, validate it, and start an evaluation. Metrics are never estimated or hard-coded.', action,
 }) => (
-  <div data-testid="evaluation-empty-state" className="flex flex-col items-center justify-center text-center py-12 px-6 rounded-xl border border-dashed border-[#E5E5E5] dark:border-[#2A2A2A]">
-    <div className="w-12 h-12 rounded-full bg-[#F7F7F5] dark:bg-[#1F1F1F] border border-[#E5E5E5] dark:border-[#2A2A2A] flex items-center justify-center text-[#737373] mb-4"><MinusCircle className="w-6 h-6" aria-hidden="true" /></div>
-    <h4 className="text-base font-semibold text-[#111111] dark:text-white mb-1">{title}</h4>
-    <p className="text-sm text-[#737373] max-w-md">{description}</p>
+  <div data-testid="evaluation-empty-state" className="flex flex-col items-center justify-center text-center py-12 px-6 rounded-xl border border-dashed border-sage-200 dark:border-[#2A2A2A]">
+    <div className="w-12 h-12 rounded-full bg-sage-100 dark:bg-[#1F1F1F] border border-sage-200 dark:border-[#2A2A2A] flex items-center justify-center text-sage-500 mb-4"><MinusCircle className="w-6 h-6" aria-hidden="true" /></div>
+    <h4 className="text-base font-semibold text-sage-800 dark:text-white mb-1">{title}</h4>
+    <p className="text-sm text-sage-500 max-w-md">{description}</p>
     {action && <div className="mt-4">{action}</div>}
   </div>
 );
@@ -202,12 +202,12 @@ export const EvaluationError: React.FC<{ message: string; onRetry?: () => void; 
 
 export const GateList: React.FC<{ gates: { metric: string; value: number | null; min: number | null; max: number | null; passed: boolean | null }[]; warnings?: string[] }> = ({ gates, warnings }) => (
   <div data-testid="quality-gates" className="space-y-1">
-    {gates.length === 0 && <p className="text-xs text-[#737373]">No quality gates configured for this task.</p>}
+    {gates.length === 0 && <p className="text-xs text-sage-500">No quality gates configured for this task.</p>}
     {gates.map((g) => (
       <p key={g.metric} className="flex items-center gap-2 text-sm">
         {g.passed === true && <CheckCircle2 className="w-4 h-4 text-green-700" aria-hidden="true" />}
         {g.passed === false && <XCircle className="w-4 h-4 text-red-700" aria-hidden="true" />}
-        {g.passed === null && <MinusCircle className="w-4 h-4 text-[#A3A3A3]" aria-hidden="true" />}
+        {g.passed === null && <MinusCircle className="w-4 h-4 text-sage-400" aria-hidden="true" />}
         <span>{metricLabel(g.metric)}: <span className="tabular-nums">{formatMetric(g.metric, g.value)}</span>{g.min !== null && ` (target ≥ ${formatMetric(g.metric, g.min)})`}{g.max !== null && ` (max ≤ ${formatMetric(g.metric, g.max)})`}</span>
         <span className="sr-only">{g.passed === true ? 'passed' : g.passed === false ? 'failed' : 'not produced'}</span>
       </p>

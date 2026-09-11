@@ -143,10 +143,10 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
     <div className="space-y-6">
       {/* KPI & Summary Ribbon */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        <Card className="p-3.5 bg-white border-[#E5E5E5]">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[#737373]">Total</span>
-          <div className="text-2xl font-extrabold text-[#111111] mt-0.5 font-mono">{localRecs.length}</div>
-          <span className="text-[10px] text-[#737373]">Suggestions</span>
+        <Card className="p-3.5 bg-white border-sage-200">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-sage-500">Total</span>
+          <div className="text-2xl font-extrabold text-sage-800 mt-0.5 font-mono">{localRecs.length}</div>
+          <span className="text-[10px] text-sage-500">Suggestions</span>
         </Card>
 
         <Card className="p-3.5 bg-[#FEF2F2]/40 border-[#FECACA]">
@@ -173,15 +173,15 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
           <span className="text-[10px] text-[#166534]">Agreed</span>
         </Card>
 
-        <Card className="p-3.5 bg-[#F7F7F5] border-[#E5E5E5]">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[#737373]">Dismissed</span>
-          <div className="text-2xl font-extrabold text-[#737373] mt-0.5 font-mono">{dismissedCount}</div>
-          <span className="text-[10px] text-[#737373]">Intended design</span>
+        <Card className="p-3.5 bg-sage-100 border-sage-200">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-sage-500">Dismissed</span>
+          <div className="text-2xl font-extrabold text-sage-500 mt-0.5 font-mono">{dismissedCount}</div>
+          <span className="text-[10px] text-sage-500">Intended design</span>
         </Card>
       </div>
 
       {/* Filter and Search Bar */}
-      <Card className="p-4 bg-white border-[#E5E5E5]">
+      <Card className="p-4 bg-white border-sage-200">
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
           {/* Status Tabs */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
@@ -197,8 +197,8 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
                 onClick={() => setSelectedStatus(tab.id)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors shrink-0 ${
                   selectedStatus === tab.id
-                    ? 'bg-[#111111] text-white shadow-subtle'
-                    : 'text-[#737373] hover:text-[#111111] hover:bg-[#F7F7F5]'
+                    ? 'bg-sage-700 text-white shadow-subtle'
+                    : 'text-sage-500 hover:text-sage-800 hover:bg-sage-100'
                 }`}
               >
                 {tab.label}
@@ -209,20 +209,20 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
           {/* Search and Priority / Category dropdowns */}
           <div className="flex flex-wrap items-center gap-2">
             <div className="relative min-w-[180px]">
-              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#737373]" />
+              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-sage-500" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search problem, LO, topic..."
-                className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-[#E5E5E5] bg-[#F7F7F5] focus:outline-none focus:border-[#111111]"
+                className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-sage-200 bg-sage-100 focus:outline-none focus:border-sage-700"
               />
             </div>
 
             <select
               value={selectedPriority}
               onChange={(e) => setSelectedPriority(e.target.value)}
-              className="text-xs px-2.5 py-1.5 rounded-lg border border-[#E5E5E5] bg-white font-medium text-[#111111] focus:outline-none focus:border-[#111111]"
+              className="text-xs px-2.5 py-1.5 rounded-lg border border-sage-200 bg-white font-medium text-sage-800 focus:outline-none focus:border-sage-700"
             >
               <option value="all">All Priorities</option>
               <option value="HIGH">High Priority</option>
@@ -233,7 +233,7 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="text-xs px-2.5 py-1.5 rounded-lg border border-[#E5E5E5] bg-white font-medium text-[#111111] focus:outline-none focus:border-[#111111]"
+              className="text-xs px-2.5 py-1.5 rounded-lg border border-sage-200 bg-white font-medium text-sage-800 focus:outline-none focus:border-sage-700"
             >
               <option value="all">All Categories</option>
               <option value="topic_coverage">Topic Coverage</option>
@@ -252,15 +252,15 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
       {/* Recommendation Cards List */}
       <div className="space-y-4">
         {isLoading ? (
-          <Card className="p-12 text-center bg-white border-[#E5E5E5]">
-            <Loader2 className="w-8 h-8 text-[#111111] animate-spin mx-auto mb-2" />
-            <p className="text-xs text-[#737373]">Evaluating assessment dimensions & updating recommendations...</p>
+          <Card className="p-12 text-center bg-white border-sage-200">
+            <Loader2 className="w-8 h-8 text-sage-800 animate-spin mx-auto mb-2" />
+            <p className="text-xs text-sage-500">Evaluating assessment dimensions & updating recommendations...</p>
           </Card>
         ) : filtered.length === 0 ? (
-          <Card className="p-8 text-center bg-white border-dashed border-[#E5E5E5]">
+          <Card className="p-8 text-center bg-white border-dashed border-sage-200">
             <CheckCircle2 className="w-10 h-10 text-[#16A34A] mx-auto mb-3" />
-            <h4 className="text-sm font-bold text-[#111111]">No Recommendations in this View</h4>
-            <p className="text-xs text-[#737373] max-w-md mx-auto mt-1">
+            <h4 className="text-sm font-bold text-sage-800">No Recommendations in this View</h4>
+            <p className="text-xs text-sage-500 max-w-md mx-auto mt-1">
               {searchQuery || selectedPriority !== 'all' || selectedCategory !== 'all' || selectedStatus !== 'all'
                 ? 'Try clearing active filters to view all recommendations.'
                 : 'All evaluation dimensions meet the required academic quality criteria without detected problems.'}
@@ -280,19 +280,19 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
                   isAccepted
                     ? 'border-[#86EFAC] bg-[#F0FDF4]/30'
                     : isDismissed
-                    ? 'border-[#E5E5E5] bg-[#F7F7F5]/60 opacity-80'
-                    : 'border-[#E5E5E5] bg-white hover:border-[#111111]'
+                    ? 'border-sage-200 bg-sage-100/60 opacity-80'
+                    : 'border-sage-200 bg-white hover:border-sage-700'
                 }`}
               >
                 {/* Header: Priority, Category, Status */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-[#E5E5E5]">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-sage-200">
                   <div className="flex flex-wrap items-center gap-2">
                     {getPriorityBadge(rec.priority)}
-                    <span className="px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-[#F7F7F5] border border-[#E5E5E5] text-[#111111] flex items-center gap-1.5">
+                    <span className="px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-sage-100 border border-sage-200 text-sage-800 flex items-center gap-1.5">
                       {getCategoryIcon(rec.category)}
                       {formatCategoryName(rec.category)}
                     </span>
-                    <span className="text-[10px] text-[#737373] font-mono">Source: {rec.source_metric}</span>
+                    <span className="text-[10px] text-sage-500 font-mono">Source: {rec.source_metric}</span>
                   </div>
 
                   {/* Status Indicator */}
@@ -320,20 +320,20 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
 
                 {/* Problem Statement */}
                 <div>
-                  <h4 className="text-base font-bold text-[#111111] flex items-start gap-2">
+                  <h4 className="text-base font-bold text-sage-800 flex items-start gap-2">
                     <span>{rec.problem}</span>
                   </h4>
-                  <p className="text-xs text-[#737373] mt-1 leading-relaxed">
-                    <span className="font-semibold text-[#111111]">Why this matters: </span>
+                  <p className="text-xs text-sage-500 mt-1 leading-relaxed">
+                    <span className="font-semibold text-sage-800">Why this matters: </span>
                     {rec.explanation}
                   </p>
                 </div>
 
                 {/* Evidence Section */}
                 {rec.evidence && Object.keys(rec.evidence).length > 0 && (
-                  <div className="p-3.5 rounded-lg border border-[#E5E5E5] bg-[#F7F7F5] space-y-2 text-xs">
-                    <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[#737373]">
-                      <BarChart3 className="w-3.5 h-3.5 text-[#111111]" />
+                  <div className="p-3.5 rounded-lg border border-sage-200 bg-sage-100 space-y-2 text-xs">
+                    <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-sage-500">
+                      <BarChart3 className="w-3.5 h-3.5 text-sage-800" />
                       <span>Empirical Analysis Evidence</span>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 pt-1 font-mono text-[11px]">
@@ -341,9 +341,9 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
                         const label = key.replace(/_/g, ' ');
                         const displayVal = typeof val === 'object' ? JSON.stringify(val) : String(val);
                         return (
-                          <div key={key} className="p-2 rounded bg-white border border-[#E5E5E5]">
-                            <span className="text-[#737373] text-[10px] uppercase block">{label}</span>
-                            <span className="font-bold text-[#111111] truncate block">{displayVal}</span>
+                          <div key={key} className="p-2 rounded bg-white border border-sage-200">
+                            <span className="text-sage-500 text-[10px] uppercase block">{label}</span>
+                            <span className="font-bold text-sage-800 truncate block">{displayVal}</span>
                           </div>
                         );
                       })}
@@ -364,12 +364,12 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
 
                 {/* Optional Faculty Notes */}
                 {rec.faculty_notes && (
-                  <div className="p-3 rounded-lg border border-[#E5E5E5] bg-white text-xs space-y-1">
-                    <span className="font-semibold text-[#737373] flex items-center gap-1.5 text-[11px]">
-                      <MessageSquare className="w-3.5 h-3.5 text-[#111111]" />
+                  <div className="p-3 rounded-lg border border-sage-200 bg-white text-xs space-y-1">
+                    <span className="font-semibold text-sage-500 flex items-center gap-1.5 text-[11px]">
+                      <MessageSquare className="w-3.5 h-3.5 text-sage-800" />
                       Faculty Notes:
                     </span>
-                    <p className="text-xs text-[#111111] italic">{rec.faculty_notes}</p>
+                    <p className="text-xs text-sage-800 italic">{rec.faculty_notes}</p>
                   </div>
                 )}
 
@@ -399,7 +399,7 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
                         variant="ghost"
                         size="sm"
                         onClick={() => handleStatusUpdate(rec.id, 'pending')}
-                        className="text-xs text-[#737373]"
+                        className="text-xs text-sage-500"
                       >
                         Reset to Pending
                       </Button>
@@ -416,7 +416,7 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
                         setNoteText(rec.faculty_notes || '');
                       }
                     }}
-                    className="text-xs text-[#737373] hover:text-[#111111] flex items-center gap-1 font-medium"
+                    className="text-xs text-sage-500 hover:text-sage-800 flex items-center gap-1 font-medium"
                   >
                     <MessageSquare className="w-3.5 h-3.5" />
                     {isEditingNote ? 'Close Note' : rec.faculty_notes ? 'Edit Note' : 'Add Note'}
@@ -425,8 +425,8 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
 
                 {/* Inline Note Editor */}
                 {isEditingNote && (
-                  <div className="p-3 rounded-lg border border-[#E5E5E5] bg-white space-y-2 pt-2">
-                    <label className="text-[11px] font-semibold text-[#737373] block">
+                  <div className="p-3 rounded-lg border border-sage-200 bg-white space-y-2 pt-2">
+                    <label className="text-[11px] font-semibold text-sage-500 block">
                       Faculty Decision Rationale / Annotation:
                     </label>
                     <textarea
@@ -434,7 +434,7 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
                       onChange={(e) => setNoteText(e.target.value)}
                       placeholder="e.g. Will add an applied recurrence relation question in Section B..."
                       rows={2}
-                      className="w-full p-2 text-xs rounded border border-[#E5E5E5] bg-[#F7F7F5] focus:outline-none focus:border-[#111111]"
+                      className="w-full p-2 text-xs rounded border border-sage-200 bg-sage-100 focus:outline-none focus:border-sage-700"
                     />
                     <div className="flex justify-end gap-2">
                       <Button

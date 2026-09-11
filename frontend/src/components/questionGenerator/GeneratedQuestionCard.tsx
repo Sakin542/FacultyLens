@@ -43,7 +43,7 @@ export const QuestionSimilarityWarning: React.FC<{ validation: QuestionValidatio
   );
 };
 
-const Check_ = ({ ok }: { ok: boolean | null }) => ok == null ? <span className="text-[#A3A3A3]">—</span> : ok ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <X className="w-3.5 h-3.5 text-red-600" />;
+const Check_ = ({ ok }: { ok: boolean | null }) => ok == null ? <span className="text-sage-400">—</span> : ok ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <X className="w-3.5 h-3.5 text-red-600" />;
 
 export const ConstraintValidation: React.FC<{ question: GeneratedQuestion }> = ({ question }) => {
   const v = question.validation;
@@ -58,16 +58,16 @@ export const ConstraintValidation: React.FC<{ question: GeneratedQuestion }> = (
   ];
   const variant = v.overall_status === 'PASSED' ? 'Good' : v.overall_status === 'PASSED_WITH_WARNINGS' ? 'Attention' : 'Critical';
   return (
-    <div data-testid="constraint-validation" className="rounded-lg border border-[#E5E5E5] dark:border-[#2A2A2A] p-3 text-xs">
+    <div data-testid="constraint-validation" className="rounded-lg border border-sage-200 dark:border-[#2A2A2A] p-3 text-xs">
       <div className="flex items-center justify-between mb-2">
-        <span className="font-semibold text-[#111111] dark:text-white">Constraint validation</span>
+        <span className="font-semibold text-sage-800 dark:text-white">Constraint validation</span>
         <Badge variant={variant} data-testid="validation-status">{fmt(v.overall_status)}</Badge>
       </div>
       <table className="w-full">
-        <thead><tr className="text-[#737373] text-left"><th className="py-0.5">Constraint</th><th>Requested</th><th>AI-estimated</th><th className="w-8"></th></tr></thead>
+        <thead><tr className="text-sage-500 text-left"><th className="py-0.5">Constraint</th><th>Requested</th><th>AI-estimated</th><th className="w-8"></th></tr></thead>
         <tbody>
           {rows.map(([k, req, det, ok]) => (
-            <tr key={k} className="border-t border-[#F0F0F0] dark:border-[#1F1F1F]"><td className="py-1 text-[#525252] dark:text-[#A3A3A3]">{k}</td><td>{req}</td><td>{det}</td><td><Check_ ok={ok} /></td></tr>
+            <tr key={k} className="border-t border-sage-100 dark:border-[#1F1F1F]"><td className="py-1 text-sage-600 dark:text-sage-400">{k}</td><td>{req}</td><td>{det}</td><td><Check_ ok={ok} /></td></tr>
           ))}
         </tbody>
       </table>
@@ -104,7 +104,7 @@ export const GeneratedQuestionEditor: React.FC<{
       options: type === 'mcq' ? options.split('\n').map((o) => o.trim()).filter(Boolean) : null,
     }); }}>
       <textarea aria-label="Question text" value={text} onChange={(e) => setText(e.target.value)} rows={4} maxLength={5000}
-        className="w-full rounded-lg border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-3 py-2 text-sm text-[#111111] dark:text-white" />
+        className="w-full rounded-lg border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-3 py-2 text-sm text-sage-800 dark:text-white" />
       <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
         <Input aria-label="Edit marks" type="number" min={0.5} step={0.5} value={marks} onChange={(e) => setMarks(e.target.value)} />
         <select aria-label="Edit type" className={selectClass} value={type} onChange={(e) => setType(e.target.value as GenQuestionType)}>
@@ -122,10 +122,10 @@ export const GeneratedQuestionEditor: React.FC<{
       </div>
       {type === 'mcq' && (
         <textarea aria-label="Options (one per line)" value={options} onChange={(e) => setOptions(e.target.value)} rows={4} placeholder="One option per line"
-          className="w-full rounded-lg border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-3 py-2 text-sm text-[#111111] dark:text-white" />
+          className="w-full rounded-lg border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-3 py-2 text-sm text-sage-800 dark:text-white" />
       )}
       <textarea aria-label="Expected answer" value={expected} onChange={(e) => setExpected(e.target.value)} rows={3} placeholder="Expected answer (draft)"
-        className="w-full rounded-lg border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-3 py-2 text-sm text-[#111111] dark:text-white" />
+        className="w-full rounded-lg border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-3 py-2 text-sm text-sage-800 dark:text-white" />
       <div className="flex gap-2">
         <Button type="submit" size="sm" disabled={!valid} isLoading={saving} data-testid="editor-save">Save changes</Button>
         <Button type="button" size="sm" variant="ghost" onClick={onCancel}>Cancel</Button>
@@ -163,15 +163,15 @@ export const GeneratedQuestionCard: React.FC<GeneratedQuestionCardProps> = ({
   const isFinal = !!q.official_question_id;
 
   return (
-    <article data-testid={`generated-question-${q.id}`} className={cn('rounded-xl border bg-white dark:bg-[#161616] p-4 space-y-3', q.review_status === 'REJECTED' ? 'border-[#E5E5E5] dark:border-[#2A2A2A] opacity-70' : 'border-[#E5E5E5] dark:border-[#2A2A2A]')}>
+    <article data-testid={`generated-question-${q.id}`} className={cn('rounded-xl border bg-white dark:bg-[#161616] p-4 space-y-3', q.review_status === 'REJECTED' ? 'border-sage-200 dark:border-[#2A2A2A] opacity-70' : 'border-sage-200 dark:border-[#2A2A2A]')}>
       <header className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-[#111111] dark:text-white">Question {q.sequence}</span>
+          <span className="text-sm font-semibold text-sage-800 dark:text-white">Question {q.sequence}</span>
           <Badge variant={reviewVariant} data-testid="review-status">{fmt(q.review_status)}</Badge>
           {q.is_edited && <Badge variant="outline">Edited v{q.version}</Badge>}
           {isFinal && <Badge variant="Good" data-testid="added-badge">Added to assessment</Badge>}
         </div>
-        <div className="flex flex-wrap gap-1.5 text-xs text-[#737373]">
+        <div className="flex flex-wrap gap-1.5 text-xs text-sage-500">
           <span className="font-mono">{q.marks} marks</span><span>·</span><span>{QUESTION_TYPE_LABELS[q.question_type] ?? q.question_type}</span>
           {q.difficulty_level && <><span>·</span><span>{fmt(q.difficulty_level)}</span></>}
           {q.cognitive_level && <><span>·</span><span>{q.cognitive_level}</span></>}
@@ -184,26 +184,26 @@ export const GeneratedQuestionCard: React.FC<GeneratedQuestionCardProps> = ({
           onSave={async (data) => { setSaving(true); try { await onEdit(q, data); setEditing(false); } finally { setSaving(false); } }} />
       ) : (
         <>
-          <p className="text-sm text-[#111111] dark:text-white whitespace-pre-wrap break-words" data-testid="question-text">{q.question_text}</p>
+          <p className="text-sm text-sage-800 dark:text-white whitespace-pre-wrap break-words" data-testid="question-text">{q.question_text}</p>
           {q.options && q.options.length > 0 && (
-            <ol className="list-[upper-alpha] pl-6 text-sm text-[#525252] dark:text-[#A3A3A3] space-y-0.5">
-              {q.options.map((o, i) => <li key={i} className={cn(o === q.correct_option && 'font-semibold text-[#111111] dark:text-white')}>{o}</li>)}
+            <ol className="list-[upper-alpha] pl-6 text-sm text-sage-600 dark:text-sage-400 space-y-0.5">
+              {q.options.map((o, i) => <li key={i} className={cn(o === q.correct_option && 'font-semibold text-sage-800 dark:text-white')}>{o}</li>)}
             </ol>
           )}
           {q.expected_answer && (
-            <details className="text-xs text-[#525252] dark:text-[#A3A3A3]"><summary className="cursor-pointer">Expected answer (draft)</summary><p className="mt-1 whitespace-pre-wrap">{q.expected_answer}</p></details>
+            <details className="text-xs text-sage-600 dark:text-sage-400"><summary className="cursor-pointer">Expected answer (draft)</summary><p className="mt-1 whitespace-pre-wrap">{q.expected_answer}</p></details>
           )}
           {q.is_edited && (
-            <button type="button" className="text-[11px] underline text-[#737373]" onClick={() => setShowOriginal((s) => !s)}>{showOriginal ? 'Hide' : 'Show'} original AI draft</button>
+            <button type="button" className="text-[11px] underline text-sage-500" onClick={() => setShowOriginal((s) => !s)}>{showOriginal ? 'Hide' : 'Show'} original AI draft</button>
           )}
-          {showOriginal && <p className="text-xs italic text-[#737373] whitespace-pre-wrap" data-testid="original-text">{q.original_question_text}</p>}
+          {showOriginal && <p className="text-xs italic text-sage-500 whitespace-pre-wrap" data-testid="original-text">{q.original_question_text}</p>}
         </>
       )}
 
       <div className="flex flex-wrap gap-2"><QuestionAlignmentBadge validation={q.validation} /></div>
       <QuestionSimilarityWarning validation={q.validation} onViewSimilar={onViewSimilar} />
       <ConstraintValidation question={q} />
-      {q.review_note && <p className="text-xs text-[#737373]">Note: {q.review_note}</p>}
+      {q.review_note && <p className="text-xs text-sage-500">Note: {q.review_note}</p>}
 
       {!editing && canReview && (
         <footer className="flex flex-wrap gap-2 pt-1">
@@ -215,7 +215,7 @@ export const GeneratedQuestionCard: React.FC<GeneratedQuestionCardProps> = ({
           {isFinal && onGenerateRubric && <Button size="sm" variant="outline" leftIcon={<Link2 className="w-3.5 h-3.5" />} onClick={() => onGenerateRubric(q)} data-testid="generate-rubric-button">Generate rubric</Button>}
         </footer>
       )}
-      {!canReview && <p className="text-[11px] text-[#A3A3A3]" data-testid="review-readonly">You can review and discuss this draft; approval and edits require an Editor or Owner role.</p>}
+      {!canReview && <p className="text-[11px] text-sage-400" data-testid="review-readonly">You can review and discuss this draft; approval and edits require an Editor or Owner role.</p>}
       {discussion}
     </article>
   );

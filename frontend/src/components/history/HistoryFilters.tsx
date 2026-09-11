@@ -30,7 +30,7 @@ export const HistoryFilters: React.FC<HistoryFiltersProps> = ({
   ) as string[];
 
   return (
-    <div className="space-y-3 bg-white dark:bg-[#1C1C1E] p-4 rounded-xl border border-[#E5E5E5] dark:border-[#2C2C2E] shadow-sm">
+    <div className="space-y-3 bg-white dark:bg-[#1C1C1E] p-4 rounded-xl border border-sage-200 dark:border-[#2C2C2E] shadow-sm">
       {/* Search and Sort Row */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="relative flex-1 w-full max-w-md">
@@ -38,19 +38,19 @@ export const HistoryFilters: React.FC<HistoryFiltersProps> = ({
             placeholder="Search by assessment title, course code, or name..."
             value={filters.search || ''}
             onChange={(e) => onFilterChange('search', e.target.value)}
-            leftIcon={<Search className="w-4 h-4 text-[#737373]" />}
+            leftIcon={<Search className="w-4 h-4 text-sage-500" />}
             className="w-full text-xs"
           />
         </div>
 
         <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-          <label className="text-xs font-medium text-[#737373] whitespace-nowrap">
+          <label className="text-xs font-medium text-sage-500 whitespace-nowrap">
             Sort:
           </label>
           <select
             value={filters.sort || 'newest'}
             onChange={(e) => onFilterChange('sort', e.target.value as any)}
-            className="rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] px-3 py-1.5 text-xs text-[#111111] dark:text-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white"
+            className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] px-3 py-1.5 text-xs text-sage-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white"
           >
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
@@ -63,7 +63,7 @@ export const HistoryFilters: React.FC<HistoryFiltersProps> = ({
             size="sm"
             onClick={onReset}
             disabled={isLoading}
-            className="text-xs text-[#737373] hover:text-[#111111] dark:hover:text-white"
+            className="text-xs text-sage-500 hover:text-sage-800 dark:hover:text-white"
             title="Reset Filters"
           >
             <RotateCcw className="w-3.5 h-3.5 mr-1" />
@@ -73,8 +73,8 @@ export const HistoryFilters: React.FC<HistoryFiltersProps> = ({
       </div>
 
       {/* Filter Options Row */}
-      <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-[#E5E5E5] dark:border-[#2C2C2E] text-xs">
-        <div className="flex items-center gap-1.5 text-[#737373]">
+      <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-sage-200 dark:border-[#2C2C2E] text-xs">
+        <div className="flex items-center gap-1.5 text-sage-500">
           <Filter className="w-3.5 h-3.5" />
           <span className="font-semibold">Filters:</span>
         </div>
@@ -84,7 +84,7 @@ export const HistoryFilters: React.FC<HistoryFiltersProps> = ({
           <select
             value={filters.course_id || 'all'}
             onChange={(e) => onFilterChange('course_id', e.target.value)}
-            className="rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-[#F7F7F5] dark:bg-[#2C2C2E] px-2.5 py-1 text-xs text-[#111111] dark:text-white focus:outline-none"
+            className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-sage-100 dark:bg-[#2C2C2E] px-2.5 py-1 text-xs text-sage-800 dark:text-white focus:outline-none"
           >
             <option value="all">All Courses</option>
             {courses.map((c) => (
@@ -100,7 +100,7 @@ export const HistoryFilters: React.FC<HistoryFiltersProps> = ({
           <select
             value={filters.assessment_type || 'all'}
             onChange={(e) => onFilterChange('assessment_type', e.target.value)}
-            className="rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-[#F7F7F5] dark:bg-[#2C2C2E] px-2.5 py-1 text-xs text-[#111111] dark:text-white focus:outline-none"
+            className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-sage-100 dark:bg-[#2C2C2E] px-2.5 py-1 text-xs text-sage-800 dark:text-white focus:outline-none"
           >
             <option value="all">All Assessment Types</option>
             <option value="midterm">Midterm</option>
@@ -116,7 +116,7 @@ export const HistoryFilters: React.FC<HistoryFiltersProps> = ({
             <select
               value={filters.academic_year || 'all'}
               onChange={(e) => onFilterChange('academic_year', e.target.value)}
-              className="rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-[#F7F7F5] dark:bg-[#2C2C2E] px-2.5 py-1 text-xs text-[#111111] dark:text-white focus:outline-none"
+              className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-sage-100 dark:bg-[#2C2C2E] px-2.5 py-1 text-xs text-sage-800 dark:text-white focus:outline-none"
             >
               <option value="all">All Academic Years</option>
               {academicYears.map((yr) => (
@@ -134,7 +134,7 @@ export const HistoryFilters: React.FC<HistoryFiltersProps> = ({
             <select
               value={filters.semester || 'all'}
               onChange={(e) => onFilterChange('semester', e.target.value)}
-              className="rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-[#F7F7F5] dark:bg-[#2C2C2E] px-2.5 py-1 text-xs text-[#111111] dark:text-white focus:outline-none"
+              className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-sage-100 dark:bg-[#2C2C2E] px-2.5 py-1 text-xs text-sage-800 dark:text-white focus:outline-none"
             >
               <option value="all">All Semesters</option>
               {semesters.map((sem) => (

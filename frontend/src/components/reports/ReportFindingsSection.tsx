@@ -22,20 +22,20 @@ export const ReportFindingsSection: React.FC<ReportFindingsSectionProps> = ({ fi
   };
 
   return (
-    <div className="bg-white border border-[#E5E5E5] rounded-xl p-6 mb-6 shadow-subtle">
+    <div className="bg-white border border-sage-200 rounded-xl p-6 mb-6 shadow-subtle">
       <div className="mb-5">
-        <h3 className="text-base font-bold text-[#111111]">
+        <h3 className="text-base font-bold text-sage-800">
           5. Diagnostic AI Findings &amp; Observations
         </h3>
-        <p className="text-xs text-[#737373] mt-0.5">
+        <p className="text-xs text-sage-500 mt-0.5">
           Systematic analytical observations regarding syllabus span, cognitive depth, and marks distribution patterns.
         </p>
       </div>
 
       {findings && findings.length > 0 ? (
-        <div className="border border-[#E5E5E5] rounded-lg overflow-hidden">
+        <div className="border border-sage-200 rounded-lg overflow-hidden">
           <table className="w-full text-left text-xs border-collapse">
-            <thead className="bg-[#F7F7F5] border-b border-[#E5E5E5] text-[#262626] font-semibold">
+            <thead className="bg-sage-100 border-b border-sage-200 text-sage-700 font-semibold">
               <tr>
                 <th className="py-2.5 px-3 text-center w-24">Severity</th>
                 <th className="py-2.5 px-4 w-48">Area / Category</th>
@@ -45,17 +45,17 @@ export const ReportFindingsSection: React.FC<ReportFindingsSectionProps> = ({ fi
             </thead>
             <tbody className="divide-y divide-[#EBEBEB]">
               {findings.map((f, idx) => (
-                <tr key={idx} className="hover:bg-[#FAFAFA] transition-colors">
+                <tr key={idx} className="hover:bg-sage-50 transition-colors">
                   <td className="py-2.5 px-3 text-center">
                     {getSeverityBadge(f.severity)}
                   </td>
-                  <td className="py-2.5 px-4 font-semibold text-[#111111]">
+                  <td className="py-2.5 px-4 font-semibold text-sage-800">
                     {f.category}
                   </td>
-                  <td className="py-2.5 px-4 text-[#262626] leading-relaxed">
+                  <td className="py-2.5 px-4 text-sage-700 leading-relaxed">
                     {f.problem}
                   </td>
-                  <td className="py-2.5 px-4 text-[#525252] leading-relaxed text-[11px]">
+                  <td className="py-2.5 px-4 text-sage-600 leading-relaxed text-[11px]">
                     {f.explanation || f.evidence || 'Identified through assessment parameter analysis.'}
                   </td>
                 </tr>

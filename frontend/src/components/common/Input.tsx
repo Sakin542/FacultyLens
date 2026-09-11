@@ -18,7 +18,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-xs font-medium uppercase tracking-wider text-[#262626]"
+            className="block text-xs font-medium uppercase tracking-wider text-sage-700"
           >
             {label}
             {required && <span className="text-[#DC2626] ml-1" aria-hidden="true">*</span>}
@@ -26,7 +26,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
         <div className="relative flex items-center">
           {leftIcon && (
-            <div className="absolute left-3 flex items-center pointer-events-none text-[#737373]">
+            <div className="absolute left-3 flex items-center pointer-events-none text-sage-500">
               {leftIcon}
             </div>
           )}
@@ -37,13 +37,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             aria-invalid={Boolean(error)}
             aria-describedby={error ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined}
             className={cn(
-              'w-full rounded-lg border bg-white px-3.5 py-2 text-sm text-[#111111] transition-all duration-150',
-              'placeholder:text-[#A3A3A3]',
-              'focus:outline-none focus:ring-2 focus:ring-[#111111] focus:border-transparent',
-              'disabled:bg-[#F7F7F5] disabled:text-[#A3A3A3] disabled:cursor-not-allowed',
+              'w-full rounded-lg border bg-white px-3.5 py-2 text-sm text-sage-800 transition-all duration-150',
+              'placeholder:text-sage-400',
+              'focus:outline-none focus:ring-2 focus:ring-sage-600 focus:border-transparent',
+              'disabled:bg-sage-100 disabled:text-sage-400 disabled:cursor-not-allowed',
               error
                 ? 'border-[#DC2626] focus:ring-[#DC2626]'
-                : 'border-[#E5E5E5] hover:border-[#CCCCCC]',
+                : 'border-sage-200 hover:border-sage-300',
               leftIcon ? 'pl-10' : '',
               rightIcon ? 'pr-10' : '',
               className
@@ -51,7 +51,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {...props}
           />
           {rightIcon && (
-            <div className="absolute right-3 flex items-center text-[#737373]">
+            <div className="absolute right-3 flex items-center text-sage-500">
               {rightIcon}
             </div>
           )}
@@ -62,7 +62,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           </p>
         )}
         {!error && helperText && (
-          <p id={`${inputId}-helper`} className="text-xs text-[#737373] mt-1">
+          <p id={`${inputId}-helper`} className="text-xs text-sage-500 mt-1">
             {helperText}
           </p>
         )}

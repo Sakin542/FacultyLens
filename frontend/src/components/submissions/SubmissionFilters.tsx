@@ -18,7 +18,7 @@ interface SubmissionFiltersProps {
 }
 
 const selectClass =
-  'rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] px-3 py-2 text-xs text-[#111111] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#111111] dark:focus:ring-white';
+  'rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] px-3 py-2 text-xs text-sage-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sage-600 dark:focus:ring-white';
 
 export const SubmissionFilters: React.FC<SubmissionFiltersProps> = ({ filters, onChange, onClear, disabled = false }) => {
   const hasFilters = Boolean(filters.status || filters.grading_status || filters.search || filters.submitted_from || filters.submitted_to);
@@ -26,7 +26,7 @@ export const SubmissionFilters: React.FC<SubmissionFiltersProps> = ({ filters, o
   return (
     <div className="flex flex-col lg:flex-row lg:items-center gap-2" data-testid="submission-filters">
       <div className="relative flex-1 min-w-[200px]">
-        <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#737373]" />
+        <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-sage-500" />
         <input
           type="search"
           value={filters.search ?? ''}

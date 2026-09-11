@@ -118,8 +118,13 @@ class AuthController extends Controller
             $user->role = strtoupper($request->input('role'));
         }
 
+        // Email is the institutional identity and is never editable here (silently ignored if sent).
         $user->fill($validated);
+        $changed = array_keys($user->getDirty());
         $user->save();
+        if ($changed !== []) {
+            app(\App\Services\AuditLogService::class)->log('PROFILE_UPDATED', $user, $user->id, ['fields' => $changed], $user);
+        }
 
         return response()->json([
             'status' => 'success',
@@ -132,6 +137,46 @@ class AuthController extends Controller
                 'department' => $user->department,
                 'designation' => $user->designation,
             ],
+        ]);
+    }
+
+    /**
+     * Change the authenticated user's password (requires the current password).
+     */
+    public function changePassword(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'current_password' => ['required', 'string'],
+            'password' => ['required', 'string', 'min:6', 'confirmed', 'different:current_password'],
+        ], [
+            'password.different' => 'The new password must be different from the current password.',
+        ]);
+
+        if (!Hash::check($validated['current_password'], $user->password)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'The current password is incorrect.',
+                'errors' => ['current_password' => ['The current password is incorrect.']],
+            ], 422);
+        }
+
+        $user->password = Hash::make($validated['password']);
+        $user->save();
+
+        // Other sessions/tokens are invalidated; the current session stays signed in.
+        if ($request->hasSession()) {
+            $request->session()->regenerate();
+        }
+        if (method_exists($user, 'tokens')) {
+            $user->tokens()->delete();
+        }
+        app(\App\Services\AuditLogService::class)->log('PASSWORD_CHANGED', $user, $user->id, null, $user);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Password updated successfully.',
         ]);
     }
 

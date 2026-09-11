@@ -23,30 +23,30 @@ export const ChatSessionList: React.FC<{
   onDelete: (session: ChatSession) => void;
   onNew: () => void;
 }> = ({ sessions, activeId, onSelect, onDelete, onNew }) => (
-  <aside data-testid="chat-session-list" className="flex flex-col h-full border-r border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#111111]">
-    <div className="flex items-center justify-between px-3 py-3 border-b border-[#E5E5E5] dark:border-[#2A2A2A]">
-      <span className="text-sm font-semibold text-[#111111] dark:text-white">Chats</span>
+  <aside data-testid="chat-session-list" className="flex flex-col h-full border-r border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-sage-700">
+    <div className="flex items-center justify-between px-3 py-3 border-b border-sage-200 dark:border-[#2A2A2A]">
+      <span className="text-sm font-semibold text-sage-800 dark:text-white">Chats</span>
       <Button size="sm" variant="outline" onClick={onNew} leftIcon={<Plus className="w-3.5 h-3.5" />} data-testid="new-chat-button">
         New
       </Button>
     </div>
     <div className="flex-1 overflow-y-auto">
       {sessions.length === 0 ? (
-        <p className="px-3 py-6 text-xs text-[#737373] text-center">No chats yet. Start one to ask questions about your documents.</p>
+        <p className="px-3 py-6 text-xs text-sage-500 text-center">No chats yet. Start one to ask questions about your documents.</p>
       ) : (
         <ul>
           {sessions.map((s) => (
-            <li key={s.id} className={cn('group flex items-start gap-2 px-3 py-2.5 border-b border-[#F0F0F0] dark:border-[#1F1F1F] cursor-pointer', activeId === s.id ? 'bg-[#F7F7F5] dark:bg-[#1F1F1F]' : 'hover:bg-[#FAFAFA] dark:hover:bg-[#161616]')}>
+            <li key={s.id} className={cn('group flex items-start gap-2 px-3 py-2.5 border-b border-sage-100 dark:border-[#1F1F1F] cursor-pointer', activeId === s.id ? 'bg-sage-100 dark:bg-[#1F1F1F]' : 'hover:bg-sage-50 dark:hover:bg-[#161616]')}>
               <button type="button" className="flex-1 min-w-0 text-left" onClick={() => onSelect(s)} data-testid={`chat-session-${s.id}`}>
-                <span className="block text-sm font-medium text-[#111111] dark:text-white truncate">{s.title}</span>
-                <span className="block text-[11px] text-[#737373] truncate">{describeScope(s)}</span>
-                <span className="block text-[11px] text-[#A3A3A3]">{s.message_count} message{s.message_count === 1 ? '' : 's'}</span>
+                <span className="block text-sm font-medium text-sage-800 dark:text-white truncate">{s.title}</span>
+                <span className="block text-[11px] text-sage-500 truncate">{describeScope(s)}</span>
+                <span className="block text-[11px] text-sage-400">{s.message_count} message{s.message_count === 1 ? '' : 's'}</span>
               </button>
               <button
                 type="button"
                 aria-label={`Delete chat ${s.title}`}
                 onClick={() => onDelete(s)}
-                className="opacity-0 group-hover:opacity-100 focus:opacity-100 text-[#A3A3A3] hover:text-red-600 p-1"
+                className="opacity-0 group-hover:opacity-100 focus:opacity-100 text-sage-400 hover:text-red-600 p-1"
               >
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
@@ -71,14 +71,14 @@ export const IndexStatusBadge: React.FC<{ index?: ChatIndexSummary }> = ({ index
 };
 
 export const ChatHeader: React.FC<{ session: ChatSession | null; onDelete?: () => void }> = ({ session, onDelete }) => (
-  <header data-testid="chat-header" className="flex items-center justify-between gap-3 px-4 py-3 border-b border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#111111]">
+  <header data-testid="chat-header" className="flex items-center justify-between gap-3 px-4 py-3 border-b border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-sage-700">
     <div className="flex items-center gap-3 min-w-0">
-      <div className="w-9 h-9 rounded-lg bg-[#111111] dark:bg-white text-white dark:text-[#111111] flex items-center justify-center flex-shrink-0">
+      <div className="w-9 h-9 rounded-lg bg-sage-700 dark:bg-white text-white dark:text-sage-800 flex items-center justify-center flex-shrink-0">
         <MessageSquareText className="w-4 h-4" />
       </div>
       <div className="min-w-0">
-        <h2 className="text-sm font-semibold text-[#111111] dark:text-white truncate">{session ? session.title : 'Academic Document Chat'}</h2>
-        <p className="text-xs text-[#737373] truncate">{session ? describeScope(session) : 'Grounded answers from your uploaded course documents'}</p>
+        <h2 className="text-sm font-semibold text-sage-800 dark:text-white truncate">{session ? session.title : 'Academic Document Chat'}</h2>
+        <p className="text-xs text-sage-500 truncate">{session ? describeScope(session) : 'Grounded answers from your uploaded course documents'}</p>
       </div>
     </div>
     <div className="flex items-center gap-2">
@@ -108,23 +108,23 @@ export const DocumentScopeSelector: React.FC<{
   starting?: boolean;
 }> = ({ courses, documents, scopeType, courseId, documentId, onScopeTypeChange, onCourseChange, onDocumentChange, onStart, starting }) => {
   const canStart = scopeType === 'COURSE' ? !!courseId : !!documentId;
-  const selectClass = 'w-full rounded-lg border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-3 py-2 text-sm text-[#111111] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#111111] dark:focus:ring-white';
+  const selectClass = 'w-full rounded-lg border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-3 py-2 text-sm text-sage-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sage-600 dark:focus:ring-white';
 
   return (
-    <div data-testid="scope-selector" className="max-w-lg mx-auto w-full rounded-xl border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] p-5 space-y-4">
+    <div data-testid="scope-selector" className="max-w-lg mx-auto w-full rounded-xl border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] p-5 space-y-4">
       <div>
-        <h3 className="text-base font-semibold text-[#111111] dark:text-white">Start a new chat</h3>
-        <p className="text-xs text-[#737373]">Choose what the assistant may read. Answers are grounded only in documents inside this scope.</p>
+        <h3 className="text-base font-semibold text-sage-800 dark:text-white">Start a new chat</h3>
+        <p className="text-xs text-sage-500">Choose what the assistant may read. Answers are grounded only in documents inside this scope.</p>
       </div>
       <div className="grid grid-cols-2 gap-2">
-        <button type="button" onClick={() => onScopeTypeChange('COURSE')} className={cn('flex items-center gap-2 rounded-lg border px-3 py-2 text-sm', scopeType === 'COURSE' ? 'border-[#111111] dark:border-white bg-[#F7F7F5] dark:bg-[#1F1F1F]' : 'border-[#E5E5E5] dark:border-[#2A2A2A]')} data-testid="scope-course">
+        <button type="button" onClick={() => onScopeTypeChange('COURSE')} className={cn('flex items-center gap-2 rounded-lg border px-3 py-2 text-sm', scopeType === 'COURSE' ? 'border-sage-700 dark:border-white bg-sage-100 dark:bg-[#1F1F1F]' : 'border-sage-200 dark:border-[#2A2A2A]')} data-testid="scope-course">
           <BookOpen className="w-4 h-4" /> Whole course
         </button>
-        <button type="button" onClick={() => onScopeTypeChange('DOCUMENT')} className={cn('flex items-center gap-2 rounded-lg border px-3 py-2 text-sm', scopeType === 'DOCUMENT' ? 'border-[#111111] dark:border-white bg-[#F7F7F5] dark:bg-[#1F1F1F]' : 'border-[#E5E5E5] dark:border-[#2A2A2A]')} data-testid="scope-document">
+        <button type="button" onClick={() => onScopeTypeChange('DOCUMENT')} className={cn('flex items-center gap-2 rounded-lg border px-3 py-2 text-sm', scopeType === 'DOCUMENT' ? 'border-sage-700 dark:border-white bg-sage-100 dark:bg-[#1F1F1F]' : 'border-sage-200 dark:border-[#2A2A2A]')} data-testid="scope-document">
           <FileText className="w-4 h-4" /> Single document
         </button>
       </div>
-      <label className="block text-xs font-medium text-[#525252] dark:text-[#A3A3A3]">
+      <label className="block text-xs font-medium text-sage-600 dark:text-sage-400">
         Course
         <select aria-label="Course" className={cn(selectClass, 'mt-1')} value={courseId} onChange={(e) => onCourseChange(e.target.value)}>
           <option value="">Select a course…</option>
@@ -134,7 +134,7 @@ export const DocumentScopeSelector: React.FC<{
         </select>
       </label>
       {scopeType === 'DOCUMENT' && (
-        <label className="block text-xs font-medium text-[#525252] dark:text-[#A3A3A3]">
+        <label className="block text-xs font-medium text-sage-600 dark:text-sage-400">
           Document
           <select aria-label="Document" className={cn(selectClass, 'mt-1')} value={documentId} onChange={(e) => onDocumentChange(e.target.value)} disabled={!courseId}>
             <option value="">{courseId ? 'Select a document…' : 'Select a course first'}</option>

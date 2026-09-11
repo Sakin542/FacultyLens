@@ -31,7 +31,7 @@ export const OverallQualityCard: React.FC<OverallQualityCardProps> = ({
         label: 'GOOD',
         description: 'Strong quality profile across core learning outcomes with minor balance opportunities.',
         badgeVariant: 'Good' as const,
-        strokeColor: '#111111',
+        strokeColor: '#2F3E2E',
       };
     }
     if (r === 'FAIR' || s >= 70) {
@@ -70,7 +70,7 @@ export const OverallQualityCard: React.FC<OverallQualityCardProps> = ({
     : circumference;
 
   return (
-    <Card className="p-6 bg-white dark:bg-[#1C1C1E] border border-[#E5E5E5] dark:border-[#2C2C2E] shadow-sm">
+    <Card className="p-6 bg-white dark:bg-[#1C1C1E] border border-sage-200 dark:border-[#2C2C2E] shadow-sm">
       <div className="flex flex-col md:flex-row items-center justify-between gap-6">
         {/* Left: Prominent Radial Score */}
         <div className="flex items-center gap-6">
@@ -104,10 +104,10 @@ export const OverallQualityCard: React.FC<OverallQualityCardProps> = ({
 
             {/* Centered Score */}
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-              <span className="text-3xl font-extrabold font-mono text-[#111111] dark:text-white tracking-tight">
+              <span className="text-3xl font-extrabold font-mono text-sage-800 dark:text-white tracking-tight">
                 {displayScore !== null ? displayScore : '—'}
               </span>
-              <span className="text-[10px] uppercase font-bold text-[#737373] tracking-wider">
+              <span className="text-[10px] uppercase font-bold text-sage-500 tracking-wider">
                 / 100
               </span>
             </div>
@@ -116,29 +116,29 @@ export const OverallQualityCard: React.FC<OverallQualityCardProps> = ({
           {/* Score Interpretation */}
           <div className="space-y-1.5 text-left">
             <div className="flex items-center gap-2">
-              <span className="text-xs uppercase font-bold text-[#737373] tracking-wider">
+              <span className="text-xs uppercase font-bold text-sage-500 tracking-wider">
                 Overall Quality Score
               </span>
               <Badge variant={meta.badgeVariant} dot>
                 {meta.label}
               </Badge>
             </div>
-            <h2 className="text-lg font-bold text-[#111111] dark:text-white">
+            <h2 className="text-lg font-bold text-sage-800 dark:text-white">
               {meta.label === 'EXCELLENT' ? 'Exemplary Assessment Rigor' : `${meta.label} Assessment Rigor`}
             </h2>
-            <p className="text-xs text-[#737373] max-w-md leading-relaxed">
+            <p className="text-xs text-sage-500 max-w-md leading-relaxed">
               {meta.description}
             </p>
           </div>
         </div>
 
         {/* Right: Academic Context Note */}
-        <div className="w-full md:w-72 p-3.5 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C] space-y-2 text-xs">
-          <div className="flex items-center gap-1.5 font-semibold text-[#111111] dark:text-white">
-            <ShieldCheck className="w-4 h-4 text-[#111111] dark:text-white" />
+        <div className="w-full md:w-72 p-3.5 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl border border-sage-200 dark:border-[#3A3A3C] space-y-2 text-xs">
+          <div className="flex items-center gap-1.5 font-semibold text-sage-800 dark:text-white">
+            <ShieldCheck className="w-4 h-4 text-sage-800 dark:text-white" />
             <span>Academic Decision Support</span>
           </div>
-          <p className="text-[11px] text-[#737373] leading-relaxed">
+          <p className="text-[11px] text-sage-500 leading-relaxed">
             Initial assessment-quality indicator based on FacultyLens analysis of six academic dimensions across {totalQuestions} questions.
           </p>
         </div>

@@ -23,7 +23,7 @@ export const ComparisonSelector: React.FC<ComparisonSelectorProps> = ({
   const isReady = selectedItems.length === 2;
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 max-w-2xl w-[92%] sm:w-full bg-[#111111] text-white p-4 rounded-2xl shadow-2xl border border-[#333333] flex flex-col sm:flex-row items-center justify-between gap-3 animate-in fade-in slide-in-from-bottom-4 duration-200">
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 max-w-2xl w-[92%] sm:w-full bg-sage-700 text-white p-4 rounded-2xl shadow-2xl border border-[#333333] flex flex-col sm:flex-row items-center justify-between gap-3 animate-in fade-in slide-in-from-bottom-4 duration-200">
       <div className="flex items-center gap-3 w-full sm:w-auto">
         <div className="w-9 h-9 rounded-xl bg-[#222222] border border-[#333333] flex items-center justify-center text-blue-400 shrink-0">
           <GitCompare className="w-4 h-4" />
@@ -37,7 +37,7 @@ export const ComparisonSelector: React.FC<ComparisonSelectorProps> = ({
             {selectedItems.map((item, idx) => (
               <span
                 key={item.id}
-                className="inline-flex items-center gap-1.5 bg-[#262626] border border-[#3A3A3A] px-2 py-0.5 rounded-md text-xs font-medium text-white"
+                className="inline-flex items-center gap-1.5 bg-sage-800 border border-[#3A3A3A] px-2 py-0.5 rounded-md text-xs font-medium text-white"
               >
                 <span className="text-[11px] text-[#A1A1AA]">
                   #{idx + 1}:

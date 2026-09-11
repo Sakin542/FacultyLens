@@ -76,13 +76,13 @@ export const AssessmentHistory: React.FC = () => {
       </div>
 
       {/* Filter Toolbar */}
-      <div className="flex flex-wrap items-center gap-3 p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl border border-[#E5E5E5] dark:border-[#3A3A3C] text-xs">
+      <div className="flex flex-wrap items-center gap-3 p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl border border-sage-200 dark:border-[#3A3A3C] text-xs">
         <div className="flex items-center gap-1.5">
-          <span className="font-semibold text-[#737373]">Course:</span>
+          <span className="font-semibold text-sage-500">Course:</span>
           <select
             value={selectedCourseId}
             onChange={(e) => setSelectedCourseId(e.target.value)}
-            className="rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-[#111111] dark:text-white"
+            className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white"
           >
             <option value="all">All Courses</option>
             {courses.map((c) => (
@@ -94,11 +94,11 @@ export const AssessmentHistory: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-1.5">
-          <span className="font-semibold text-[#737373]">Type:</span>
+          <span className="font-semibold text-sage-500">Type:</span>
           <select
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
-            className="rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-[#111111] dark:text-white capitalize"
+            className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white capitalize"
           >
             <option value="all">All Types</option>
             <option value="quiz">Quiz</option>
@@ -111,11 +111,11 @@ export const AssessmentHistory: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-1.5">
-          <span className="font-semibold text-[#737373]">Status:</span>
+          <span className="font-semibold text-sage-500">Status:</span>
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="rounded-lg border border-[#E5E5E5] dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-[#111111] dark:text-white capitalize"
+            className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white capitalize"
           >
             <option value="all">All Statuses</option>
             <option value="draft">Draft</option>
@@ -140,7 +140,7 @@ export const AssessmentHistory: React.FC = () => {
 
       {/* History Table Card */}
       <Card padding="none" className="overflow-hidden">
-        <div className="p-6 border-b border-[#E5E5E5] dark:border-[#2C2C2E] flex items-center justify-between">
+        <div className="p-6 border-b border-sage-200 dark:border-[#2C2C2E] flex items-center justify-between">
           <div>
             <CardTitle>Faculty Assessment History</CardTitle>
             <CardDescription>
@@ -154,21 +154,21 @@ export const AssessmentHistory: React.FC = () => {
 
         {isLoading ? (
           <div className="flex flex-col items-center justify-center min-h-[250px] space-y-3">
-            <Loader2 className="w-8 h-8 animate-spin text-[#111111] dark:text-white" />
-            <p className="text-xs text-[#737373]">Loading history records...</p>
+            <Loader2 className="w-8 h-8 animate-spin text-sage-800 dark:text-white" />
+            <p className="text-xs text-sage-500">Loading history records...</p>
           </div>
         ) : historyRecords.length === 0 ? (
           <div className="p-12 text-center space-y-3">
-            <FileCheck2 className="w-10 h-10 text-[#737373] mx-auto opacity-50" />
-            <p className="text-sm font-bold text-[#111111] dark:text-white">No assessment history found</p>
-            <p className="text-xs text-[#737373] max-w-sm mx-auto">
+            <FileCheck2 className="w-10 h-10 text-sage-500 mx-auto opacity-50" />
+            <p className="text-sm font-bold text-sage-800 dark:text-white">No assessment history found</p>
+            <p className="text-xs text-sage-500 max-w-sm mx-auto">
               Created and completed assessments will appear here chronologically for historical record keeping.
             </p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#F7F7F5] dark:bg-[#2C2C2E] border-b border-[#E5E5E5] dark:border-[#3A3A3C] text-[#737373] uppercase tracking-wider font-semibold">
+              <thead className="bg-sage-100 dark:bg-[#2C2C2E] border-b border-sage-200 dark:border-[#3A3A3C] text-sage-500 uppercase tracking-wider font-semibold">
                 <tr>
                   <th className="px-6 py-3.5">Assessment & Course</th>
                   <th className="px-6 py-3.5">Type</th>
@@ -179,19 +179,19 @@ export const AssessmentHistory: React.FC = () => {
                   <th className="px-6 py-3.5 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E5E5E5] dark:divide-[#2C2C2E]">
+              <tbody className="divide-y divide-sage-200 dark:divide-[#2C2C2E]">
                 {historyRecords.map((asm) => {
                   const paper = asm.questionPaper || asm.question_paper;
                   const qCount = asm.questions_count ?? (asm.questions ? asm.questions.length : 0);
 
                   return (
-                    <tr key={asm.id} className="hover:bg-[#F7F7F5] dark:hover:bg-[#2C2C2E]/60 transition-colors">
+                    <tr key={asm.id} className="hover:bg-sage-100 dark:hover:bg-[#2C2C2E]/60 transition-colors">
                       <td className="px-6 py-4">
-                        <div className="font-semibold text-[#111111] dark:text-white text-sm">
+                        <div className="font-semibold text-sage-800 dark:text-white text-sm">
                           {asm.title}
                         </div>
-                        <div className="text-[11px] text-[#737373] mt-0.5">
-                          <span className="font-mono font-medium text-[#262626] dark:text-[#E5E5E5]">
+                        <div className="text-[11px] text-sage-500 mt-0.5">
+                          <span className="font-mono font-medium text-sage-700 dark:text-sage-200">
                             {asm.course?.course_code || asm.courseCode}
                           </span>{' '}
                           • {asm.course?.course_name || asm.courseTitle}
@@ -204,7 +204,7 @@ export const AssessmentHistory: React.FC = () => {
                         </Badge>
                       </td>
 
-                      <td className="px-6 py-4 font-mono text-[11px] text-[#737373]">
+                      <td className="px-6 py-4 font-mono text-[11px] text-sage-500">
                         <span className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
                           {asm.assessment_date ? asm.assessment_date.split('T')[0] : 'TBD'}
@@ -212,11 +212,11 @@ export const AssessmentHistory: React.FC = () => {
                       </td>
 
                       <td className="px-6 py-4">
-                        <div className="font-mono font-bold text-[#111111] dark:text-white flex items-center gap-1">
-                          <Award className="w-3 h-3 text-[#737373]" />
+                        <div className="font-mono font-bold text-sage-800 dark:text-white flex items-center gap-1">
+                          <Award className="w-3 h-3 text-sage-500" />
                           {asm.total_marks || asm.totalMarks} Marks
                         </div>
-                        <div className="text-[10px] text-[#737373] flex items-center gap-1 mt-0.5">
+                        <div className="text-[10px] text-sage-500 flex items-center gap-1 mt-0.5">
                           <Layers className="w-3 h-3" />
                           {qCount} Questions • {asm.duration_minutes || 90}m
                         </div>
@@ -229,7 +229,7 @@ export const AssessmentHistory: React.FC = () => {
                             <span className="truncate max-w-[140px]">{paper.file_name}</span>
                           </div>
                         ) : (
-                          <span className="text-[11px] text-[#737373]">No file</span>
+                          <span className="text-[11px] text-sage-500">No file</span>
                         )}
                       </td>
 

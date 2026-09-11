@@ -39,10 +39,10 @@ export const AnalysisError: React.FC<AnalysisErrorProps> = ({
       </div>
 
       <div className="space-y-1.5">
-        <h3 className="text-base font-bold text-[#111111] dark:text-white">
+        <h3 className="text-base font-bold text-sage-800 dark:text-white">
           Analysis Unavailable
         </h3>
-        <p className="text-xs text-[#737373] leading-relaxed max-w-sm mx-auto">
+        <p className="text-xs text-sage-500 leading-relaxed max-w-sm mx-auto">
           {getFriendlyMessage(status, error)}
         </p>
       </div>

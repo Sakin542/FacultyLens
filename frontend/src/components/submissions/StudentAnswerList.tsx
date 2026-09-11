@@ -18,7 +18,7 @@ interface StudentAnswerListProps {
 export const StudentAnswerList: React.FC<StudentAnswerListProps> = ({ questions, ...handlers }) => {
   if (questions.length === 0) {
     return (
-      <p className="text-xs text-[#737373] italic p-4 rounded-xl border border-dashed border-[#E5E5E5] dark:border-[#3A3A3C]">
+      <p className="text-xs text-sage-500 italic p-4 rounded-xl border border-dashed border-sage-200 dark:border-[#3A3A3C]">
         This assessment has no questions yet. Add questions before recording answers.
       </p>
     );

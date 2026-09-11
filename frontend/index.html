@@ -2,15 +2,71 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none'><polygon points='24,4 41,14 41,34 24,44 7,34 7,14' stroke='%23111111' stroke-width='3'/><path d='M24 4L24 24M41 14L24 24M41 34L24 24M24 44L24 24M7 34L24 24M7 14L24 24' stroke='%23737373' stroke-width='2'/><polygon points='24,18 29,24 24,30 19,24' fill='%23111111'/></svg>" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none'><circle cx='24' cy='24' r='21' stroke='%238C9A82' stroke-width='1.5' stroke-dasharray='6 5' stroke-linecap='round'/><circle cx='24' cy='24' r='15.5' stroke='%232F3E2E' stroke-width='1.5' fill='%23FFFFFF'/><circle cx='24' cy='3' r='2.2' fill='%232F3E2E'/><g stroke='%232F3E2E' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'><path d='M14 22.5 24 18l10 4.5-10 4.5-10-4.5Z'/><path d='M18.5 24.5v4.2c0 1.6 2.6 3 5.5 3s5.5-1.4 5.5-3v-4.2'/><path d='M34 22.5v6'/></g></svg>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#FAF9F6" />
     <title>FacultyLens | AI Academic Decision Support</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,600&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+      /* Pre-React boot splash: shown while the bundle loads, replaced by the app on mount. */
+      html, body { margin: 0; background: #FAF9F6; color: #1E261D; }
+      #boot { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: #FAF9F6; overflow: hidden; font-family: 'Plus Jakarta Sans', Inter, system-ui, sans-serif; }
+      #boot::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(#E8ECE3 1px, transparent 1px); background-size: 22px 22px; opacity: .6; }
+      #boot::after { content: ''; position: absolute; top: -8rem; left: 50%; width: 24rem; height: 24rem; transform: translateX(-50%); border-radius: 9999px; background: rgba(232,236,227,.5); filter: blur(64px); }
+      .boot-inner { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; }
+      .boot-logo { position: relative; display: inline-flex; padding: 14px; border-radius: 9999px; background: #fff; box-shadow: 0 12px 30px -14px rgba(47,62,46,.35); animation: bootLogoIn .6s cubic-bezier(.22,1,.36,1) both; }
+      .boot-halo { position: absolute; inset: 0; border-radius: 9999px; border: 1.5px solid #8C9A82; animation: bootHalo 2s ease-out infinite; }
+      .boot-ring { transform-origin: 50% 50%; animation: bootSpin 4s linear infinite; }
+      .boot-orbit { transform-origin: 50% 50%; animation: bootSpinRev 2s linear infinite; }
+      .boot-glow { transform-origin: 50% 50%; animation: bootGlow 3.2s ease-in-out infinite; }
+      .boot-step { animation: bootStepIn .5s cubic-bezier(.22,1,.36,1) both; }
+      .boot-name { margin: 20px 0 0; font-family: 'Instrument Serif', Georgia, serif; font-size: 30px; line-height: 1; letter-spacing: -.02em; color: #2F3E2E; animation-delay: .35s; }
+      .boot-text { margin-top: 24px; animation-delay: .7s; }
+      .boot-text strong { display: block; font-size: 14px; font-weight: 600; letter-spacing: -.01em; color: #2F3E2E; }
+      .boot-text span { display: block; margin-top: 6px; font-size: 12px; color: #8C9A82; }
+      .boot-dots i { font-style: normal; animation: bootDot 1.2s ease-in-out infinite; }
+      .boot-dots i:nth-child(2) { animation-delay: .2s; } .boot-dots i:nth-child(3) { animation-delay: .4s; }
+      .boot-track { margin-top: 24px; width: 160px; height: 4px; border-radius: 9999px; background: #E8ECE3; overflow: hidden; animation-delay: .9s; }
+      .boot-bar { width: 33%; height: 100%; border-radius: 9999px; background: linear-gradient(90deg, #C3CBB9, #4A5D45, #C3CBB9); animation: bootBar 1.4s ease-in-out infinite; }
+      @keyframes bootLogoIn { from { opacity: 0; transform: scale(.6); } 60% { transform: scale(1.06); } to { opacity: 1; transform: scale(1); } }
+      @keyframes bootStepIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+      @keyframes bootHalo { 0% { transform: scale(.7); opacity: .55; } 100% { transform: scale(1.9); opacity: 0; } }
+      @keyframes bootSpin { to { transform: rotate(360deg); } } @keyframes bootSpinRev { to { transform: rotate(-360deg); } }
+      @keyframes bootGlow { 0%,100% { opacity: .35; transform: scale(.9); } 50% { opacity: .7; transform: scale(1.08); } }
+      @keyframes bootBar { from { transform: translateX(-120%); } to { transform: translateX(420%); } }
+      @keyframes bootDot { 0%,80%,100% { opacity: .2; } 40% { opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) { #boot * { animation: none !important; } .boot-halo { display: none; } }
+    </style>
   </head>
-  <body class="bg-[#F7F7F5] text-[#111111] antialiased selection:bg-[#111111] selection:text-white min-h-screen">
-    <div id="root"></div>
+  <body class="antialiased min-h-screen">
+    <div id="root">
+      <div id="boot" role="status" aria-live="polite" aria-label="Loading FacultyLens">
+        <div class="boot-inner">
+          <div class="boot-logo">
+            <span class="boot-halo" aria-hidden="true"></span>
+            <svg viewBox="0 0 48 48" width="72" height="72" fill="none" style="overflow:visible" aria-hidden="true">
+              <circle class="boot-glow" cx="24" cy="24" r="16" fill="#8C9A82" opacity="0.35" />
+              <circle class="boot-ring" cx="24" cy="24" r="21" stroke="#8C9A82" stroke-width="1.5" stroke-dasharray="6 5" stroke-linecap="round" />
+              <circle cx="24" cy="24" r="15.5" stroke="#2F3E2E" stroke-width="1.5" fill="#FFFFFF" />
+              <g class="boot-orbit"><circle cx="24" cy="3" r="2.2" fill="#2F3E2E" /></g>
+              <g stroke="#2F3E2E" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 22.5 24 18l10 4.5-10 4.5-10-4.5Z" />
+                <path d="M18.5 24.5v4.2c0 1.6 2.6 3 5.5 3s5.5-1.4 5.5-3v-4.2" />
+                <path d="M34 22.5v6" />
+              </g>
+            </svg>
+          </div>
+          <p class="boot-step boot-name">FacultyLens</p>
+          <div class="boot-step boot-text">
+            <strong>Verifying Institutional Session</strong>
+            <span>Connecting with FacultyLens Sanctum<b class="boot-dots" style="font-weight:inherit"><i>.</i><i>.</i><i>.</i></b></span>
+          </div>
+          <div class="boot-step boot-track" aria-hidden="true"><div class="boot-bar"></div></div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -105,20 +105,20 @@ export const PreviousQuestionUploadModal: React.FC<PreviousQuestionUploadModalPr
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-      <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-[#E5E5E5] dark:border-[#2C2C2E] shadow-xl max-w-lg w-full p-6 space-y-5 animate-in fade-in zoom-in duration-150">
-        <div className="flex items-center justify-between pb-3 border-b border-[#E5E5E5] dark:border-[#2C2C2E]">
+      <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-sage-200 dark:border-[#2C2C2E] shadow-xl max-w-lg w-full p-6 space-y-5 animate-in fade-in zoom-in duration-150">
+        <div className="flex items-center justify-between pb-3 border-b border-sage-200 dark:border-[#2C2C2E]">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#F7F7F5] dark:bg-[#2C2C2E] border border-[#E5E5E5] dark:border-[#3A3A3C] flex items-center justify-center text-[#111111] dark:text-white">
+            <div className="w-8 h-8 rounded-lg bg-sage-100 dark:bg-[#2C2C2E] border border-sage-200 dark:border-[#3A3A3C] flex items-center justify-center text-sage-800 dark:text-white">
               <UploadCloud className="w-4 h-4" />
             </div>
-            <h3 className="text-lg font-bold text-[#111111] dark:text-white">
+            <h3 className="text-lg font-bold text-sage-800 dark:text-white">
               Upload Previous Question Paper
             </h3>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-1 rounded-lg text-[#737373] hover:text-[#111111] dark:hover:text-white hover:bg-[#F7F7F5] dark:hover:bg-[#2C2C2E] transition-colors"
+            className="p-1 rounded-lg text-sage-500 hover:text-sage-800 dark:hover:text-white hover:bg-sage-100 dark:hover:bg-[#2C2C2E] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -136,7 +136,7 @@ export const PreviousQuestionUploadModal: React.FC<PreviousQuestionUploadModalPr
             onDragOver={(e) => e.preventDefault()}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
-            className="border-2 border-dashed border-[#D4D4D4] dark:border-[#3A3A3C] hover:border-[#111111] dark:hover:border-white rounded-xl p-6 text-center cursor-pointer transition-colors bg-[#FAFAFA] dark:bg-[#2C2C2E]/50"
+            className="border-2 border-dashed border-sage-300 dark:border-[#3A3A3C] hover:border-sage-700 dark:hover:border-white rounded-xl p-6 text-center cursor-pointer transition-colors bg-sage-50 dark:bg-[#2C2C2E]/50"
           >
             <input
               type="file"
@@ -151,19 +151,19 @@ export const PreviousQuestionUploadModal: React.FC<PreviousQuestionUploadModalPr
                   <FileText className="w-5 h-5" />
                 </div>
                 <div className="text-left">
-                  <p className="text-sm font-semibold text-[#111111] dark:text-white truncate max-w-xs">
+                  <p className="text-sm font-semibold text-sage-800 dark:text-white truncate max-w-xs">
                     {file.name}
                   </p>
-                  <p className="text-xs text-[#737373]">{formatFileSize(file.size)}</p>
+                  <p className="text-xs text-sage-500">{formatFileSize(file.size)}</p>
                 </div>
               </div>
             ) : (
               <div className="space-y-2">
-                <UploadCloud className="w-8 h-8 text-[#737373] mx-auto" />
-                <p className="text-xs font-semibold text-[#111111] dark:text-white">
+                <UploadCloud className="w-8 h-8 text-sage-500 mx-auto" />
+                <p className="text-xs font-semibold text-sage-800 dark:text-white">
                   Click to select previous exam paper or drag & drop here
                 </p>
-                <p className="text-[11px] text-[#737373]">
+                <p className="text-[11px] text-sage-500">
                   PDF, DOC, DOCX, TXT (up to 20MB)
                 </p>
               </div>
@@ -195,7 +195,7 @@ export const PreviousQuestionUploadModal: React.FC<PreviousQuestionUploadModalPr
             />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#E5E5E5] dark:border-[#2C2C2E]">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-sage-200 dark:border-[#2C2C2E]">
             <Button
               variant="outline"
               size="sm"

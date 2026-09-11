@@ -1,567 +1,475 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/common/Button';
-import { Card } from '@/components/common/Card';
-import { Badge } from '@/components/common/Badge';
-import { ProgressBar } from '@/components/dashboard/ProgressBar';
 import {
-  Sparkles,
-  ArrowRight,
-  BookOpen,
-  Target,
-  CopyCheck,
-  CheckCircle2,
-  Lightbulb,
-  UploadCloud,
-  Cpu,
-  Eye,
-  Sliders,
-  ShieldCheck,
-  Award,
-  BarChart3,
-  SearchCheck,
-  Compass,
+  ArrowRight, BarChart3, BookOpen, Bot, CheckCircle2, ChevronDown, ClipboardList, Eye, FileText, GitBranch, GitCompare, History, Layers, Lightbulb,
+  Lock, Search, Scale, ScrollText, ShieldCheck, Sparkles, Target, Users, Leaf, Quote,
 } from 'lucide-react';
+import { Reveal, Typewriter, TypewriterCycle, useCardTilt } from '@/components/landing/Motion';
+
+/* ------------------------------------------------------------------ data */
+
+const HERO_LINES = [
+  'Turn assessment data into academic intelligence.',
+  'See every question through an explainable lens.',
+  'Connect outcomes, evidence and better learning.',
+  'Make confident decisions you can stand behind.',
+];
+
+const PROCESS = [
+  { icon: FileText, title: 'Understand', desc: 'Upload a question paper, syllabus or blueprint. FacultyLens reads the structure, questions, marks and metadata for you.' },
+  { icon: Search, title: 'Analyze', desc: 'Every question is classified by type, difficulty and Bloom level, and mapped to the topics it actually tests.' },
+  { icon: Scale, title: 'Compare', desc: 'Questions are aligned with course and program outcomes, checked against the blueprint and scanned for near-duplicates.' },
+  { icon: CheckCircle2, title: 'Evaluate', desc: 'Six transparent quality dimensions roll up into one score you can defend in a curriculum meeting.' },
+  { icon: Lightbulb, title: 'Recommend', desc: 'Prioritised, evidence-linked recommendations — you review, accept or dismiss every one.' },
+];
+
+const FEATURES = [
+  { icon: ScrollText, title: 'Question Analysis', desc: 'Classify question type, difficulty and Bloom’s cognitive level, with the reasoning shown next to every label.' },
+  { icon: Target, title: 'LO / CO / PO Alignment', desc: 'See which learning outcomes each question serves, which outcomes are over-tested and which are missing entirely.' },
+  { icon: GitCompare, title: 'Similarity Detection', desc: 'Semantic embeddings surface duplicate or near-identical questions across semesters before a paper goes out.' },
+  { icon: BookOpen, title: 'Topic & Concept Mapping', desc: 'Compare the topics your syllabus promises with the topics your assessment actually examines.' },
+  { icon: BarChart3, title: 'Performance & Gap Analysis', desc: 'Connect student results back to questions and outcomes to locate learning gaps, not just low averages.' },
+  { icon: Bot, title: 'RAG & AI Assistant', desc: 'Ask questions about your own course materials and get answers grounded in the documents you uploaded.' },
+  { icon: ClipboardList, title: 'Assessment Blueprints', desc: 'Plan sections, marks, difficulty and outcome coverage first, then validate the real paper against the plan.' },
+  { icon: History, title: 'Assessment Versioning', desc: 'Immutable version history with question snapshots, side-by-side diffs and restore-as-new-version.' },
+  { icon: Users, title: 'Faculty Collaboration', desc: 'Invite co-instructors and reviewers with role-based access; every change is captured in an audit trail.' },
+];
+
+const AUDIENCE = [
+  { icon: BookOpen, title: 'Course instructors', text: 'Check a paper before it goes out: coverage, difficulty, Bloom mix and near-duplicate questions, with the reasons shown.' },
+  { icon: Target, title: 'Course coordinators', text: 'Keep every section’s assessment aligned to the same course outcomes and blueprint, semester after semester.' },
+  { icon: ShieldCheck, title: 'Accreditation & OBE leads', text: 'Pull CO/PO evidence, version history and audit trails straight from the record instead of rebuilding spreadsheets.' },
+  { icon: Users, title: 'Reviewers & moderators', text: 'Read, compare and comment on versions with role-based access — without being able to change a finalized paper.' },
+];
+
+const PRINCIPLES = [
+  { icon: Eye, title: 'Explainable by design', text: 'Every score, label and recommendation links back to the questions and outcomes that produced it. There are no black-box verdicts — you can always see why FacultyLens said what it said, and disagree with it.' },
+  { icon: ShieldCheck, title: 'Your decisions, on record', text: 'AI suggests; faculty decide. Approvals, rejections, edits and finalizations are written to an immutable audit log, so accreditation reviews and department meetings start from evidence rather than memory.' },
+  { icon: Lock, title: 'Private and course-scoped', text: 'Course data never leaks across faculty. Access follows an explicit role matrix — owner, editor, reviewer, viewer — and student answers stay bound to the exact assessment version they were written for.' },
+];
+
+const LIFECYCLE = [
+  { icon: ClipboardList, title: 'Blueprint', text: 'Define sections, marks, difficulty and CO/PO targets before a single question is written.' },
+  { icon: Sparkles, title: 'Generate & review', text: 'Draft constrained questions from your own materials; nothing enters the paper until you approve it.' },
+  { icon: Search, title: 'Analyze', text: 'Quality, alignment, similarity and topic coverage — computed on the real paper, explained per question.' },
+  { icon: Layers, title: 'Grade with rubrics', text: 'AI-generated rubrics and grading suggestions speed up marking while every mark stays yours.' },
+  { icon: BarChart3, title: 'Learn from results', text: 'Performance and gap analysis tie outcomes to evidence and feed the next revision.' },
+  { icon: GitBranch, title: 'Version & preserve', text: 'Each finalized paper becomes a historical record; compare, restore and report on any version.' },
+];
+
+const VOICES = [
+  { role: 'Course coordinator · Database Systems', text: 'The first thing I noticed was that two of my “new” midterm questions were 87% identical to last spring’s paper. The second thing was that CO4 had no questions at all.' },
+  { role: 'Program accreditation lead', text: 'Outcome coverage used to live in a spreadsheet that was out of date the moment someone edited a paper. Now every version carries its own CO/PO evidence.' },
+  { role: 'Lecturer · first semester using FacultyLens', text: 'I was worried the AI would rewrite my exam. It never touches it. It shows me what it sees and lets me decide — that is exactly the relationship I wanted.' },
+];
+
+const FAQ = [
+  { q: 'Does FacultyLens change my questions, marks or grades automatically?', a: 'No. Every recommendation, generated question, rubric and grading suggestion is a proposal. Nothing becomes part of the assessment or a student record until a faculty member approves it, and finalized versions can never be edited in place.' },
+  { q: 'How are quality scores calculated?', a: 'Six deterministic dimensions — topic coverage, learning-outcome alignment, difficulty balance, cognitive diversity, similarity and question diversity — are computed from your paper and shown individually. The overall score is a weighted roll-up of those dimensions, never an opaque number.' },
+  { q: 'What happens to historical analyses when I revise an assessment?', a: 'Each analysis is attached to the exact assessment version it examined. Revising a paper creates a new version; earlier analyses, reports and student submissions stay bound to their original snapshot.' },
+  { q: 'Can colleagues review a paper without being able to edit it?', a: 'Yes. Invite them as reviewers or viewers. They can read, comment and compare versions; only owners and editors can change drafts, approve or finalize.' },
+  { q: 'Where does my course data go?', a: 'Documents, questions and student answers are stored in your institution’s FacultyLens deployment and scoped to the course. Audit logs never store question text or student answers.' },
+];
+
+/** Hero showcase: what FacultyLens does at each stage (no figures — behaviour only). */
+const PIPELINE = [
+  { icon: FileText, title: 'Upload', text: 'Question paper, syllabus or blueprint — PDF, DOCX or text.', tags: ['Questions parsed', 'Marks & sections read'] },
+  { icon: Search, title: 'Analyze', text: 'Each question is classified and mapped to the topics it tests.', tags: ['Bloom level', 'Difficulty', 'Question type'] },
+  { icon: Target, title: 'Align', text: 'Questions are matched to course and program outcomes and checked against the blueprint.', tags: ['CO / PO mapping', 'Coverage gaps'] },
+  { icon: GitCompare, title: 'Check', text: 'Semantic similarity flags near-duplicate questions across semesters.', tags: ['Similarity scan', 'Question bank'] },
+  { icon: Lightbulb, title: 'Recommend', text: 'Evidence-linked suggestions appear for you to accept, edit or dismiss.', tags: ['Explainable', 'Faculty decides'] },
+  { icon: Lock, title: 'Finalize', text: 'The approved paper becomes an immutable version with its own history.', tags: ['Snapshot', 'Audit trail'] },
+];
+
+/* ------------------------------------------------------------------ small pieces */
+
+const Eyebrow: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (
+  <p className={`text-[11px] uppercase tracking-[0.18em] text-sage-500 ${className ?? ''}`}>{children}</p>
+);
+
+const Heading: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (
+  <h2 className={`font-serif text-3xl sm:text-4xl lg:text-[2.75rem] leading-[1.1] tracking-tight text-sage-800 ${className ?? ''}`}>{children}</h2>
+);
+
+const Lede: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (
+  <p className={`text-sm sm:text-base text-sage-500 leading-relaxed ${className ?? ''}`}>{children}</p>
+);
+
+const PrimaryButton: React.FC<{ onClick: () => void; children: React.ReactNode; className?: string }> = ({ onClick, children, className }) => (
+  <button type="button" onClick={onClick} className={`group inline-flex items-center gap-2 rounded-lg bg-sage-700 hover:bg-sage-800 text-white text-sm px-5 py-2.5 transition-all hover:shadow-elevated hover:-translate-y-0.5 ${className ?? ''}`}>
+    {children}<ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+  </button>
+);
+
+const IconCircle: React.FC<{ icon: React.ElementType; size?: 'md' | 'lg' }> = ({ icon: Icon, size = 'lg' }) => (
+  <div className={`${size === 'lg' ? 'w-16 h-16' : 'w-12 h-12'} rounded-full bg-sage-100 border border-sage-200 flex items-center justify-center text-sage-800 shrink-0 transition-transform duration-500 group-hover:-translate-y-1 group-hover:bg-sage-200`}>
+    <Icon className={size === 'lg' ? 'w-6 h-6' : 'w-5 h-5'} strokeWidth={1.6} aria-hidden="true" />
+  </div>
+);
+
+/** Animated pipeline: stages light up in sequence while a pulse travels the connecting rail. */
+const PipelineShowcase: React.FC = () => {
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  useEffect(() => {
+    if (paused || (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)) return;
+    const t = window.setInterval(() => setActive((a) => (a + 1) % PIPELINE.length), 2400);
+    return () => window.clearInterval(t);
+  }, [paused]);
+  const stage = PIPELINE[active];
+  const { ref: cardRef, onMouseMove: tilt, reset: untilt } = useCardTilt();
+  return (
+    <div className="landing-showcase-wrap">
+    <div ref={cardRef} className="landing-showcase rounded-2xl bg-white p-5 sm:p-6 text-sage-800" onMouseEnter={() => setPaused(true)} onMouseMove={tilt} onMouseLeave={() => { setPaused(false); untilt(); }}>
+      <div className="flex items-center justify-between gap-3 pb-4 border-b border-sage-200">
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.18em] text-sage-500">How a paper moves through FacultyLens</p>
+          <p className="font-serif text-lg leading-tight mt-0.5">Upload once. Every stage explains itself.</p>
+        </div>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-sage-100 border border-sage-200 px-2.5 py-1 text-[10px] text-sage-700"><span className="landing-pulse-dot w-1.5 h-1.5 rounded-full bg-sage-600" />{paused ? 'Paused' : 'Live walkthrough'}</span>
+      </div>
+
+      {/* rail */}
+      <ol className="relative mt-5 grid grid-cols-6 gap-1" aria-label="Pipeline stages">
+        <div className="absolute left-[8%] right-[8%] top-5 h-px bg-sage-200" aria-hidden="true" />
+        <div className="absolute left-[8%] top-5 h-px bg-sage-600 transition-all duration-700 ease-out" style={{ width: `${(active / (PIPELINE.length - 1)) * 84}%` }} aria-hidden="true" />
+        <span className="landing-pipeline-pulse absolute top-5 -mt-1.5 w-3 h-3 rounded-full bg-sage-600 shadow-[0_0_0_6px_rgba(74,93,69,0.15)] transition-all duration-700 ease-out" style={{ left: `calc(8% + ${(active / (PIPELINE.length - 1)) * 84}% - 6px)` }} aria-hidden="true" />
+        {PIPELINE.map((p, i) => {
+          const done = i < active;
+          const on = i === active;
+          return (
+            <li key={p.title} className="relative flex flex-col items-center text-center">
+              <button type="button" onClick={() => setActive(i)} aria-current={on} aria-label={`Show stage ${p.title}`}
+                className={`relative z-10 w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-500 ${on ? 'bg-sage-700 border-sage-700 text-white scale-110 shadow-elevated' : done ? 'bg-sage-100 border-sage-300 text-sage-700' : 'bg-white border-sage-200 text-sage-400'}`}>
+                <p.icon className="w-4 h-4" strokeWidth={1.8} aria-hidden="true" />
+              </button>
+              <span className={`mt-2 text-[10px] sm:text-[11px] transition-colors ${on ? 'text-sage-800 font-semibold' : 'text-sage-500'}`}>{p.title}</span>
+            </li>
+          );
+        })}
+      </ol>
+
+      {/* active stage */}
+      <div key={stage.title} className="landing-stage mt-5 rounded-xl border border-sage-200 bg-sage-50 p-4 min-h-[7.5rem]" aria-live="polite">
+        <div className="flex items-center gap-2">
+          <span className="font-serif text-2xl text-sage-300 leading-none">{String(active + 1).padStart(2, '0')}</span>
+          <h3 className="text-sm font-semibold">{stage.title}</h3>
+        </div>
+        <p className="mt-1.5 text-sm text-sage-600 leading-relaxed">{stage.text}</p>
+        <ul className="mt-3 flex flex-wrap gap-1.5">
+          {stage.tags.map((t, k) => <li key={t} className="landing-word rounded-full border border-sage-200 bg-white px-2.5 py-0.5 text-[10px] text-sage-700" style={{ animationDelay: `${120 + k * 90}ms` }}>{t}</li>)}
+        </ul>
+      </div>
+
+      <div className="mt-4 flex items-center justify-between text-[10px] text-sage-400">
+        <span>Click a stage or hover to pause</span>
+        <span>AI assists · Faculty decides</span>
+      </div>
+    </div>
+    </div>
+  );
+};
+
+/** Record types FacultyLens links together, and how each link is formed (no figures — relationships only). */
+const TRACE_NODES = [
+  { id: 'question', icon: FileText, label: 'Question', sub: 'text, marks, type, Bloom level', x: 50, y: 12 },
+  { id: 'outcome', icon: Target, label: 'Outcome', sub: 'course & program outcomes', x: 86, y: 34 },
+  { id: 'blueprint', icon: ClipboardList, label: 'Blueprint', sub: 'planned coverage & marks', x: 14, y: 34 },
+  { id: 'topic', icon: BookOpen, label: 'Topic', sub: 'from the syllabus', x: 14, y: 72 },
+  { id: 'answer', icon: Users, label: 'Student answer', sub: 'bound to the version answered', x: 86, y: 72 },
+  { id: 'version', icon: History, label: 'Version', sub: 'immutable snapshot', x: 50, y: 92 },
+  { id: 'recommendation', icon: Lightbulb, label: 'Recommendation', sub: 'evidence-linked, faculty-decided', x: 50, y: 52 },
+] as const;
+
+const TRACE_LINKS = [
+  { from: 'question', to: 'outcome', label: 'is mapped to' },
+  { from: 'question', to: 'blueprint', label: 'is checked against' },
+  { from: 'question', to: 'topic', label: 'examines' },
+  { from: 'question', to: 'answer', label: 'is answered in' },
+  { from: 'outcome', to: 'recommendation', label: 'gaps raise' },
+  { from: 'answer', to: 'recommendation', label: 'results inform' },
+  { from: 'recommendation', to: 'version', label: 'is reviewed into' },
+  { from: 'blueprint', to: 'version', label: 'is snapshotted with' },
+] as const;
+
+const TraceabilityMap: React.FC = () => {
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  useEffect(() => {
+    if (paused || (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)) return;
+    const t = window.setInterval(() => setActive((a) => (a + 1) % TRACE_LINKS.length), 2200);
+    return () => window.clearInterval(t);
+  }, [paused]);
+  const node = (id: string) => TRACE_NODES.find((n) => n.id === id)!;
+  const link = TRACE_LINKS[active];
+  const lit = new Set([link.from, link.to]);
+  const { ref: cardRef, onMouseMove: tilt, reset: untilt } = useCardTilt();
+  return (
+    <div className="landing-showcase-wrap">
+    <div ref={cardRef} className="landing-showcase rounded-2xl bg-sage-50 p-5 sm:p-6 text-sage-800" onMouseEnter={() => setPaused(true)} onMouseMove={tilt} onMouseLeave={() => { setPaused(false); untilt(); }}>
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.18em] text-sage-500">Traceability map</p>
+          <p className="font-serif text-lg leading-tight mt-0.5">Every record knows what it is connected to.</p>
+        </div>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-white border border-sage-200 px-2.5 py-1 text-[10px] text-sage-700"><span className="landing-pulse-dot w-1.5 h-1.5 rounded-full bg-sage-600" />{paused ? 'Paused' : 'Walking links'}</span>
+      </div>
+
+      <div className="relative mt-4 aspect-[4/3] sm:aspect-[16/10]">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 w-full h-full" aria-hidden="true">
+          {TRACE_LINKS.map((l, i) => {
+            const a = node(l.from);
+            const b = node(l.to);
+            const on = i === active;
+            return <line key={`${l.from}-${l.to}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={on ? '#4A5D45' : '#C3CBB9'} strokeWidth={on ? 0.9 : 0.5} strokeDasharray={on ? undefined : '1.5 1.5'} vectorEffect="non-scaling-stroke" className="landing-trace-line transition-all duration-500" style={{ animationDelay: `${i * 120}ms` }} />;
+          })}
+          <circle r="1.3" fill="#4A5D45" className="landing-trace-dot" key={active} style={{ offsetPath: `path('M ${node(link.from).x} ${node(link.from).y} L ${node(link.to).x} ${node(link.to).y}')` }} />
+        </svg>
+        {TRACE_NODES.map((n) => {
+          const on = lit.has(n.id);
+          return (
+            <button key={n.id} type="button" onClick={() => setActive(TRACE_LINKS.findIndex((l) => l.from === n.id || l.to === n.id))} aria-label={`${n.label}: ${n.sub}`}
+              className={`absolute -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 rounded-full border pl-1.5 pr-3 py-1 text-left transition-all duration-500 ${on ? 'bg-sage-700 border-sage-700 text-white shadow-elevated scale-105' : 'bg-white border-sage-200 text-sage-700 hover:border-sage-400'}`}
+              style={{ left: `${n.x}%`, top: `${n.y}%` }}>
+              <span className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${on ? 'bg-white/15' : 'bg-sage-100'}`}><n.icon className="w-3.5 h-3.5" strokeWidth={1.8} aria-hidden="true" /></span>
+              <span className="text-[11px] font-medium whitespace-nowrap">{n.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div key={active} className="landing-stage mt-4 rounded-xl border border-sage-200 bg-white p-3.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm" aria-live="polite">
+        <span className="font-semibold">{node(link.from).label}</span>
+        <span className="text-sage-500 italic">{link.label}</span>
+        <span className="font-semibold">{node(link.to).label}</span>
+        <span className="basis-full text-[11px] text-sage-500">{node(link.from).sub} → {node(link.to).sub}</span>
+      </div>
+      <p className="mt-3 text-[10px] text-sage-400 text-right">Click a record or hover to pause · nothing here is a fabricated result</p>
+    </div>
+    </div>
+  );
+};
+
+const FaqItem: React.FC<{ q: string; a: string; open: boolean; onToggle: () => void }> = ({ q, a, open, onToggle }) => (
+  <li className="border-b border-sage-200">
+    <button type="button" onClick={onToggle} aria-expanded={open} className="w-full flex items-center justify-between gap-4 py-4 text-left text-sm sm:text-base text-sage-800 hover:text-sage-600 transition-colors">
+      <span className="font-medium">{q}</span>
+      <ChevronDown className={`w-4 h-4 shrink-0 text-sage-400 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
+    </button>
+    <div className={`grid transition-all duration-300 ease-out ${open ? 'grid-rows-[1fr] opacity-100 pb-4' : 'grid-rows-[0fr] opacity-0'}`}>
+      <p className="overflow-hidden text-sm text-sage-500 leading-relaxed max-w-3xl">{a}</p>
+    </div>
+  </li>
+);
+
+/* ------------------------------------------------------------------ page */
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
-  const [activeInteractiveTab, setActiveInteractiveTab] = useState<'taxonomy' | 'similarity' | 'matrix'>('taxonomy');
-
-  const features = [
-    {
-      title: 'Syllabus & Curriculum Analysis',
-      description: 'Automatically parse multi-week course outlines, identify core thematic pillars, and verify prerequisite topic distribution across academic semesters.',
-      icon: BookOpen,
-      tag: 'Curriculum',
-    },
-    {
-      title: 'Learning Outcome (CLO/PLO) Alignment',
-      description: 'Map assessment items directly against Bloom’s Revised Taxonomy levels to identify under-tested course learning objectives and prevent curriculum blindspots.',
-      icon: Target,
-      tag: 'Alignment',
-    },
-    {
-      title: 'Question Similarity & Reuse Detection',
-      description: 'Leverage semantic similarity embeddings to detect duplicate or near-identical questions from previous academic terms and protect examination integrity.',
-      icon: CopyCheck,
-      tag: 'Integrity',
-    },
-    {
-      title: 'Assessment Quality & Rigor Audit',
-      description: 'Evaluate question phrasing clarity, mark distribution parity, and overall cognitive depth to ensure balanced examination rigor.',
-      icon: CheckCircle2,
-      tag: 'Quality',
-    },
-    {
-      title: 'Actionable AI Recommendations',
-      description: 'Receive concrete pedagogical recommendations: proposed question rewrites, cognitive elevation tips, and targeted outcome balancing.',
-      icon: Lightbulb,
-      tag: 'Decisions',
-    },
-    {
-      title: 'Accreditation & Governance Readiness',
-      description: 'Generate audit-ready documentation and alignment matrices compatible with ABET, AACSB, and Washington Accord outcome-based education (OBE) criteria.',
-      icon: Award,
-      tag: 'Accreditation',
-    },
-    {
-      title: 'Cognitive & Difficulty Balancer',
-      description: 'Visualize student effort distribution across foundational (20%), application (60%), and higher-order synthesis (20%) question tiers.',
-      icon: BarChart3,
-      tag: 'Analytics',
-    },
-    {
-      title: 'Historical Examination Repository',
-      description: 'Cross-analyze semester archives to uncover long-term coverage trends, recurring problem types, and historical quality improvements.',
-      icon: SearchCheck,
-      tag: 'Repository',
-    },
-  ];
-
-  const steps = [
-    {
-      step: '01',
-      title: 'Upload Course Materials',
-      desc: 'Submit syllabi, course learning outcomes, current question papers, and past examination archives in PDF, DOCX, or text formats.',
-      icon: UploadCloud,
-    },
-    {
-      step: '02',
-      title: 'AI Multi-Dimensional Analysis',
-      desc: 'Our academic intelligence engine processes taxonomies, semantic embeddings, and curriculum coverage matrices simultaneously.',
-      icon: Cpu,
-    },
-    {
-      step: '03',
-      title: 'Inspect Visual Intelligence',
-      desc: 'Explore comprehensive interactive dashboards detailing topic representation, Bloom distributions, and duplicate flags.',
-      icon: Eye,
-    },
-    {
-      step: '04',
-      title: 'Make Informed Faculty Decisions',
-      desc: 'Review AI suggestions, refine problem statements, adjust weighting, and finalize high-rigor assessments with full academic freedom.',
-      icon: Sliders,
-    },
-  ];
+  const [openFaq, setOpenFaq] = useState<number>(0);
+  const go = (path: string) => () => navigate(path);
+  const scrollTo = (id: string) => () => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <div className="flex flex-col">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden py-16 sm:py-28 border-b border-[#E5E5E5] bg-gradient-to-b from-[#FFFFFF] to-[#F7F7F5]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-            {/* Left Column: Heading & Narrative */}
-            <div className="lg:col-span-7 space-y-6 text-left">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#E5E5E5] bg-white text-xs font-semibold tracking-wide text-[#262626] shadow-subtle">
-                <Sparkles className="w-3.5 h-3.5 text-[#111111] animate-pulse" />
-                <span>Next-Gen Academic Decision Support System</span>
-              </div>
-
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#111111] tracking-tighter leading-[1.12]">
-                See Academic Work <br className="hidden sm:inline" />
-                Through a <span className="underline decoration-[#737373] decoration-4 underline-offset-8">Smarter Lens</span>
+    <div className="flex flex-col text-sage-800 overflow-x-hidden">
+      {/* Hero */}
+      <section className="relative overflow-hidden bg-sage-50">
+        <Leaf className="landing-float absolute -left-10 top-10 w-64 h-64 text-sage-200/60 pointer-events-none" aria-hidden="true" />
+        <Leaf className="landing-float-slow absolute -right-16 -bottom-10 w-72 h-72 text-sage-200/40 pointer-events-none" aria-hidden="true" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative">
+          <div className="lg:col-span-5 space-y-6">
+            <Reveal><Eyebrow className="inline-flex items-center gap-2"><span className="landing-pulse-dot w-1.5 h-1.5 rounded-full bg-sage-500" />AI-Powered Assessment Intelligence</Eyebrow></Reveal>
+            <Reveal delay={100}>
+              <h1 className="font-serif text-4xl sm:text-5xl lg:text-[3.4rem] leading-[1.08] tracking-tight">
+                <TypewriterCycle lines={HERO_LINES} textClassName="landing-sheen" />
               </h1>
-
-              <p className="text-base sm:text-lg text-[#737373] max-w-2xl font-normal leading-relaxed">
-                FacultyLens is an AI-powered academic decision support platform built specifically for university educators. Transform hours of manual syllabus cross-referencing, learning outcome mapping, and question validation into instant, transparent pedagogical insights.
-              </p>
-
-              <div className="flex flex-wrap items-center gap-3.5 pt-2">
-                <Button
-                  size="lg"
-                  variant="primary"
-                  rightIcon={<ArrowRight className="w-4 h-4" />}
-                  onClick={() => navigate('/login')}
-                  className="font-bold tracking-wide"
-                >
-                  Get Started
-                </Button>
-                <a href="#interactive-demo">
-                  <Button size="lg" variant="outline" className="font-semibold">
-                    Explore Interactive Live Box
-                  </Button>
-                </a>
+            </Reveal>
+            <Reveal delay={200}>
+              <Lede className="max-w-md">
+                FacultyLens helps faculty understand, evaluate and improve assessments using AI-powered analysis, learning-outcome alignment, performance insights and explainable recommendations — while every decision stays in your hands.
+              </Lede>
+            </Reveal>
+            <Reveal delay={300}>
+              <div className="flex flex-wrap gap-3 pt-1">
+                <PrimaryButton onClick={go('/register')}>Start Analyzing</PrimaryButton>
+                <button type="button" onClick={scrollTo('features')} className="inline-flex items-center rounded-lg border border-sage-300 bg-white hover:bg-sage-100 text-sage-800 text-sm px-5 py-2.5 transition-colors">Explore FacultyLens</button>
               </div>
+            </Reveal>
+            <Reveal delay={400}>
+              <ul className="flex flex-wrap gap-x-5 gap-y-2 pt-2 text-xs text-sage-500">
+                {['No automatic changes', 'Explainable scores', 'Immutable history'].map((t) => <li key={t} className="inline-flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-sage-600" aria-hidden="true" />{t}</li>)}
+              </ul>
+            </Reveal>
+          </div>
+          <Reveal delay={200} className="lg:col-span-7 lg:pl-6"><PipelineShowcase /></Reveal>
+        </div>
+      </section>
 
-              <div className="pt-6 border-t border-[#E5E5E5] flex flex-wrap items-center gap-6 text-xs font-semibold text-[#737373]">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-[#16A34A]" />
-                  <span>Accreditation Ready (OBE / ABET)</span>
+      {/* Who it's for */}
+      <section className="bg-white border-b border-sage-200/70">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <Reveal><Eyebrow className="text-center md:text-left">Who it’s for</Eyebrow></Reveal>
+          <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {AUDIENCE.map((a, i) => (
+              <Reveal key={a.title} delay={i * 90} className="group flex gap-4 rounded-xl border border-sage-200 bg-sage-50 p-5 hover:bg-white hover:shadow-card transition-all duration-300">
+                <IconCircle icon={a.icon} size="md" />
+                <div>
+                  <h3 className="text-sm font-semibold">{a.title}</h3>
+                  <p className="mt-1 text-xs text-sage-500 leading-relaxed">{a.text}</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-[#16A34A]" />
-                  <span>Bloom Taxonomy Classification</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-[#16A34A]" />
-                  <span>Human-in-the-Loop Governance</span>
-                </div>
-              </div>
-            </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            {/* Right Column: AI Analysis Preview Card */}
-            <div className="lg:col-span-5">
-              <div className="relative mx-auto max-w-md">
-                <div className="absolute -inset-1.5 bg-gradient-to-r from-[#111111]/10 via-[#737373]/10 to-[#111111]/10 rounded-2xl blur-md -z-10" />
+      {/* Process */}
+      <section id="how-it-works" className="bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 text-center">
+          <Reveal><Eyebrow>The FacultyLens Process</Eyebrow><Heading className="mt-3">One assessment. <span className="landing-ink">Complete insight.</span></Heading></Reveal>
+          <Reveal delay={120}><Lede className="mt-4 max-w-2xl mx-auto">Most assessment review happens after the exam, in a spreadsheet, from memory. FacultyLens moves it to before the paper leaves your desk — and keeps a record of what was decided and why.</Lede></Reveal>
+          <ol className="mt-12 flex flex-col md:flex-row md:items-start md:justify-between gap-8 md:gap-2">
+            {PROCESS.map((p, i) => (
+              <React.Fragment key={p.title}>
+                <Reveal as="li" delay={i * 110} className="group flex-1 flex flex-col items-center text-center max-w-[13rem] mx-auto">
+                  <IconCircle icon={p.icon} />
+                  <h3 className="mt-4 text-sm font-semibold">{p.title}</h3>
+                  <p className="mt-1 text-xs text-sage-500 leading-relaxed">{p.desc}</p>
+                </Reveal>
+                {i < PROCESS.length - 1 && <li aria-hidden="true" className="hidden md:flex items-center justify-center pt-6 text-sage-300"><ArrowRight className="w-4 h-4" /></li>}
+              </React.Fragment>
+            ))}
+          </ol>
+        </div>
+      </section>
 
-                <Card className="bg-white border-[#111111]/15 shadow-elevated p-6 sm:p-7 space-y-5">
-                  <div className="flex items-center justify-between pb-3.5 border-b border-[#E5E5E5]">
-                    <div>
-                      <span className="text-[10px] font-mono uppercase tracking-widest text-[#737373] font-bold">Assessment Preview</span>
-                      <h2 className="text-base font-extrabold text-[#111111] tracking-tight">Database Systems Midterm</h2>
-                    </div>
-                    <Badge variant="Analyzed" dot>Analyzed</Badge>
-                  </div>
+      {/* Features */}
+      <section id="features" className="bg-sage-50 border-y border-sage-200/70">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 text-center">
+          <Reveal><Eyebrow>AI-Powered Assessment Intelligence</Eyebrow><Heading className="mt-3">Everything you need, in one place.</Heading></Reveal>
+          <Reveal delay={120}><Lede className="mt-4 max-w-2xl mx-auto">Nine connected modules share one course model, so a question analysed today is the same question that appears in tomorrow’s blueprint check, next week’s grading and next semester’s version comparison.</Lede></Reveal>
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-left">
+            {FEATURES.map((f, i) => (
+              <Reveal as="article" key={f.title} delay={(i % 3) * 100} className="group rounded-xl border border-sage-200 bg-white p-6 hover:shadow-elevated hover:-translate-y-1 transition-all duration-300">
+                <div className="w-10 h-10 rounded-lg bg-sage-100 flex items-center justify-center transition-colors group-hover:bg-sage-700 group-hover:text-white"><f.icon className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" /></div>
+                <h3 className="mt-4 text-sm font-semibold">{f.title}</h3>
+                <p className="mt-1.5 text-xs text-sage-500 leading-relaxed">{f.desc}</p>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
 
-                  {/* Quality Metrics */}
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex justify-between items-baseline mb-1.5">
-                        <span className="text-xs font-bold text-[#111111] uppercase tracking-wider">Overall Quality</span>
-                        <span className="text-2xl font-extrabold text-[#111111] font-mono">86%</span>
-                      </div>
-                      <ProgressBar value={86} size="md" statusColor />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3 pt-2">
-                      <div className="p-3.5 bg-[#F7F7F5] rounded-xl border border-[#E5E5E5]">
-                        <span className="text-[11px] text-[#737373] font-medium block">Topic Coverage</span>
-                        <span className="text-lg font-extrabold text-[#111111] font-mono">89%</span>
-                        <div className="w-full bg-[#E5E5E5] h-1.5 rounded-full mt-2 overflow-hidden">
-                          <div className="bg-[#16A34A] h-full w-[89%] rounded-full" />
-                        </div>
-                      </div>
-
-                      <div className="p-3.5 bg-[#F7F7F5] rounded-xl border border-[#E5E5E5]">
-                        <span className="text-[11px] text-[#737373] font-medium block">LO Alignment</span>
-                        <span className="text-lg font-extrabold text-[#111111] font-mono">84%</span>
-                        <div className="w-full bg-[#E5E5E5] h-1.5 rounded-full mt-2 overflow-hidden">
-                          <div className="bg-[#16A34A] h-full w-[84%] rounded-full" />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Flagged alert preview */}
-                    <div className="flex items-center justify-between p-3.5 rounded-xl bg-[#FEF2F2] border border-[#FECACA] text-xs text-[#991B1B]">
-                      <div className="flex items-center gap-2">
-                        <CopyCheck className="w-4 h-4 shrink-0 text-[#DC2626]" />
-                        <span className="font-bold">Similar Questions</span>
-                      </div>
-                      <span className="font-extrabold font-mono px-2 py-0.5 bg-white rounded-md text-[#991B1B] border border-[#FECACA]">
-                        2 detected
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="pt-2 flex items-center justify-between text-[11px] text-[#737373] border-t border-[#E5E5E5] font-medium">
-                    <span className="flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5 text-[#111111]" /> Simulated AI Output
-                    </span>
-                    <span className="font-mono">Spring 2026</span>
-                  </div>
-                </Card>
-              </div>
+      {/* Principles */}
+      <section className="bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+            <Reveal className="lg:col-span-4 space-y-4">
+              <Eyebrow>Why FacultyLens</Eyebrow>
+              <Heading>Built for people who have to <span className="landing-ink">stand behind the result.</span></Heading>
+              <Lede>An assessment tool for universities cannot be a black box. Faculty defend their papers to students, colleagues, and accreditation bodies — so every output has to be traceable, reversible and yours.</Lede>
+            </Reveal>
+            <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+              {PRINCIPLES.map((p, i) => (
+                <Reveal key={p.title} delay={i * 120} className="rounded-xl border border-sage-200 bg-sage-50 p-6 space-y-3">
+                  <IconCircle icon={p.icon} size="md" />
+                  <h3 className="text-sm font-semibold">{p.title}</h3>
+                  <p className="text-xs text-sage-500 leading-relaxed">{p.text}</p>
+                </Reveal>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* ✦ Interactive Animated Academic Intelligence Box Section */}
-      <section id="interactive-demo" className="py-20 sm:py-28 bg-[#111111] text-white relative overflow-hidden border-b border-[#262626]">
-        {/* Ambient background grid & glow */}
-        <div className="absolute inset-0 bg-[radial-gradient(#333333_1px,transparent_1px)] [background-size:24px_24px] opacity-30 pointer-events-none" />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12">
-          <div className="text-center max-w-3xl mx-auto space-y-3">
-            <span className="font-mono text-xs uppercase font-bold tracking-widest text-[#16A34A] px-3 py-1 rounded-full bg-[#16A34A]/10 border border-[#16A34A]/20">
-              Interactive Decision Simulator
-            </span>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
-              Real-Time Academic Lens Showcase
+      {/* Lifecycle */}
+      <section className="bg-sage-800 text-white relative overflow-hidden">
+        <Leaf className="landing-float-slow absolute -right-10 -top-10 w-80 h-80 text-white/5 pointer-events-none" aria-hidden="true" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 relative">
+          <Reveal className="max-w-2xl">
+            <p className="text-[11px] uppercase tracking-[0.18em] text-sage-300">The full lifecycle</p>
+            <h2 className="mt-3 font-serif text-3xl sm:text-4xl lg:text-[2.75rem] leading-[1.1] tracking-tight">
+              <Typewriter text="From the first blueprint to the final version, nothing is lost." />
             </h2>
-            <p className="text-sm sm:text-base text-[#A3A3A3] leading-relaxed">
-              Explore how FacultyLens deconstructs complex examination papers across multiple pedagogical dimensions in seconds.
-            </p>
-          </div>
-
-          {/* Interactive Showcase Box Container */}
-          <div className="max-w-4xl mx-auto bg-[#181818] rounded-2xl border border-[#2E2E2E] shadow-2xl p-6 sm:p-8 space-y-6">
-            {/* Simulation Tab Switcher */}
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#2E2E2E] pb-4">
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setActiveInteractiveTab('taxonomy')}
-                  className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                    activeInteractiveTab === 'taxonomy'
-                      ? 'bg-white text-[#111111] shadow-md'
-                      : 'text-[#A3A3A3] hover:text-white hover:bg-[#262626]'
-                  }`}
-                >
-                  Bloom Cognitive Taxonomy
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveInteractiveTab('similarity')}
-                  className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                    activeInteractiveTab === 'similarity'
-                      ? 'bg-white text-[#111111] shadow-md'
-                      : 'text-[#A3A3A3] hover:text-white hover:bg-[#262626]'
-                  }`}
-                >
-                  Semantic Duplicate Scan
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveInteractiveTab('matrix')}
-                  className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                    activeInteractiveTab === 'matrix'
-                      ? 'bg-white text-[#111111] shadow-md'
-                      : 'text-[#A3A3A3] hover:text-white hover:bg-[#262626]'
-                  }`}
-                >
-                  Outcome Matrix (CLO)
-                </button>
-              </div>
-
-              <div className="flex items-center gap-2 text-xs font-mono text-[#16A34A]">
-                <span className="w-2 h-2 rounded-full bg-[#16A34A] animate-ping" />
-                <span>Live AI Simulation</span>
-              </div>
-            </div>
-
-            {/* Dynamic Interactive Tab Content */}
-            {activeInteractiveTab === 'taxonomy' && (
-              <div className="space-y-5 text-left animate-fadeIn">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <div>
-                    <h3 className="text-base font-bold text-white">Cognitive Level Breakdown</h3>
-                    <p className="text-xs text-[#A3A3A3]">Evaluates question distribution against Bloom&apos;s Revised Taxonomy</p>
-                  </div>
-                  <span className="font-mono text-xs px-2.5 py-1 rounded bg-[#262626] border border-[#3E3E3E] text-white">
-                    Target: 20% / 60% / 20%
-                  </span>
+            <p className="mt-4 text-sm sm:text-base text-sage-300 leading-relaxed">Assessment quality is not a single check. It is a cycle that runs every semester. FacultyLens follows the whole loop and preserves each step as evidence.</p>
+          </Reveal>
+          <ol className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {LIFECYCLE.map((l, i) => (
+              <Reveal as="li" key={l.title} delay={i * 90} className="rounded-xl border border-white/10 bg-white/5 p-5 hover:bg-white/10 transition-colors">
+                <div className="flex items-center gap-3">
+                  <span className="font-serif text-2xl text-sage-300 w-8">{String(i + 1).padStart(2, '0')}</span>
+                  <l.icon className="w-5 h-5 text-sage-200" strokeWidth={1.6} aria-hidden="true" />
+                  <h3 className="text-sm font-semibold">{l.title}</h3>
                 </div>
+                <p className="mt-3 text-xs text-sage-300 leading-relaxed">{l.text}</p>
+              </Reveal>
+            ))}
+          </ol>
+        </div>
+      </section>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div className="p-4 rounded-xl bg-[#202020] border border-[#2E2E2E] space-y-2">
-                    <span className="text-[11px] font-mono uppercase text-[#16A34A] font-bold">Remember & Understand</span>
-                    <div className="text-2xl font-bold font-mono text-white">20%</div>
-                    <p className="text-[11px] text-[#A3A3A3]">Foundational conceptual recall and definitions.</p>
-                  </div>
-                  <div className="p-4 rounded-xl bg-[#202020] border border-[#2E2E2E] space-y-2">
-                    <span className="text-[11px] font-mono uppercase text-white font-bold">Apply & Analyze</span>
-                    <div className="text-2xl font-bold font-mono text-white">60%</div>
-                    <p className="text-[11px] text-[#A3A3A3]">Algorithmic solutions, relational queries & proofs.</p>
-                  </div>
-                  <div className="p-4 rounded-xl bg-[#202020] border border-[#2E2E2E] space-y-2">
-                    <span className="text-[11px] font-mono uppercase text-white/80 font-bold">Evaluate & Create</span>
-                    <div className="text-2xl font-bold font-mono text-white">20%</div>
-                    <p className="text-[11px] text-[#A3A3A3]">Architecture synthesis and critical trade-off evaluation.</p>
-                  </div>
-                </div>
+      {/* Big picture */}
+      <section id="about" className="bg-white border-b border-sage-200/70">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <Reveal className="space-y-5">
+            <Eyebrow>The Big Picture</Eyebrow>
+            <Heading>From Questions to Learning Outcomes</Heading>
+            <Lede className="max-w-md">FacultyLens connects your assessments to learning outcomes, identifies gaps, and gives you the insights you need to improve student success.</Lede>
+            <Lede className="max-w-md">A low class average tells you something went wrong. Tracing that average back to the two questions on transactions, the outcome they were meant to test and the topic the syllabus barely covered tells you what to change.</Lede>
+            <PrimaryButton onClick={go('/register')}>Learn More</PrimaryButton>
+          </Reveal>
+          <Reveal delay={150}><TraceabilityMap /></Reveal>
+        </div>
+      </section>
 
-                {/* Animated multi-tier bar */}
-                <div className="space-y-1.5">
-                  <div className="h-3 w-full bg-[#2E2E2E] rounded-full overflow-hidden flex shadow-inner">
-                    <div className="bg-[#16A34A] h-full transition-all duration-700" style={{ width: '20%' }} />
-                    <div className="bg-white h-full transition-all duration-700" style={{ width: '60%' }} />
-                    <div className="bg-[#737373] h-full transition-all duration-700" style={{ width: '20%' }} />
-                  </div>
-                  <div className="flex justify-between text-[10px] font-mono text-[#737373]">
-                    <span>Lower Order (20%)</span>
-                    <span>Application Tier (60%)</span>
-                    <span>Higher Synthesis (20%)</span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeInteractiveTab === 'similarity' && (
-              <div className="space-y-4 text-left animate-fadeIn">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-base font-bold text-white">Semantic Cross-Term Collision Radar</h3>
-                    <p className="text-xs text-[#A3A3A3]">Scanning historical papers across Spring 2024 - Fall 2025</p>
-                  </div>
-                  <Badge variant="Critical" dot>2 Collisions Flagged</Badge>
-                </div>
-
-                <div className="p-4 rounded-xl bg-[#2A1818] border border-[#5C2424] space-y-2">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-[#FCA5A5] font-mono">Question #7 Collision Detected (87% Match)</span>
-                    <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-black/40 text-[#FCA5A5]">Matched: Spring 2025 Midterm Q5</span>
-                  </div>
-                  <p className="text-xs text-[#FCA5A5]/80 font-mono">
-                    &ldquo;Compare the search time complexity of B+ Tree index versus Hash index for range query operations.&rdquo;
-                  </p>
-                  <p className="text-[11px] text-white/90 pt-1">
-                    <strong className="text-[#16A34A]">AI Recommendation:</strong> Replace with an open architectural synthesis problem assessing index selectivity on skew-distributed datasets.
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {activeInteractiveTab === 'matrix' && (
-              <div className="space-y-4 text-left animate-fadeIn">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-base font-bold text-white">Course Learning Outcome (CLO) Coverage Matrix</h3>
-                    <p className="text-xs text-[#A3A3A3]">Real-time accreditation alignment balance</p>
-                  </div>
-                  <span className="font-mono text-xs text-[#16A34A]">5 / 5 CLOs Tracked</span>
-                </div>
-
-                <div className="space-y-2.5">
-                  <div className="flex items-center justify-between p-2.5 rounded-lg bg-[#202020] border border-[#2E2E2E] text-xs">
-                    <span className="font-mono text-white font-bold">CLO-1: Conceptual & Logical Relational Modeling</span>
-                    <span className="font-mono text-[#16A34A] font-bold">92% (2 Questions)</span>
-                  </div>
-                  <div className="flex items-center justify-between p-2.5 rounded-lg bg-[#202020] border border-[#2E2E2E] text-xs">
-                    <span className="font-mono text-white font-bold">CLO-2: Relational Algebra & Advanced SQL Querying</span>
-                    <span className="font-mono text-[#16A34A] font-bold">95% (3 Questions)</span>
-                  </div>
-                  <div className="flex items-center justify-between p-2.5 rounded-lg bg-[#202020] border border-[#2E2E2E] text-xs">
-                    <span className="font-mono text-white font-bold">CLO-3: Schema Normalization & Lossless Decompositions</span>
-                    <span className="font-mono text-[#16A34A] font-bold">88% (2 Questions)</span>
-                  </div>
-                  <div className="flex items-center justify-between p-2.5 rounded-lg bg-[#332211] border border-[#664422] text-xs">
-                    <span className="font-mono text-[#FBBF24] font-bold">CLO-4: Transaction ACID & Concurrency Control</span>
-                    <span className="font-mono text-[#FBBF24] font-bold">40% (1 Question — Low Coverage)</span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Bottom Interactive Action Callout */}
-            <div className="pt-4 border-t border-[#2E2E2E] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#A3A3A3]">
-              <span>Ready to inspect your university department&apos;s question papers?</span>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => navigate('/login')}
-                className="bg-white text-[#111111] hover:bg-[#E5E5E5] font-bold"
-              >
-                Analyze Paper Now
-              </Button>
-            </div>
+      {/* Voices */}
+      <section className="bg-sage-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+          <Reveal className="text-center"><Eyebrow>From the faculty room</Eyebrow><Heading className="mt-3">Written for the way faculty actually work.</Heading><Lede className="mt-4 max-w-2xl mx-auto">Illustrative scenarios drawn from the situations FacultyLens was designed around.</Lede></Reveal>
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4">
+            {VOICES.map((v, i) => (
+              <Reveal key={v.role} delay={i * 120} className="rounded-xl border border-sage-200 bg-white p-6 flex flex-col gap-4 hover:-translate-y-1 hover:shadow-elevated transition-all duration-300">
+                <Quote className="w-6 h-6 text-sage-300" aria-hidden="true" />
+                <p className="font-serif text-lg leading-snug text-sage-800">“{v.text}”</p>
+                <p className="mt-auto text-xs text-sage-500">{v.role}</p>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Narrative Section: The Academic Dilemma & Solution */}
-      <section className="py-20 sm:py-24 bg-white border-b border-[#E5E5E5]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center text-left">
-            <div className="lg:col-span-6 space-y-4">
-              <Badge variant="outline" className="font-mono font-bold tracking-widest text-[11px]">
-                PEDAGOGICAL CHALLENGE
-              </Badge>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-[#111111] tracking-tight leading-snug">
-                Why Faculty Need an AI Decision-Support Co-Pilot
-              </h2>
-              <p className="text-sm sm:text-base text-[#737373] leading-relaxed">
-                Designing academic examinations requires balancing complex curriculum objectives, historical exam papers, Bloom’s cognitive taxonomy distribution, and strict accreditation criteria.
-              </p>
-              <p className="text-sm sm:text-base text-[#737373] leading-relaxed">
-                Without specialized assistive intelligence, subtle curriculum gaps, repetitive questions from previous semesters, and cognitive level imbalances easily go unnoticed amidst demanding academic schedules.
-              </p>
-            </div>
+      {/* FAQ */}
+      <section className="bg-white border-t border-sage-200/70">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 grid grid-cols-1 lg:grid-cols-12 gap-10">
+          <Reveal className="lg:col-span-4 space-y-4">
+            <Eyebrow>Questions faculty ask first</Eyebrow>
+            <Heading>Straight answers.</Heading>
+            <Lede>The questions we hear before anyone uploads their first paper — answered the way the system actually behaves.</Lede>
+          </Reveal>
+          <Reveal delay={120} className="lg:col-span-8">
+            <ul className="border-t border-sage-200">
+              {FAQ.map((f, i) => <FaqItem key={f.q} q={f.q} a={f.a} open={openFaq === i} onToggle={() => setOpenFaq(openFaq === i ? -1 : i)} />)}
+            </ul>
+          </Reveal>
+        </div>
+      </section>
 
-            <div className="lg:col-span-6 space-y-4">
-              <div className="p-6 rounded-2xl bg-[#F7F7F5] border border-[#E5E5E5] space-y-3">
-                <div className="flex items-center gap-2.5 font-bold text-[#111111]">
-                  <Compass className="w-5 h-5 text-[#111111]" />
-                  <span>The FacultyLens Decision Framework</span>
-                </div>
-                <p className="text-xs sm:text-sm text-[#737373] leading-relaxed">
-                  FacultyLens bridges the gap by acting as an objective analytical co-pilot. It extracts syllabus structures, measures question similarity across terms, maps cognitive taxonomy levels, and highlights curriculum gaps — empowering professors to make informed, data-backed adjustments with total academic autonomy.
-                </p>
+      {/* CTA */}
+      <section id="pricing" className="bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+          <Reveal>
+            <div className="relative overflow-hidden rounded-2xl bg-sage-100 border border-sage-200 px-6 sm:px-10 py-10 flex flex-col md:flex-row md:items-center gap-8">
+              <Leaf className="landing-float absolute -left-4 -bottom-6 w-32 h-32 text-sage-300/60" aria-hidden="true" />
+              <div className="hidden md:block w-24 shrink-0" />
+              <div className="flex-1 space-y-2 relative">
+                <Eyebrow>Built for Academic Excellence</Eyebrow>
+                <h2 className="font-serif text-2xl sm:text-3xl tracking-tight">AI assists. <span className="landing-sheen">Faculty decides.</span></h2>
+                <p className="text-sm text-sage-600 max-w-xl">Upload one assessment and see its quality, alignment and similarity picture in minutes — no automatic changes, no lock-in, every decision left to you.</p>
+                <p className="text-xs text-sage-500 flex flex-wrap gap-x-4"><span>Explainable</span><span>·</span><span>Private</span><span>·</span><span>Auditable</span></p>
               </div>
-
-              <div className="grid grid-cols-2 gap-3 text-left">
-                <div className="p-4 rounded-xl border border-[#E5E5E5] bg-white">
-                  <span className="text-2xl font-extrabold text-[#111111] font-mono">100%</span>
-                  <p className="text-xs text-[#737373] pt-1">Faculty Decision Ownership</p>
-                </div>
-                <div className="p-4 rounded-xl border border-[#E5E5E5] bg-white">
-                  <span className="text-2xl font-extrabold text-[#111111] font-mono">&lt; 3s</span>
-                  <p className="text-xs text-[#737373] pt-1">Automated Assessment Audit</p>
-                </div>
-              </div>
+              <PrimaryButton onClick={go('/register')} className="self-start md:self-center relative">Get Started</PrimaryButton>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Expanded Features Section (8 Cards) */}
-      <section id="features" className="py-20 sm:py-28 bg-[#F7F7F5] border-b border-[#E5E5E5]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-            <Badge variant="outline" className="font-mono font-bold tracking-widest text-[11px]">COMPREHENSIVE CAPABILITIES</Badge>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#111111] tracking-tight">
-              Designed for Academic Rigor & Faculty Control
-            </h2>
-            <p className="text-base text-[#737373]">
-              Purpose-built tools to enhance assessment design, ensure learning outcome compliance, and uphold university examination integrity.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-            {features.map((feat) => {
-              const Icon = feat.icon;
-              return (
-                <Card
-                  key={feat.title}
-                  variant="default"
-                  className="hover:border-[#111111] hover:shadow-card transition-all duration-200 flex flex-col justify-between p-6"
-                >
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="w-10 h-10 rounded-xl bg-[#111111] text-white flex items-center justify-center shadow-subtle">
-                        <Icon className="w-5 h-5" />
-                      </div>
-                      <Badge variant="neutral" className="text-[10px] font-semibold">{feat.tag}</Badge>
-                    </div>
-                    <div>
-                      <h3 className="text-base font-bold text-[#111111] mb-2 tracking-tight">{feat.title}</h3>
-                      <p className="text-xs text-[#737373] leading-relaxed">{feat.description}</p>
-                    </div>
-                  </div>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works Section */}
-      <section id="how-it-works" className="py-20 sm:py-28 bg-white border-b border-[#E5E5E5]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-            <Badge variant="outline" className="font-mono font-bold tracking-widest text-[11px]">FOUR-STEP WORKFLOW</Badge>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#111111] tracking-tight">
-              How FacultyLens Operates
-            </h2>
-            <p className="text-base text-[#737373]">
-              A streamlined, transparent decision support cycle from initial document upload to final academic approval.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-            {steps.map((st) => {
-              const Icon = st.icon;
-              return (
-                <div
-                  key={st.step}
-                  className="relative p-6 sm:p-7 rounded-xl border border-[#E5E5E5] bg-[#F7F7F5] space-y-4 hover:border-[#111111] transition-colors"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-3xl font-black font-mono text-[#111111]/25 tracking-tighter">{st.step}</span>
-                    <div className="w-10 h-10 rounded-xl bg-white border border-[#E5E5E5] flex items-center justify-center text-[#111111] shadow-subtle">
-                      <Icon className="w-4 h-4" />
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="text-base font-bold text-[#111111] mb-1.5 tracking-tight">{st.title}</h3>
-                    <p className="text-xs text-[#737373] leading-relaxed">{st.desc}</p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Human-in-the-Loop Section */}
-      <section id="about" className="py-20 sm:py-28 bg-[#111111] text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center space-y-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#262626] border border-[#3E3E3E] text-xs font-semibold text-[#A3A3A3]">
-              <ShieldCheck className="w-4 h-4 text-[#16A34A]" />
-              <span>Ethical AI & Academic Governance</span>
-            </div>
-
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
-              FacultyLens supports faculty decisions — it does not replace them.
-            </h2>
-
-            <p className="text-base sm:text-lg text-[#A3A3A3] font-normal leading-relaxed">
-              We believe university educators hold irreplaceable pedagogical judgment. FacultyLens serves as an analytical co-pilot: surfacing hidden imbalances, highlighting curriculum gaps, and providing evidence-based recommendations, while leaving all final grading and design decisions entirely with faculty.
-            </p>
-
-            <div className="pt-4">
-              <Button
-                variant="secondary"
-                size="lg"
-                onClick={() => navigate('/login')}
-                className="bg-white text-[#111111] hover:bg-[#E5E5E5] font-bold"
-              >
-                Experience FacultyLens
-              </Button>
-            </div>
-          </div>
+          </Reveal>
         </div>
       </section>
     </div>

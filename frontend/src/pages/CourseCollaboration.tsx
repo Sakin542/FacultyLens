@@ -51,7 +51,7 @@ export const CourseCollaboration: React.FC = () => {
 
   return (
     <div className="space-y-4" data-testid="course-collaboration-page">
-      <Link to={`/courses/${courseId}`} className="inline-flex items-center gap-1 text-xs text-[#737373] hover:text-[#111111] dark:hover:text-white"><ArrowLeft className="w-3.5 h-3.5" /> Back to course</Link>
+      <Link to={`/courses/${courseId}`} className="inline-flex items-center gap-1 text-xs text-sage-500 hover:text-sage-800 dark:hover:text-white"><ArrowLeft className="w-3.5 h-3.5" /> Back to course</Link>
       {loading && !overview ? <CollaborationLoading /> : error && !overview ? <CollaborationError message={error} onRetry={load} /> : overview && (
         <>
           <CollaborationHeader courseCode={overview.course.course_code} courseName={overview.course.course_name} ownerName={overview.owner?.name} role={overview.current_user.role} memberCount={overview.collaborators.filter((c) => c.status === 'ACTIVE').length} permissions={perms} />
@@ -62,7 +62,7 @@ export const CourseCollaboration: React.FC = () => {
               <CollaboratorList owner={overview.owner} collaborators={overview.collaborators} permissions={perms} onInvite={() => { setInviteError(null); setInviteOpen(true); }} onChangeRole={setRoleTarget} onRemove={setRemoveTarget} />
               {perms.manage_collaborators && overview.pending_invitations.length > 0 && (
                 <section data-testid="pending-invitations" className="space-y-2">
-                  <h2 className="text-sm font-semibold text-[#111111] dark:text-white">Pending invitations</h2>
+                  <h2 className="text-sm font-semibold text-sage-800 dark:text-white">Pending invitations</h2>
                   {overview.pending_invitations.map((i: Invitation) => <InvitationCard key={i.id} invitation={i} busy={busy} onRevoke={() => run(async () => { await collaborationService.revokeInvitation(courseId!, i.id); return 'Invitation revoked.'; })} />)}
                 </section>
               )}

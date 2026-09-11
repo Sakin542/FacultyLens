@@ -10,9 +10,9 @@ export const VersionSummary: React.FC<{ version: AssessmentVersion }> = ({ versi
       ['Type', humanize(v.assessment_type)], ['Validation', v.validation_status ? humanize(v.validation_status) : 'Not validated'],
       [v.finalized_at ? 'Finalized' : v.approved_at ? 'Approved' : 'Created', fmtDate(v.finalized_at ?? v.approved_at ?? v.created_at)],
     ] as const).map(([l, val]) => (
-      <div key={l} className="rounded-lg border border-[#E5E5E5] dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-4 py-3">
-        <dt className="text-xs uppercase tracking-wide text-[#737373]">{l}</dt>
-        <dd className="text-xl font-semibold text-[#111111] dark:text-white mt-1 tabular-nums">{val}</dd>
+      <div key={l} className="rounded-lg border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-4 py-3">
+        <dt className="text-xs uppercase tracking-wide text-sage-500">{l}</dt>
+        <dd className="text-xl font-semibold text-sage-800 dark:text-white mt-1 tabular-nums">{val}</dd>
       </div>
     ))}
   </dl>

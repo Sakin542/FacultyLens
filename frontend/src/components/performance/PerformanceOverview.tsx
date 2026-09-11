@@ -93,10 +93,10 @@ export const PerformanceOverview: React.FC<PerformanceOverviewProps> = ({ assess
     <Card variant="default" className="p-5 space-y-4" data-testid="performance-overview">
       <header className="flex flex-wrap items-center justify-between gap-2">
         <div>
-          <h3 className="text-sm font-bold text-[#111111] dark:text-white flex items-center gap-2">
-            <BarChart3 className="w-4 h-4 text-[#737373]" /> Student Performance
+          <h3 className="text-sm font-bold text-sage-800 dark:text-white flex items-center gap-2">
+            <BarChart3 className="w-4 h-4 text-sage-500" /> Student Performance
           </h3>
-          <p className="text-[11px] text-[#737373]">How students actually performed, from finalized faculty marks. Separate from assessment-quality analysis.</p>
+          <p className="text-[11px] text-sage-500">How students actually performed, from finalized faculty marks. Separate from assessment-quality analysis.</p>
         </div>
         {analysis && !isPerformanceRunActive(analysis.status) && (
           <Button variant="outline" size="sm" leftIcon={<RotateCcw className={`w-3.5 h-3.5 ${isAnalyzing ? 'animate-spin' : ''}`} />} onClick={() => analyze(true)} isLoading={isAnalyzing} data-testid="regenerate-performance">
@@ -135,7 +135,7 @@ export const PerformanceOverview: React.FC<PerformanceOverviewProps> = ({ assess
           <PerformanceSummary analysis={analysis} />
 
           {analysis.finalized_answer_count === 0 ? (
-            <p className="text-xs text-[#737373] italic" data-testid="no-finalized">No finalized grades were available when this analysis ran. Finalize faculty marks and regenerate.</p>
+            <p className="text-xs text-sage-500 italic" data-testid="no-finalized">No finalized grades were available when this analysis ran. Finalize faculty marks and regenerate.</p>
           ) : (
             <>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">

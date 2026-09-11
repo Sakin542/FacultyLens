@@ -18,26 +18,26 @@ export const PerformanceSummary: React.FC<{ analysis: PerformanceAnalysis }> = (
     <div className="space-y-3" data-testid="performance-summary">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <span className="text-[10px] uppercase tracking-wider font-semibold text-[#737373] flex items-center gap-1.5"><Target className="w-3 h-3" /> Status</span>
+          <span className="text-[10px] uppercase tracking-wider font-semibold text-sage-500 flex items-center gap-1.5"><Target className="w-3 h-3" /> Status</span>
           <PerformanceGapBadge status={analysis.overall_status} />
         </div>
-        {analysis.analyzed_at && <span className="text-[10px] text-[#737373]">Analyzed {new Date(analysis.analyzed_at).toLocaleString()}</span>}
+        {analysis.analyzed_at && <span className="text-[10px] text-sage-500">Analyzed {new Date(analysis.analyzed_at).toLocaleString()}</span>}
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {tiles.map(([label, value, sub]) => (
-          <div key={label} className="p-3 rounded-xl bg-[#F7F7F5] dark:bg-[#2C2C2E] text-center" data-testid="performance-tile">
-            <span className="block text-[10px] uppercase font-semibold text-[#737373]">{label}</span>
-            <span className="block text-lg font-bold font-mono text-[#111111] dark:text-white mt-1">{value}</span>
-            {sub && <span className="block text-[10px] text-[#737373]">{sub}</span>}
+          <div key={label} className="p-3 rounded-xl bg-sage-100 dark:bg-[#2C2C2E] text-center" data-testid="performance-tile">
+            <span className="block text-[10px] uppercase font-semibold text-sage-500">{label}</span>
+            <span className="block text-lg font-bold font-mono text-sage-800 dark:text-white mt-1">{value}</span>
+            {sub && <span className="block text-[10px] text-sage-500">{sub}</span>}
           </div>
         ))}
       </div>
       {(s.insufficient_data_count ?? 0) > 0 && (
-        <p className="text-[11px] text-[#737373] flex items-center gap-1.5">
+        <p className="text-[11px] text-sage-500 flex items-center gap-1.5">
           <Users className="w-3 h-3" /> {s.insufficient_data_count} question{s.insufficient_data_count === 1 ? ' has' : 's have'} fewer than {analysis.minimum_responses} finalized responses and {s.insufficient_data_count === 1 ? 'is' : 'are'} not classified.
         </p>
       )}
-      <p className="text-[11px] text-[#737373] flex items-center gap-1.5">
+      <p className="text-[11px] text-sage-500 flex items-center gap-1.5">
         <Award className="w-3 h-3" /> Percentages are mark-weighted: Σ final marks ÷ Σ maximum marks. Only finalized faculty marks are counted.
       </p>
     </div>

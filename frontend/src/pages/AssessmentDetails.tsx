@@ -226,8 +226,8 @@ export const AssessmentDetails: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
-        <Loader2 className="w-8 h-8 animate-spin text-[#111111] dark:text-white" />
-        <p className="text-sm text-[#737373]">Loading assessment information...</p>
+        <Loader2 className="w-8 h-8 animate-spin text-sage-800 dark:text-white" />
+        <p className="text-sm text-sage-500">Loading assessment information...</p>
       </div>
     );
   }
@@ -235,7 +235,7 @@ export const AssessmentDetails: React.FC = () => {
   if (error || !assessment) {
     return (
       <div className="space-y-4">
-        <Link to="/assessments" className="inline-flex items-center gap-2 text-xs font-semibold text-[#737373] hover:text-[#111111] dark:hover:text-white">
+        <Link to="/assessments" className="inline-flex items-center gap-2 text-xs font-semibold text-sage-500 hover:text-sage-800 dark:hover:text-white">
           <ArrowLeft className="w-4 h-4" /> Back to Assessments
         </Link>
         <div className="p-6 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-xl space-y-3">
@@ -272,29 +272,29 @@ export const AssessmentDetails: React.FC = () => {
       {/* Breadcrumbs & Header Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs text-[#737373]">
-            <Link to="/assessments" className="hover:text-[#111111] dark:hover:text-white transition-colors">
+          <div className="flex items-center gap-2 text-xs text-sage-500">
+            <Link to="/assessments" className="hover:text-sage-800 dark:hover:text-white transition-colors">
               Assessments
             </Link>
             <span>/</span>
             {course && (
               <>
-                <Link to={`/courses/${course.id}`} className="font-mono hover:text-[#111111] dark:hover:text-white transition-colors">
+                <Link to={`/courses/${course.id}`} className="font-mono hover:text-sage-800 dark:hover:text-white transition-colors">
                   {course.course_code || course.code}
                 </Link>
                 <span>/</span>
               </>
             )}
-            <span className="font-semibold text-[#111111] dark:text-white">{assessment.title}</span>
+            <span className="font-semibold text-sage-800 dark:text-white">{assessment.title}</span>
           </div>
-          <h1 className="text-2xl font-bold text-[#111111] dark:text-white">{assessment.title}</h1>
+          <h1 className="text-2xl font-bold text-sage-800 dark:text-white">{assessment.title}</h1>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           <Button
             variant="primary"
             size="sm"
-            className="bg-[#111111] text-white hover:bg-black dark:bg-white dark:text-[#111111] dark:hover:bg-neutral-200 shadow-sm"
+            className="bg-sage-700 text-white hover:bg-black dark:bg-white dark:text-sage-800 dark:hover:bg-neutral-200 shadow-sm"
             leftIcon={<BrainCircuit className="w-3.5 h-3.5 text-amber-400" />}
             onClick={() => navigate(`/assessments/${id}/analysis`)}
           >
@@ -303,7 +303,7 @@ export const AssessmentDetails: React.FC = () => {
           <Button
             variant="outline"
             size="sm"
-            className="border-[#E5E5E5] text-[#111111] dark:text-white"
+            className="border-sage-200 text-sage-800 dark:text-white"
             leftIcon={<History className="w-3.5 h-3.5 text-blue-500" />}
             onClick={() => navigate(`/history?search=${encodeURIComponent(assessment.title)}`)}
           >
@@ -312,7 +312,7 @@ export const AssessmentDetails: React.FC = () => {
           <Button
             variant="outline"
             size="sm"
-            className="border-[#E5E5E5] text-[#111111] dark:text-white"
+            className="border-sage-200 text-sage-800 dark:text-white"
             leftIcon={
               isRunningFullAnalysis ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -390,7 +390,7 @@ export const AssessmentDetails: React.FC = () => {
       <Card variant="default" className="p-6 space-y-6">
         <div className="flex flex-wrap items-center gap-3">
           {course && (
-            <Badge variant="outline" className="font-mono font-bold text-sm bg-[#F7F7F5] dark:bg-[#2C2C2E]">
+            <Badge variant="outline" className="font-mono font-bold text-sm bg-sage-100 dark:bg-[#2C2C2E]">
               {course.course_code || course.code} — {course.course_name || course.title}
             </Badge>
           )}
@@ -407,40 +407,40 @@ export const AssessmentDetails: React.FC = () => {
 
         {assessment.description && (
           <div className="space-y-1">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-[#737373]">Description / Scope</h3>
-            <p className="text-sm text-[#262626] dark:text-[#E5E5E5] leading-relaxed whitespace-pre-line">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-sage-500">Description / Scope</h3>
+            <p className="text-sm text-sage-700 dark:text-sage-200 leading-relaxed whitespace-pre-line">
               {assessment.description}
             </p>
           </div>
         )}
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-[#E5E5E5] dark:border-[#2C2C2E] text-center">
-          <div className="p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl">
-            <span className="text-[10px] uppercase font-semibold text-[#737373] block">Total Marks</span>
-            <span className="text-lg font-bold text-[#111111] dark:text-white flex items-center justify-center gap-1.5 mt-1">
-              <Award className="w-4 h-4 text-[#737373]" /> {assessment.total_marks || assessment.totalMarks}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-sage-200 dark:border-[#2C2C2E] text-center">
+          <div className="p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl">
+            <span className="text-[10px] uppercase font-semibold text-sage-500 block">Total Marks</span>
+            <span className="text-lg font-bold text-sage-800 dark:text-white flex items-center justify-center gap-1.5 mt-1">
+              <Award className="w-4 h-4 text-sage-500" /> {assessment.total_marks || assessment.totalMarks}
             </span>
           </div>
 
-          <div className="p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl">
-            <span className="text-[10px] uppercase font-semibold text-[#737373] block">Duration</span>
-            <span className="text-lg font-bold text-[#111111] dark:text-white flex items-center justify-center gap-1.5 mt-1">
-              <Clock className="w-4 h-4 text-[#737373]" /> {assessment.duration_minutes || 90}m
+          <div className="p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl">
+            <span className="text-[10px] uppercase font-semibold text-sage-500 block">Duration</span>
+            <span className="text-lg font-bold text-sage-800 dark:text-white flex items-center justify-center gap-1.5 mt-1">
+              <Clock className="w-4 h-4 text-sage-500" /> {assessment.duration_minutes || 90}m
             </span>
           </div>
 
-          <div className="p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl">
-            <span className="text-[10px] uppercase font-semibold text-[#737373] block">Assessment Date</span>
-            <span className="text-sm font-bold text-[#111111] dark:text-white flex items-center justify-center gap-1.5 mt-2">
-              <Calendar className="w-3.5 h-3.5 text-[#737373]" />
+          <div className="p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl">
+            <span className="text-[10px] uppercase font-semibold text-sage-500 block">Assessment Date</span>
+            <span className="text-sm font-bold text-sage-800 dark:text-white flex items-center justify-center gap-1.5 mt-2">
+              <Calendar className="w-3.5 h-3.5 text-sage-500" />
               {assessment.assessment_date ? assessment.assessment_date.split('T')[0] : 'TBD'}
             </span>
           </div>
 
-          <div className="p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl">
-            <span className="text-[10px] uppercase font-semibold text-[#737373] block">Questions Count</span>
-            <span className="text-lg font-bold text-[#111111] dark:text-white flex items-center justify-center gap-1.5 mt-1">
-              <Layers className="w-4 h-4 text-[#737373]" /> {qCount}
+          <div className="p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl">
+            <span className="text-[10px] uppercase font-semibold text-sage-500 block">Questions Count</span>
+            <span className="text-lg font-bold text-sage-800 dark:text-white flex items-center justify-center gap-1.5 mt-1">
+              <Layers className="w-4 h-4 text-sage-500" /> {qCount}
             </span>
           </div>
         </div>
@@ -468,10 +468,10 @@ export const AssessmentDetails: React.FC = () => {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-[#F7F7F5] dark:bg-[#2C2C2E] flex items-center justify-center text-[#111111] dark:text-white">
+              <div className="w-7 h-7 rounded-lg bg-sage-100 dark:bg-[#2C2C2E] flex items-center justify-center text-sage-800 dark:text-white">
                 <FileText className="w-4 h-4" />
               </div>
-              <h2 className="text-base font-bold text-[#111111] dark:text-white">Question Paper Document</h2>
+              <h2 className="text-base font-bold text-sage-800 dark:text-white">Question Paper Document</h2>
             </div>
             {paper && (
               <Button
@@ -493,11 +493,11 @@ export const AssessmentDetails: React.FC = () => {
                     <FileText className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-[#111111] dark:text-white">{paper.file_name}</h4>
-                    <p className="text-xs text-[#737373] font-mono mt-0.5">
+                    <h4 className="text-sm font-bold text-sage-800 dark:text-white">{paper.file_name}</h4>
+                    <p className="text-xs text-sage-500 font-mono mt-0.5">
                       {paper.file_type?.toUpperCase() || 'DOCUMENT'} • {formatFileSize(paper.file_size)}
                     </p>
-                    <p className="text-[11px] text-[#737373] mt-1">
+                    <p className="text-[11px] text-sage-500 mt-1">
                       Uploaded on {paper.created_at ? new Date(paper.created_at).toLocaleDateString() : 'recently'}
                     </p>
                   </div>
@@ -531,10 +531,10 @@ export const AssessmentDetails: React.FC = () => {
             </Card>
           ) : (
             <Card variant="default" className="p-8 text-center space-y-3">
-              <UploadCloud className="w-8 h-8 text-[#737373] mx-auto opacity-50" />
+              <UploadCloud className="w-8 h-8 text-sage-500 mx-auto opacity-50" />
               <div className="space-y-1">
-                <p className="text-sm font-bold text-[#111111] dark:text-white">No Question Paper Attached</p>
-                <p className="text-xs text-[#737373]">
+                <p className="text-sm font-bold text-sage-800 dark:text-white">No Question Paper Attached</p>
+                <p className="text-xs text-sage-500">
                   Upload the official question paper (PDF, DOCX, TXT) for this assessment.
                 </p>
               </div>
@@ -554,10 +554,10 @@ export const AssessmentDetails: React.FC = () => {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-[#F7F7F5] dark:bg-[#2C2C2E] flex items-center justify-center text-[#111111] dark:text-white">
+              <div className="w-7 h-7 rounded-lg bg-sage-100 dark:bg-[#2C2C2E] flex items-center justify-center text-sage-800 dark:text-white">
                 <HelpCircle className="w-4 h-4" />
               </div>
-              <h2 className="text-base font-bold text-[#111111] dark:text-white">Questions & Question Bank</h2>
+              <h2 className="text-base font-bold text-sage-800 dark:text-white">Questions & Question Bank</h2>
             </div>
             {course && (
               <div className="flex gap-2">
@@ -587,10 +587,10 @@ export const AssessmentDetails: React.FC = () => {
 
           {questions.length === 0 ? (
             <Card variant="default" className="p-8 text-center space-y-3">
-              <Layers className="w-8 h-8 text-[#737373] mx-auto opacity-50" />
+              <Layers className="w-8 h-8 text-sage-500 mx-auto opacity-50" />
               <div className="space-y-1">
-                <p className="text-sm font-bold text-[#111111] dark:text-white">Question Paper Overview</p>
-                <p className="text-xs text-[#737373]">
+                <p className="text-sm font-bold text-sage-800 dark:text-white">Question Paper Overview</p>
+                <p className="text-xs text-sage-500">
                   Manage course questions in the Question Bank or review assessment history.
                 </p>
               </div>
@@ -608,7 +608,7 @@ export const AssessmentDetails: React.FC = () => {
                 <Card key={q.id || idx} variant="default" className="p-4 space-y-2.5">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-xs font-bold text-[#111111] dark:text-white font-mono">
+                      <span className="text-xs font-bold text-sage-800 dark:text-white font-mono">
                         Q{q.question_number || q.questionNumber || idx + 1}
                       </span>
                       {q.difficulty_level && (
@@ -642,12 +642,12 @@ export const AssessmentDetails: React.FC = () => {
                       )}
                     </div>
 
-                    <span className="text-xs font-mono font-bold text-[#111111] dark:text-white">
+                    <span className="text-xs font-mono font-bold text-sage-800 dark:text-white">
                       {q.marks || q.maxMarks} Marks
                     </span>
                   </div>
 
-                  <p className="text-xs text-[#262626] dark:text-[#E5E5E5] leading-relaxed">
+                  <p className="text-xs text-sage-700 dark:text-sage-200 leading-relaxed">
                     {q.question_text || q.text}
                   </p>
 
@@ -664,13 +664,13 @@ export const AssessmentDetails: React.FC = () => {
                   </div>
 
                   {q.ai_topics && q.ai_topics.length > 0 && (
-                    <div className="flex items-center gap-1.5 pt-1 text-[11px] text-[#737373]">
-                      <span className="font-semibold text-[#111111] dark:text-white">AI Topics:</span>
+                    <div className="flex items-center gap-1.5 pt-1 text-[11px] text-sage-500">
+                      <span className="font-semibold text-sage-800 dark:text-white">AI Topics:</span>
                       {Array.isArray(q.ai_topics) &&
                         q.ai_topics.map((t, tIdx) => {
                           const topicName = typeof t === 'string' ? t : t.topic || (t as any).name;
                           return (
-                            <span key={tIdx} className="px-2 py-0.5 rounded bg-[#F7F7F5] dark:bg-[#2C2C2E] border border-[#E5E5E5] dark:border-[#3A3A3C] font-medium">
+                            <span key={tIdx} className="px-2 py-0.5 rounded bg-sage-100 dark:bg-[#2C2C2E] border border-sage-200 dark:border-[#3A3A3C] font-medium">
                               {topicName}
                             </span>
                           );

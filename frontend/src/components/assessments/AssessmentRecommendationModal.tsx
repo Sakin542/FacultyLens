@@ -86,12 +86,12 @@ export const AssessmentRecommendationModal: React.FC<AssessmentRecommendationMod
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-[#F7F7F5] border border-[#E5E5E5] w-full max-w-5xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+      <div className="bg-sage-100 border border-sage-200 w-full max-w-5xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
         {/* Modal Header */}
-        <div className="p-6 bg-white border-b border-[#E5E5E5] flex items-center justify-between shrink-0">
+        <div className="p-6 bg-white border-b border-sage-200 flex items-center justify-between shrink-0">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#111111] text-white flex items-center gap-1.5 font-mono">
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sage-700 text-white flex items-center gap-1.5 font-mono">
                 <Sparkles className="w-3.5 h-3.5 text-amber-300" />
                 AI RECOMMENDATION ENGINE
               </span>
@@ -99,10 +99,10 @@ export const AssessmentRecommendationModal: React.FC<AssessmentRecommendationMod
                 {assessment.title}
               </Badge>
             </div>
-            <h2 className="text-xl font-bold text-[#111111]">
+            <h2 className="text-xl font-bold text-sage-800">
               Prioritized Pedagogical Recommendations
             </h2>
-            <p className="text-xs text-[#737373]">
+            <p className="text-xs text-sage-500">
               Deterministic, evidence-grounded recommendations to elevate assessment balance, LO coverage, and originality.
             </p>
           </div>
@@ -119,7 +119,7 @@ export const AssessmentRecommendationModal: React.FC<AssessmentRecommendationMod
             </Button>
             <button
               onClick={onClose}
-              className="p-2 text-[#737373] hover:text-[#111111] hover:bg-[#F7F7F5] rounded-lg transition-colors"
+              className="p-2 text-sage-500 hover:text-sage-800 hover:bg-sage-100 rounded-lg transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -140,17 +140,17 @@ export const AssessmentRecommendationModal: React.FC<AssessmentRecommendationMod
 
           {isLoading ? (
             <div className="p-16 text-center space-y-3">
-              <Loader2 className="w-8 h-8 text-[#111111] animate-spin mx-auto" />
-              <p className="text-xs text-[#737373] font-medium">Loading recommendations...</p>
+              <Loader2 className="w-8 h-8 text-sage-800 animate-spin mx-auto" />
+              <p className="text-xs text-sage-500 font-medium">Loading recommendations...</p>
             </div>
           ) : recommendations.length === 0 && !isGenerating ? (
-            <div className="p-12 text-center bg-white rounded-2xl border border-dashed border-[#E5E5E5] space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-[#F7F7F5] border border-[#E5E5E5] flex items-center justify-center mx-auto text-[#111111]">
+            <div className="p-12 text-center bg-white rounded-2xl border border-dashed border-sage-200 space-y-4">
+              <div className="w-12 h-12 rounded-xl bg-sage-100 border border-sage-200 flex items-center justify-center mx-auto text-sage-800">
                 <Sparkles className="w-6 h-6" />
               </div>
               <div className="space-y-1">
-                <h3 className="text-base font-bold text-[#111111]">No Recommendations Generated Yet</h3>
-                <p className="text-xs text-[#737373] max-w-md mx-auto">
+                <h3 className="text-base font-bold text-sage-800">No Recommendations Generated Yet</h3>
+                <p className="text-xs text-sage-500 max-w-md mx-auto">
                   Click the button below to inspect assessment questions, learning outcomes, and difficulty distributions for actionable suggestions.
                 </p>
               </div>
@@ -168,7 +168,7 @@ export const AssessmentRecommendationModal: React.FC<AssessmentRecommendationMod
         </div>
 
         {/* Modal Footer */}
-        <div className="p-4 bg-white border-t border-[#E5E5E5] flex items-center justify-between text-xs text-[#737373] shrink-0">
+        <div className="p-4 bg-white border-t border-sage-200 flex items-center justify-between text-xs text-sage-500 shrink-0">
           <span className="flex items-center gap-1.5">
             <CheckCircle2 className="w-4 h-4 text-[#16A34A]" />
             Faculty Decision-in-the-loop: The system will never automatically change questions.

@@ -19,7 +19,7 @@ export const RubricVersionHistory: React.FC<RubricVersionHistoryProps> = ({ rubr
 
   return (
     <div className="space-y-2" data-testid="rubric-version-history">
-      <div className="flex items-center gap-2 text-[11px] font-semibold text-[#737373] uppercase tracking-wider">
+      <div className="flex items-center gap-2 text-[11px] font-semibold text-sage-500 uppercase tracking-wider">
         <History className="w-3.5 h-3.5" />
         Version history ({rubrics.length})
       </div>
@@ -34,15 +34,15 @@ export const RubricVersionHistory: React.FC<RubricVersionHistoryProps> = ({ rubr
                 aria-pressed={active}
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs transition-colors ${
                   active
-                    ? 'border-[#111111] dark:border-white bg-[#F7F7F5] dark:bg-[#2C2C2E]'
-                    : 'border-[#E5E5E5] dark:border-[#3A3A3C] hover:border-[#CCCCCC]'
+                    ? 'border-sage-700 dark:border-white bg-sage-100 dark:bg-[#2C2C2E]'
+                    : 'border-sage-200 dark:border-[#3A3A3C] hover:border-sage-300'
                 }`}
               >
-                <span className="font-mono font-bold text-[#111111] dark:text-white">v{r.version}</span>
+                <span className="font-mono font-bold text-sage-800 dark:text-white">v{r.version}</span>
                 <RubricStatusBadge status={r.status} />
-                <span className="text-[#737373] font-mono">{formatMarks(r.criteria_total)} marks</span>
+                <span className="text-sage-500 font-mono">{formatMarks(r.criteria_total)} marks</span>
                 {r.generated_at && (
-                  <span className="text-[#737373]">{new Date(r.generated_at).toLocaleDateString()}</span>
+                  <span className="text-sage-500">{new Date(r.generated_at).toLocaleDateString()}</span>
                 )}
               </button>
             </li>

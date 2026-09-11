@@ -85,7 +85,7 @@ export const AssessmentVersions: React.FC = () => {
           : (
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
               <div className="xl:col-span-2 space-y-2">
-                <p className="text-xs text-[#737373]">{data.total_versions} version{data.total_versions === 1 ? '' : 's'} · tick two to compare</p>
+                <p className="text-xs text-sage-500">{data.total_versions} version{data.total_versions === 1 ? '' : 's'} · tick two to compare</p>
                 <VersionList versions={versions} currentVersionId={data.current_version_id} selected={selected} onToggleSelect={toggle} />
               </div>
               <VersionTimeline items={toTimeline(versions, data.current_version_id)} assessmentId={data.assessment.id} />

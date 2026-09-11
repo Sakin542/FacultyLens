@@ -143,12 +143,12 @@ export const AcademicChat: React.FC = () => {
 
   return (
     <div className="flex flex-col h-[calc(100vh-7rem)] min-h-[520px]" data-testid="academic-chat-page">
-      <div className="flex items-center gap-2 text-xs text-[#737373] mb-3">
-        <Link to={backLink} className="inline-flex items-center gap-1 hover:text-[#111111] dark:hover:text-white">
+      <div className="flex items-center gap-2 text-xs text-sage-500 mb-3">
+        <Link to={backLink} className="inline-flex items-center gap-1 hover:text-sage-800 dark:hover:text-white">
           <ArrowLeft className="w-3.5 h-3.5" /> {routeCourseId ? 'Back to course' : 'Dashboard'}
         </Link>
       </div>
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-[260px_1fr] rounded-xl border border-[#E5E5E5] dark:border-[#2A2A2A] overflow-hidden bg-white dark:bg-[#111111]">
+      <div className="flex-1 grid grid-cols-1 md:grid-cols-[260px_1fr] rounded-xl border border-sage-200 dark:border-[#2A2A2A] overflow-hidden bg-white dark:bg-sage-700">
         <ChatSessionList
           sessions={sessions}
           activeId={active?.id ?? null}
@@ -191,7 +191,7 @@ export const AcademicChat: React.FC = () => {
                 emptyDescription={noIndexed ? 'No indexed documents are available in this scope yet. Upload documents to the course and wait for indexing to finish.' : undefined}
               />
               {noIndexed && active.index && active.index.total > 0 && active.index.indexing > 0 && (
-                <p className="px-4 pb-2 text-xs text-[#737373]" data-testid="indexing-hint">
+                <p className="px-4 pb-2 text-xs text-sage-500" data-testid="indexing-hint">
                   Documents are still being indexed. Refresh in a moment.{' '}
                   <button type="button" className="underline" onClick={() => void openSession(active.id)}>Refresh</button>
                 </p>

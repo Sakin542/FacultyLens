@@ -84,29 +84,29 @@ export const AssessmentQualityModal: React.FC<AssessmentQualityModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
       <div
-        className="bg-white rounded-2xl max-w-5xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-[#E5E5E5] animate-in fade-in zoom-in-95 duration-200"
+        className="bg-white rounded-2xl max-w-5xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-sage-200 animate-in fade-in zoom-in-95 duration-200"
         role="dialog"
         aria-modal="true"
       >
         {/* Header */}
-        <div className="p-6 border-b border-[#E5E5E5] flex items-center justify-between">
+        <div className="p-6 border-b border-sage-200 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#111111] text-white flex items-center justify-center shadow-subtle">
+            <div className="w-10 h-10 rounded-xl bg-sage-700 text-white flex items-center justify-center shadow-subtle">
               <BarChart3 className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold text-[#111111]">Assessment Quality Engine</h2>
+                <h2 className="text-lg font-bold text-sage-800">Assessment Quality Engine</h2>
                 <Badge variant="neutral" className="text-[10px]">STEP 13</Badge>
               </div>
-              <p className="text-xs text-[#737373]">
+              <p className="text-xs text-sage-500">
                 {assessment.title} • {assessment.courseCode || assessment.course?.course_code || 'Course'}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-[#737373] hover:text-[#111111] hover:bg-[#F7F7F5] transition-colors"
+            className="p-1.5 rounded-lg text-sage-500 hover:text-sage-800 hover:bg-sage-100 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -125,8 +125,8 @@ export const AssessmentQualityModal: React.FC<AssessmentQualityModalProps> = ({
           )}
 
           {/* Action Ribbon */}
-          <div className="bg-[#F7F7F5] rounded-xl p-4 border border-[#E5E5E5] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <div className="text-xs text-[#525252]">
+          <div className="bg-sage-100 rounded-xl p-4 border border-sage-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="text-xs text-sage-600">
               <span>Evaluating <strong>{currentQuestionsCount}</strong> questions across 6 core academic dimensions.</span>
             </div>
 
@@ -165,78 +165,78 @@ export const AssessmentQualityModal: React.FC<AssessmentQualityModalProps> = ({
 
           {/* Expandable Scoring Weight Settings */}
           {showSettings && (
-            <div className="p-4 bg-white border border-[#E5E5E5] rounded-xl space-y-3 shadow-subtle animate-in slide-in-from-top-2">
+            <div className="p-4 bg-white border border-sage-200 rounded-xl space-y-3 shadow-subtle animate-in slide-in-from-top-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-[#111111] uppercase tracking-wider">Configurable Dimension Weights (%)</span>
-                <span className="text-[11px] text-[#737373]">
+                <span className="text-xs font-bold text-sage-800 uppercase tracking-wider">Configurable Dimension Weights (%)</span>
+                <span className="text-[11px] text-sage-500">
                   Total: {topicWeight + loWeight + difficultyWeight + cognitiveWeight + questionDiversityWeight + marksWeight}%
                 </span>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                 <div>
-                  <label className="text-[11px] text-[#737373] block mb-1">Topics ({topicWeight}%)</label>
+                  <label className="text-[11px] text-sage-500 block mb-1">Topics ({topicWeight}%)</label>
                   <input
                     type="number"
                     min="0"
                     max="50"
                     value={topicWeight}
                     onChange={(e) => setTopicWeight(parseInt(e.target.value) || 0)}
-                    className="w-full px-2.5 py-1 text-xs border border-[#E5E5E5] rounded-lg font-mono"
+                    className="w-full px-2.5 py-1 text-xs border border-sage-200 rounded-lg font-mono"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] text-[#737373] block mb-1">LOs ({loWeight}%)</label>
+                  <label className="text-[11px] text-sage-500 block mb-1">LOs ({loWeight}%)</label>
                   <input
                     type="number"
                     min="0"
                     max="50"
                     value={loWeight}
                     onChange={(e) => setLoWeight(parseInt(e.target.value) || 0)}
-                    className="w-full px-2.5 py-1 text-xs border border-[#E5E5E5] rounded-lg font-mono"
+                    className="w-full px-2.5 py-1 text-xs border border-sage-200 rounded-lg font-mono"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] text-[#737373] block mb-1">Difficulty ({difficultyWeight}%)</label>
+                  <label className="text-[11px] text-sage-500 block mb-1">Difficulty ({difficultyWeight}%)</label>
                   <input
                     type="number"
                     min="0"
                     max="50"
                     value={difficultyWeight}
                     onChange={(e) => setDifficultyWeight(parseInt(e.target.value) || 0)}
-                    className="w-full px-2.5 py-1 text-xs border border-[#E5E5E5] rounded-lg font-mono"
+                    className="w-full px-2.5 py-1 text-xs border border-sage-200 rounded-lg font-mono"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] text-[#737373] block mb-1">Cognitive ({cognitiveWeight}%)</label>
+                  <label className="text-[11px] text-sage-500 block mb-1">Cognitive ({cognitiveWeight}%)</label>
                   <input
                     type="number"
                     min="0"
                     max="50"
                     value={cognitiveWeight}
                     onChange={(e) => setCognitiveWeight(parseInt(e.target.value) || 0)}
-                    className="w-full px-2.5 py-1 text-xs border border-[#E5E5E5] rounded-lg font-mono"
+                    className="w-full px-2.5 py-1 text-xs border border-sage-200 rounded-lg font-mono"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] text-[#737373] block mb-1">Formats ({questionDiversityWeight}%)</label>
+                  <label className="text-[11px] text-sage-500 block mb-1">Formats ({questionDiversityWeight}%)</label>
                   <input
                     type="number"
                     min="0"
                     max="50"
                     value={questionDiversityWeight}
                     onChange={(e) => setQuestionDiversityWeight(parseInt(e.target.value) || 0)}
-                    className="w-full px-2.5 py-1 text-xs border border-[#E5E5E5] rounded-lg font-mono"
+                    className="w-full px-2.5 py-1 text-xs border border-sage-200 rounded-lg font-mono"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] text-[#737373] block mb-1">Marks ({marksWeight}%)</label>
+                  <label className="text-[11px] text-sage-500 block mb-1">Marks ({marksWeight}%)</label>
                   <input
                     type="number"
                     min="0"
                     max="50"
                     value={marksWeight}
                     onChange={(e) => setMarksWeight(parseInt(e.target.value) || 0)}
-                    className="w-full px-2.5 py-1 text-xs border border-[#E5E5E5] rounded-lg font-mono"
+                    className="w-full px-2.5 py-1 text-xs border border-sage-200 rounded-lg font-mono"
                   />
                 </div>
               </div>
@@ -247,16 +247,16 @@ export const AssessmentQualityModal: React.FC<AssessmentQualityModalProps> = ({
           {qualityResult ? (
             <AssessmentQualitySection qualityData={qualityResult} />
           ) : (
-            <div className="py-12 text-center text-xs text-[#737373] space-y-2">
-              <BarChart3 className="w-8 h-8 text-[#A3A3A3] mx-auto mb-2" />
+            <div className="py-12 text-center text-xs text-sage-500 space-y-2">
+              <BarChart3 className="w-8 h-8 text-sage-400 mx-auto mb-2" />
               <p>Click <strong>Run Quality Audit</strong> to evaluate examination balance and pedagogical rigor.</p>
             </div>
           )}
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-[#E5E5E5] bg-[#F7F7F5] flex items-center justify-between rounded-b-2xl">
-          <span className="text-xs text-[#737373]">
+        <div className="p-4 border-t border-sage-200 bg-sage-100 flex items-center justify-between rounded-b-2xl">
+          <span className="text-xs text-sage-500">
             {qualityResult ? 'Quality report successfully computed and synchronized.' : 'Ready to evaluate.'}
           </span>
           <Button variant="secondary" size="sm" onClick={onClose}>

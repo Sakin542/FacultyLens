@@ -18,9 +18,9 @@ interface SubmissionCardProps {
  */
 export const SubmissionCard: React.FC<SubmissionCardProps> = ({ assessmentId, stats, isLoading = false, error, onImport }) => {
   const stat = (label: string, value: number | string) => (
-    <div className="p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl text-center">
-      <span className="text-[10px] uppercase font-semibold text-[#737373] block">{label}</span>
-      <span className="text-lg font-bold text-[#111111] dark:text-white block mt-1">{value}</span>
+    <div className="p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl text-center">
+      <span className="text-[10px] uppercase font-semibold text-sage-500 block">{label}</span>
+      <span className="text-lg font-bold text-sage-800 dark:text-white block mt-1">{value}</span>
     </div>
   );
 
@@ -28,10 +28,10 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ assessmentId, st
     <Card variant="default" className="p-5 space-y-4" data-testid="submission-card-summary">
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-[#F7F7F5] dark:bg-[#2C2C2E] flex items-center justify-center text-[#111111] dark:text-white">
+          <div className="w-7 h-7 rounded-lg bg-sage-100 dark:bg-[#2C2C2E] flex items-center justify-center text-sage-800 dark:text-white">
             <Users className="w-4 h-4" />
           </div>
-          <h2 className="text-base font-bold text-[#111111] dark:text-white">Student Submissions</h2>
+          <h2 className="text-base font-bold text-sage-800 dark:text-white">Student Submissions</h2>
         </div>
         <div className="flex items-center gap-2">
           {onImport && (
@@ -51,7 +51,7 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ assessmentId, st
         <p className="text-xs text-red-600" role="alert">{error}</p>
       ) : isLoading || !stats ? (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 animate-pulse">
-          {[1, 2, 3, 4].map((i) => <div key={i} className="h-16 bg-[#E5E5E5] dark:bg-[#2C2C2E] rounded-xl" />)}
+          {[1, 2, 3, 4].map((i) => <div key={i} className="h-16 bg-sage-200 dark:bg-[#2C2C2E] rounded-xl" />)}
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -62,7 +62,7 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ assessmentId, st
         </div>
       )}
       {stats && !error && (
-        <p className="text-[11px] text-[#737373]">
+        <p className="text-[11px] text-sage-500">
           {stats.total_answers} answers across {stats.questions_count} questions · {stats.by_grading_status.NOT_STARTED} submissions not started
         </p>
       )}

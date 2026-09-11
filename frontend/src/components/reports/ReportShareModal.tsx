@@ -44,24 +44,24 @@ export const ReportShareModal: React.FC<ReportShareModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in duration-150">
-      <div className="bg-white rounded-xl max-w-lg w-full p-6 shadow-xl border border-[#E5E5E5]">
-        <div className="flex items-center justify-between pb-4 border-b border-[#F0F0F0]">
+      <div className="bg-white rounded-xl max-w-lg w-full p-6 shadow-xl border border-sage-200">
+        <div className="flex items-center justify-between pb-4 border-b border-sage-100">
           <div className="flex items-center gap-2">
-            <Globe className="w-5 h-5 text-[#111111]" />
-            <h3 className="text-base font-bold text-[#111111]">
+            <Globe className="w-5 h-5 text-sage-800" />
+            <h3 className="text-base font-bold text-sage-800">
               Share Academic Assessment Report
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="text-[#737373] hover:text-[#111111] p-1 rounded-md transition-colors"
+            className="text-sage-500 hover:text-sage-800 p-1 rounded-md transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <div className="py-5 space-y-4">
-          <p className="text-xs text-[#525252] leading-relaxed">
+          <p className="text-xs text-sage-600 leading-relaxed">
             Generate a secure, view-only public link to share this assessment quality report with academic committee members, department chairs, or external accreditation evaluators.
           </p>
 
@@ -75,7 +75,7 @@ export const ReportShareModal: React.FC<ReportShareModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#111111] mb-1.5">
+                <label className="block text-xs font-semibold text-sage-800 mb-1.5">
                   Public Share Link:
                 </label>
                 <div className="flex items-center gap-2">
@@ -83,7 +83,7 @@ export const ReportShareModal: React.FC<ReportShareModalProps> = ({
                     type="text"
                     readOnly
                     value={shareUrl}
-                    className="flex-1 text-xs font-mono bg-[#F7F7F5] border border-[#E5E5E5] rounded-lg px-3 py-2 text-[#111111] select-all focus:outline-none focus:ring-1 focus:ring-[#111111]"
+                    className="flex-1 text-xs font-mono bg-sage-100 border border-sage-200 rounded-lg px-3 py-2 text-sage-800 select-all focus:outline-none focus:ring-1 focus:ring-sage-600"
                   />
                   <Button
                     variant="primary"
@@ -96,7 +96,7 @@ export const ReportShareModal: React.FC<ReportShareModalProps> = ({
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-3 border-t border-[#F0F0F0]">
+              <div className="flex items-center justify-between pt-3 border-t border-sage-100">
                 <a
                   href={shareUrl}
                   target="_blank"
@@ -143,7 +143,7 @@ export const ReportShareModal: React.FC<ReportShareModalProps> = ({
           )}
         </div>
 
-        <div className="pt-3 border-t border-[#F0F0F0] flex justify-end">
+        <div className="pt-3 border-t border-sage-100 flex justify-end">
           <Button variant="outline" size="sm" onClick={onClose}>
             Close
           </Button>

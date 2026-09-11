@@ -23,7 +23,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   const clampedValue = Math.min(Math.max(0, value), 100);
 
   const getBarColor = (val: number) => {
-    if (!statusColor) return 'bg-[#111111]';
+    if (!statusColor) return 'bg-sage-700';
     if (val >= 80) return 'bg-[#16A34A]';
     if (val >= 60) return 'bg-[#D97706]';
     return 'bg-[#DC2626]';
@@ -40,11 +40,11 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
       {(label || showValue) && (
         <div className="flex items-center justify-between text-xs">
           <div className="flex items-center gap-1.5">
-            {label && <span className="font-medium text-[#262626]">{label}</span>}
-            {sublabel && <span className="text-[#737373] text-[11px]">({sublabel})</span>}
+            {label && <span className="font-medium text-sage-700">{label}</span>}
+            {sublabel && <span className="text-sage-500 text-[11px]">({sublabel})</span>}
           </div>
           {showValue && (
-            <span className="font-semibold text-[#111111] tabular-nums">{clampedValue}%</span>
+            <span className="font-semibold text-sage-800 tabular-nums">{clampedValue}%</span>
           )}
         </div>
       )}
@@ -54,7 +54,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
         aria-valuemin={0}
         aria-valuemax={100}
         className={cn(
-          'w-full bg-[#E5E5E5] rounded-full overflow-hidden',
+          'w-full bg-sage-200 rounded-full overflow-hidden',
           heightClasses[size]
         )}
       >

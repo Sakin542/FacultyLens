@@ -21,20 +21,20 @@ export const ReportLOSection: React.FC<ReportLOSectionProps> = ({ loAlignment })
   };
 
   return (
-    <div className="bg-white border border-[#E5E5E5] rounded-xl p-6 mb-6 shadow-subtle">
+    <div className="bg-white border border-sage-200 rounded-xl p-6 mb-6 shadow-subtle">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5">
         <div>
-          <h3 className="text-base font-bold text-[#111111]">
+          <h3 className="text-base font-bold text-sage-800">
             2. Learning Outcome (LO) Alignment Analysis
           </h3>
-          <p className="text-xs text-[#737373] mt-0.5">
+          <p className="text-xs text-sage-500 mt-0.5">
             Evaluates semantic relevance and conceptual coherence between questions and target learning outcomes using NLP cosine similarity.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-xs text-[#737373]">Composite LO Alignment:</span>
-          <span className="text-sm font-bold text-[#111111] bg-[#F7F7F5] px-2.5 py-1 rounded border border-[#E5E5E5]">
+          <span className="text-xs text-sage-500">Composite LO Alignment:</span>
+          <span className="text-sm font-bold text-sage-800 bg-sage-100 px-2.5 py-1 rounded border border-sage-200">
             {Math.round(loAlignment.score * 10) / 10}%
           </span>
         </div>
@@ -42,12 +42,12 @@ export const ReportLOSection: React.FC<ReportLOSectionProps> = ({ loAlignment })
 
       {/* Outcomes Summary Table */}
       <div className="mb-6">
-        <h4 className="text-xs font-bold uppercase tracking-wider text-[#525252] mb-2.5">
+        <h4 className="text-xs font-bold uppercase tracking-wider text-sage-600 mb-2.5">
           Course Learning Outcomes Summary
         </h4>
-        <div className="border border-[#E5E5E5] rounded-lg overflow-hidden">
+        <div className="border border-sage-200 rounded-lg overflow-hidden">
           <table className="w-full text-left text-xs border-collapse">
-            <thead className="bg-[#F7F7F5] border-b border-[#E5E5E5] text-[#262626] font-semibold">
+            <thead className="bg-sage-100 border-b border-sage-200 text-sage-700 font-semibold">
               <tr>
                 <th className="py-2.5 px-4 w-24">LO Code</th>
                 <th className="py-2.5 px-4">Description</th>
@@ -59,17 +59,17 @@ export const ReportLOSection: React.FC<ReportLOSectionProps> = ({ loAlignment })
             <tbody className="divide-y divide-[#EBEBEB]">
               {loAlignment.outcomes && loAlignment.outcomes.length > 0 ? (
                 loAlignment.outcomes.map((lo, idx) => (
-                  <tr key={idx} className="hover:bg-[#FAFAFA] transition-colors">
-                    <td className="py-2.5 px-4 font-bold text-[#111111]">
+                  <tr key={idx} className="hover:bg-sage-50 transition-colors">
+                    <td className="py-2.5 px-4 font-bold text-sage-800">
                       {lo.code}
                     </td>
-                    <td className="py-2.5 px-4 text-[#525252]">
+                    <td className="py-2.5 px-4 text-sage-600">
                       {lo.description}
                     </td>
-                    <td className="py-2.5 px-4 text-center font-mono text-[#111111]">
+                    <td className="py-2.5 px-4 text-center font-mono text-sage-800">
                       {lo.question_count}
                     </td>
-                    <td className="py-2.5 px-4 text-center font-mono font-medium text-[#111111]">
+                    <td className="py-2.5 px-4 text-center font-mono font-medium text-sage-800">
                       {Number(lo.average_score).toFixed(2)}
                     </td>
                     <td className="py-2.5 px-4 text-center">
@@ -79,7 +79,7 @@ export const ReportLOSection: React.FC<ReportLOSectionProps> = ({ loAlignment })
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="py-4 text-center text-xs text-[#737373]">
+                  <td colSpan={5} className="py-4 text-center text-xs text-sage-500">
                     No learning outcome records defined for this course.
                   </td>
                 </tr>
@@ -92,12 +92,12 @@ export const ReportLOSection: React.FC<ReportLOSectionProps> = ({ loAlignment })
       {/* Question-to-LO Detailed Mapping */}
       {loAlignment.question_mappings && loAlignment.question_mappings.length > 0 && (
         <div>
-          <h4 className="text-xs font-bold uppercase tracking-wider text-[#525252] mb-2.5">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-sage-600 mb-2.5">
             Question-to-Learning Outcome Detailed Mapping
           </h4>
-          <div className="border border-[#E5E5E5] rounded-lg overflow-hidden">
+          <div className="border border-sage-200 rounded-lg overflow-hidden">
             <table className="w-full text-left text-xs border-collapse">
-              <thead className="bg-[#F7F7F5] border-b border-[#E5E5E5] text-[#262626] font-semibold">
+              <thead className="bg-sage-100 border-b border-sage-200 text-sage-700 font-semibold">
                 <tr>
                   <th className="py-2.5 px-3 text-center w-12">Q#</th>
                   <th className="py-2.5 px-4">Question Content</th>
@@ -109,17 +109,17 @@ export const ReportLOSection: React.FC<ReportLOSectionProps> = ({ loAlignment })
               </thead>
               <tbody className="divide-y divide-[#EBEBEB]">
                 {loAlignment.question_mappings.map((qm, qIdx) => (
-                  <tr key={qIdx} className="hover:bg-[#FAFAFA] transition-colors">
-                    <td className="py-2.5 px-3 text-center font-bold text-[#111111]">
+                  <tr key={qIdx} className="hover:bg-sage-50 transition-colors">
+                    <td className="py-2.5 px-3 text-center font-bold text-sage-800">
                       Q{qm.question_number}
                     </td>
                     <td className="py-2.5 px-4 text-[#333333] font-medium max-w-xs truncate">
                       {qm.question_text}
                     </td>
-                    <td className="py-2.5 px-3 font-semibold text-[#111111]">
+                    <td className="py-2.5 px-3 font-semibold text-sage-800">
                       {qm.lo_code}
                     </td>
-                    <td className="py-2.5 px-3 text-center font-mono font-medium text-[#111111]">
+                    <td className="py-2.5 px-3 text-center font-mono font-medium text-sage-800">
                       {Number(qm.similarity_score).toFixed(2)}
                     </td>
                     <td className="py-2.5 px-3 text-center">

@@ -59,21 +59,21 @@ export const ImportAnswersModal: React.FC<ImportAnswersModalProps> = ({ isOpen, 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-      <div className="w-full max-w-lg bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl border border-[#E5E5E5] dark:border-[#2C2C2E] overflow-hidden" role="dialog" aria-modal="true" aria-labelledby="import-answers-title">
-        <div className="flex items-center justify-between p-4 border-b border-[#E5E5E5] dark:border-[#2C2C2E]">
-          <h3 id="import-answers-title" className="text-sm font-bold text-[#111111] dark:text-white flex items-center gap-2">
+      <div className="w-full max-w-lg bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl border border-sage-200 dark:border-[#2C2C2E] overflow-hidden" role="dialog" aria-modal="true" aria-labelledby="import-answers-title">
+        <div className="flex items-center justify-between p-4 border-b border-sage-200 dark:border-[#2C2C2E]">
+          <h3 id="import-answers-title" className="text-sm font-bold text-sage-800 dark:text-white flex items-center gap-2">
             <FileSpreadsheet className="w-4 h-4" /> Import Student Answers (CSV)
           </h3>
-          <button type="button" onClick={onClose} disabled={busy} aria-label="Close" className="p-1 rounded-lg text-[#737373] hover:text-[#111111] dark:hover:text-white">
+          <button type="button" onClick={onClose} disabled={busy} aria-label="Close" className="p-1 rounded-lg text-sage-500 hover:text-sage-800 dark:hover:text-white">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-5 space-y-4 text-xs">
-          <div className="p-3 rounded-xl bg-[#F7F7F5] dark:bg-[#2C2C2E] border border-[#E5E5E5] dark:border-[#3A3A3C] space-y-1">
-            <p className="font-semibold text-[#111111] dark:text-white">Required columns</p>
-            <pre className="font-mono text-[11px] text-[#262626] dark:text-[#E5E5E5] whitespace-pre-wrap">student_identifier,question_number,answer_text{'\n'}STU001,1,"Normalization is..."</pre>
-            <p className="text-[11px] text-[#737373]">Students must already be registered. Rows are validated together; nothing is imported if any row is invalid.</p>
+          <div className="p-3 rounded-xl bg-sage-100 dark:bg-[#2C2C2E] border border-sage-200 dark:border-[#3A3A3C] space-y-1">
+            <p className="font-semibold text-sage-800 dark:text-white">Required columns</p>
+            <pre className="font-mono text-[11px] text-sage-700 dark:text-sage-200 whitespace-pre-wrap">student_identifier,question_number,answer_text{'\n'}STU001,1,"Normalization is..."</pre>
+            <p className="text-[11px] text-sage-500">Students must already be registered. Rows are validated together; nothing is imported if any row is invalid.</p>
           </div>
 
           <div
@@ -83,14 +83,14 @@ export const ImportAnswersModal: React.FC<ImportAnswersModalProps> = ({ isOpen, 
             onKeyDown={(e) => { if (e.key === 'Enter') inputRef.current?.click(); }}
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => { e.preventDefault(); pick(e.dataTransfer.files?.[0]); }}
-            className={`flex flex-col items-center justify-center p-6 rounded-xl border-2 border-dashed cursor-pointer ${file ? 'border-[#111111] dark:border-white bg-[#F7F7F5] dark:bg-[#2C2C2E]' : 'border-[#E5E5E5] dark:border-[#3A3A3C] hover:border-[#CCCCCC]'}`}
+            className={`flex flex-col items-center justify-center p-6 rounded-xl border-2 border-dashed cursor-pointer ${file ? 'border-sage-700 dark:border-white bg-sage-100 dark:bg-[#2C2C2E]' : 'border-sage-200 dark:border-[#3A3A3C] hover:border-sage-300'}`}
           >
             <input ref={inputRef} type="file" accept=".csv,text/csv" className="hidden" onChange={(e) => pick(e.target.files?.[0])} disabled={busy} data-testid="csv-input" />
-            <UploadCloud className="w-5 h-5 text-[#737373] mb-1" />
+            <UploadCloud className="w-5 h-5 text-sage-500 mb-1" />
             {file ? (
-              <p className="font-medium text-[#111111] dark:text-white">{file.name} · {(file.size / 1024).toFixed(0)} KB</p>
+              <p className="font-medium text-sage-800 dark:text-white">{file.name} · {(file.size / 1024).toFixed(0)} KB</p>
             ) : (
-              <p className="text-[#262626] dark:text-[#E5E5E5]">Click or drop a CSV file (max 5 MB)</p>
+              <p className="text-sage-700 dark:text-sage-200">Click or drop a CSV file (max 5 MB)</p>
             )}
           </div>
 
@@ -105,7 +105,7 @@ export const ImportAnswersModal: React.FC<ImportAnswersModalProps> = ({ isOpen, 
             </div>
           )}
 
-          <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#E5E5E5] dark:border-[#2C2C2E]">
+          <div className="flex items-center justify-end gap-2 pt-2 border-t border-sage-200 dark:border-[#2C2C2E]">
             <Button type="button" variant="ghost" size="sm" onClick={onClose} disabled={busy}>Cancel</Button>
             <Button type="submit" variant="primary" size="sm" isLoading={busy} disabled={!file || busy} leftIcon={<UploadCloud className="w-3.5 h-3.5" />}>
               Import Answers

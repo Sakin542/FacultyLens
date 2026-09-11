@@ -13,16 +13,16 @@ export const ChatEmptyState: React.FC<{ title?: string; description?: string; cl
   className,
 }) => (
   <div data-testid="chat-empty-state" className={cn('flex flex-col items-center justify-center text-center py-12 px-6', className)}>
-    <div className="w-12 h-12 rounded-full bg-[#F7F7F5] dark:bg-[#1F1F1F] border border-[#E5E5E5] dark:border-[#2A2A2A] flex items-center justify-center text-[#737373] mb-4">
+    <div className="w-12 h-12 rounded-full bg-sage-100 dark:bg-[#1F1F1F] border border-sage-200 dark:border-[#2A2A2A] flex items-center justify-center text-sage-500 mb-4">
       <MessageSquareText className="w-6 h-6" />
     </div>
-    <h4 className="text-base font-semibold text-[#111111] dark:text-white mb-1">{title}</h4>
-    <p className="text-sm text-[#737373] max-w-md">{description}</p>
+    <h4 className="text-base font-semibold text-sage-800 dark:text-white mb-1">{title}</h4>
+    <p className="text-sm text-sage-500 max-w-md">{description}</p>
   </div>
 );
 
 export const ChatLoading: React.FC<{ label?: string }> = ({ label = 'Searching your documents…' }) => (
-  <div data-testid="chat-loading" role="status" className="flex items-center gap-2 text-sm text-[#737373] px-4 py-3">
+  <div data-testid="chat-loading" role="status" className="flex items-center gap-2 text-sm text-sage-500 px-4 py-3">
     <Loader2 className="w-4 h-4 animate-spin" />
     <span>{label}</span>
   </div>

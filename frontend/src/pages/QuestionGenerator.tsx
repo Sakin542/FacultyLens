@@ -163,9 +163,9 @@ export const QuestionGenerator: React.FC = () => {
     <div className="space-y-4" data-testid="question-generator-page">
       <div className="flex items-center justify-between gap-2">
         <div>
-          <Link to={backLink} className="inline-flex items-center gap-1 text-xs text-[#737373] hover:text-[#111111] dark:hover:text-white"><ArrowLeft className="w-3.5 h-3.5" /> {routeCourseId ? 'Back to course' : 'Dashboard'}</Link>
-          <h1 className="text-2xl font-bold text-[#111111] dark:text-white flex items-center gap-2"><Sparkles className="w-5 h-5" /> Constrained Question Generator</h1>
-          <p className="text-sm text-[#737373]">AI drafts under your constraints — grounded in your course outcomes and documents, validated, and always reviewed by you.</p>
+          <Link to={backLink} className="inline-flex items-center gap-1 text-xs text-sage-500 hover:text-sage-800 dark:hover:text-white"><ArrowLeft className="w-3.5 h-3.5" /> {routeCourseId ? 'Back to course' : 'Dashboard'}</Link>
+          <h1 className="text-2xl font-bold text-sage-800 dark:text-white flex items-center gap-2"><Sparkles className="w-5 h-5" /> Constrained Question Generator</h1>
+          <p className="text-sm text-sage-500">AI drafts under your constraints — grounded in your course outcomes and documents, validated, and always reviewed by you.</p>
         </div>
       </div>
 
@@ -200,7 +200,7 @@ export const QuestionGenerator: React.FC = () => {
                     questions={questions} outcomes={outcomeOptions} regenerationsLeft={regenerationsLeft} hasAssessment={!!active.assessment_id}
                     canReview={canReview}
                     renderDiscussion={(q) => (
-                      <details className="text-xs"><summary className="cursor-pointer text-[#737373]">Discussion</summary>
+                      <details className="text-xs"><summary className="cursor-pointer text-sage-500">Discussion</summary>
                         <div className="mt-2"><CollaborationComments courseId={active.course_id} commentableType="generated_question" commentableId={q.id} currentUserId={user ? Number(user.id) : undefined} canComment={permissions ? !!permissions.comment : undefined} canResolve={canReview} title="Draft discussion" compact showResolvedToggle={false} /></div>
                       </details>
                     )}

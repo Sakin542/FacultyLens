@@ -17,16 +17,16 @@ export const ReportError: React.FC<ReportErrorProps> = ({
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-[450px] flex flex-col items-center justify-center p-8 bg-white border border-[#E5E5E5] rounded-xl shadow-subtle text-center">
+    <div className="min-h-[450px] flex flex-col items-center justify-center p-8 bg-white border border-sage-200 rounded-xl shadow-subtle text-center">
       <div className="w-14 h-14 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center mb-4 text-red-600">
         <AlertTriangle className="w-7 h-7" />
       </div>
 
-      <h3 className="text-lg font-bold text-[#111111]">
+      <h3 className="text-lg font-bold text-sage-800">
         Unable to Load Report
       </h3>
 
-      <p className="text-xs text-[#737373] max-w-md mt-1.5 mb-6 leading-relaxed">
+      <p className="text-xs text-sage-500 max-w-md mt-1.5 mb-6 leading-relaxed">
         {message}
       </p>
 

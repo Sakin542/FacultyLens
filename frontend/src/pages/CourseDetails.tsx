@@ -249,8 +249,8 @@ export const CourseDetails: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
-        <Loader2 className="w-8 h-8 animate-spin text-[#111111] dark:text-white" />
-        <p className="text-sm text-[#737373]">Loading course information...</p>
+        <Loader2 className="w-8 h-8 animate-spin text-sage-800 dark:text-white" />
+        <p className="text-sm text-sage-500">Loading course information...</p>
       </div>
     );
   }
@@ -258,7 +258,7 @@ export const CourseDetails: React.FC = () => {
   if (error || !course) {
     return (
       <div className="space-y-4">
-        <Link to="/courses" className="inline-flex items-center gap-2 text-xs font-semibold text-[#737373] hover:text-[#111111] dark:hover:text-white">
+        <Link to="/courses" className="inline-flex items-center gap-2 text-xs font-semibold text-sage-500 hover:text-sage-800 dark:hover:text-white">
           <ArrowLeft className="w-4 h-4" /> Back to Courses
         </Link>
         <div className="p-6 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-xl space-y-3">
@@ -295,14 +295,14 @@ export const CourseDetails: React.FC = () => {
       {/* Breadcrumb & Top Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs text-[#737373]">
-            <Link to="/courses" className="hover:text-[#111111] dark:hover:text-white transition-colors">
+          <div className="flex items-center gap-2 text-xs text-sage-500">
+            <Link to="/courses" className="hover:text-sage-800 dark:hover:text-white transition-colors">
               Courses
             </Link>
             <span>/</span>
-            <span className="font-mono font-semibold text-[#111111] dark:text-white">{courseCode}</span>
+            <span className="font-mono font-semibold text-sage-800 dark:text-white">{courseCode}</span>
           </div>
-          <h1 className="text-2xl font-bold text-[#111111] dark:text-white">{courseName}</h1>
+          <h1 className="text-2xl font-bold text-sage-800 dark:text-white">{courseName}</h1>
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
@@ -348,7 +348,7 @@ export const CourseDetails: React.FC = () => {
       {/* Course Overview Card */}
       <Card variant="default" className="p-6 space-y-6">
         <div className="flex flex-wrap items-center gap-3">
-          <Badge variant="outline" className="font-mono font-bold text-sm bg-[#F7F7F5] dark:bg-[#2C2C2E]">
+          <Badge variant="outline" className="font-mono font-bold text-sm bg-sage-100 dark:bg-[#2C2C2E]">
             {courseCode}
           </Badge>
           <Badge variant="neutral" className="text-xs">
@@ -369,36 +369,36 @@ export const CourseDetails: React.FC = () => {
 
         {course.description && (
           <div className="space-y-1">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-[#737373]">Course Description</h3>
-            <p className="text-sm text-[#262626] dark:text-[#E5E5E5] leading-relaxed whitespace-pre-line">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-sage-500">Course Description</h3>
+            <p className="text-sm text-sage-700 dark:text-sage-200 leading-relaxed whitespace-pre-line">
               {course.description}
             </p>
           </div>
         )}
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-[#E5E5E5] dark:border-[#2C2C2E] text-center">
-          <div className="p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl">
-            <span className="text-[10px] uppercase font-semibold text-[#737373] block">Learning Outcomes</span>
-            <span className="text-lg font-bold text-[#111111] dark:text-white flex items-center justify-center gap-1.5 mt-1">
-              <Sparkles className="w-4 h-4 text-[#737373]" /> {learningOutcomes.length}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-sage-200 dark:border-[#2C2C2E] text-center">
+          <div className="p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl">
+            <span className="text-[10px] uppercase font-semibold text-sage-500 block">Learning Outcomes</span>
+            <span className="text-lg font-bold text-sage-800 dark:text-white flex items-center justify-center gap-1.5 mt-1">
+              <Sparkles className="w-4 h-4 text-sage-500" /> {learningOutcomes.length}
             </span>
           </div>
-          <div className="p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl">
-            <span className="text-[10px] uppercase font-semibold text-[#737373] block">Course Materials</span>
-            <span className="text-lg font-bold text-[#111111] dark:text-white flex items-center justify-center gap-1.5 mt-1">
-              <Layers className="w-4 h-4 text-[#737373]" /> {materials.length}
+          <div className="p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl">
+            <span className="text-[10px] uppercase font-semibold text-sage-500 block">Course Materials</span>
+            <span className="text-lg font-bold text-sage-800 dark:text-white flex items-center justify-center gap-1.5 mt-1">
+              <Layers className="w-4 h-4 text-sage-500" /> {materials.length}
             </span>
           </div>
-          <div className="p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl">
-            <span className="text-[10px] uppercase font-semibold text-[#737373] block">Assessments</span>
-            <span className="text-lg font-bold text-[#111111] dark:text-white flex items-center justify-center gap-1.5 mt-1">
-              <FileCheck2 className="w-4 h-4 text-[#737373]" /> {course.assessments_count ?? course.assessmentCount ?? 0}
+          <div className="p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl">
+            <span className="text-[10px] uppercase font-semibold text-sage-500 block">Assessments</span>
+            <span className="text-lg font-bold text-sage-800 dark:text-white flex items-center justify-center gap-1.5 mt-1">
+              <FileCheck2 className="w-4 h-4 text-sage-500" /> {course.assessments_count ?? course.assessmentCount ?? 0}
             </span>
           </div>
-          <div className="p-3 bg-[#F7F7F5] dark:bg-[#2C2C2E] rounded-xl">
-            <span className="text-[10px] uppercase font-semibold text-[#737373] block">Term / Year</span>
-            <span className="text-xs font-bold text-[#111111] dark:text-white flex items-center justify-center gap-1.5 mt-2">
-              <Calendar className="w-3.5 h-3.5 text-[#737373]" /> {course.semester} {academicYear}
+          <div className="p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl">
+            <span className="text-[10px] uppercase font-semibold text-sage-500 block">Term / Year</span>
+            <span className="text-xs font-bold text-sage-800 dark:text-white flex items-center justify-center gap-1.5 mt-2">
+              <Calendar className="w-3.5 h-3.5 text-sage-500" /> {course.semester} {academicYear}
             </span>
           </div>
         </div>
@@ -410,10 +410,10 @@ export const CourseDetails: React.FC = () => {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-[#F7F7F5] dark:bg-[#2C2C2E] flex items-center justify-center text-[#111111] dark:text-white">
+              <div className="w-7 h-7 rounded-lg bg-sage-100 dark:bg-[#2C2C2E] flex items-center justify-center text-sage-800 dark:text-white">
                 <Sparkles className="w-4 h-4" />
               </div>
-              <h2 className="text-base font-bold text-[#111111] dark:text-white">Course Learning Outcomes</h2>
+              <h2 className="text-base font-bold text-sage-800 dark:text-white">Course Learning Outcomes</h2>
               <Badge variant="outline" className="text-[10px] font-mono">{learningOutcomes.length}</Badge>
             </div>
             <Button
@@ -428,10 +428,10 @@ export const CourseDetails: React.FC = () => {
 
           {learningOutcomes.length === 0 ? (
             <Card variant="default" className="p-8 text-center space-y-3">
-              <Sparkles className="w-8 h-8 text-[#737373] mx-auto opacity-50" />
+              <Sparkles className="w-8 h-8 text-sage-500 mx-auto opacity-50" />
               <div className="space-y-1">
-                <p className="text-sm font-bold text-[#111111] dark:text-white">No learning outcomes defined</p>
-                <p className="text-xs text-[#737373]">
+                <p className="text-sm font-bold text-sage-800 dark:text-white">No learning outcomes defined</p>
+                <p className="text-xs text-sage-500">
                   Add CLOs to map exam questions and measure student cognitive achievements.
                 </p>
               </div>
@@ -450,11 +450,11 @@ export const CourseDetails: React.FC = () => {
                 <Card
                   key={clo.id}
                   variant="default"
-                  className="p-4 space-y-2 hover:border-[#111111] dark:hover:border-white transition-colors"
+                  className="p-4 space-y-2 hover:border-sage-700 dark:hover:border-white transition-colors"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold text-sm text-[#111111] dark:text-white">
+                      <span className="font-mono font-bold text-sm text-sage-800 dark:text-white">
                         {clo.code}
                       </span>
                       <Badge variant="neutral" className="text-[10px]">
@@ -465,7 +465,7 @@ export const CourseDetails: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => setEditingClo(clo)}
-                        className="p-1 rounded text-[#737373] hover:text-[#111111] dark:hover:text-white hover:bg-[#F7F7F5] dark:hover:bg-[#2C2C2E]"
+                        className="p-1 rounded text-sage-500 hover:text-sage-800 dark:hover:text-white hover:bg-sage-100 dark:hover:bg-[#2C2C2E]"
                         title="Edit outcome"
                       >
                         <Edit className="w-3.5 h-3.5" />
@@ -485,7 +485,7 @@ export const CourseDetails: React.FC = () => {
                       </button>
                     </div>
                   </div>
-                  <p className="text-xs text-[#262626] dark:text-[#D4D4D4] leading-relaxed">
+                  <p className="text-xs text-sage-700 dark:text-sage-300 leading-relaxed">
                     {clo.description}
                   </p>
                 </Card>
@@ -498,10 +498,10 @@ export const CourseDetails: React.FC = () => {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-[#F7F7F5] dark:bg-[#2C2C2E] flex items-center justify-center text-[#111111] dark:text-white">
+              <div className="w-7 h-7 rounded-lg bg-sage-100 dark:bg-[#2C2C2E] flex items-center justify-center text-sage-800 dark:text-white">
                 <FileText className="w-4 h-4" />
               </div>
-              <h2 className="text-base font-bold text-[#111111] dark:text-white">Course Materials</h2>
+              <h2 className="text-base font-bold text-sage-800 dark:text-white">Course Materials</h2>
               <Badge variant="outline" className="text-[10px] font-mono">{materials.length}</Badge>
             </div>
             <Button
@@ -516,10 +516,10 @@ export const CourseDetails: React.FC = () => {
 
           {materials.length === 0 ? (
             <Card variant="default" className="p-8 text-center space-y-3">
-              <UploadCloud className="w-8 h-8 text-[#737373] mx-auto opacity-50" />
+              <UploadCloud className="w-8 h-8 text-sage-500 mx-auto opacity-50" />
               <div className="space-y-1">
-                <p className="text-sm font-bold text-[#111111] dark:text-white">No materials uploaded yet</p>
-                <p className="text-xs text-[#737373]">
+                <p className="text-sm font-bold text-sage-800 dark:text-white">No materials uploaded yet</p>
+                <p className="text-xs text-sage-500">
                   Upload syllabi, lecture guidelines, reference books, and past slides (PDF, DOCX, TXT).
                 </p>
               </div>
@@ -538,20 +538,20 @@ export const CourseDetails: React.FC = () => {
                 <Card
                   key={mat.id}
                   variant="default"
-                  className="p-4 space-y-2 hover:border-[#111111] dark:hover:border-white transition-colors"
+                  className="p-4 space-y-2 hover:border-sage-700 dark:hover:border-white transition-colors"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-start gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-[#F7F7F5] dark:bg-[#2C2C2E] border border-[#E5E5E5] dark:border-[#3A3A3C] flex items-center justify-center text-[#111111] dark:text-white shrink-0 mt-0.5">
+                      <div className="w-8 h-8 rounded-lg bg-sage-100 dark:bg-[#2C2C2E] border border-sage-200 dark:border-[#3A3A3C] flex items-center justify-center text-sage-800 dark:text-white shrink-0 mt-0.5">
                         <FileText className="w-4 h-4" />
                       </div>
                       <div>
-                        <h4 className="text-sm font-bold text-[#111111] dark:text-white">{mat.title}</h4>
-                        <p className="text-xs text-[#737373] font-mono mt-0.5">
+                        <h4 className="text-sm font-bold text-sage-800 dark:text-white">{mat.title}</h4>
+                        <p className="text-xs text-sage-500 font-mono mt-0.5">
                           {mat.file_name} • {formatFileSize(mat.file_size)}
                         </p>
                         {mat.description && (
-                          <p className="text-xs text-[#262626] dark:text-[#D4D4D4] mt-1">
+                          <p className="text-xs text-sage-700 dark:text-sage-300 mt-1">
                             {mat.description}
                           </p>
                         )}
@@ -562,7 +562,7 @@ export const CourseDetails: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => handleDownloadMaterial(mat)}
-                        className="p-1.5 rounded-lg text-[#111111] dark:text-white bg-[#F7F7F5] dark:bg-[#2C2C2E] hover:bg-[#E5E5E5] dark:hover:bg-[#3A3A3C] transition-colors"
+                        className="p-1.5 rounded-lg text-sage-800 dark:text-white bg-sage-100 dark:bg-[#2C2C2E] hover:bg-sage-200 dark:hover:bg-[#3A3A3C] transition-colors"
                         title="Download file"
                       >
                         <Download className="w-3.5 h-3.5" />
@@ -593,10 +593,10 @@ export const CourseDetails: React.FC = () => {
       <div className="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-700/80">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-[#F7F7F5] dark:bg-[#2C2C2E] flex items-center justify-center text-[#111111] dark:text-white">
+            <div className="w-7 h-7 rounded-lg bg-sage-100 dark:bg-[#2C2C2E] flex items-center justify-center text-sage-800 dark:text-white">
               <FileText className="w-4 h-4" />
             </div>
-            <h2 className="text-base font-bold text-[#111111] dark:text-white">Extracted Academic Documents</h2>
+            <h2 className="text-base font-bold text-sage-800 dark:text-white">Extracted Academic Documents</h2>
             <Badge variant="outline" className="text-[10px] font-mono">{documents.length}</Badge>
           </div>
           <Button
