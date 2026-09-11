@@ -13,6 +13,8 @@ class AnalysisReport extends Model
 
     protected $fillable = [
         'assessment_id',
+        'assessment_version_id',
+        'version_content_hash',
         'analysis_version',
         'overall_score',
         'topic_coverage_score',
@@ -47,6 +49,16 @@ class AnalysisReport extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        // STEP 38: a completed analysis is attached to the assessment version whose snapshot it describes (all persistence paths).
+        static::saved(function (AnalysisReport $report) {
+            if ($report->analysis_status === 'completed' && $report->version_content_hash === null) {
+                app(\App\Services\AssessmentVersionService::class)->linkAnalysisReport($report);
+            }
+        });
+    }
+
     /**
      * Scope query to only include completed analyses.
      */
@@ -69,6 +81,14 @@ class AnalysisReport extends Model
     public function assessment(): BelongsTo
     {
         return $this->belongsTo(Assessment::class);
+    }
+
+    /**
+     * STEP 38: The assessment version whose state this analysis describes (null for pre-versioning reports).
+     */
+    public function assessmentVersion(): BelongsTo
+    {
+        return $this->belongsTo(AssessmentVersion::class);
     }
 
     /**

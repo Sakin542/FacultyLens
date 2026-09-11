@@ -156,20 +156,26 @@ class StudentSubmissionController extends Controller
             'assessment:id,course_id,title,type,total_marks,assessment_date',
             'assessment.course:id,course_code,course_name',
             'assessment.questions.approvedRubric',
+            'assessmentVersion.questions',
             'answers.currentAiGrading.criterionResults',
             'answers.currentRubricAlignment.criterionAlignments',
         ]);
 
         $answersByQuestion = $submission->answers->keyBy('question_id');
+        // STEP 38: the student answered the version snapshot — show that historical wording, never the later live edit.
+        $snapshots = $submission->assessmentVersion ? $submission->assessmentVersion->questions->whereNotNull('original_question_id')->keyBy('original_question_id') : collect();
 
-        $questions = $submission->assessment->questions->map(function ($q) use ($answersByQuestion) {
+        $questions = $submission->assessment->questions->map(function ($q) use ($answersByQuestion, $snapshots) {
             $answer = $answersByQuestion->get($q->id);
+            $snap = $snapshots->get($q->id);
             return [
                 'id' => $q->id,
-                'question_number' => $q->question_number,
-                'question_text' => $q->question_text,
-                'question_type' => $q->question_type,
-                'marks' => (float) $q->marks,
+                'question_number' => $snap ? $snap->question_number : $q->question_number,
+                'question_text' => $snap ? $snap->question_text : $q->question_text,
+                'question_type' => $snap ? $snap->question_type : $q->question_type,
+                'marks' => (float) ($snap ? $snap->marks : $q->marks),
+                'current_question_text' => $q->question_text,
+                'version_question' => $snap ? ['id' => $snap->id, 'question_number' => $snap->question_number, 'question_text' => $snap->question_text, 'marks' => (float) $snap->marks, 'question_type' => $snap->question_type] : null,
                 'approved_rubric' => $q->approvedRubric ? [
                     'id' => $q->approvedRubric->id,
                     'title' => $q->approvedRubric->title,
@@ -194,6 +200,13 @@ class StudentSubmissionController extends Controller
                 'awarded_marks' => $submission->awarded_marks !== null ? (float) $submission->awarded_marks : null,
                 'allowed_transitions' => StudentSubmission::TRANSITIONS[$submission->status] ?? [],
                 'student' => $submission->student,
+                'assessment_version_id' => $submission->assessment_version_id,
+                'assessment_version' => $submission->assessmentVersion ? [
+                    'id' => $submission->assessmentVersion->id,
+                    'version_number' => $submission->assessmentVersion->version_number,
+                    'version_label' => $submission->assessmentVersion->version_label,
+                    'status' => $submission->assessmentVersion->status,
+                ] : null,
                 'assessment' => [
                     'id' => $submission->assessment->id,
                     'title' => $submission->assessment->title,

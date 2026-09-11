@@ -29,6 +29,7 @@ class AnalysisHistoryService
             })
             ->with([
                 'assessment.course',
+                'assessmentVersion:id,version_number,version_label,status,content_hash',
                 'assessmentReports' => function ($q) {
                     $q->where('generation_status', 'completed')->latest();
                 },
@@ -115,6 +116,7 @@ class AnalysisHistoryService
                 'similar_questions_count' => $report->similar_questions_count,
                 'analysis_status' => $report->analysis_status,
                 'analyzed_at' => $report->analyzed_at?->toIso8601String() ?? $report->created_at->toIso8601String(),
+                'assessment_version' => $this->versionIdentity($report),
                 'assessment' => [
                     'id' => $assessment?->id,
                     'title' => $assessment?->title,
@@ -148,7 +150,7 @@ class AnalysisHistoryService
         }
 
         $reports = AnalysisReport::where('assessment_id', $assessment->id)
-            ->with(['assessmentReports' => fn($q) => $q->where('generation_status', 'completed')->latest()])
+            ->with(['assessmentReports' => fn($q) => $q->where('generation_status', 'completed')->latest(), 'assessmentVersion:id,version_number,version_label,status,content_hash'])
             ->orderByDesc('analysis_version')
             ->get();
 
@@ -172,6 +174,7 @@ class AnalysisHistoryService
                 'total_questions' => $r->total_questions,
                 'analysis_status' => $r->analysis_status,
                 'analyzed_at' => $r->analyzed_at?->toIso8601String() ?? $r->created_at->toIso8601String(),
+                'assessment_version' => $this->versionIdentity($r),
                 'has_report' => (bool) $latestPdf,
                 'report_id' => $latestPdf?->id,
                 'report_uuid' => $latestPdf?->report_uuid,
@@ -185,6 +188,23 @@ class AnalysisHistoryService
             'current_analysis_version' => $currentVersion,
             'total_versions' => $reports->count(),
             'history' => $historyList,
+        ];
+    }
+
+    /** STEP 38: which assessment version an analysis snapshot describes (null for pre-versioning reports). */
+    protected function versionIdentity(AnalysisReport $report): ?array
+    {
+        $v = $report->assessmentVersion;
+        if (!$v) {
+            return null;
+        }
+
+        return [
+            'id' => $v->id,
+            'version_number' => $v->version_number,
+            'version_label' => $v->version_label,
+            'status' => $v->status,
+            'analysis_state' => $report->version_content_hash !== null && $report->version_content_hash === $v->content_hash ? 'CURRENT' : 'STALE',
         ];
     }
 

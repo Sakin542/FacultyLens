@@ -277,6 +277,9 @@
                 <td style="width: 50%;">
                     <div><span class="kv-label">Course:</span> {{ $data['assessment']['course_code'] }} - {{ $data['assessment']['course_name'] }}</div>
                     <div><span class="kv-label">Assessment:</span> {{ $data['assessment']['title'] }} ({{ ucfirst($data['assessment']['type']) }})</div>
+                    @if(!empty($data['assessment_version']))
+                    <div><span class="kv-label">Version:</span> {{ $data['assessment_version']['version_label'] }} &bull; {{ str_replace('_', ' ', $data['assessment_version']['status']) }}@if(!empty($data['assessment_version']['blueprint_version'])) &bull; Blueprint v{{ $data['assessment_version']['blueprint_version'] }}@endif @if(!empty($data['assessment_version']['analysis_version'])) &bull; Analysis v{{ $data['assessment_version']['analysis_version'] }}@endif @if(!empty($data['assessment_version']['finalized_at'])) &bull; Finalized {{ \Carbon\Carbon::parse($data['assessment_version']['finalized_at'])->format('Y-m-d') }}@endif</div>
+                    @endif
                     <div><span class="kv-label">Department:</span> {{ $data['assessment']['department'] }}</div>
                 </td>
                 <td style="width: 50%; text-align: right;">

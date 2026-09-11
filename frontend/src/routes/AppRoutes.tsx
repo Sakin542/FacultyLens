@@ -39,6 +39,9 @@ const InvitationLanding  = lazy(() => import('@/pages/Invitations').then(m => ({
 const AiEvaluation       = lazy(() => import('@/pages/AiEvaluation').then(m => ({ default: m.AiEvaluation })));
 const AcademicAnalytics  = lazy(() => import('@/pages/AcademicAnalytics').then(m => ({ default: m.AcademicAnalytics })));
 const AssessmentBlueprintPage = lazy(() => import('@/pages/AssessmentBlueprint').then(m => ({ default: m.AssessmentBlueprintPage })));
+const AssessmentVersions = lazy(() => import('@/pages/AssessmentVersions').then(m => ({ default: m.AssessmentVersions })));
+const AssessmentVersionDetail = lazy(() => import('@/pages/AssessmentVersionDetail').then(m => ({ default: m.AssessmentVersionDetail })));
+const AssessmentVersionCompare = lazy(() => import('@/pages/AssessmentVersionCompare').then(m => ({ default: m.AssessmentVersionCompare })));
 
 /**
  * Lightweight fallback shown while a lazy page chunk loads.
@@ -80,6 +83,9 @@ export const AppRoutes: React.FC = () => {
             <Route path="/ai-evaluation" element={<AiEvaluation />} />
             <Route path="/analytics" element={<AcademicAnalytics />} />
             <Route path="/assessments/:assessmentId/blueprint" element={<AssessmentBlueprintPage />} />
+            <Route path="/assessments/:assessmentId/versions" element={<AssessmentVersions />} />
+            <Route path="/assessments/:assessmentId/versions/:versionId" element={<AssessmentVersionDetail />} />
+            <Route path="/assessments/:assessmentId/versions/:versionId/compare" element={<AssessmentVersionCompare />} />
             <Route path="/courses/:courseId/collaboration" element={<CourseCollaboration />} />
             <Route path="/collaboration/invitations" element={<PendingInvitations />} />
             <Route path="/courses/:courseId/question-bank" element={<QuestionBank />} />

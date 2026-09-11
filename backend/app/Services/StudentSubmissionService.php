@@ -38,6 +38,22 @@ class StudentSubmissionService
 
     public function __construct(protected AuditLogService $auditLogService) {}
 
+    /** STEP 38: new submissions record the assessment version in force (latest finalized, else the working version). */
+    protected function currentVersionId(Assessment $assessment): ?int
+    {
+        return app(AssessmentVersionService::class)->currentVersion($assessment)?->id;
+    }
+
+    /** STEP 38: link the answer to the question snapshot of the submission's version so later edits never change what was answered. */
+    protected function versionQuestionId(StudentSubmission $submission, Question $question): ?int
+    {
+        if (!$submission->assessment_version_id) {
+            return null;
+        }
+
+        return \App\Models\AssessmentVersionQuestion::where('assessment_version_id', $submission->assessment_version_id)->where('original_question_id', $question->id)->value('id');
+    }
+
     // ------------------------------------------------------------ submissions
 
     public function createSubmission(Assessment $assessment, User $user, array $data): StudentSubmission
@@ -58,6 +74,7 @@ class StudentSubmissionService
 
         $submission = StudentSubmission::create([
             'assessment_id' => $assessment->id,
+            'assessment_version_id' => $this->currentVersionId($assessment),
             'student_id' => $student->id,
             'submission_identifier' => isset($data['submission_identifier']) ? Str::limit(trim($data['submission_identifier']), 64, '') : null,
             'submitted_at' => $data['submitted_at'] ?? ($status === StudentSubmission::STATUS_SUBMITTED ? now() : null),
@@ -171,6 +188,7 @@ class StudentSubmissionService
                 $answer = StudentAnswer::create([
                     'student_submission_id' => $submission->id,
                     'question_id' => $question->id,
+                    'assessment_version_question_id' => $this->versionQuestionId($submission, $question),
                     'answer_type' => $answerType,
                     'answer_text' => $text !== '' ? $text : null,
                     'original_answer_text' => $text !== '' ? $text : null,
@@ -438,9 +456,10 @@ class StudentSubmissionService
         }
 
         $totalMarks = $this->assessmentTotalMarks($assessment);
+        $versionId = $this->currentVersionId($assessment);
         $created = ['submissions' => 0, 'answers' => 0];
 
-        DB::transaction(function () use ($rows, $assessment, $user, $existingSubs, $totalMarks, &$created) {
+        DB::transaction(function () use ($rows, $assessment, $user, $existingSubs, $totalMarks, $versionId, &$created) {
             $subCache = $existingSubs->all();
             $touched = [];
             foreach ($rows as $r) {
@@ -448,6 +467,7 @@ class StudentSubmissionService
                 if (!$sub) {
                     $sub = StudentSubmission::create([
                         'assessment_id' => $assessment->id,
+                        'assessment_version_id' => $versionId,
                         'student_id' => $r['student']->id,
                         'submitted_at' => now(),
                         'status' => StudentSubmission::STATUS_SUBMITTED,
@@ -460,6 +480,7 @@ class StudentSubmissionService
                 StudentAnswer::create([
                     'student_submission_id' => $sub->id,
                     'question_id' => $r['question']->id,
+                    'assessment_version_question_id' => $this->versionQuestionId($sub, $r['question']),
                     'answer_type' => StudentAnswer::TYPE_TEXT,
                     'answer_text' => $r['text'],
                     'original_answer_text' => $r['text'],

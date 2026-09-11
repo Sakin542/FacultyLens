@@ -566,6 +566,11 @@ export const AssessmentDetails: React.FC = () => {
                     Blueprint
                   </Button>
                 </Link>
+                <Link to={`/assessments/${assessment?.id ?? ''}/versions`} data-testid="versions-link">
+                  <Button variant="outline" size="sm">
+                    Versions
+                  </Button>
+                </Link>
                 <Link to={`/courses/${course.id}/question-generator?assessment=${assessment?.id ?? ''}`} data-testid="generate-questions-link">
                   <Button variant="outline" size="sm" leftIcon={<Sparkles className="w-3.5 h-3.5" />}>
                     Generate Questions

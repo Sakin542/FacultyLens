@@ -103,5 +103,13 @@ class Assessment extends Model
     {
         return $this->hasMany(StudentSubmission::class);
     }
+
+    /**
+     * STEP 38: Immutable historical versions of this assessment (newest first).
+     */
+    public function versions(): HasMany
+    {
+        return $this->hasMany(AssessmentVersion::class)->orderByDesc('version_number');
+    }
 }
 

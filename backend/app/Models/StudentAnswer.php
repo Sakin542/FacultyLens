@@ -32,6 +32,7 @@ class StudentAnswer extends Model
     protected $fillable = [
         'student_submission_id',
         'question_id',
+        'assessment_version_question_id',
         'answer_type',
         'answer_text',
         'original_answer_text',
@@ -65,6 +66,12 @@ class StudentAnswer extends Model
     public function question(): BelongsTo
     {
         return $this->belongsTo(Question::class);
+    }
+
+    /** STEP 38: the question snapshot the student actually answered (immune to later question edits). */
+    public function versionQuestion(): BelongsTo
+    {
+        return $this->belongsTo(AssessmentVersionQuestion::class, 'assessment_version_question_id');
     }
 
     public function aiGradingResults(): HasMany
