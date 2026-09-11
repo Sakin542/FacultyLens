@@ -1,6 +1,6 @@
 import logging
 from typing import Any, Dict, Optional
-from fastapi import APIRouter, Header, HTTPException, status, Depends
+from fastapi import APIRouter, Header, HTTPException, Response, status, Depends
 from app.config import get_settings, Settings
 from app.services.huggingface_service import HuggingFaceService, get_hf_service
 from app.services.text_cleaner import TextCleaner
@@ -116,10 +116,30 @@ def health_check(
     settings: Settings = Depends(get_settings),
 ) -> HealthResponse:
     """
-    Health check endpoint returning service status and model information.
+    Liveness: the process answers. Reports whether the model is loaded but never fails because of it.
     """
     return HealthResponse(
         status="ok",
+        service=settings.app_name,
+        model=hf_service.model_name,
+        model_loaded=hf_service.is_loaded,
+    )
+
+
+@router.get("/ready", response_model=HealthResponse)
+def readiness_check(
+    response: Response,
+    hf_service: HuggingFaceService = Depends(get_hf_service),
+    settings: Settings = Depends(get_settings),
+) -> HealthResponse:
+    """
+    Readiness: 200 only once the Hugging Face model is initialised (Laravel depends on it for analysis);
+    503 while loading or after a startup failure. The load error is logged, never returned.
+    """
+    if not hf_service.is_loaded:
+        response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+    return HealthResponse(
+        status="ready" if hf_service.is_loaded else "not_ready",
         service=settings.app_name,
         model=hf_service.model_name,
         model_loaded=hf_service.is_loaded,

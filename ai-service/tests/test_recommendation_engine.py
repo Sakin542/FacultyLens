@@ -1,7 +1,6 @@
 """Unit and integration tests for STEP 14 AI Recommendation Engine.
 """
 
-import pytest
 from fastapi.testclient import TestClient
 from app.main import app
 from app.schemas.recommendation import (

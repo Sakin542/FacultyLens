@@ -13,7 +13,7 @@ blocks actually placed in the prompt (and, for generative answers, the [S#] cita
 
 import logging
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from app.config import get_settings
 from app.schemas.chat import AcademicChatRequest

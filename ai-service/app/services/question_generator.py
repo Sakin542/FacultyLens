@@ -295,7 +295,8 @@ class QuestionGenerator:
     def _aspects(text: str, topic: str) -> List[str]:
         """Noun-ish phrases to vary stems: bigrams of consecutive key terms first, then longer single terms."""
         words = [w for w in re.findall(r"[a-z0-9-]+", text.lower())]
-        ok = lambda w: w not in _ASPECT_STOP and len(w) > 2 and w in set(key_terms(w)) and w not in topic.lower()
+        def ok(w: str) -> bool:
+            return w not in _ASPECT_STOP and len(w) > 2 and w in set(key_terms(w)) and w not in topic.lower()
         phrases: List[str] = []
         for a, b in zip(words, words[1:]):
             if ok(a) and ok(b) and f"{a} {b}" not in phrases:

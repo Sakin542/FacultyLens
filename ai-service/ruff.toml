@@ -1,0 +1,21 @@
+# Ruff configuration for the FacultyLens AI service (production-blocking rules only).
+# Style-only rule families are intentionally excluded; run `ruff check .` in CI.
+target-version = "py311"
+line-length = 160
+extend-exclude = [".venv", "cache", "__pycache__"]
+
+[lint]
+select = ["E", "F", "B", "S", "W"]
+ignore = [
+  "E501",   # long lines: enforced loosely (160) — many schema descriptions are long
+  "B008",   # FastAPI `Depends()` / `Header()` in defaults is the framework idiom
+  "B904",   # re-raise style; existing handlers return safe HTTP errors deliberately
+  "B905",   # zip(strict=) not required on 3.11 call sites reviewed
+  "S104",   # binding 0.0.0.0 is required inside the container (never exposed publicly)
+]
+
+[lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106", "S108", "B011", "F841"]
+
+[format]
+quote-style = "double"

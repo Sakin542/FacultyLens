@@ -36,9 +36,10 @@ use App\Http\Controllers\Api\StudentSubmissionController;
 use Illuminate\Support\Facades\Route;
 
 /**
- * Health check endpoint for FacultyLens
+ * Health check endpoints for FacultyLens (liveness + readiness; coarse, secret-free)
  */
 Route::get('/health', [HealthController::class, 'check']);
+Route::get('/health/ready', [HealthController::class, 'ready']);
 
 /**
  * Faculty Authentication Endpoints

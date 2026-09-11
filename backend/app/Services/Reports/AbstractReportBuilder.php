@@ -2,6 +2,8 @@
 
 namespace App\Services\Reports;
 
+use App\Models\AnalysisReport;
+
 /**
  * STEP 39 common report data contract. Every builder returns
  *   { metadata, summary, sections, tables, warnings, record_count }
@@ -55,11 +57,11 @@ abstract class AbstractReportBuilder
     {
         $start = $filters['start_date'] ?? null;
         $end = $filters['end_date'] ?? null;
-        if (!$start && !$end) {
+        if (! $start && ! $end) {
             return null;
         }
 
-        return ($start ?? 'Beginning') . ' → ' . ($end ?? 'Now');
+        return ($start ?? 'Beginning').' → '.($end ?? 'Now');
     }
 
     /** @param array<int, array{key:string,label:string}|string> $columns */
@@ -101,7 +103,7 @@ abstract class AbstractReportBuilder
             return $absent;
         }
 
-        return (is_float($v) ? rtrim(rtrim(number_format($v, 2, '.', ''), '0'), '.') : (string) $v) . $suffix;
+        return (is_float($v) ? rtrim(rtrim(number_format($v, 2, '.', ''), '0'), '.') : (string) $v).$suffix;
     }
 
     protected function pct(mixed $v): ?string
@@ -119,18 +121,18 @@ abstract class AbstractReportBuilder
      * else the current analysis whose analyzed content hash equals the version snapshot (STEP 38 "CURRENT").
      * Never falls back to an analysis of different content.
      */
-    protected function analysisFor(ReportContext $ctx): ?\App\Models\AnalysisReport
+    protected function analysisFor(ReportContext $ctx): ?AnalysisReport
     {
         if ($ctx->version) {
-            $own = \App\Models\AnalysisReport::where('assessment_version_id', $ctx->version->id)->where('analysis_status', 'completed')->orderByDesc('analysis_version')->orderByDesc('id')->first();
-            if ($own || !$ctx->version->content_hash) {
+            $own = AnalysisReport::where('assessment_version_id', $ctx->version->id)->where('analysis_status', 'completed')->orderByDesc('analysis_version')->orderByDesc('id')->first();
+            if ($own || ! $ctx->version->content_hash) {
                 return $own;
             }
 
-            return \App\Models\AnalysisReport::where('assessment_id', $ctx->version->assessment_id)->where('analysis_status', 'completed')
+            return AnalysisReport::where('assessment_id', $ctx->version->assessment_id)->where('analysis_status', 'completed')
                 ->where('version_content_hash', $ctx->version->content_hash)->orderByDesc('analysis_version')->orderByDesc('id')->first();
         }
 
-        return \App\Models\AnalysisReport::where('assessment_id', $ctx->assessment->id)->where('is_current', true)->where('analysis_status', 'completed')->first();
+        return AnalysisReport::where('assessment_id', $ctx->assessment->id)->where('is_current', true)->where('analysis_status', 'completed')->first();
     }
 }

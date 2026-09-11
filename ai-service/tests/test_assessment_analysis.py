@@ -1,7 +1,6 @@
 """Unit and integration tests for STEP 15 Unified AI Assessment Analysis API.
 """
 
-import pytest
 from fastapi.testclient import TestClient
 from app.main import app
 from app.schemas.assessment_analysis import (

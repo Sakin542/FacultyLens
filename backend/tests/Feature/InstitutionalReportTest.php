@@ -15,6 +15,8 @@ use App\Models\LearningOutcomePerformanceResult;
 use App\Models\PerformanceAnalysisRun;
 use App\Models\Question;
 use App\Models\QuestionLearningOutcomeAlignment;
+use App\Models\Rubric;
+use App\Models\RubricCriterion;
 use App\Models\Student;
 use App\Models\StudentAnswer;
 use App\Models\StudentSubmission;
@@ -23,9 +25,11 @@ use App\Services\AssessmentVersionService;
 use App\Services\InstitutionalReportService;
 use App\Services\Reports\AssessmentQualityReportBuilder;
 use App\Services\Reports\ReportContext;
+use App\Services\RubricService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
@@ -38,16 +42,27 @@ class InstitutionalReportTest extends TestCase
     use RefreshDatabase;
 
     protected User $faculty;
+
     protected User $other;
+
     protected User $reviewer;
+
     protected User $admin;
+
     protected Course $course;
+
     protected Course $otherCourse;
+
     protected Assessment $midterm;
+
     protected Assessment $final;
+
     protected LearningOutcome $lo1;
+
     protected LearningOutcome $lo2;
+
     protected LearningOutcome $lo3;
+
     /** @var Question[] */
     protected array $questions = [];
 
@@ -73,7 +88,7 @@ class InstitutionalReportTest extends TestCase
 
         $spec = [['easy', 'Remember'], ['easy', 'Remember'], ['easy', 'Understand'], ['medium', 'Understand'], ['medium', 'Understand'], ['medium', 'Apply'], ['medium', 'Apply'], ['medium', 'Apply'], ['hard', 'Apply'], ['hard', 'Apply']];
         foreach ($spec as $i => [$d, $c]) {
-            $this->questions[] = Question::create(['assessment_id' => $this->midterm->id, 'question_number' => $i + 1, 'question_text' => 'Question ' . ($i + 1), 'question_type' => 'descriptive', 'marks' => 10,
+            $this->questions[] = Question::create(['assessment_id' => $this->midterm->id, 'question_number' => $i + 1, 'question_text' => 'Question '.($i + 1), 'question_type' => 'descriptive', 'marks' => 10,
                 'difficulty_level' => $d, 'cognitive_level' => $c, 'learning_outcome_id' => $i < 5 ? $this->lo1->id : $this->lo2->id]);
         }
         // Other faculty's private data must never appear in the faculty's reports
@@ -147,7 +162,7 @@ class InstitutionalReportTest extends TestCase
     /** Sheet names + all inline strings of an XLSX built by the dependency-free writer (readable via PharData). */
     protected function readXlsx(string $binary): array
     {
-        $tmp = tempnam(sys_get_temp_dir(), 'flx') . '.zip';
+        $tmp = tempnam(sys_get_temp_dir(), 'flx').'.zip';
         file_put_contents($tmp, $binary);
         $zip = new \PharData($tmp);
         $files = [];
@@ -334,7 +349,7 @@ class InstitutionalReportTest extends TestCase
         $this->assertMatchesRegularExpression('/CSE101,Midterm,midterm,,84,GOOD,80,70,90,60/', $csv);
         $this->assertMatchesRegularExpression('/CSE101,Final,final,,58,REQUIRES_ATTENTION/', $csv);
         $this->assertStringContainsString('metric,value', $csv);
-        $this->assertStringContainsString('Generated from FacultyLens', $csv . ' Generated from FacultyLens');
+        $this->assertStringContainsString('Generated from FacultyLens', $csv.' Generated from FacultyLens');
         $this->assertStringContainsString('FacultyLens', $csv);
         $this->assertStringNotContainsString('Other exam', $csv);
 
@@ -454,7 +469,7 @@ class InstitutionalReportTest extends TestCase
             foreach (['Secret Student', 'STU-SECRET', 'secret0@students.edu', 'private answer text', 'STU-PENDING'] as $needle) {
                 $this->assertStringNotContainsString($needle, $csv, "{$type} export leaked '{$needle}'");
             }
-            $this->assertStringContainsString('No student names, identifiers or individual answers', $csv . ' No student names, identifiers or individual answers');
+            $this->assertStringContainsString('No student names, identifiers or individual answers', $csv.' No student names, identifiers or individual answers');
         }
         $perf = InstitutionalReport::where('report_type', 'STUDENT_PERFORMANCE')->first();
         $csv = Storage::disk('local')->get($perf->file_path);
@@ -523,7 +538,8 @@ class InstitutionalReportTest extends TestCase
     public function test_failed_generation_records_safe_message_only(): void
     {
         $this->seedAnalysis();
-        $this->app->bind(AssessmentQualityReportBuilder::class, fn () => new class extends AssessmentQualityReportBuilder {
+        $this->app->bind(AssessmentQualityReportBuilder::class, fn () => new class extends AssessmentQualityReportBuilder
+        {
             public function __construct() {}
 
             public function build(ReportContext $ctx): array
@@ -531,7 +547,7 @@ class InstitutionalReportTest extends TestCase
                 throw new \RuntimeException('SQLSTATE[42S02]: Base table not found /var/www/secret.php');
             }
         });
-        $report = InstitutionalReport::create(['report_uuid' => (string) \Illuminate\Support\Str::uuid(), 'created_by' => $this->faculty->id, 'report_type' => 'ASSESSMENT_QUALITY', 'scope_type' => 'COURSE', 'course_id' => $this->course->id,
+        $report = InstitutionalReport::create(['report_uuid' => (string) Str::uuid(), 'created_by' => $this->faculty->id, 'report_type' => 'ASSESSMENT_QUALITY', 'scope_type' => 'COURSE', 'course_id' => $this->course->id,
             'filters' => ['course_id' => $this->course->id], 'title' => 'Quality', 'format' => 'PDF', 'status' => 'PENDING', 'is_async' => true]);
         (new GenerateInstitutionalReportJob($report->id))->handle(app(InstitutionalReportService::class));
         $report->refresh();
@@ -587,9 +603,9 @@ class InstitutionalReportTest extends TestCase
         $this->seedGrades();
         $this->seedPerformanceRun();
         app(AssessmentVersionService::class)->createVersion($this->faculty, $this->midterm, []);
-        app(\App\Services\RubricService::class); // ensure container resolves
-        \App\Models\Rubric::create(['question_id' => $this->questions[0]->id, 'assessment_id' => $this->midterm->id, 'created_by' => $this->faculty->id, 'title' => 'Q1 rubric', 'total_marks' => 10, 'status' => 'APPROVED', 'version' => 1, 'generation_method' => 'ai', 'approved_at' => now(), 'approved_by' => $this->faculty->id]);
-        \App\Models\RubricCriterion::create(['rubric_id' => \App\Models\Rubric::first()->id, 'criterion' => 'Correctness', 'description' => 'd', 'max_marks' => 10, 'scoring_guidance' => 'g', 'sort_order' => 1]);
+        app(RubricService::class); // ensure container resolves
+        Rubric::create(['question_id' => $this->questions[0]->id, 'assessment_id' => $this->midterm->id, 'created_by' => $this->faculty->id, 'title' => 'Q1 rubric', 'total_marks' => 10, 'status' => 'APPROVED', 'version' => 1, 'generation_method' => 'ai', 'approved_at' => now(), 'approved_by' => $this->faculty->id]);
+        RubricCriterion::create(['rubric_id' => Rubric::first()->id, 'criterion' => 'Correctness', 'description' => 'd', 'max_marks' => 10, 'scoring_guidance' => 'g', 'sort_order' => 1]);
 
         Sanctum::actingAs($this->faculty);
         $cases = [

@@ -50,11 +50,11 @@ class LearningGapReportBuilder extends AbstractReportBuilder
             $warnings[] = 'No STEP 30 performance analysis exists for the selected scope.';
         }
         if ($ctx->assessmentIds !== [] && count($ids) < count($ctx->assessmentIds)) {
-            $warnings[] = (count($ctx->assessmentIds) - count($ids)) . ' assessment(s) are excluded because you are not authorized to view their student data.';
+            $warnings[] = (count($ctx->assessmentIds) - count($ids)).' assessment(s) are excluded because you are not authorized to view their student data.';
         }
         $insufficient = (int) ($gaps['counts'][PerformanceAnalysisRun::PERF_INSUFFICIENT] ?? 0);
         if ($insufficient > 0) {
-            $warnings[] = "{$insufficient} outcome result(s) have insufficient responses (fewer than " . $this->svc->minResponses() . ') and are reported as INSUFFICIENT_DATA, not as gaps.';
+            $warnings[] = "{$insufficient} outcome result(s) have insufficient responses (fewer than ".$this->svc->minResponses().') and are reported as INSUFFICIENT_DATA, not as gaps.';
         }
 
         return $this->document($ctx, $summary, [$this->section('privacy', 'Privacy', [], config('institutional_reports.sensitive_footer'))], [

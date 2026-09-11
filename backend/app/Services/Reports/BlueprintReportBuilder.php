@@ -13,7 +13,7 @@ class BlueprintReportBuilder extends AbstractReportBuilder
     {
         $assessment = $ctx->assessment;
         $section = $this->blueprints->reportSection($assessment);
-        if (!$section) {
+        if (! $section) {
             return $this->document($ctx, [$this->kv('Assessment', $assessment->title), $this->kv('Blueprint', 'Not configured')], [], [], ['No blueprint exists for this assessment.']);
         }
         $cmp = $section['comparison'];
@@ -21,7 +21,7 @@ class BlueprintReportBuilder extends AbstractReportBuilder
 
         $summary = [
             $this->kv('Assessment', $assessment->title),
-            $this->kv('Blueprint Version', 'v' . $section['version']),
+            $this->kv('Blueprint Version', 'v'.$section['version']),
             $this->kv('Blueprint Status', $section['status']),
             $this->kv('Validation Status', $section['validation_status'] ?? 'Not validated'),
             $this->kv('Completeness', $this->na($section['completeness'], '%')),
@@ -37,17 +37,18 @@ class BlueprintReportBuilder extends AbstractReportBuilder
         ];
         foreach (['difficulty' => 'Difficulty Targets', 'cognitive' => 'Bloom Targets', 'question_types' => 'Question Type Targets', 'learning_outcomes' => 'CO Targets', 'program_outcomes' => 'PO Targets', 'topics' => 'Topic Targets'] as $key => $title) {
             $dim = $cmp['dimensions'][$key] ?? null;
-            if (!$dim) {
+            if (! $dim) {
                 continue;
             }
-            if (!($dim['configured'] ?? false)) {
+            if (! ($dim['configured'] ?? false)) {
                 $tables[] = $this->table($key, $title, ['message' => 'Status'], [['message' => $dim['message'] ?? 'Not configured in this blueprint.']]);
+
                 continue;
             }
-            $tables[] = $this->table($key, $title . ' (' . ($dim['basis'] ?? 'count') . ' basis)', ['label' => 'Target', 'target_percentage' => 'Target %', 'actual_percentage' => 'Actual %', 'actual_raw' => 'Actual', 'difference' => 'Difference', 'status' => 'Status'], $dim['rows']);
+            $tables[] = $this->table($key, $title.' ('.($dim['basis'] ?? 'count').' basis)', ['label' => 'Target', 'target_percentage' => 'Target %', 'actual_percentage' => 'Actual %', 'actual_raw' => 'Actual', 'difference' => 'Difference', 'status' => 'Status'], $dim['rows']);
         }
         $warnings = array_map(fn ($w) => is_array($w) ? ($w['message'] ?? json_encode($w)) : (string) $w, (array) ($section['warnings'] ?? []));
-        if (!$hasQuestions) {
+        if (! $hasQuestions) {
             $warnings[] = 'The assessment has no questions yet; the comparison shows targets only.';
         }
         $tables[] = $this->table('warnings', 'Validation Warnings', ['warning' => 'Warning'], array_map(fn ($w) => ['warning' => $w], $warnings));

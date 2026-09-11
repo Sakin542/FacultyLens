@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 from app.main import app
 from app.services.text_cleaner import TextCleaner
-from app.utils.text_utils import extract_questions, split_paragraphs, split_sentences
+from app.utils.text_utils import extract_questions
 
 client = TestClient(app)
 

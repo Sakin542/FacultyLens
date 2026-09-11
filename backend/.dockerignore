@@ -1,0 +1,22 @@
+# Files never shipped in the production backend image
+vendor/
+node_modules/
+tests/
+storage/logs/*
+storage/app/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/fonts/
+bootstrap/cache/*
+.env
+.env.*
+!.env.example
+!.env.production.example
+.git
+.gitignore
+.phpunit.result.cache
+.phpunit.cache
+phpunit.xml
+database/database.sqlite*
+README.md

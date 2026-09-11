@@ -882,14 +882,27 @@ git clone <your-repository-url>
 cd FacultyLens
 ```
 
-## Start the Backend
+## Quick start with Docker (recommended for development)
+
+```bash
+cp backend/.env.example backend/.env          # dev values; DB_PASSWORD=root123 matches docker-compose.yml
+docker compose up -d --build                   # app :8080, mysql :3307, ai-service :8001, phpmyadmin :8081, queue-worker
+docker compose exec app php artisan key:generate
+docker compose exec app php artisan migrate --seed   # synthetic DevelopmentSeeder (faculty@example.com / password123)
+cd frontend && npm install && npm run dev      # http://localhost:5173 (proxies to :8080)
+```
+
+Verify: `curl http://127.0.0.1:8080/api/health` and `http://127.0.0.1:8080/api/health/ready` → `ok` / `ready`.
+
+## Start the Backend (without Docker)
 
 ```bash
 cd backend
 cp .env.example .env
+composer install && php artisan key:generate && php artisan migrate --seed
+php artisan serve --host=127.0.0.1 --port=8080
+php artisan queue:work                          # second terminal: async AI jobs, reports
 ```
-
-Configure the required environment variables and start the backend server.
 
 ---
 
@@ -922,8 +935,11 @@ pip install -r requirements.txt
 Run the AI service:
 
 ```bash
-python main.py
+cp .env.example .env            # HF_MODEL_NAME, optional HF_TOKEN, AI_SERVICE_API_KEY (must match backend)
+uvicorn app.main:app --host 0.0.0.0 --port 8001
 ```
+
+The Hugging Face model is loaded once at startup; `GET /health` is liveness, `GET /ready` returns 503 until the model is initialised.
 
 ---
 
@@ -931,9 +947,79 @@ python main.py
 
 ```bash
 cd frontend
+cp .env.example .env            # VITE_API_BASE_URL=http://127.0.0.1:8080/api (development only)
 npm install
 npm run dev
 ```
+
+---
+
+# Environment Variables
+
+| File | Purpose |
+|---|---|
+| `backend/.env.example` / `backend/.env.production.example` | Laravel (APP_KEY, DB, Redis, AI_SERVICE_URL + AI_SERVICE_API_KEY, CORS_ALLOWED_ORIGINS, SANCTUM_STATEFUL_DOMAINS, SESSION_*, REPORTS_*) |
+| `frontend/.env.example` / `frontend/.env.production.example` | `VITE_API_BASE_URL` only — everything in `VITE_*` ships to the browser, never put secrets here |
+| `ai-service/.env.example` / `ai-service/.env.production.example` | FastAPI (DEBUG, HF_MODEL_NAME, HF_TOKEN, AI_SERVICE_API_KEY, chat/generation limits) |
+| `.env.prod.example` | compose-level values for `docker-compose.prod.yml` (DB/Redis passwords, image tag, TLS dir) |
+
+`.env` and `.env.*` are git-ignored; only `*.example` templates are committed. Development URLs (`127.0.0.1:8080`, `localhost:5173`, `:8001`, MySQL `3307`, phpMyAdmin `8081`) are development values only.
+
+# Queue & Scheduler
+
+Development: `queue-worker` container (database driver). Production: Redis-backed `queue:work` workers + `schedule:work`
+(`reports:purge-expired` daily); Laravel Horizon is an optional add-on (see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md#9-queue)).
+Jobs: document extraction/embeddings, assessment analysis, question generation, AI grading assistance, performance analysis,
+AI evaluation, institutional reports — all with bounded retries and safe failure states.
+
+# Testing
+
+```bash
+cd backend && php artisan test                 # PHPUnit feature suite (sqlite)
+cd frontend && npm test && npm run build       # Vitest + production build (tsc strict)
+cd ai-service && pytest -q && ruff check .     # FastAPI tests + lint
+bash backend/tests/e2e_all.sh                  # every end-to-end journey against the Docker stack (real AI)
+php artisan facultylens:integrity-check        # read-only academic data consistency report
+scripts/perf-smoke.sh <email> <password>       # latency snapshot of key endpoints
+```
+
+Dependency audits: `composer audit`, `npm audit`, `pip-audit`. Current results are recorded in
+[docs/PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md).
+
+# Production Deployment
+
+`docker-compose.prod.yml` runs **nginx** (TLS, static React, security headers, rate limits) → **php-fpm app** → **MySQL**,
+**Redis**, **worker**, **scheduler**, and a private **ai-service** (no published ports, `X-AI-Service-Key`). Images are
+production-oriented (`backend/Dockerfile.prod` without dev dependencies, `frontend/Dockerfile` multi-stage build; no
+`artisan serve`, `npm run dev` or `uvicorn --reload`). Release flow, smoke tests, rollback, backup/restore
+(`scripts/backup.sh`, `scripts/restore.sh`), DR parameters, retention and monitoring are documented in
+[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+
+# Security
+
+- Sanctum cookie sessions (HttpOnly, `Secure` in production, SameSite=lax), CSRF on every mutation, explicit CORS origins (no wildcard with credentials).
+- Authorization is server-side only: STEP 34 course role matrix (`OWNER/EDITOR/REVIEWER/VIEWER`) + `FACULTY/ADMIN` roles; every resource id is re-checked (IDOR sweep test).
+- Private storage for documents and reports, streamed through authenticated endpoints; no public storage URLs.
+- Security headers (CSP, HSTS, nosniff, frame-ancestors, Referrer-Policy, Permissions-Policy), request ids and structured request logs without bodies/tokens.
+- Rate limits on auth, uploads, AI analysis, chat, generation, collaboration and report generation.
+- Internal AI authentication (`AI_SERVICE_API_KEY`), AI timeouts, safe error messages (no stack traces), document text treated as untrusted context.
+- Student privacy: institutional reports and analytics are aggregates; AI never assigns or changes grades, approvals or mappings.
+
+# Backup
+
+`scripts/backup.sh` (MySQL dump + private storage + manifest) and `scripts/restore.sh` (verified restore into a scratch
+database with count and orphan checks; `--target-db … --yes` for a real restore). Run daily, copy off-host. Details and
+tested results: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md#6-backup--restore).
+
+# API
+
+See [docs/API.md](docs/API.md) — authentication, authorization model, endpoints, validation rules and error codes for
+courses, assessments, blueprints, versions, analysis, rubrics, submissions, grading, performance, analytics and reports.
+
+# Troubleshooting
+
+See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md#11-troubleshooting) (419 on login, CORS, AI unavailable, stuck reports,
+stale frontend chunks, cached config).
 
 ---
 

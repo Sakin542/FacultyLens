@@ -37,10 +37,10 @@ class InstitutionalSummaryReportBuilder extends AbstractReportBuilder
             $ass = $group->flatMap(fn ($c) => $byCourse->get($c->id, collect()));
             $quality = $ass->pluck('quality_score')->filter(fn ($v) => $v !== null);
 
-            return ['program' => $group->first()->program_code . ' — ' . $group->first()->program_name, 'courses' => $group->count(), 'assessments' => $ass->count(), 'questions' => (int) $ass->sum('questions'), 'average_quality' => $quality->isEmpty() ? null : round($quality->avg(), 2)];
+            return ['program' => $group->first()->program_code.' — '.$group->first()->program_name, 'courses' => $group->count(), 'assessments' => $ass->count(), 'questions' => (int) $ass->sum('questions'), 'average_quality' => $quality->isEmpty() ? null : round($quality->avg(), 2)];
         })->values()->all();
 
-        $terms = $courses->groupBy(fn ($c) => trim($c->academic_year . ' ' . $c->semester))->map(function ($group, $term) use ($byCourse) {
+        $terms = $courses->groupBy(fn ($c) => trim($c->academic_year.' '.$c->semester))->map(function ($group, $term) use ($byCourse) {
             $ass = $group->flatMap(fn ($c) => $byCourse->get($c->id, collect()));
             $quality = $ass->pluck('quality_score')->filter(fn ($v) => $v !== null);
             $perf = $ass->pluck('performance_percentage')->filter(fn ($v) => $v !== null);
@@ -59,7 +59,7 @@ class InstitutionalSummaryReportBuilder extends AbstractReportBuilder
             $this->kv('Questions', $a['kpis']['questions']['value']),
             $this->kv('Average Assessment Quality', $this->na($a['assessment_quality']['average_score'], '', 'Not analyzed')),
             $this->kv('CO Coverage', $this->na($a['learning_outcomes']['coverage_percentage'], '%', 'No outcomes')),
-            $this->kv('Average Student Performance', $perf['available'] ? $perf['average_percentage'] . '%' : 'No finalized grades'),
+            $this->kv('Average Student Performance', $perf['available'] ? $perf['average_percentage'].'%' : 'No finalized grades'),
             $this->kv('Open Learning Gaps', $a['learning_gaps']['analyzed_assessments'] ? $a['learning_gaps']['open_gaps'] : 'No analysis'),
             $this->kv('AI Analysis Runs (completed)', $aiRuns),
             $this->kv('AI Evaluation Status', $a['ai_evaluation']['overall_status']),

@@ -1,8 +1,10 @@
-import re
 import math
 from typing import List, Dict, Any, Optional
 from app.services.huggingface_service import HuggingFaceService, get_hf_service
 from app.utils.text_utils import extract_basic_keywords
+import logging
+
+logger = logging.getLogger("facultylens.ai.topics")
 
 
 def cosine_similarity(v1: List[float], v2: List[float]) -> float:
@@ -81,9 +83,9 @@ class TopicDetector:
                     if all_scored and all_scored[0]["confidence"] >= 0.20:
                         return all_scored[:1]
 
-            except Exception:
-                # Fallback to lexical matching if model inference fails
-                pass
+            except Exception as exc:
+                # Fallback to lexical matching if model inference fails (never surfaces to the caller)
+                logger.warning("Topic embedding inference failed; using lexical fallback: %s", type(exc).__name__)
 
         # NLP keyword/phrase extraction fallback if no course topics or embedding unavailable
         return self._extract_heuristic_topics(question_text, top_k=top_k)
@@ -135,8 +137,8 @@ class TopicDetector:
                     batch_results.append(scored[:top_k] if scored else self._extract_heuristic_topics(q_text, top_k=top_k))
 
                 return batch_results
-            except Exception:
-                pass
+            except Exception as exc:
+                logger.warning("Batch topic embedding failed; using per-question fallback: %s", type(exc).__name__)
 
         # Fallback for each question individually
         return [self._extract_heuristic_topics(q, top_k=top_k) for q in questions]

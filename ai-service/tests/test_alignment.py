@@ -1,8 +1,6 @@
-import pytest
 from fastapi.testclient import TestClient
 from app.main import app
 from app.services.similarity_service import SimilarityService
-from app.services.lo_matcher import LearningOutcomeMatcher
 from app.services.alignment_analyzer import AlignmentAnalyzer
 from app.schemas.alignment import (
     LearningOutcomeItem,

@@ -19,7 +19,9 @@ class GenerateInstitutionalReportJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public int $tries = 2;
+
     public array $backoff = [30];
+
     public int $timeout = 900;
 
     public function __construct(public int $reportId) {}
@@ -27,7 +29,7 @@ class GenerateInstitutionalReportJob implements ShouldQueue
     public function handle(InstitutionalReportService $service): void
     {
         $report = InstitutionalReport::find($this->reportId);
-        if (!$report || $report->status === InstitutionalReport::STATUS_COMPLETED || $report->status === InstitutionalReport::STATUS_CANCELLED) {
+        if (! $report || $report->status === InstitutionalReport::STATUS_COMPLETED || $report->status === InstitutionalReport::STATUS_CANCELLED) {
             return;
         }
         $service->generate($report);

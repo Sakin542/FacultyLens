@@ -1,6 +1,5 @@
 """Security and authentication tests for FacultyLens AI microservice."""
 
-import pytest
 from fastapi.testclient import TestClient
 from app.main import app
 from app.config import get_settings

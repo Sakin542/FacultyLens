@@ -52,7 +52,7 @@ class GradingReportBuilder extends AbstractReportBuilder
             $warnings[] = 'No finalized faculty grades exist for the selected scope.';
         }
         if ($ctx->assessmentIds !== [] && count($ids) < count($ctx->assessmentIds)) {
-            $warnings[] = (count($ctx->assessmentIds) - count($ids)) . ' assessment(s) are excluded because you are not authorized to view their student data.';
+            $warnings[] = (count($ctx->assessmentIds) - count($ids)).' assessment(s) are excluded because you are not authorized to view their student data.';
         }
         $methods = [
             ['method' => 'FACULTY', 'responses' => $totalResponses - $aiAssisted, 'share' => $totalResponses ? round(($totalResponses - $aiAssisted) / $totalResponses * 100, 1) : null, 'meaning' => 'Graded by faculty without an AI suggestion'],

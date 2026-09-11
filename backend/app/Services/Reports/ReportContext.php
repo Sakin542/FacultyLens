@@ -14,9 +14,9 @@ use App\Models\User;
 final class ReportContext
 {
     /**
-     * @param int[] $courseIds
-     * @param int[] $assessmentIds
-     * @param int[] $studentDataAssessmentIds assessments where aggregated student data may be included
+     * @param  int[]  $courseIds
+     * @param  int[]  $assessmentIds
+     * @param  int[]  $studentDataAssessmentIds  assessments where aggregated student data may be included
      */
     public function __construct(
         public readonly User $user,
@@ -50,9 +50,9 @@ final class ReportContext
             'ASSESSMENT_VERSION' => sprintf('%s · %s · %s', $this->course?->course_code, $this->assessment?->title, $this->version?->version_label),
             'ASSESSMENT' => sprintf('%s · %s', $this->course?->course_code, $this->assessment?->title),
             'COURSE' => sprintf('%s — %s (%s %s)', $this->course?->course_code, $this->course?->course_name, $this->course?->semester, $this->course?->academic_year),
-            'DEPARTMENT' => 'Department: ' . ($this->department ?? 'All'),
+            'DEPARTMENT' => 'Department: '.($this->department ?? 'All'),
             'INSTITUTION' => 'Institution-wide (aggregated)',
-            default => 'Faculty: ' . $this->user->name,
+            default => 'Faculty: '.$this->user->name,
         };
     }
 }
