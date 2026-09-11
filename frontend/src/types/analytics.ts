@@ -98,6 +98,20 @@ export interface AttentionArea { severity: AttentionSeverity; type: 'LEARNING_GA
 
 export interface AnalyticsMeta { generated_at: string; served_at?: string; cached?: boolean; cache_ttl_seconds?: number; benchmark_percent: number; disclaimer: string; }
 
+export interface BlueprintComplianceRow {
+  assessment_id: number;
+  assessment_title: string;
+  blueprint_id: number;
+  version: number;
+  status: string;
+  validation_status: string | null;
+  completeness: number | null;
+  compliance_percent: number | null;
+  summary: Record<string, 'MATCH' | 'CLOSE' | 'MISMATCH' | 'NOT_CONFIGURED'>;
+  has_questions: boolean;
+}
+export interface BlueprintComplianceAnalytics { assessments_with_blueprint: number; average_compliance: number | null; rows: BlueprintComplianceRow[]; }
+
 export interface AnalyticsOverview {
   filters: Record<string, string | number>;
   scope: { course_ids: number[]; assessment_ids: number[]; student_data_course_ids: number[]; student_data_restricted: boolean };
@@ -120,6 +134,7 @@ export interface AnalyticsOverview {
   recommendations: RecommendationAnalytics;
   collaboration: CollaborationAnalytics;
   assessments: AssessmentRow[];
+  blueprint_compliance?: BlueprintComplianceAnalytics;
   attention_areas: AttentionArea[];
   meta: AnalyticsMeta;
 }

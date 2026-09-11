@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AcademicChatController;
 use App\Http\Controllers\Api\AiEvaluationController;
 use App\Http\Controllers\Api\AcademicAnalyticsController;
+use App\Http\Controllers\Api\AssessmentBlueprintController;
 use App\Http\Controllers\Api\CollaborationCommentController;
 use App\Http\Controllers\Api\CollaborationController;
 use App\Http\Controllers\Api\NotificationController;
@@ -285,6 +286,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead']);
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markRead']);
+
+    // STEP 37: Assessment Blueprint (planning + validation layer; never publishes/finalizes the assessment)
+    Route::get('/assessments/{assessment}/blueprint', [AssessmentBlueprintController::class, 'show']);
+    Route::post('/assessments/{assessment}/blueprint', [AssessmentBlueprintController::class, 'store']);
+    Route::put('/blueprints/{blueprint}', [AssessmentBlueprintController::class, 'update']);
+    Route::delete('/blueprints/{blueprint}', [AssessmentBlueprintController::class, 'destroy']);
+    Route::post('/blueprints/{blueprint}/validate', [AssessmentBlueprintController::class, 'validateBlueprint']);
+    Route::post('/blueprints/{blueprint}/finalize', [AssessmentBlueprintController::class, 'finalize']);
+    Route::get('/blueprints/{blueprint}/coverage', [AssessmentBlueprintController::class, 'coverage']);
+    Route::get('/blueprints/{blueprint}/comparison', [AssessmentBlueprintController::class, 'comparison']);
+    Route::post('/blueprints/{blueprint}/generate-questions', [AssessmentBlueprintController::class, 'generateQuestions'])->middleware('throttle:ai-analysis');
+    Route::post('/blueprints/{blueprint}/validate-questions', [AssessmentBlueprintController::class, 'validateQuestions']);
 
     // STEP 36: Academic Analytics Dashboard (read-only aggregates; authorization enforced in the scope service)
     Route::prefix('analytics')->group(function () {

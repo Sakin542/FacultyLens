@@ -699,6 +699,36 @@ signals for faculty review — they never change assessments, grades, mappings, 
 
 ---
 
+## Assessment Blueprint
+
+FacultyLens allows faculty to define and validate assessment
+blueprints before selecting or generating questions.
+
+Blueprints support:
+
+- question structure
+- marks
+- difficulty
+- Bloom/cognitive levels
+- learning outcomes
+- program outcomes
+- topics
+- question types
+- assessment sections
+- question-set compliance
+- versioning
+- validation
+
+Open `/assessments/:assessmentId/blueprint` to plan sections (e.g. Section A: MCQ 10 × 1 = 10), difficulty / Bloom / CO / PO / topic
+targets and cross-dimension plan rows (CO2 · Analyze · Medium · Problem solving · 2 × 5). Deterministic validation reports
+`VALID`, `VALID_WITH_WARNINGS` or `INVALID` with evidence-based warnings, a CO × difficulty / CO × Bloom matrix and a
+**Blueprint Completeness** planning indicator (not an assessment-quality score). Finalized blueprints are immutable (edits
+create a new version), feed the STEP 33 generator (drafts stay drafts until approved) and are compared with the actual
+question set (`MATCH` / `CLOSE` / `MISMATCH` with `BLUEPRINT_PERCENTAGE_TOLERANCE`). The blueprint never publishes the
+assessment or changes questions automatically. See [docs/assessment-blueprint.md](docs/assessment-blueprint.md).
+
+---
+
 #  MVP Scope
 
 The core FacultyLens workflow is:

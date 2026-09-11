@@ -5,7 +5,7 @@ import { AnalyticsFilters as Filters, AnalyticsOverview, AssessmentComparison, C
 import { AnalyticsEmptyState, AnalyticsError, AnalyticsFilters, AnalyticsHeader, AnalyticsLoading, getAnalyticsErrorMessage } from '@/components/analytics/AnalyticsStates';
 import { AnalyticsSummary, AssessmentQualityCard, AttentionAreas, CognitiveDistribution, DifficultyDistribution, QualityTrendChart } from '@/components/analytics/AnalyticsSummary';
 import { AssessmentComparisonPanel, AssessmentTable, CourseHistoryTable, LearningGapSummary, LearningOutcomeCoverage, PerformanceTrendChart, ProgramOutcomeCoverage, QuestionPerformanceTable, StudentPerformanceCard, TopicPerformanceTable } from '@/components/analytics/AnalyticsOutcomesPerformance';
-import { AiEvaluationSummary, CollaborationSummary, GradingSummary, InterGraderSummary, QuestionBankSummary, RecommendationSummary, RubricSummary, SimilaritySummary } from '@/components/analytics/AnalyticsAiCollab';
+import { AiEvaluationSummary, BlueprintComplianceSummary, CollaborationSummary, GradingSummary, InterGraderSummary, QuestionBankSummary, RecommendationSummary, RubricSummary, SimilaritySummary } from '@/components/analytics/AnalyticsAiCollab';
 
 const FILTER_KEYS = ['course_id', 'assessment_id', 'semester', 'academic_year', 'assessment_type', 'start_date', 'end_date'] as const;
 
@@ -139,6 +139,7 @@ export const AcademicAnalytics: React.FC = () => {
             <AiEvaluationSummary data={overview.ai_evaluation} />
             <RecommendationSummary data={overview.recommendations} />
             <CollaborationSummary data={overview.collaboration} />
+            <BlueprintComplianceSummary data={overview.blueprint_compliance} />
           </div>
         </>
       )}

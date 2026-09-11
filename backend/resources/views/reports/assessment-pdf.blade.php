@@ -748,6 +748,10 @@
     @include('reports.partials.co-po-mapping', ['cp' => $data['co_po_mapping']])
     @endif
 
+    @if(!empty($data['assessment_blueprint']))
+    @include('reports.partials.assessment-blueprint', ['bp' => $data['assessment_blueprint']])
+    @endif
+
     <!-- SIGN-OFF SECTION -->
     <div class="avoid-break" style="margin-top: 24px; padding-top: 14px; border-top: 1px solid #cbd5e1;">
         <table style="width: 100%; font-size: 8.5pt;">

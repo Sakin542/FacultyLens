@@ -67,6 +67,7 @@ class AcademicAnalyticsService
         $activity = $this->collaboration->activity($courseIds);
         $lowDiversity = $this->assessments->lowCognitiveDiversity($assessmentIds);
         $rows = $this->assessments->assessmentRows($assessmentIds);
+        $blueprints = $this->blueprintCompliance($assessmentIds);
 
         $kpis = [
             'courses' => ['value' => count($courseIds), 'label' => 'Courses'],
@@ -102,9 +103,30 @@ class AcademicAnalyticsService
             'recommendations' => $recommendations,
             'collaboration' => $collab + ['activity' => $activity],
             'assessments' => $rows,
+            'blueprint_compliance' => $blueprints,
             'attention_areas' => $this->attentionAreas($gaps, $quality, $rows, $lo, $po, $similarity, $lowDiversity, $difficulty),
             'meta' => ['generated_at' => now()->toISOString(), 'benchmark_percent' => $perf['benchmark_percent'], 'disclaimer' => 'Analytics are evidence, trends and signals for faculty review. FacultyLens never changes assessments, grades, mappings, rubrics or AI models automatically.'],
         ];
+    }
+
+    /** STEP 37: compliance of each assessment's current blueprint with its actual question set (informational). */
+    protected function blueprintCompliance(array $assessmentIds): array
+    {
+        if ($assessmentIds === []) {
+            return ['assessments_with_blueprint' => 0, 'average_compliance' => null, 'rows' => []];
+        }
+        $service = app(\App\Services\AssessmentBlueprintService::class);
+        $rows = [];
+        $blueprints = \App\Models\AssessmentBlueprint::whereIn('assessment_id', $assessmentIds)->where('is_current', true)->with('assessment:id,title')->get();
+        foreach ($blueprints as $bp) {
+            $c = $service->compliance($bp->assessment);
+            if ($c) {
+                $rows[] = $c + ['assessment_id' => $bp->assessment_id, 'assessment_title' => $bp->assessment->title];
+            }
+        }
+        $values = array_filter(array_column($rows, 'compliance_percent'), fn ($v) => $v !== null);
+
+        return ['assessments_with_blueprint' => count($rows), 'average_compliance' => $values ? round(array_sum($values) / count($values), 1) : null, 'rows' => $rows];
     }
 
     /**
