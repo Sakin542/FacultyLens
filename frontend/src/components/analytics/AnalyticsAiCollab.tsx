@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/common/Badge';
-import { AiEvaluationAnalytics, CollaborationAnalytics as CollabData, GradingAnalytics, InterGraderAnalytics, RecommendationAnalytics as RecData, RubricAnalytics, SimilarityAnalytics, QuestionBankAnalytics } from '@/types/analytics';
+import { AiEvaluationAnalytics, BlueprintComplianceAnalytics, CollaborationAnalytics as CollabData, GradingAnalytics, InterGraderAnalytics, RecommendationAnalytics as RecData, RubricAnalytics, SimilarityAnalytics, QuestionBankAnalytics } from '@/types/analytics';
 import { Bars, LineChart, Section, SectionEmpty, StatusBadge, fmtNum, fmtPct, humanize, statusVariant } from './AnalyticsStates';
 import { TASK_LABELS, EvaluationTask } from '@/types/aiEvaluation';
 
@@ -130,3 +130,21 @@ export const CollaborationSummary: React.FC<{ data: CollabData }> = ({ data }) =
     </Section>
   );
 };
+
+/** STEP 37: blueprint compliance card (links back to each assessment's blueprint). */
+export const BlueprintComplianceSummary: React.FC<{ data: BlueprintComplianceAnalytics | undefined }> = ({ data }) => (
+  <Section testId="blueprint-compliance" title="Assessment Blueprint Compliance" subtitle="Actual question sets compared with each assessment's current blueprint (STEP 37).">
+    {!data || data.assessments_with_blueprint === 0 ? <SectionEmpty title="No blueprints yet" description="Create an assessment blueprint to plan and validate structure before generating or selecting questions." /> : (
+      <>
+        <p className="text-sm">Average compliance <span className="font-semibold tabular-nums">{fmtPct(data.average_compliance)}</span> across {data.assessments_with_blueprint} assessment(s)</p>
+        <ul className="space-y-2 text-sm">{data.rows.map((r) => (
+          <li key={r.blueprint_id} className="border-t border-[#F0F0F0] dark:border-[#2A2A2A] pt-1">
+            <div className="flex flex-wrap items-center gap-2"><Link to={`/assessments/${r.assessment_id}/blueprint`} className="font-medium underline underline-offset-2">{r.assessment_title}</Link><span className="text-xs text-[#737373]">v{r.version} · {humanize(r.status)}</span>
+              <span className="tabular-nums font-semibold">{r.compliance_percent === null ? (r.has_questions ? 'N/A' : 'No questions yet') : fmtPct(r.compliance_percent)}</span></div>
+            <ul className="flex flex-wrap gap-1 mt-1">{Object.entries(r.summary).map(([k, v]) => <li key={k}><Badge variant={v === 'MATCH' ? 'Good' : v === 'CLOSE' ? 'Attention' : v === 'MISMATCH' ? 'Critical' : 'neutral'} size="sm">{humanize(k)} {v === 'MATCH' ? '✓' : v === 'CLOSE' ? '~' : v === 'MISMATCH' ? '⚠' : '—'}</Badge></li>)}</ul>
+          </li>
+        ))}</ul>
+      </>
+    )}
+  </Section>
+);

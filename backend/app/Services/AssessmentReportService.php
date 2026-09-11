@@ -415,6 +415,7 @@ class AssessmentReportService
             'recommendation_summary' => $recommendationSummary,
             'student_performance' => $this->buildStudentPerformanceSection($assessment),
             'co_po_mapping' => $this->buildCoPoSection($assessment),
+            'assessment_blueprint' => app(AssessmentBlueprintService::class)->reportSection($assessment),
             'generated_report' => $latestReportModel ? [
                 'id' => $latestReportModel->id,
                 'uuid' => $latestReportModel->report_uuid,

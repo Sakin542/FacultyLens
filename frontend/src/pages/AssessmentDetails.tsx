@@ -561,6 +561,11 @@ export const AssessmentDetails: React.FC = () => {
             </div>
             {course && (
               <div className="flex gap-2">
+                <Link to={`/assessments/${assessment?.id ?? ''}/blueprint`} data-testid="blueprint-link">
+                  <Button variant="outline" size="sm">
+                    Blueprint
+                  </Button>
+                </Link>
                 <Link to={`/courses/${course.id}/question-generator?assessment=${assessment?.id ?? ''}`} data-testid="generate-questions-link">
                   <Button variant="outline" size="sm" leftIcon={<Sparkles className="w-3.5 h-3.5" />}>
                     Generate Questions
