@@ -31,7 +31,8 @@
         <env name="SESSION_DRIVER" value="array"/>
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
-        <env name="AI_SERVICE_URL" value="http://ai-service:8001"/>
+        <!-- Host runs reach the Docker-published AI service; inside the app container the env var already exists and is kept -->
+        <env name="AI_SERVICE_URL" value="http://127.0.0.1:8001"/>
         <env name="FILESYSTEM_DISK" value="testing"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
     </php>

@@ -74,7 +74,7 @@ class PreviousQuestionController extends Controller
                 $query->orderBy('marks', 'desc');
                 break;
             case 'difficulty':
-                $query->orderByRaw("FIELD(difficulty_level, 'easy', 'medium', 'hard')");
+                $query->orderByRaw("CASE difficulty_level WHEN 'easy' THEN 1 WHEN 'medium' THEN 2 WHEN 'hard' THEN 3 ELSE 4 END");
                 break;
             case 'newest':
             default:

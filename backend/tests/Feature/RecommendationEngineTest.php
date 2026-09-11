@@ -114,6 +114,8 @@ class RecommendationEngineTest extends TestCase
      */
     public function test_direct_generate_recommendations_success(): void
     {
+        $this->requireLiveAiService();
+
         $payload = [
             'assessment' => [
                 'id' => 1,
@@ -180,6 +182,8 @@ class RecommendationEngineTest extends TestCase
      */
     public function test_generate_assessment_recommendations_persists_to_database(): void
     {
+        $this->requireLiveAiService();
+
         $response = $this->actingAs($this->facultyA, 'sanctum')
             ->postJson("/api/ai/assessments/{$this->assessmentA->id}/generate-recommendations");
 

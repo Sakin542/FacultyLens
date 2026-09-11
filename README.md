@@ -670,6 +670,35 @@ tasks without a run show **Not evaluated yet**. See [docs/ai-evaluation.md](docs
 
 ---
 
+## Academic Analytics Dashboard
+
+FacultyLens provides unified academic analytics covering:
+
+- Assessment quality
+- Difficulty distribution
+- Cognitive/Bloom distribution
+- Learning-outcome coverage
+- Program-outcome coverage
+- Student performance
+- Learning gaps
+- Question similarity
+- Rubric activity
+- AI grading assistance
+- Inter-grader consistency
+- AI evaluation
+- Recommendations
+- Faculty collaboration
+- Historical assessment trends
+
+The dashboard at `/analytics` aggregates real records from the existing FacultyLens tables (analysis reports, finalized
+grades, STEP 30 performance runs, STEP 31 CO/PO runs, STEP 35 evaluation runs, audit log) for the courses the signed-in
+faculty member may access. Filters (course, assessment, semester, academic year, type, date range) apply to every section;
+metrics without underlying data show **N/A** or an explicit empty state, never fabricated zeroes. Analytics are evidence and
+signals for faculty review — they never change assessments, grades, mappings, rubrics or AI models. See
+[docs/academic-analytics.md](docs/academic-analytics.md).
+
+---
+
 #  MVP Scope
 
 The core FacultyLens workflow is:

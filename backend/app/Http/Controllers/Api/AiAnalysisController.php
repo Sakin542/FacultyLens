@@ -1140,7 +1140,7 @@ class AiAnalysisController extends Controller
                     ->delete();
 
                 return Recommendation::where('analysis_report_id', $report->id)
-                    ->orderByRaw("FIELD(priority, 'high', 'medium', 'low')")
+                    ->orderByRaw("CASE priority WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 ELSE 4 END")
                     ->get();
             });
 
@@ -1206,7 +1206,7 @@ class AiAnalysisController extends Controller
         }
 
         $recommendations = Recommendation::where('analysis_report_id', $report->id)
-            ->orderByRaw("FIELD(priority, 'high', 'medium', 'low')")
+            ->orderByRaw("CASE priority WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 ELSE 4 END")
             ->get();
 
         return response()->json([
@@ -1842,7 +1842,7 @@ class AiAnalysisController extends Controller
 
         // Build recommendations list with proper sorting
         $recommendations = $report->recommendations()
-            ->orderByRaw("FIELD(priority, 'high', 'medium', 'low')")
+            ->orderByRaw("CASE priority WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 ELSE 4 END")
             ->orderBy('id', 'desc')
             ->get();
 
