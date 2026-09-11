@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { BrandMark } from './Navbar';
 import { ConfirmSignOutDialog } from '@/components/common/ConfirmSignOutDialog';
 import {
-  LayoutDashboard, BookOpen, FileCheck2, HelpCircle, BrainCircuit, History, MessageSquare, MessageSquareText, Sparkles, Gauge, BarChart3, Users, Settings, LogOut, X, User as UserIcon, ExternalLink, Leaf,
+  LayoutDashboard, BookOpen, FileCheck2, HelpCircle, BrainCircuit, History, MessageSquare, MessageSquareText, Sparkles, Gauge, BarChart3, Users, Settings, LogOut, X, User as UserIcon, ExternalLink, Leaf, FileBarChart2,
 } from 'lucide-react';
 
 export interface SidebarProps {
@@ -19,6 +19,7 @@ export const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
   { title: 'Overview', items: [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, end: true },
     { name: 'Analytics', path: '/analytics', icon: BarChart3 },
+    { name: 'Reports', path: '/reports', icon: FileBarChart2 },
   ] },
   { title: 'Teaching', items: [
     { name: 'Courses', path: '/courses', icon: BookOpen },

@@ -42,6 +42,19 @@ class AcademicAnalyticsService
         return $data;
     }
 
+    /**
+     * STEP 39: the same overview for an already-authorized course/assessment scope (department or
+     * institution reports). Uncached — reports snapshot their own output.
+     */
+    public function overviewForScope(User $user, array $filters, array $courseIds, array $assessmentIds): array
+    {
+        $data = $this->build($user, $this->scope->normalize($filters), $courseIds, $assessmentIds);
+        $data['meta']['cached'] = false;
+        $data['meta']['served_at'] = now()->toISOString();
+
+        return $data;
+    }
+
     protected function build(User $user, array $filters, array $courseIds, array $assessmentIds): array
     {
         $studentCourseIds = $this->scope->studentDataCourseIds($user, $courseIds);

@@ -43,6 +43,9 @@ const AssessmentBlueprintPage = lazy(() => import('@/pages/AssessmentBlueprint')
 const AssessmentVersions = lazy(() => import('@/pages/AssessmentVersions').then(m => ({ default: m.AssessmentVersions })));
 const AssessmentVersionDetail = lazy(() => import('@/pages/AssessmentVersionDetail').then(m => ({ default: m.AssessmentVersionDetail })));
 const AssessmentVersionCompare = lazy(() => import('@/pages/AssessmentVersionCompare').then(m => ({ default: m.AssessmentVersionCompare })));
+const InstitutionalReports = lazy(() => import('@/pages/InstitutionalReports').then(m => ({ default: m.InstitutionalReports })));
+const ReportBuilder      = lazy(() => import('@/pages/ReportBuilder').then(m => ({ default: m.ReportBuilder })));
+const ReportDetails      = lazy(() => import('@/pages/ReportDetails').then(m => ({ default: m.ReportDetails })));
 
 /**
  * Lightweight fallback shown while a lazy page chunk loads.
@@ -84,6 +87,10 @@ export const AppRoutes: React.FC = () => {
             <Route path="/question-generator" element={<QuestionGenerator />} />
             <Route path="/ai-evaluation" element={<AiEvaluation />} />
             <Route path="/analytics" element={<AcademicAnalytics />} />
+            {/* STEP 39: Institutional Export & Reporting */}
+            <Route path="/reports" element={<InstitutionalReports />} />
+            <Route path="/reports/create" element={<ReportBuilder />} />
+            <Route path="/reports/:reportId" element={<ReportDetails />} />
             <Route path="/assessments/:assessmentId/blueprint" element={<AssessmentBlueprintPage />} />
             <Route path="/assessments/:assessmentId/versions" element={<AssessmentVersions />} />
             <Route path="/assessments/:assessmentId/versions/:versionId" element={<AssessmentVersionDetail />} />
