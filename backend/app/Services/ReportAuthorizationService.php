@@ -70,8 +70,8 @@ class ReportAuthorizationService
         if (in_array('INSTITUTION', $this->allowedScopes($user), true)) {
             $out['programs'] = Program::query()->orderBy('code')->get(['id', 'code', 'name'])->map(fn ($p) => ['id' => $p->id, 'code' => $p->code, 'name' => $p->name])->values();
         }
-        $applicable = $scope ? (array) (config('institutional_reports.scope_filters.' . $scope) ?? []) : (array) config('institutional_reports.filter_keys');
-        if ($type && !(config('institutional_reports.types.' . $type . '.scopes') ?? [])) {
+        $applicable = $scope ? (array) (config('institutional_reports.scope_filters.'.$scope) ?? []) : (array) config('institutional_reports.filter_keys');
+        if ($type && ! (config('institutional_reports.types.'.$type.'.scopes') ?? [])) {
             $applicable = [];
         }
 
@@ -84,15 +84,15 @@ class ReportAuthorizationService
     public function resolve(User $user, array $input): ReportContext
     {
         $type = strtoupper((string) ($input['report_type'] ?? ''));
-        $def = config('institutional_reports.types.' . $type);
-        if (!$def) {
+        $def = config('institutional_reports.types.'.$type);
+        if (! $def) {
             throw new ReportValidationException('The selected report type is not supported.', ['report_type' => ['Unsupported report type.']]);
         }
         $scope = strtoupper((string) ($input['scope_type'] ?? ''));
-        if (!in_array($scope, $def['scopes'], true)) {
+        if (! in_array($scope, $def['scopes'], true)) {
             throw new ReportValidationException('The selected scope is not available for this report type.', ['scope_type' => ['Scope not available for this report type.']]);
         }
-        if (!in_array($scope, $this->allowedScopes($user), true)) {
+        if (! in_array($scope, $this->allowedScopes($user), true)) {
             throw new AuthorizationException('You are not authorized to generate this report.');
         }
 
@@ -109,10 +109,10 @@ class ReportAuthorizationService
             case 'ASSESSMENT_VERSION':
             case 'ASSESSMENT':
                 $assessment = Assessment::with('course')->find((int) ($filters['assessment_id'] ?? 0));
-                if (!$assessment || !$assessment->course) {
+                if (! $assessment || ! $assessment->course) {
                     throw new ReportValidationException('The selected assessment is unavailable.', ['assessment_id' => ['Select an assessment.']]);
                 }
-                if (!empty($filters['course_id']) && (int) $filters['course_id'] !== (int) $assessment->course_id) {
+                if (! empty($filters['course_id']) && (int) $filters['course_id'] !== (int) $assessment->course_id) {
                     throw new ReportValidationException('The selected assessment does not belong to the selected course.', ['assessment_id' => ['Assessment does not belong to the selected course.']]);
                 }
                 $course = $assessment->course;
@@ -120,7 +120,7 @@ class ReportAuthorizationService
                 $filters['course_id'] = $course->id;
                 if ($scope === 'ASSESSMENT_VERSION') {
                     $version = AssessmentVersion::find((int) ($filters['assessment_version_id'] ?? 0));
-                    if (!$version || (int) $version->assessment_id !== (int) $assessment->id) {
+                    if (! $version || (int) $version->assessment_id !== (int) $assessment->id) {
                         throw new ReportValidationException('The selected assessment version is unavailable.', ['assessment_version_id' => ['Select a version of this assessment.']]);
                     }
                 }
@@ -130,7 +130,7 @@ class ReportAuthorizationService
 
             case 'COURSE':
                 $course = Course::find((int) ($filters['course_id'] ?? 0));
-                if (!$course) {
+                if (! $course) {
                     throw new ReportValidationException('The selected course is unavailable.', ['course_id' => ['Select a course.']]);
                 }
                 $this->authorizeCourse($user, $course);
@@ -150,7 +150,7 @@ class ReportAuthorizationService
 
             case 'INSTITUTION':
                 $q = Course::query();
-                if (!empty($filters['program_id'])) {
+                if (! empty($filters['program_id'])) {
                     $programId = (int) $filters['program_id'];
                     $q->where('courses.program_id', $programId);
                 }
@@ -163,7 +163,7 @@ class ReportAuthorizationService
                 $assessmentIds = $this->scope->assessmentIds($courseIds, $this->assessmentFilters($filters));
         }
 
-        if (!empty($filters['status']) && $assessmentIds !== []) {
+        if (! empty($filters['status']) && $assessmentIds !== []) {
             $assessmentIds = Assessment::whereIn('id', $assessmentIds)->where('status', $filters['status'])->pluck('id')->map(fn ($id) => (int) $id)->all();
         }
 
@@ -182,7 +182,7 @@ class ReportAuthorizationService
 
     protected function authorizeCourse(User $user, Course $course): void
     {
-        if (!$this->access->can($user, $course, 'view')) {
+        if (! $this->access->can($user, $course, 'view')) {
             throw new AuthorizationException('You are not authorized to generate this report.');
         }
     }
@@ -190,7 +190,7 @@ class ReportAuthorizationService
     /** Keep only filters applicable to the scope; drop blanks; cast ids. */
     protected function normalizeFilters(array $filters, string $scope): array
     {
-        $applicable = (array) (config('institutional_reports.scope_filters.' . $scope) ?? []);
+        $applicable = (array) (config('institutional_reports.scope_filters.'.$scope) ?? []);
         $out = [];
         foreach ($applicable as $k) {
             $v = $filters[$k] ?? null;
@@ -205,7 +205,7 @@ class ReportAuthorizationService
 
     protected function validateDateRange(array $filters): void
     {
-        if (!empty($filters['start_date']) && !empty($filters['end_date']) && $filters['start_date'] > $filters['end_date']) {
+        if (! empty($filters['start_date']) && ! empty($filters['end_date']) && $filters['start_date'] > $filters['end_date']) {
             throw new ReportValidationException('The date range is invalid: the start date is after the end date.', ['start_date' => ['Start date must be before the end date.']]);
         }
     }
@@ -217,10 +217,10 @@ class ReportAuthorizationService
 
     protected function applyCourseFilters($q, array $filters)
     {
-        if (!empty($filters['semester'])) {
+        if (! empty($filters['semester'])) {
             $q->where('courses.semester', $filters['semester']);
         }
-        if (!empty($filters['academic_year'])) {
+        if (! empty($filters['academic_year'])) {
             $q->where('courses.academic_year', $filters['academic_year']);
         }
 
@@ -231,6 +231,6 @@ class ReportAuthorizationService
     {
         $role = strtoupper((string) ($user->role ?? 'FACULTY'));
 
-        return in_array($role, array_map('strtoupper', (array) config('institutional_reports.' . $configKey, [])), true);
+        return in_array($role, array_map('strtoupper', (array) config('institutional_reports.'.$configKey, [])), true);
     }
 }

@@ -1,7 +1,6 @@
 """Performance and singleton model initialization tests for FacultyLens AI microservice."""
 
 import time
-import pytest
 from app.services.huggingface_service import get_hf_service
 
 

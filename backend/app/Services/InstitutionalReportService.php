@@ -59,12 +59,12 @@ class InstitutionalReportService
     {
         $ctx = $this->authorization->resolve($user, $input);
         $format = strtoupper((string) ($input['format'] ?? 'PDF'));
-        if (!in_array($format, (array) config('institutional_reports.formats'), true)) {
+        if (! in_array($format, (array) config('institutional_reports.formats'), true)) {
             throw new ReportValidationException('The selected export format is not supported.', ['format' => ['Unsupported format.']]);
         }
         // Validate data presence before persisting anything: an empty report would be misleading.
         $document = $this->builder($ctx)->build($ctx);
-        if (!$this->hasData($document)) {
+        if (! $this->hasData($document)) {
             throw new ReportValidationException('No data available for the selected filters.', ['filters' => ['No data available for the selected filters.']]);
         }
         $queue = $this->shouldQueue($ctx, $document['record_count']);
@@ -81,7 +81,7 @@ class InstitutionalReportService
             'department' => $ctx->department,
             'program_id' => $ctx->programId,
             'filters' => $ctx->filters,
-            'title' => $ctx->label() . ' — ' . $ctx->scopeDescription(),
+            'title' => $ctx->label().' — '.$ctx->scopeDescription(),
             'format' => $format,
             'status' => InstitutionalReport::STATUS_PENDING,
             'is_async' => $queue,
@@ -113,7 +113,7 @@ class InstitutionalReportService
 
         try {
             $user = $report->creator;
-            if (!$user) {
+            if (! $user) {
                 throw new ReportValidationException('The requesting user no longer exists.');
             }
             if ($document === null) {
@@ -171,7 +171,7 @@ class InstitutionalReportService
     public function present(InstitutionalReport $report): array
     {
         $report->loadMissing(['course:id,course_code,course_name,semester,academic_year', 'assessment:id,title', 'assessmentVersion:id,version_label,status', 'creator:id,name']);
-        $def = config('institutional_reports.types.' . $report->report_type);
+        $def = config('institutional_reports.types.'.$report->report_type);
 
         return [
             'id' => $report->id, 'uuid' => $report->report_uuid, 'title' => $report->title,
@@ -208,7 +208,7 @@ class InstitutionalReportService
             return (bool) $document['has_data'];
         }
         foreach ($document['tables'] as $t) {
-            if (count($t['rows']) > 0 && !(count($t['columns']) === 1 && ($t['columns'][0]['key'] ?? '') === 'message')) {
+            if (count($t['rows']) > 0 && ! (count($t['columns']) === 1 && ($t['columns'][0]['key'] ?? '') === 'message')) {
                 return true;
             }
         }
@@ -220,7 +220,7 @@ class InstitutionalReportService
     {
         $bytes = strlen(json_encode($document['tables'])) + 4096;
 
-        return $bytes > 1048576 ? round($bytes / 1048576, 1) . ' MB' : round($bytes / 1024) . ' KB';
+        return $bytes > 1048576 ? round($bytes / 1048576, 1).' MB' : round($bytes / 1024).' KB';
     }
 
     protected function auditMeta(ReportContext $ctx): array

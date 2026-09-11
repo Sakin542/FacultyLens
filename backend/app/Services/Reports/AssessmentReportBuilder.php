@@ -8,6 +8,7 @@ use App\Models\Question;
 use App\Models\QuestionLearningOutcomeAlignment;
 use App\Models\QuestionSimilarityMatch;
 use App\Models\Recommendation;
+use App\Services\Analytics\OutcomeAnalyticsService;
 use App\Services\AssessmentBlueprintService;
 use App\Services\AssessmentReportService;
 use App\Services\AssessmentVersionService;
@@ -41,7 +42,7 @@ class AssessmentReportBuilder extends AbstractReportBuilder
 
         $summary = [
             $this->kv('Assessment', $assessment->title),
-            $this->kv('Course', $assessment->course->course_code . ' — ' . $assessment->course->course_name),
+            $this->kv('Course', $assessment->course->course_code.' — '.$assessment->course->course_name),
             $this->kv('Assessment Type', $this->humanize($version?->assessment_type ?? $assessment->type)),
             $this->kv('Version', $currentVersion['version_label'] ?? 'No version recorded'),
             $this->kv('Version Status', $currentVersion['status'] ?? 'N/A'),
@@ -53,8 +54,8 @@ class AssessmentReportBuilder extends AbstractReportBuilder
             $this->kv('Quality Rating', $analysis ? $this->reports->getRatingLabel((float) $analysis->overall_score) : 'Not analyzed'),
             $this->kv('Quality Score', $analysis ? round((float) $analysis->overall_score, 2) : 'Not analyzed'),
         ];
-        if (!$analysis) {
-            $warnings[] = 'No completed AI analysis exists for this ' . ($version ? 'version' : 'assessment') . '; quality, alignment, similarity and recommendation sections are unavailable.';
+        if (! $analysis) {
+            $warnings[] = 'No completed AI analysis exists for this '.($version ? 'version' : 'assessment').'; quality, alignment, similarity and recommendation sections are unavailable.';
         }
 
         $tables = [
@@ -166,8 +167,8 @@ class AssessmentReportBuilder extends AbstractReportBuilder
 
     protected function poTable(ReportContext $ctx): ?array
     {
-        $po = app(\App\Services\Analytics\OutcomeAnalyticsService::class)->programOutcomes([$ctx->course->id]);
-        if (!($po['configured'] ?? false)) {
+        $po = app(OutcomeAnalyticsService::class)->programOutcomes([$ctx->course->id]);
+        if (! ($po['configured'] ?? false)) {
             return $this->table('po_coverage', 'PO Coverage', ['message' => 'Status'], [['message' => 'PO Mapping is not configured for this course.']]);
         }
 
@@ -196,7 +197,7 @@ class AssessmentReportBuilder extends AbstractReportBuilder
 
     protected function similarityTable(?AnalysisReport $analysis): ?array
     {
-        if (!$analysis) {
+        if (! $analysis) {
             return null;
         }
         $rows = QuestionSimilarityMatch::where('analysis_report_id', $analysis->id)->with(['currentQuestion:id,question_number', 'previousQuestion:id,question_text,source'])
@@ -209,7 +210,7 @@ class AssessmentReportBuilder extends AbstractReportBuilder
 
     protected function recommendationTable(?AnalysisReport $analysis): ?array
     {
-        if (!$analysis) {
+        if (! $analysis) {
             return null;
         }
         $rows = Recommendation::where('analysis_report_id', $analysis->id)->orderByRaw("CASE LOWER(priority) WHEN 'high' THEN 0 WHEN 'medium' THEN 1 ELSE 2 END")->get()

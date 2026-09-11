@@ -31,7 +31,7 @@ class XlsxWriter
             'xl/styles.xml' => '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>',
         ];
         foreach ($this->sheets as $i => $sheet) {
-            $files['xl/worksheets/sheet' . ($i + 1) . '.xml'] = $this->worksheet($sheet['rows']);
+            $files['xl/worksheets/sheet'.($i + 1).'.xml'] = $this->worksheet($sheet['rows']);
         }
 
         return $this->zip($files);
@@ -40,44 +40,44 @@ class XlsxWriter
     protected function contentTypes(): string
     {
         $xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
-            . '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>'
-            . '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'
-            . '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>';
+            .'<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>'
+            .'<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'
+            .'<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>';
         foreach ($this->sheets as $i => $s) {
-            $xml .= '<Override PartName="/xl/worksheets/sheet' . ($i + 1) . '.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>';
+            $xml .= '<Override PartName="/xl/worksheets/sheet'.($i + 1).'.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>';
         }
 
-        return $xml . '</Types>';
+        return $xml.'</Types>';
     }
 
     protected function workbook(): string
     {
         $xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>';
         foreach ($this->sheets as $i => $s) {
-            $xml .= '<sheet name="' . $this->esc($s['name']) . '" sheetId="' . ($i + 1) . '" r:id="rId' . ($i + 1) . '"/>';
+            $xml .= '<sheet name="'.$this->esc($s['name']).'" sheetId="'.($i + 1).'" r:id="rId'.($i + 1).'"/>';
         }
 
-        return $xml . '</sheets></workbook>';
+        return $xml.'</sheets></workbook>';
     }
 
     protected function workbookRels(): string
     {
         $xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">';
         foreach ($this->sheets as $i => $s) {
-            $xml .= '<Relationship Id="rId' . ($i + 1) . '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet' . ($i + 1) . '.xml"/>';
+            $xml .= '<Relationship Id="rId'.($i + 1).'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet'.($i + 1).'.xml"/>';
         }
-        $xml .= '<Relationship Id="rId' . (count($this->sheets) + 1) . '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>';
+        $xml .= '<Relationship Id="rId'.(count($this->sheets) + 1).'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>';
 
-        return $xml . '</Relationships>';
+        return $xml.'</Relationships>';
     }
 
     protected function worksheet(array $rows): string
     {
         $xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>';
         foreach (array_values($rows) as $r => $row) {
-            $xml .= '<row r="' . ($r + 1) . '">';
+            $xml .= '<row r="'.($r + 1).'">';
             foreach (array_values($row) as $c => $value) {
-                $ref = $this->col($c) . ($r + 1);
+                $ref = $this->col($c).($r + 1);
                 $style = $r === 0 ? ' s="1"' : '';
                 if ($value === null || $value === '') {
                     continue;
@@ -85,16 +85,16 @@ class XlsxWriter
                 if (is_bool($value)) {
                     $value = $value ? 'Yes' : 'No';
                 }
-                if (is_int($value) || is_float($value) || (is_string($value) && is_numeric($value) && !preg_match('/^0\d/', $value) && strlen($value) < 16)) {
-                    $xml .= '<c r="' . $ref . '"' . $style . '><v>' . (0 + $value) . '</v></c>';
+                if (is_int($value) || is_float($value) || (is_string($value) && is_numeric($value) && ! preg_match('/^0\d/', $value) && strlen($value) < 16)) {
+                    $xml .= '<c r="'.$ref.'"'.$style.'><v>'.(0 + $value).'</v></c>';
                 } else {
-                    $xml .= '<c r="' . $ref . '" t="inlineStr"' . $style . '><is><t xml:space="preserve">' . $this->esc((string) $value) . '</t></is></c>';
+                    $xml .= '<c r="'.$ref.'" t="inlineStr"'.$style.'><is><t xml:space="preserve">'.$this->esc((string) $value).'</t></is></c>';
                 }
             }
             $xml .= '</row>';
         }
 
-        return $xml . '</sheetData></worksheet>';
+        return $xml.'</sheetData></worksheet>';
     }
 
     protected function col(int $index): string
@@ -103,7 +103,7 @@ class XlsxWriter
         $index++;
         while ($index > 0) {
             $m = ($index - 1) % 26;
-            $s = chr(65 + $m) . $s;
+            $s = chr(65 + $m).$s;
             $index = intdiv($index - 1, 26);
         }
 
@@ -125,7 +125,7 @@ class XlsxWriter
         $i = 2;
         $taken = array_map(fn ($s) => strtolower($s['name']), $this->sheets);
         while (in_array(strtolower($candidate), $taken, true)) {
-            $candidate = mb_substr($base, 0, 28) . ' ' . $i++;
+            $candidate = mb_substr($base, 0, 28).' '.$i++;
         }
 
         return $candidate;
@@ -141,14 +141,14 @@ class XlsxWriter
         foreach ($files as $name => $content) {
             $crc = crc32($content);
             $size = strlen($content);
-            $header = "\x50\x4b\x03\x04" . pack('vvvvvVVVvv', 20, 0x0800, 0, $dosTime['time'], $dosTime['date'], $crc, $size, $size, strlen($name), 0) . $name;
-            $local .= $header . $content;
-            $central .= "\x50\x4b\x01\x02" . pack('vvvvvvVVVvvvvvVV', 20, 20, 0x0800, 0, $dosTime['time'], $dosTime['date'], $crc, $size, $size, strlen($name), 0, 0, 0, 0, 0, $offset) . $name;
+            $header = "\x50\x4b\x03\x04".pack('vvvvvVVVvv', 20, 0x0800, 0, $dosTime['time'], $dosTime['date'], $crc, $size, $size, strlen($name), 0).$name;
+            $local .= $header.$content;
+            $central .= "\x50\x4b\x01\x02".pack('vvvvvvVVVvvvvvVV', 20, 20, 0x0800, 0, $dosTime['time'], $dosTime['date'], $crc, $size, $size, strlen($name), 0, 0, 0, 0, 0, $offset).$name;
             $offset += strlen($header) + $size;
         }
-        $end = "\x50\x4b\x05\x06" . pack('vvvvVVv', 0, 0, count($files), count($files), strlen($central), $offset, 0);
+        $end = "\x50\x4b\x05\x06".pack('vvvvVVv', 0, 0, count($files), count($files), strlen($central), $offset, 0);
 
-        return $local . $central . $end;
+        return $local.$central.$end;
     }
 
     protected function dosTime(): array

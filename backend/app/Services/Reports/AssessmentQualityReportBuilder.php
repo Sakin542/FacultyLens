@@ -3,6 +3,7 @@
 namespace App\Services\Reports;
 
 use App\Models\AnalysisReport;
+use App\Models\AssessmentVersion;
 use App\Services\Analytics\AssessmentAnalyticsService;
 use App\Services\AssessmentReportService;
 
@@ -30,7 +31,7 @@ class AssessmentQualityReportBuilder extends AbstractReportBuilder
         $reports = $q->orderBy('courses.course_code')->orderBy('assessments.title')
             ->get(['analysis_reports.*', 'assessments.title AS assessment_title', 'assessments.type AS assessment_type', 'assessments.assessment_date', 'courses.course_code', 'courses.course_name']);
 
-        $versionLabels = \App\Models\AssessmentVersion::whereIn('id', $reports->pluck('assessment_version_id')->filter())->pluck('version_label', 'id');
+        $versionLabels = AssessmentVersion::whereIn('id', $reports->pluck('assessment_version_id')->filter())->pluck('version_label', 'id');
         $rows = $reports->map(function ($r) use ($versionLabels, $ctx) {
             $score = (float) $r->overall_score;
 
@@ -50,7 +51,7 @@ class AssessmentQualityReportBuilder extends AbstractReportBuilder
         $avg = $rows ? round(array_sum(array_column($rows, 'overall_quality')) / count($rows), 2) : null;
         $warnings = [];
         $unanalyzed = count($ctx->assessmentIds) - count($rows);
-        if ($unanalyzed > 0 && !$ctx->version) {
+        if ($unanalyzed > 0 && ! $ctx->version) {
             $warnings[] = "{$unanalyzed} assessment(s) in scope have no completed analysis and are excluded.";
         }
         if ($rows === []) {

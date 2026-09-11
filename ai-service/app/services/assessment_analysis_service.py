@@ -19,7 +19,6 @@ from app.services.recommendation_engine import RecommendationEngine
 
 from app.schemas.assessment_analysis import (
     UnifiedAssessmentAnalysisRequest,
-    UnifiedAssessmentAnalysisResponse,
 )
 from app.schemas.alignment import (
     QuestionItem as AlignmentQuestionItem,

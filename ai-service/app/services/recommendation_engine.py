@@ -4,11 +4,10 @@ Coordinates problem detection, evidence compilation, recommendation generation,
 and priority ranking for faculty academic decision support.
 """
 
-from typing import List, Dict, Any, Optional
+from typing import Dict, Any, Optional
 from app.schemas.recommendation import (
     RecommendationRequest,
     RecommendationResponse,
-    RecommendationItem,
     RecommendationPriority,
 )
 from app.services.problem_detector import ProblemDetector

@@ -18,7 +18,7 @@ class AcademicAnalyticsReportBuilder extends AbstractReportBuilder
 
         $summary = [];
         foreach ($a['kpis'] as $kpi) {
-            $summary[] = $this->kv($kpi['label'], $kpi['value'] === null ? 'N/A' : $kpi['value'] . (($kpi['unit'] ?? '') === 'percent' ? '%' : ''));
+            $summary[] = $this->kv($kpi['label'], $kpi['value'] === null ? 'N/A' : $kpi['value'].(($kpi['unit'] ?? '') === 'percent' ? '%' : ''));
         }
         $summary[] = $this->kv('Student Data', $a['scope']['student_data_restricted'] ? 'Restricted for your role' : 'Aggregated');
 

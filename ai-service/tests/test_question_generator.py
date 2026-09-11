@@ -70,7 +70,7 @@ def test_endpoint_template_engine_generates_requested_count_with_validation():
 
 
 def test_type_and_bloom_constraints_are_honoured_by_template_engine():
-    for qtype, cog, expect_type in [("MCQ", "REMEMBER", "MCQ"), ("TRUE_FALSE", "UNDERSTAND", "TRUE_FALSE"),
+    for qtype, cog, _expect_type in [("MCQ", "REMEMBER", "MCQ"), ("TRUE_FALSE", "UNDERSTAND", "TRUE_FALSE"),
                                     ("SHORT_ANSWER", "UNDERSTAND", "SHORT_ANSWER"), ("PROBLEM_SOLVING", "APPLY", "PROBLEM_SOLVING"),
                                     ("DESCRIPTIVE", "EVALUATE", None), ("DESCRIPTIVE", "CREATE", None)]:
         res = client.post("/api/v1/generate-questions", json=_payload(question_type=qtype, cognitive_level=cog, number_of_questions=2, difficulty_level=None))

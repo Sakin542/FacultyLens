@@ -4,7 +4,7 @@ Converts detected assessment problems and evidence into actionable, advisory
 recommendations for university faculty.
 """
 
-from typing import List, Dict, Any, Optional
+from typing import List
 import uuid
 from app.schemas.recommendation import DetectedProblem, RecommendationItem
 from app.services.recommendation_rules import RuleCodes

@@ -55,10 +55,10 @@ class QuestionAnalysisReportBuilder extends AbstractReportBuilder
             $this->kv('Questions', $n),
             $this->kv('Total Marks', $marks),
             $this->kv('Mapped to a CO', count(array_filter($rows, fn ($r) => $r['co'] !== null))),
-            $this->kv('Analysis', $analysis ? 'Completed ' . $analysis->analyzed_at?->toDateString() : 'Not analyzed'),
+            $this->kv('Analysis', $analysis ? 'Completed '.$analysis->analyzed_at?->toDateString() : 'Not analyzed'),
         ];
         $warnings = [];
-        if (!$analysis) {
+        if (! $analysis) {
             $warnings[] = 'No completed analysis: alignment and similarity columns are unavailable.';
         }
         if ($n === 0) {

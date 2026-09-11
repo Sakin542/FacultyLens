@@ -12,9 +12,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class InstitutionalReport extends Model
 {
     public const STATUS_PENDING = 'PENDING';
+
     public const STATUS_PROCESSING = 'PROCESSING';
+
     public const STATUS_COMPLETED = 'COMPLETED';
+
     public const STATUS_FAILED = 'FAILED';
+
     public const STATUS_CANCELLED = 'CANCELLED';
 
     protected $fillable = [
@@ -74,7 +78,7 @@ class InstitutionalReport extends Model
 
     public function isDownloadable(): bool
     {
-        return $this->status === self::STATUS_COMPLETED && $this->file_path !== null && $this->file_deleted_at === null && !$this->isExpired();
+        return $this->status === self::STATUS_COMPLETED && $this->file_path !== null && $this->file_deleted_at === null && ! $this->isExpired();
     }
 
     public function isTerminal(): bool

@@ -76,7 +76,7 @@ class AlignmentAnalyzer:
             q_num = qa.get("question_number") or qa.get("question_id") or "Unknown"
 
             # Find matching LO bucket by ID or code/description
-            for key, stat in lo_stats.items():
+            for stat in lo_stats.values():
                 is_match = False
                 if matched_lo.get("id") is not None and stat["learning_outcome_id"] == matched_lo["id"]:
                     is_match = True
@@ -101,7 +101,7 @@ class AlignmentAnalyzer:
         weakly_covered_lo_count = 0
         uncovered_lo_count = 0
 
-        for key, stat in lo_stats.items():
+        for stat in lo_stats.values():
             max_sim = stat["max_similarity"]
             if stat["strong_count"] > 0 or max_sim >= th.strong:
                 coverage_status = "COVERED"
@@ -127,7 +127,6 @@ class AlignmentAnalyzer:
         # Formula: (sum(strong * 1.0 + weak * 0.5 + not_aligned * 0.0) / total_questions) * 100
         strong_q_count = sum(1 for q in question_alignments if q["alignment_status"] == "STRONG")
         weak_q_count = sum(1 for q in question_alignments if q["alignment_status"] == "WEAK")
-        unaligned_q_count = sum(1 for q in question_alignments if q["alignment_status"] == "NOT_ALIGNED")
 
         if total_questions > 0:
             raw_score = ((strong_q_count * 1.0 + weak_q_count * 0.5) / total_questions) * 100.0

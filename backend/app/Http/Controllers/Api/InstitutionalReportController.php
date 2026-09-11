@@ -59,10 +59,10 @@ class InstitutionalReportController extends Controller
     {
         $data = $request->validate(['status' => ['nullable', 'string', 'max:20'], 'report_type' => ['nullable', 'string', 'max:40'], 'per_page' => ['nullable', 'integer', 'min:1', 'max:100'], 'page' => ['nullable', 'integer', 'min:1']]);
         $q = InstitutionalReport::query()->where('created_by', $request->user()->id)->orderByDesc('id');
-        if (!empty($data['status'])) {
+        if (! empty($data['status'])) {
             $q->where('status', strtoupper($data['status']));
         }
-        if (!empty($data['report_type'])) {
+        if (! empty($data['report_type'])) {
             $q->where('report_type', strtoupper($data['report_type']));
         }
         $page = $q->paginate((int) ($data['per_page'] ?? 20));
@@ -103,7 +103,7 @@ class InstitutionalReportController extends Controller
     /** GET /api/reports/{report} */
     public function show(Request $request, InstitutionalReport $report): JsonResponse
     {
-        if (!$request->user()->can('view', $report)) {
+        if (! $request->user()->can('view', $report)) {
             return $this->forbidden();
         }
 
@@ -113,7 +113,7 @@ class InstitutionalReportController extends Controller
     /** GET /api/reports/{report}/download — authenticated, policy-checked stream from the private disk. */
     public function download(Request $request, InstitutionalReport $report): StreamedResponse|JsonResponse
     {
-        if (!$request->user()->can('download', $report)) {
+        if (! $request->user()->can('download', $report)) {
             return $this->forbidden();
         }
         if ($report->status !== InstitutionalReport::STATUS_COMPLETED) {
@@ -123,7 +123,7 @@ class InstitutionalReportController extends Controller
             return response()->json(['status' => 'error', 'message' => 'This report has expired. Generate it again to download a fresh copy.'], 410);
         }
         $disk = Storage::disk($this->export->disk());
-        if (!$report->file_path || !$disk->exists($report->file_path)) {
+        if (! $report->file_path || ! $disk->exists($report->file_path)) {
             return response()->json(['status' => 'error', 'message' => 'The report file is unavailable. Generate it again.'], 410);
         }
         $this->audit->log('REPORT_DOWNLOADED', $report, $report->id, ['report_type' => $report->report_type, 'scope' => $report->scope_type, 'format' => $report->format, 'contains_student_data' => $report->contains_student_data], $request->user());
@@ -134,7 +134,7 @@ class InstitutionalReportController extends Controller
     /** DELETE /api/reports/{report} */
     public function destroy(Request $request, InstitutionalReport $report): JsonResponse
     {
-        if (!$request->user()->can('delete', $report)) {
+        if (! $request->user()->can('delete', $report)) {
             return response()->json(['status' => 'error', 'message' => $report->status === InstitutionalReport::STATUS_PROCESSING ? 'A report that is being generated cannot be deleted.' : 'You are not authorized to delete this report.'], 403);
         }
         $this->service->delete($request->user(), $report);

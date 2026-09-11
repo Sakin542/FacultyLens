@@ -1,11 +1,9 @@
-import pytest
 from fastapi.testclient import TestClient
 from app.main import app
 from app.services.semantic_similarity_analyzer import SemanticSimilarityAnalyzer
 from app.schemas.similarity import (
     CurrentQuestionItem,
     PreviousQuestionItem,
-    SimilarityThresholdsConfig,
 )
 
 client = TestClient(app)

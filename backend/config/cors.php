@@ -19,13 +19,12 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => array_values(array_unique(array_filter([
-        env('FRONTEND_URL', 'http://localhost:5173'),
-        'http://localhost:5173',
-        'http://127.0.0.1:5173',
-        'http://localhost:3000',
-        'http://127.0.0.1:3000',
-    ]))),
+    // Production: only the configured frontend origin(s) (comma-separated CORS_ALLOWED_ORIGINS or FRONTEND_URL).
+    // Development additionally allows the usual Vite ports; a wildcard is never used with credentials.
+    'allowed_origins' => array_values(array_unique(array_filter(array_merge(
+        array_map('trim', explode(',', (string) env('CORS_ALLOWED_ORIGINS', env('FRONTEND_URL', '')))),
+        env('APP_ENV', 'production') !== 'production' ? ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:3000', 'http://127.0.0.1:3000'] : []
+    )))),
 
     // Any localhost / 127.0.0.1 port (Vite falls back to 3001, 5174, … when the default port is busy)
     'allowed_origins_patterns' => array_values(array_filter([

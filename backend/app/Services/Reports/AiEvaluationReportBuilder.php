@@ -25,7 +25,7 @@ class AiEvaluationReportBuilder extends AbstractReportBuilder
         $taskRows = array_map(fn ($t) => ['task' => $t['task'], 'evaluated' => $t['evaluated'] ? 'Yes' : 'No', 'headline_metric' => $t['headline_metric'], 'headline_value' => $t['evaluated'] ? $t['headline_value'] : 'Not evaluated',
             'gate_status' => $t['gate_status'] ?? 'Not evaluated', 'run_id' => $t['run']['id'] ?? null, 'completed_at' => $t['run']['completed_at'] ?? null, 'examples' => $t['run']['example_count'] ?? null, 'regression' => $t['evaluated'] ? ($t['regression'] ? 'Yes' : 'No') : null], $overview['tasks']);
 
-        $runRows = $runs->map(fn ($r) => ['run_id' => $r->id, 'task' => $r->task, 'model' => $r->model?->model_name, 'model_version' => $r->model?->version, 'prompt_version' => $r->promptVersion ? $r->promptVersion->feature . ' ' . $r->promptVersion->version : null,
+        $runRows = $runs->map(fn ($r) => ['run_id' => $r->id, 'task' => $r->task, 'model' => $r->model?->model_name, 'model_version' => $r->model?->version, 'prompt_version' => $r->promptVersion ? $r->promptVersion->feature.' '.$r->promptVersion->version : null,
             'dataset' => $r->dataset?->name, 'dataset_version' => $r->dataset?->version, 'examples' => $r->example_count, 'gate_status' => $r->gate_status, 'headline_metric' => $r->summary['headline_metric'] ?? ($headline[$r->task] ?? null),
             'headline_value' => $r->summary['headline_value'] ?? 'Not evaluated', 'evaluation_date' => $r->completed_at?->toDateTimeString()])->values()->all();
 
@@ -39,7 +39,7 @@ class AiEvaluationReportBuilder extends AbstractReportBuilder
 
         $summary = [
             $this->kv('Overall Evaluation Status', $overview['overall_status']),
-            $this->kv('Evaluated Tasks', count(array_filter($overview['tasks'], fn ($t) => $t['evaluated'])) . ' / ' . count($overview['tasks'])),
+            $this->kv('Evaluated Tasks', count(array_filter($overview['tasks'], fn ($t) => $t['evaluated'])).' / '.count($overview['tasks'])),
             $this->kv('Completed Runs', $runs->count()),
             $this->kv('Datasets', $overview['dataset_count']),
         ];

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { academicChatService } from '@/services/academicChatService';
+import { ApiError } from '@/services/api';
 import { courseService } from '@/services/courseService';
 import { documentService } from '@/services/documentService';
 import { ChatMessage, ChatScopeType, ChatSession, ChatSessionDetail } from '@/types/chat';
@@ -76,6 +77,11 @@ export const AcademicChat: React.FC = () => {
       setError(getChatErrorMessage(e));
       setActive(null);
       setMessages([]);
+      // A stale/deleted session id in the URL should not keep the page in a broken state
+      if (e instanceof ApiError && e.status === 404) {
+        setSearchParams({}, { replace: true });
+        setComposing(true);
+      }
     } finally {
       setLoadingSession(false);
     }

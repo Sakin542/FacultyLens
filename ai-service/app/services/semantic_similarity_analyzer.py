@@ -183,7 +183,6 @@ class SemanticSimilarityAnalyzer:
                 elif best_pq.source_assessment:
                     src_info = f" in {best_pq.source_assessment}"
 
-            q_num_label = f"Q{cq.question_number}" if cq.question_number else "Question"
 
             if max_status == "POTENTIAL_DUPLICATE":
                 reasoning = (

@@ -20,6 +20,10 @@ return [
 
     'default' => env('LOG_CHANNEL', 'stack'),
 
+    // STEP 40: structured per-request log lines (RequestLoggingMiddleware)
+    'log_requests' => env('LOG_REQUESTS', true),
+    'slow_request_ms' => (int) env('LOG_SLOW_REQUEST_MS', 2000),
+
     /*
     |--------------------------------------------------------------------------
     | Deprecations Log Channel

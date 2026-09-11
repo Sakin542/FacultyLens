@@ -2,8 +2,11 @@
 
 namespace App\Services\Reports;
 
+use App\Models\LearningOutcomePerformanceResult;
 use App\Models\StudentSubmission;
+use App\Services\Analytics\AnalyticsScopeService;
 use App\Services\Analytics\PerformanceAnalyticsService;
+use App\Services\StudentPerformanceService;
 
 /**
  * Student Performance Report — STEP 30 aggregates from finalized faculty grades only.
@@ -24,11 +27,11 @@ class PerformanceReportBuilder extends AbstractReportBuilder
         $students = $ids === [] ? 0 : (int) StudentSubmission::whereIn('assessment_id', $ids)->whereIn('grading_status', (array) config('performance.finalized_grading_statuses'))->distinct('student_id')->count('student_id');
 
         $warnings = [];
-        if (!$summary['available']) {
+        if (! $summary['available']) {
             $warnings[] = 'No finalized faculty grades exist for the selected scope.';
         }
         if ($ctx->assessmentIds !== [] && count($ids) < count($ctx->assessmentIds)) {
-            $warnings[] = (count($ctx->assessmentIds) - count($ids)) . ' assessment(s) are excluded because you are not authorized to view their student data.';
+            $warnings[] = (count($ctx->assessmentIds) - count($ids)).' assessment(s) are excluded because you are not authorized to view their student data.';
         }
         if ($summary['available'] && $gaps['analyzed_assessments'] === 0) {
             $warnings[] = 'Finalized grades exist but no STEP 30 performance analysis has been run; question, topic and outcome breakdowns are unavailable.';
@@ -75,13 +78,13 @@ class PerformanceReportBuilder extends AbstractReportBuilder
         if ($assessmentIds === []) {
             return [];
         }
-        $runIds = app(\App\Services\Analytics\AnalyticsScopeService::class)->currentPerformanceRunsQuery($assessmentIds)->pluck('id');
+        $runIds = app(AnalyticsScopeService::class)->currentPerformanceRunsQuery($assessmentIds)->pluck('id');
         if ($runIds->isEmpty()) {
             return [];
         }
-        $svc = app(\App\Services\StudentPerformanceService::class);
+        $svc = app(StudentPerformanceService::class);
         $by = [];
-        foreach (\App\Models\LearningOutcomePerformanceResult::whereIn('performance_analysis_run_id', $runIds)->get() as $r) {
+        foreach (LearningOutcomePerformanceResult::whereIn('performance_analysis_run_id', $runIds)->get() as $r) {
             $k = $r->learning_outcome_id ?? $r->lo_code;
             $by[$k] ??= ['code' => $r->lo_code, 'description' => mb_substr((string) $r->lo_description, 0, 120), 'assessments' => 0, 'responses' => 0, 'w' => 0.0, 'n' => 0];
             $by[$k]['assessments']++;

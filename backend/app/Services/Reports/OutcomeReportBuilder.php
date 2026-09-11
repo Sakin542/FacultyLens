@@ -3,6 +3,7 @@
 namespace App\Services\Reports;
 
 use App\Models\Course;
+use App\Models\LearningOutcome;
 use App\Services\Analytics\OutcomeAnalyticsService;
 
 /**
@@ -51,8 +52,8 @@ class OutcomeReportBuilder extends AbstractReportBuilder
     protected function targetCoverage(int $courseId, ReportContext $ctx): ?float
     {
         static $cache = [];
-        if (!isset($cache[$courseId])) {
-            $n = \App\Models\LearningOutcome::where('course_id', $courseId)->count();
+        if (! isset($cache[$courseId])) {
+            $n = LearningOutcome::where('course_id', $courseId)->count();
             $cache[$courseId] = $n ? round(100 / $n, 1) : null;
         }
 
@@ -62,7 +63,7 @@ class OutcomeReportBuilder extends AbstractReportBuilder
     protected function po(ReportContext $ctx): array
     {
         $po = $this->outcomes->programOutcomes($ctx->courseIds);
-        if (!($po['configured'] ?? false)) {
+        if (! ($po['configured'] ?? false)) {
             return $this->document($ctx, [$this->kv('Courses in Scope', count($ctx->courseIds)), $this->kv('PO Mapping', 'Not configured')], [],
                 [$this->table('po_coverage', 'PO Coverage', ['message' => 'Status'], [['message' => 'PO Mapping is not configured for the selected course(s).']])],
                 ['PO Mapping is not configured for the selected course(s). No PO values are produced.']);
@@ -81,10 +82,10 @@ class OutcomeReportBuilder extends AbstractReportBuilder
         ];
         $warnings = $po['message'] ? [$po['message']] : [];
         if (count($po['courses']) < count($ctx->courseIds)) {
-            $warnings[] = (count($ctx->courseIds) - count($po['courses'])) . ' course(s) have no program configured and are excluded from PO evidence.';
+            $warnings[] = (count($ctx->courseIds) - count($po['courses'])).' course(s) have no program configured and are excluded from PO evidence.';
         }
 
-        return $this->document($ctx, $summary, [$this->section('note', 'Interpretation', [], 'PO evidence is derived from confirmed CO→PO mappings and assessed questions of the current CO/PO analysis run per course (' . $courseNames . '). It is evidence for review, not an accreditation compliance claim.')], [
+        return $this->document($ctx, $summary, [$this->section('note', 'Interpretation', [], 'PO evidence is derived from confirmed CO→PO mappings and assessed questions of the current CO/PO analysis run per course ('.$courseNames.'). It is evidence for review, not an accreditation compliance claim.')], [
             $this->table('po_coverage', 'PO Coverage', ['po' => 'PO', 'title' => 'Title', 'courses' => 'Courses', 'mapped_cos' => 'Mapped COs', 'mapped_questions' => 'Mapped Questions', 'strong_mappings' => 'Strong Mappings', 'weak_mappings' => 'Weak Mappings', 'coverage' => 'Evidence %', 'student_performance' => 'Student Performance %', 'alignment' => 'Alignment Status'], $rows),
             $this->table('courses', 'Per-Course CO/PO Analysis', ['course_code' => 'Course', 'analyzed' => 'Analyzed', 'stale' => 'Stale', 'analyzed_at' => 'Analyzed At', 'co_coverage' => 'CO Coverage %', 'po_evidence' => 'PO Evidence %', 'question_mapping' => 'Question Mapping %'], $courses),
         ], $warnings);

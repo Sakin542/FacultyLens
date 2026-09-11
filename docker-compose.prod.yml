@@ -1,0 +1,156 @@
+# FacultyLens — PRODUCTION topology
+#
+#   Internet → nginx (TLS, static React, /api → php-fpm) → app (Laravel) → mysql / redis / ai-service
+#   worker (queue:work redis) and scheduler share the app image. Only nginx publishes ports.
+#
+# Usage:
+#   cp backend/.env.production.example backend/.env   # fill secrets
+#   cp .env.prod.example .env                          # compose-level values (DB/Redis passwords, image tags)
+#   docker compose -f docker-compose.prod.yml build
+#   docker compose -f docker-compose.prod.yml up -d
+#   docker compose -f docker-compose.prod.yml exec app php artisan migrate --force   # after backup
+#
+# See docs/DEPLOYMENT.md for the full procedure, rollback and backup/restore.
+
+x-app-image: &app-image
+  image: facultylens/backend:${IMAGE_TAG:-latest}
+  build:
+    context: ./backend
+    dockerfile: Dockerfile.prod
+  env_file: ./backend/.env
+  volumes:
+    - app_storage:/var/www/html/storage/app
+    - app_logs:/var/www/html/storage/logs
+  networks: [internal]
+  restart: unless-stopped
+  logging: &json-logging
+    driver: json-file
+    options: { max-size: "20m", max-file: "5" }
+
+services:
+  nginx:
+    image: facultylens/frontend:${IMAGE_TAG:-latest}
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-/api}
+    container_name: facultylens-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/nginx/facultylens.conf:/etc/nginx/conf.d/facultylens.conf:ro
+      - ${TLS_CERT_DIR:-./deploy/certs}:/etc/nginx/certs:ro
+    depends_on:
+      app:
+        condition: service_healthy
+    networks: [internal]
+    logging: *json-logging
+
+  app:
+    <<: *app-image
+    container_name: facultylens-app
+    depends_on:
+      mysql: { condition: service_healthy }
+      redis: { condition: service_healthy }
+
+  worker:
+    <<: *app-image
+    container_name: facultylens-worker
+    command: ["php", "artisan", "queue:work", "redis", "--tries=2", "--backoff=30", "--timeout=900", "--sleep=2", "--max-jobs=500", "--max-time=3600", "--memory=512"]
+    healthcheck:
+      test: ["CMD-SHELL", "php artisan queue:monitor redis:default --max=1000 >/dev/null 2>&1 || exit 1"]
+      interval: 60s
+      timeout: 15s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      app: { condition: service_healthy }
+
+  scheduler:
+    <<: *app-image
+    container_name: facultylens-scheduler
+    command: ["php", "artisan", "schedule:work"]
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f 'schedule:work' >/dev/null || exit 1"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      app: { condition: service_healthy }
+
+  mysql:
+    image: mysql:8.0
+    container_name: facultylens-mysql
+    restart: unless-stopped
+    command: ["--default-authentication-plugin=caching_sha2_password", "--innodb-buffer-pool-size=512M", "--max-connections=200"]
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-facultylens}
+      MYSQL_USER: ${DB_USERNAME:-facultylens_app}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?set MYSQL_ROOT_PASSWORD in .env}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks: [internal]
+    logging: *json-logging
+    # No published ports: MySQL is reachable from the internal network only.
+
+  redis:
+    image: redis:7-alpine
+    container_name: facultylens-redis
+    restart: unless-stopped
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD:?set REDIS_PASSWORD in .env}", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a $$REDIS_PASSWORD ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    networks: [internal]
+    logging: *json-logging
+    # No published ports.
+
+  ai-service:
+    image: facultylens/ai-service:${IMAGE_TAG:-latest}
+    build:
+      context: ./ai-service
+      dockerfile: Dockerfile
+    container_name: facultylens-ai-service
+    restart: unless-stopped
+    env_file: ./ai-service/.env
+    environment:
+      - DEBUG=false
+      - HF_HOME=/app/cache/huggingface
+    volumes:
+      - ai_models_cache:/app/cache/huggingface
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8001/ready >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    networks: [internal]
+    logging: *json-logging
+    # No published ports: only Laravel (same network) can call the AI service, with AI_SERVICE_API_KEY.
+
+volumes:
+  mysql_data:
+  redis_data:
+  app_storage:
+  app_logs:
+  ai_models_cache:
+
+networks:
+  internal:
+    driver: bridge

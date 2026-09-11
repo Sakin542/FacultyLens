@@ -13,7 +13,7 @@ class RubricReportBuilder extends AbstractReportBuilder
             ->with(['question:id,question_number,question_text,marks', 'assessment:id,title', 'criteria' => fn ($q) => $q->orderBy('sort_order')])
             ->orderBy('assessment_id')->orderBy('question_id')->orderByDesc('version')->get()
             // Only the latest version per question is authoritative
-            ->unique(fn ($r) => $r->assessment_id . ':' . $r->question_id)->values();
+            ->unique(fn ($r) => $r->assessment_id.':'.$r->question_id)->values();
 
         $rubricRows = $rubrics->map(fn ($r) => ['assessment' => $r->assessment?->title, 'question' => $r->question?->question_number, 'rubric' => $r->title, 'version' => $r->version, 'status' => $r->status,
             'criteria' => $r->criteria->count(), 'total_marks' => (float) $r->total_marks, 'question_marks' => $r->question ? (float) $r->question->marks : null, 'generation_method' => $r->generation_method, 'approved_at' => $r->approved_at?->toDateTimeString()])->all();

@@ -8,8 +8,6 @@ from app.schemas.quality import (
     TopicInput,
     LearningOutcomeInput,
     AssessmentMetadataInput,
-    QualityWeightsConfig,
-    DifficultyTargetsConfig,
 )
 from app.services.assessment_quality_engine import AssessmentQualityEngine
 
