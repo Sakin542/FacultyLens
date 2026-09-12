@@ -1,0 +1,59 @@
+{
+ "data": {
+  "meta": {
+   "benchmark_percent": 70,
+   "disclaimer": "Analytics are evidence, trends and signals for faculty review. FacultyLens never changes assessments, grades, mappings, rubrics or AI models automatically."
+  },
+  "scope": {
+   "assessment_ids": [
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112
+   ],
+   "course_ids": [
+    1013
+   ],
+   "student_data_course_ids": [
+    1013
+   ],
+   "student_data_restricted": false
+  },
+  "similarity": {
+   "analyzed_assessments": 10,
+   "by_status": {
+    "HIGHLY_SIMILAR": {
+     "matches": 0,
+     "questions": 0
+    },
+    "NOT_SIMILAR": {
+     "matches": 0,
+     "questions": 0
+    },
+    "POTENTIAL_DUPLICATE": {
+     "matches": 0,
+     "questions": 0
+    },
+    "SOMEWHAT_SIMILAR": {
+     "matches": 0,
+     "questions": 0
+    }
+   },
+   "explanation": "Similarity categories use the production STEP 12 thresholds (Potential Duplicate \u2265 0.85, Highly Similar \u2265 0.70, Somewhat Similar \u2265 0.50).",
+   "flagged_assessments": [],
+   "thresholds": {
+    "HIGHLY_SIMILAR": 0.7,
+    "POTENTIAL_DUPLICATE": 0.85,
+    "SOMEWHAT_SIMILAR": 0.5
+   }
+  }
+ },
+ "message": "Course analytics section retrieved.",
+ "status": "success"
+}

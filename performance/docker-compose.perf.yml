@@ -1,0 +1,48 @@
+# STEP 43 — override that turns docker-compose.prod.yml into a LOCAL, isolated performance stack.
+#
+#   docker compose -p facultylens-perf --env-file performance/env/compose.env \
+#     -f docker-compose.prod.yml -f performance/docker-compose.perf.yml up -d --build
+#
+# Same production topology (nginx → php-fpm+opcache → MySQL / Redis / FastAPI, redis queue worker, scheduler) but:
+#   * distinct container names + volumes so the developer stack on :8080 keeps running untouched
+#   * plain HTTP nginx on :8090 without per-IP limit_req (see performance/env/nginx.perf.conf)
+#   * throw-away credentials from performance/env/*.env
+#   * MySQL published on :3309 and FastAPI on :8011 so EXPLAIN and direct AI latency can be measured from the host
+#   * the developer's Hugging Face cache is bind-mounted read-write so the model is not downloaded again
+services:
+  nginx:
+    container_name: facultylens-perf-nginx
+    ports: !override
+      - "8090:80"
+    volumes: !override
+      - ./performance/env/nginx.perf.conf:/etc/nginx/conf.d/facultylens.conf:ro
+
+  app:
+    container_name: facultylens-perf-app
+    env_file: !override ./performance/env/backend.env
+
+  worker:
+    container_name: facultylens-perf-worker
+    env_file: !override ./performance/env/backend.env
+
+  scheduler:
+    container_name: facultylens-perf-scheduler
+    env_file: !override ./performance/env/backend.env
+
+  mysql:
+    container_name: facultylens-perf-mysql
+    ports:
+      - "3309:3306"
+
+  redis:
+    container_name: facultylens-perf-redis
+    ports:
+      - "6390:6379"
+
+  ai-service:
+    container_name: facultylens-perf-ai-service
+    env_file: !override ./performance/env/ai.env
+    ports:
+      - "8011:8001"
+    volumes: !override
+      - ./ai-service/cache/huggingface:/app/cache/huggingface

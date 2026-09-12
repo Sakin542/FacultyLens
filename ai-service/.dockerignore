@@ -1,0 +1,13 @@
+# STEP 43: keep the model cache, virtualenv and tool caches out of the image build context.
+# The Hugging Face hub cache contains symlinked snapshots that make `docker build` fail on Windows hosts
+# once the volume has been populated ("invalid file request cache/huggingface/hub/...").
+cache/
+.venv/
+.pytest_cache/
+.ruff_cache/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+!.env.production.example

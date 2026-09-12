@@ -437,24 +437,21 @@ class AiAnalysisController extends Controller
                     }
                 }
 
-                // Merge findings into AnalysisReport
-                $existingFindings = $assessment->latestAnalysisReport?->findings ?? [];
-                $updatedFindings = array_merge($existingFindings, [
+                // Merge findings into the current AnalysisReport
+                $savedReport = $this->currentReportOrNew($assessment);
+                $updatedFindings = array_merge($savedReport->findings ?? [], [
                     'alignment_findings' => $aiResult['findings'] ?? [],
                     'learning_outcome_coverage' => $aiResult['learning_outcome_coverage'] ?? [],
                 ]);
 
-                $savedReport = AnalysisReport::updateOrCreate(
-                    ['assessment_id' => $assessment->id],
-                    [
-                        'learning_outcome_alignment_score' => $aiResult['overall_alignment_score'] ?? 0.0,
-                        'total_questions' => $aiResult['total_questions'] ?? count($questions),
-                        'findings' => $updatedFindings,
-                        'analysis_status' => 'completed',
-                        'processing_error' => null,
-                        'analyzed_at' => now(),
-                    ]
-                );
+                $savedReport->fill([
+                    'learning_outcome_alignment_score' => $aiResult['overall_alignment_score'] ?? 0.0,
+                    'total_questions' => $aiResult['total_questions'] ?? count($questions),
+                    'findings' => $updatedFindings,
+                    'analysis_status' => 'completed',
+                    'processing_error' => null,
+                    'analyzed_at' => now(),
+                ])->save();
 
                 // Persist granular QuestionLearningOutcomeAlignment records
                 QuestionLearningOutcomeAlignment::where('analysis_report_id', $savedReport->id)->delete();
@@ -492,13 +489,7 @@ class AiAnalysisController extends Controller
         } catch (Exception $e) {
             Log::error('Assessment LO alignment analysis failed: ' . $e->getMessage());
 
-            AnalysisReport::updateOrCreate(
-                ['assessment_id' => $assessment->id],
-                [
-                    'analysis_status' => 'failed',
-                    'processing_error' => $e->getMessage(),
-                ]
-            );
+            AnalysisReport::recordFailure($assessment->id, $e->getMessage());
 
             return response()->json([
                 'status' => 'error',
@@ -614,26 +605,23 @@ class AiAnalysisController extends Controller
             );
 
             $report = DB::transaction(function () use ($assessment, $questions, $aiResult) {
-                // Merge findings into AnalysisReport
-                $existingFindings = $assessment->latestAnalysisReport?->findings ?? [];
-                $updatedFindings = array_merge($existingFindings, [
+                // Merge findings into the current AnalysisReport
+                $savedReport = $this->currentReportOrNew($assessment);
+                $updatedFindings = array_merge($savedReport->findings ?? [], [
                     'similarity_findings' => $aiResult['findings'] ?? [],
                 ]);
 
                 $similarQuestionsCount = ($aiResult['potential_duplicates_count'] ?? 0) + ($aiResult['highly_similar_count'] ?? 0);
 
-                $savedReport = AnalysisReport::updateOrCreate(
-                    ['assessment_id' => $assessment->id],
-                    [
-                        'similarity_score' => $aiResult['average_similarity_score'] ?? 0.0,
-                        'similar_questions_count' => $similarQuestionsCount,
-                        'total_questions' => $aiResult['total_current_questions'] ?? count($questions),
-                        'findings' => $updatedFindings,
-                        'analysis_status' => 'completed',
-                        'processing_error' => null,
-                        'analyzed_at' => now(),
-                    ]
-                );
+                $savedReport->fill([
+                    'similarity_score' => $aiResult['average_similarity_score'] ?? 0.0,
+                    'similar_questions_count' => $similarQuestionsCount,
+                    'total_questions' => $aiResult['total_current_questions'] ?? count($questions),
+                    'findings' => $updatedFindings,
+                    'analysis_status' => 'completed',
+                    'processing_error' => null,
+                    'analyzed_at' => now(),
+                ])->save();
 
                 // Persist granular question similarity matches
                 QuestionSimilarityMatch::where('analysis_report_id', $savedReport->id)->delete();
@@ -672,13 +660,7 @@ class AiAnalysisController extends Controller
         } catch (Exception $e) {
             Log::error('Assessment similarity analysis failed: ' . $e->getMessage());
 
-            AnalysisReport::updateOrCreate(
-                ['assessment_id' => $assessment->id],
-                [
-                    'analysis_status' => 'failed',
-                    'processing_error' => $e->getMessage(),
-                ]
-            );
+            AnalysisReport::recordFailure($assessment->id, $e->getMessage());
 
             return response()->json([
                 'status' => 'error',
@@ -838,8 +820,9 @@ class AiAnalysisController extends Controller
                 $targets
             );
 
-            // Merge findings into AnalysisReport
-            $existingFindings = $assessment->latestAnalysisReport?->findings ?? [];
+            // Merge findings into the current AnalysisReport
+            $target = $this->currentReportOrNew($assessment);
+            $existingFindings = $target->findings ?? [];
             $updatedFindings = array_merge($existingFindings, [
                 'quality_engine' => [
                     'rating' => $aiResult['rating'] ?? 'NEEDS_REVIEW',
@@ -859,11 +842,9 @@ class AiAnalysisController extends Controller
 
             $components = $aiResult['components'] ?? [];
 
-            $report = DB::transaction(function () use ($assessment, $questions, $aiResult, $updatedFindings, $components) {
-                return AnalysisReport::updateOrCreate(
-                    ['assessment_id' => $assessment->id],
-                    [
-                        'overall_score' => (float) ($aiResult['overall_quality_score'] ?? 0.0),
+            $report = DB::transaction(function () use ($questions, $aiResult, $updatedFindings, $components, $target) {
+                $target->fill([
+                    'overall_score' => (float) ($aiResult['overall_quality_score'] ?? 0.0),
                         'topic_coverage_score' => (float) ($components['topic_coverage'] ?? 0.0),
                         'learning_outcome_alignment_score' => (float) ($components['learning_outcome_coverage'] ?? 0.0),
                         'difficulty_balance_score' => (float) ($components['difficulty_balance'] ?? 0.0),
@@ -873,8 +854,9 @@ class AiAnalysisController extends Controller
                         'analysis_status' => 'completed',
                         'processing_error' => null,
                         'analyzed_at' => now(),
-                    ]
-                );
+                ])->save();
+
+                return $target;
             });
 
             return response()->json([
@@ -888,13 +870,7 @@ class AiAnalysisController extends Controller
         } catch (Exception $e) {
             Log::error('Assessment quality analysis failed: ' . $e->getMessage());
 
-            AnalysisReport::updateOrCreate(
-                ['assessment_id' => $assessment->id],
-                [
-                    'analysis_status' => 'failed',
-                    'processing_error' => $e->getMessage(),
-                ]
-            );
+            AnalysisReport::recordFailure($assessment->id, $e->getMessage());
 
             return response()->json([
                 'status' => 'error',
@@ -1251,6 +1227,9 @@ class AiAnalysisController extends Controller
             $recommendation->faculty_notes = $validated['faculty_notes'];
         }
         $recommendation->save();
+        if ($assessmentId = $recommendation->analysisReport?->assessment_id) {
+            \App\Services\AnalysisPayloadCache::forget((int) $assessmentId);
+        }
 
         return response()->json([
             'status' => 'success',
@@ -1282,6 +1261,7 @@ class AiAnalysisController extends Controller
         $user = $request->user();
         $assessmentId = $validated['assessment_id'] ?? null;
         $assessment = null;
+        $run = null;
         $questions = collect();
         $prevQuestions = collect();
 
@@ -1320,14 +1300,8 @@ class AiAnalysisController extends Controller
                 ], 409);
             }
 
-            // Set analysis report status to processing
-            AnalysisReport::updateOrCreate(
-                ['assessment_id' => $assessment->id],
-                [
-                    'analysis_status' => 'processing',
-                    'processing_error' => null,
-                ]
-            );
+            // Open a run row without touching completed history (BUG-001/002)
+            $run = AnalysisReport::beginRun($assessment->id);
 
             // Audit log analysis start event
             $this->auditLogService->log(
@@ -1451,70 +1425,29 @@ class AiAnalysisController extends Controller
                     $recommendationsData,
                     $alignmentAnalysis,
                     $similarityAnalysis,
-                    $components
+                    $components,
+                    $run
                 ) {
-                    // 1. Update/create AnalysisReport with versioning
+                    // 1. Complete the run row opened before the AI call (history stays intact)
                     $similarCount = ($similarityAnalysis['potential_duplicates_count'] ?? 0) + ($similarityAnalysis['highly_similar_count'] ?? 0);
 
-                    $existingCompleted = AnalysisReport::where('assessment_id', $assessment->id)
-                        ->where('analysis_status', 'completed')
-                        ->orderByDesc('analysis_version')
-                        ->first();
-
-                    if ($existingCompleted) {
-                        $nextVersion = $existingCompleted->analysis_version + 1;
-                        AnalysisReport::where('assessment_id', $assessment->id)->update(['is_current' => false]);
-
-                        $report = AnalysisReport::create([
-                            'assessment_id' => $assessment->id,
-                            'analysis_version' => $nextVersion,
-                            'is_current' => true,
-                            'overall_score' => (float) ($qualityAnalysis['overall_quality_score'] ?? 0.0),
-                            'topic_coverage_score' => (float) ($components['topic_coverage'] ?? 0.0),
-                            'learning_outcome_alignment_score' => (float) ($components['learning_outcome_coverage'] ?? ($alignmentAnalysis['overall_alignment_score'] ?? 0.0)),
-                            'difficulty_balance_score' => (float) ($components['difficulty_balance'] ?? 0.0),
-                            'cognitive_level_balance_score' => (float) ($components['cognitive_diversity'] ?? 0.0),
-                            'similarity_score' => (float) ($similarityAnalysis['average_similarity_score'] ?? 0.0),
-                            'similar_questions_count' => $similarCount,
-                            'total_questions' => count($questions),
-                            'analysis_status' => 'completed',
-                            'processing_error' => null,
-                            'findings' => [
-                                'summary' => $aiResult['summary'] ?? [],
-                                'quality' => $qualityAnalysis,
-                                'quality_engine' => $qualityAnalysis,
-                                'alignment' => $alignmentAnalysis,
-                                'similarity' => $similarityAnalysis,
-                            ],
-                            'analyzed_at' => now(),
-                        ]);
-                    } else {
-                        $report = AnalysisReport::updateOrCreate(
-                            ['assessment_id' => $assessment->id, 'analysis_version' => 1],
-                            [
-                                'analysis_version' => 1,
-                                'is_current' => true,
-                                'overall_score' => (float) ($qualityAnalysis['overall_quality_score'] ?? 0.0),
-                                'topic_coverage_score' => (float) ($components['topic_coverage'] ?? 0.0),
-                                'learning_outcome_alignment_score' => (float) ($components['learning_outcome_coverage'] ?? ($alignmentAnalysis['overall_alignment_score'] ?? 0.0)),
-                                'difficulty_balance_score' => (float) ($components['difficulty_balance'] ?? 0.0),
-                                'cognitive_level_balance_score' => (float) ($components['cognitive_diversity'] ?? 0.0),
-                                'similarity_score' => (float) ($similarityAnalysis['average_similarity_score'] ?? 0.0),
-                                'similar_questions_count' => $similarCount,
-                                'total_questions' => count($questions),
-                                'analysis_status' => 'completed',
-                                'processing_error' => null,
-                                'findings' => [
-                                    'summary' => $aiResult['summary'] ?? [],
-                                    'quality' => $qualityAnalysis,
-                                    'quality_engine' => $qualityAnalysis,
-                                    'alignment' => $alignmentAnalysis,
-                                    'similarity' => $similarityAnalysis,
-                                ],
-                                'analyzed_at' => now(),
-                            ]
-                        );
-                    }
+                    $report = $run->completeRun([
+                        'overall_score' => (float) ($qualityAnalysis['overall_quality_score'] ?? 0.0),
+                        'topic_coverage_score' => (float) ($components['topic_coverage'] ?? 0.0),
+                        'learning_outcome_alignment_score' => (float) ($components['learning_outcome_coverage'] ?? ($alignmentAnalysis['overall_alignment_score'] ?? 0.0)),
+                        'difficulty_balance_score' => (float) ($components['difficulty_balance'] ?? 0.0),
+                        'cognitive_level_balance_score' => (float) ($components['cognitive_diversity'] ?? 0.0),
+                        'similarity_score' => (float) ($similarityAnalysis['average_similarity_score'] ?? 0.0),
+                        'similar_questions_count' => $similarCount,
+                        'total_questions' => count($questions),
+                        'findings' => [
+                            'summary' => $aiResult['summary'] ?? [],
+                            'quality' => $qualityAnalysis,
+                            'quality_engine' => $qualityAnalysis,
+                            'alignment' => $alignmentAnalysis,
+                            'similarity' => $similarityAnalysis,
+                        ],
+                    ]);
 
                     // 2. Update question AI fields (preserving faculty manual fields)
                     $qAnalysisList = $aiResult['questions_analysis']['questions'] ?? [];
@@ -1641,7 +1574,7 @@ class AiAnalysisController extends Controller
             }
 
             if ($assessment) {
-                Cache::forget("user:{$user->id}:assessment:{$assessment->id}:analysis");
+                \App\Services\AnalysisPayloadCache::forget($assessment->id);
 
                 $this->auditLogService->log(
                     'AI_ANALYSIS_COMPLETED',
@@ -1665,13 +1598,7 @@ class AiAnalysisController extends Controller
             Log::error('Unified assessment analysis failed: ' . $e->getMessage());
 
             if ($assessment) {
-                AnalysisReport::updateOrCreate(
-                    ['assessment_id' => $assessment->id],
-                    [
-                        'analysis_status' => 'failed',
-                        'processing_error' => $e->getMessage(),
-                    ]
-                );
+                $run ? $run->failRun($e->getMessage()) : AnalysisReport::recordFailure($assessment->id, $e->getMessage());
             }
 
             return response()->json([
@@ -1720,11 +1647,8 @@ class AiAnalysisController extends Controller
                 ], 202);
             }
 
-            // Create/update report row so frontend can poll status immediately
-            $report = AnalysisReport::updateOrCreate(
-                ['assessment_id' => $assessment->id],
-                ['analysis_status' => 'processing', 'processing_error' => null]
-            );
+            // Open a run row so the frontend can poll immediately; completed history is never touched (BUG-001/002)
+            $report = AnalysisReport::beginRun($assessment->id);
 
             // Dispatch the job to the queue
             AnalyzeAssessmentJob::dispatch($assessment, $user->id);
@@ -1778,9 +1702,8 @@ class AiAnalysisController extends Controller
             ], 403);
         }
 
-        // Serve from cache for completed analyses (5-minute TTL, user-scoped key)
-        $cacheKey = "user:{$user->id}:assessment:{$assessment->id}:analysis";
-        $cached   = Cache::get($cacheKey);
+        // Serve from cache for completed analyses (5-minute TTL; authorization was checked above)
+        $cached = \App\Services\AnalysisPayloadCache::get($assessment->id);
         if ($cached !== null && ($cached['data']['analysis_status'] ?? '') === 'completed') {
             return response()->json($cached);
         }
@@ -1960,9 +1883,9 @@ class AiAnalysisController extends Controller
             ],
         ];
 
-        // Cache completed results for 5 minutes (user-scoped, never shared between users)
+        // Cache completed results for 5 minutes (shared by every authorized viewer of this assessment)
         if ($report->analysis_status === 'completed') {
-            Cache::put($cacheKey, $responseData, 300);
+            \App\Services\AnalysisPayloadCache::put($assessment->id, $responseData);
         }
 
         return response()->json($responseData);
@@ -2013,6 +1936,16 @@ class AiAnalysisController extends Controller
     public function alignmentAnalysis(Request $request): JsonResponse
     {
         return $this->analyzeAlignment($request);
+    }
+
+    /**
+     * Component analyses (alignment / similarity / quality) enrich the assessment's current report.
+     * Never resolves to an arbitrary historical row (BUG-001).
+     */
+    protected function currentReportOrNew(Assessment $assessment): AnalysisReport
+    {
+        return AnalysisReport::currentFor($assessment->id)
+            ?? new AnalysisReport(['assessment_id' => $assessment->id, 'analysis_version' => 1, 'is_current' => true]);
     }
 }
 

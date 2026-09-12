@@ -1,0 +1,205 @@
+{
+ "data": {
+  "ai_evaluation": {
+   "evaluated_tasks": 0,
+   "explanation": "Headline metrics from completed STEP 35 evaluation runs; tasks without a run are shown as not evaluated.",
+   "overall_status": "NOT_EVALUATED",
+   "run_count": 0,
+   "tasks": [
+    {
+     "completed_at": null,
+     "evaluated": false,
+     "example_count": null,
+     "gate_status": null,
+     "headline_metric": "macro_f1",
+     "headline_value": null,
+     "regression": false,
+     "run_id": null,
+     "task": "QUESTION_CLASSIFICATION"
+    },
+    {
+     "completed_at": null,
+     "evaluated": false,
+     "example_count": null,
+     "gate_status": null,
+     "headline_metric": "macro_f1",
+     "headline_value": null,
+     "regression": false,
+     "run_id": null,
+     "task": "DIFFICULTY_CLASSIFICATION"
+    },
+    {
+     "completed_at": null,
+     "evaluated": false,
+     "example_count": null,
+     "gate_status": null,
+     "headline_metric": "macro_f1",
+     "headline_value": null,
+     "regression": false,
+     "run_id": null,
+     "task": "BLOOM_CLASSIFICATION"
+    },
+    {
+     "completed_at": null,
+     "evaluated": false,
+     "example_count": null,
+     "gate_status": null,
+     "headline_metric": "macro_f1",
+     "headline_value": null,
+     "regression": false,
+     "run_id": null,
+     "task": "LO_ALIGNMENT"
+    },
+    {
+     "completed_at": null,
+     "evaluated": false,
+     "example_count": null,
+     "gate_status": null,
+     "headline_metric": "duplicate_f1",
+     "headline_value": null,
+     "regression": false,
+     "run_id": null,
+     "task": "SIMILARITY"
+    },
+    {
+     "completed_at": null,
+     "evaluated": false,
+     "example_count": null,
+     "gate_status": null,
+     "headline_metric": "marks_validity_rate",
+     "headline_value": null,
+     "regression": false,
+     "run_id": null,
+     "task": "RUBRIC_GENERATION"
+    },
+    {
+     "completed_at": null,
+     "evaluated": false,
+     "example_count": null,
+     "gate_status": null,
+     "headline_metric": "mae",
+     "headline_value": null,
+     "regression": false,
+     "run_id": null,
+     "task": "GRADING_ASSISTANCE"
+    },
+    {
+     "completed_at": null,
+     "evaluated": false,
+     "example_count": null,
+     "gate_status": null,
+     "headline_metric": "macro_f1",
+     "headline_value": null,
+     "regression": false,
+     "run_id": null,
+     "task": "ANSWER_RUBRIC_ALIGNMENT"
+    },
+    {
+     "completed_at": null,
+     "evaluated": false,
+     "example_count": null,
+     "gate_status": null,
+     "headline_metric": "citation_accuracy",
+     "headline_value": null,
+     "regression": false,
+     "run_id": null,
+     "task": "DOCUMENT_CHAT"
+    },
+    {
+     "completed_at": null,
+     "evaluated": false,
+     "example_count": null,
+     "gate_status": null,
+     "headline_metric": "constraint_satisfaction_rate",
+     "headline_value": null,
+     "regression": false,
+     "run_id": null,
+     "task": "QUESTION_GENERATION"
+    }
+   ],
+   "trend": []
+  },
+  "grading": {
+   "ai_assisted_answers": 0,
+   "ai_suggestion_mean": null,
+   "available": false,
+   "compared_answers": 0,
+   "exact_agreement_rate": null,
+   "explanation": "AI suggestions are compared with the final faculty grade; the faculty grade is always the official grade.",
+   "faculty_accepted": 0,
+   "faculty_modified": 0,
+   "faculty_rejected": 0,
+   "final_faculty_grade_mean": null,
+   "mae": null,
+   "mean_signed_difference": null
+  },
+  "inter_grader": {
+   "available": false,
+   "indicator_name": "FacultyLens Agreement Indicator",
+   "message": "Inter-grader consistency (STEP 29) is not available in this deployment."
+  },
+  "meta": {
+   "benchmark_percent": 70,
+   "disclaimer": "Analytics are evidence, trends and signals for faculty review. FacultyLens never changes assessments, grades, mappings, rubrics or AI models automatically."
+  },
+  "recommendations": {
+   "accepted": 0,
+   "active": 20,
+   "active_by_priority": {
+    "high": 10,
+    "low": 0,
+    "medium": 10
+   },
+   "dismissed": 0,
+   "feedback": {
+    "accepted_percent": null,
+    "average_usefulness": null,
+    "dismissed_percent": null,
+    "explanation": "Faculty interaction signal \u2014 acceptance does not establish that the AI was objectively correct.",
+    "label": "Faculty Interaction Signal",
+    "needs_review_percent": null,
+    "total": 0
+   },
+   "total": 20,
+   "under_review": 0
+  },
+  "rubrics": {
+   "approved": 0,
+   "archived": 0,
+   "average_criteria": null,
+   "by_generation_method": [],
+   "draft": 0,
+   "faculty_ratings": {
+    "acceptance_rate": null,
+    "average_rating": null,
+    "note": "Faculty acceptance is an interaction signal, not objective AI accuracy.",
+    "rated": 0,
+    "revision_rate": null
+   },
+   "total": 0
+  },
+  "scope": {
+   "assessment_ids": [
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112
+   ],
+   "course_ids": [
+    1013
+   ],
+   "student_data_course_ids": [
+    1013
+   ],
+   "student_data_restricted": false
+  }
+ },
+ "message": "Course analytics section retrieved.",
+ "status": "success"
+}

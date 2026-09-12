@@ -111,5 +111,26 @@ class Assessment extends Model
     {
         return $this->hasMany(AssessmentVersion::class)->orderByDesc('version_number');
     }
+
+    /**
+     * STEP 42 (BUG-003): why this assessment must not be deleted, or null when deletion is safe.
+     * Finalized faculty grades and finalized versions are permanent academic records.
+     */
+    public function deletionBlocker(): ?string
+    {
+        $graded = $this->submissions()
+            ->whereIn('status', [StudentSubmission::STATUS_GRADED, StudentSubmission::STATUS_RETURNED])
+            ->count();
+        if ($graded > 0) {
+            return "{$graded} graded student submission(s) reference this assessment. Finalized grades are permanent academic records and cannot be deleted with the assessment.";
+        }
+
+        $finalized = $this->versions()->where('status', AssessmentVersion::STATUS_FINALIZED)->count();
+        if ($finalized > 0) {
+            return "{$finalized} finalized version(s) reference this assessment. Archive the assessment instead of deleting it.";
+        }
+
+        return null;
+    }
 }
 

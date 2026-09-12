@@ -1,0 +1,85 @@
+time="2026-09-12T17:15:05+06:00" level=info msg="[courses] perf.courses@example.com list status=200 bytes=370303 items=1000 paginated=false" source=console
+
+{
+  "course_update": {
+    "avg": 15.8,
+    "min": 11,
+    "med": 15,
+    "p90": 18.1,
+    "p95": 19,
+    "p99": 21.1,
+    "max": 22,
+    "count": 30
+  },
+  "course_show": {
+    "avg": 14.9,
+    "min": 14,
+    "med": 15,
+    "p90": 16,
+    "p95": 16,
+    "p99": 16.7,
+    "max": 17,
+    "count": 30
+  },
+  "course_learning_outcomes": {
+    "avg": 11.7,
+    "min": 10,
+    "med": 12,
+    "p90": 13,
+    "p95": 13,
+    "p99": 13.7,
+    "max": 14,
+    "count": 30
+  },
+  "course_assessments": {
+    "avg": 12.1,
+    "min": 11,
+    "med": 12,
+    "p90": 14.1,
+    "p95": 15,
+    "p99": 15,
+    "max": 15,
+    "count": 30
+  },
+  "course_delete": {
+    "avg": 14.5,
+    "min": 13,
+    "med": 14,
+    "p90": 16,
+    "p95": 16.5,
+    "p99": 17,
+    "max": 17,
+    "count": 30
+  },
+  "course_create": {
+    "avg": 14.3,
+    "min": 12,
+    "med": 14,
+    "p90": 17.2,
+    "p95": 19.5,
+    "p99": 20.7,
+    "max": 21,
+    "count": 30
+  },
+  "courses_list_1000": {
+    "avg": 85.9,
+    "min": 77,
+    "med": 86,
+    "p90": 89,
+    "p95": 89,
+    "p99": 108.2,
+    "max": 116,
+    "count": 30
+  }
+}
+── resources during courses-baseline-after (126s) ──
+  facultylens-perf-ai-service      cpu avg    0.1%  max    0.1%   mem max   5.5% (414.9MiB)  samples 18
+  facultylens-perf-app             cpu avg    2.5%  max   12.5%   mem max   1.0% (77.98MiB)  samples 18
+  facultylens-perf-mysql           cpu avg    1.5%  max    3.9%   mem max   8.2% (617.1MiB)  samples 18
+  facultylens-perf-nginx           cpu avg    0.1%  max    0.4%   mem max   0.2% (15.4MiB)  samples 18
+  facultylens-perf-redis           cpu avg    0.6%  max    3.0%   mem max   0.2% (17.64MiB)  samples 18
+  facultylens-perf-scheduler       cpu avg    0.1%  max    0.1%   mem max   0.4% (31.84MiB)  samples 18
+  facultylens-perf-worker          cpu avg    0.0%  max    0.1%   mem max   0.6% (41.31MiB)  samples 18
+  mysql: Threads_connected	1 Max_used_connections	7 max_connections	200  (max_used before run: 7)
+  redis: used_memory_human:1.92M
+  redis queue depth: 0

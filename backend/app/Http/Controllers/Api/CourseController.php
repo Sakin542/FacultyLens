@@ -121,6 +121,14 @@ class CourseController extends Controller
             ], 403);
         }
 
+        foreach ($course->assessments as $assessment) {
+            if ($blocker = $assessment->deletionBlocker()) {
+                return response()->json([
+                    'message' => "Assessment \"{$assessment->title}\" cannot be deleted: {$blocker}",
+                ], 409);
+            }
+        }
+
         self::forgetCourseListCaches($course);
 
         // Delete any physical course material files from disk

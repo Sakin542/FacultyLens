@@ -79,6 +79,9 @@ class RecommendationFeedbackService
                 $recommendation->faculty_notes = $facultyNotes;
             }
             $recommendation->save();
+            if ($assessmentId = $recommendation->analysisReport?->assessment_id) {
+                \App\Services\AnalysisPayloadCache::forget((int) $assessmentId);
+            }
 
             // 2. Record status transition audit record
             $decisionRecord = RecommendationDecision::create([

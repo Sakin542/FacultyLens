@@ -35,6 +35,8 @@ class Settings(BaseSettings):
 
     # Model settings
     max_text_length: int = 50000
+    # STEP 43: in-process LRU of sentence embeddings (entries; ~1.5 KB each for MiniLM). 0 disables it.
+    embedding_cache_size: int = 20000
 
     # Semantic Similarity & Duplicate Detection Settings (Step 12)
     similarity_duplicate_threshold: float = 0.85

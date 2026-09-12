@@ -597,7 +597,7 @@ class StudentPerformanceService
     /** question_id => [learning_outcome_id, ...] from the current STEP 11 report, strong alignments only. */
     protected function alignedQuestionLos(Assessment $assessment): array
     {
-        $report = AnalysisReport::where('assessment_id', $assessment->id)->where('analysis_status', 'completed')->orderByDesc('id')->first();
+        $report = AnalysisReport::where('assessment_id', $assessment->id)->where('analysis_status', 'completed')->orderByDesc('id')->first(['id']);
         if (!$report) {
             return [];
         }
@@ -651,7 +651,8 @@ class StudentPerformanceService
             return PerformanceAnalysisRun::PERF_INSUFFICIENT;
         }
         $t = $this->thresholds();
-        $gap = $this->gap($averagePercentage);
+        // Compare at the precision that is reported (2 dp) so the band always agrees with the displayed gap (BUG-005).
+        $gap = round($this->gap($averagePercentage), 2);
         if ($gap >= $t['gap_high_threshold']) {
             return PerformanceAnalysisRun::PERF_HIGH_GAP;
         }
@@ -661,7 +662,7 @@ class StudentPerformanceService
         if ($gap >= $t['gap_low_threshold']) {
             return PerformanceAnalysisRun::PERF_MINOR_GAP;
         }
-        if ($averagePercentage >= $t['strong_performance_percent']) {
+        if (round($averagePercentage, 2) >= $t['strong_performance_percent']) {
             return PerformanceAnalysisRun::PERF_STRONG;
         }
         return PerformanceAnalysisRun::PERF_ON_TARGET;

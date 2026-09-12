@@ -1,0 +1,64 @@
+time="2026-09-12T17:49:30+06:00" level=info msg="[ai] VU10 50q assessment 106: completed in 4.1s (2 polls)" source=console
+time="2026-09-12T17:49:30+06:00" level=info msg="[ai] VU7 100q assessment 178: completed in 4.1s (2 polls)" source=console
+time="2026-09-12T17:49:30+06:00" level=info msg="[ai] VU9 10q assessment 193: completed in 4.1s (2 polls)" source=console
+time="2026-09-12T17:49:30+06:00" level=info msg="[ai] VU5 10q assessment 153: completed in 4.1s (2 polls)" source=console
+time="2026-09-12T17:49:30+06:00" level=info msg="[ai] VU3 100q assessment 138: completed in 4.1s (2 polls)" source=console
+time="2026-09-12T17:49:30+06:00" level=info msg="[ai] VU6 50q assessment 166: completed in 4.1s (2 polls)" source=console
+time="2026-09-12T17:49:32+06:00" level=info msg="[ai] VU2 50q assessment 126: completed in 6.1s (3 polls)" source=console
+time="2026-09-12T17:49:32+06:00" level=info msg="[ai] VU8 200q assessment 192: completed in 6.1s (3 polls)" source=console
+time="2026-09-12T17:49:32+06:00" level=info msg="[ai] VU1 10q assessment 113: completed in 6.1s (3 polls)" source=console
+time="2026-09-12T17:49:32+06:00" level=info msg="[ai] VU4 200q assessment 152: completed in 6.1s (3 polls)" source=console
+
+{
+  "app_analysis_total": {
+    "avg": 4903.9,
+    "min": 4076,
+    "med": 4115,
+    "p90": 6103,
+    "p95": 6121,
+    "p99": 6135.4,
+    "max": 6139,
+    "count": 10
+  },
+  "app_analysis_accept": {
+    "avg": 48.8,
+    "min": 22,
+    "med": 57,
+    "p90": 70,
+    "p95": 70,
+    "p99": 70,
+    "max": 70,
+    "count": 10
+  },
+  "app_analysis_queue_wait": {
+    "avg": 2076.1,
+    "min": 2038,
+    "med": 2092.5,
+    "p90": 2096.2,
+    "p95": 2097.1,
+    "p99": 2097.8,
+    "max": 2098,
+    "count": 10
+  },
+  "app_analysis_status_poll": {
+    "avg": 22.2,
+    "min": 14,
+    "med": 20,
+    "p90": 33.7,
+    "p95": 35.7,
+    "p99": 36,
+    "max": 36,
+    "count": 24
+  }
+}
+── resources during ai-analysis-baseline-after2 (7s) ──
+  facultylens-perf-ai-service      cpu avg    0.1%  max    0.1%   mem max   6.3% (472.1MiB)  samples 1
+  facultylens-perf-app             cpu avg    0.0%  max    0.0%   mem max   0.9% (68.46MiB)  samples 1
+  facultylens-perf-mysql           cpu avg   29.7%  max   29.7%   mem max  10.0% (750.6MiB)  samples 1
+  facultylens-perf-nginx           cpu avg    2.9%  max    2.9%   mem max   0.2% (15.52MiB)  samples 1
+  facultylens-perf-redis           cpu avg    1.5%  max    1.5%   mem max   0.1% (11.04MiB)  samples 1
+  facultylens-perf-scheduler       cpu avg    0.1%  max    0.1%   mem max   0.4% (31.89MiB)  samples 1
+  facultylens-perf-worker          cpu avg    0.0%  max    0.0%   mem max   0.4% (32.64MiB)  samples 1
+  mysql: Threads_connected	2 Max_used_connections	33 max_connections	200  (max_used before run: 33)
+  redis: used_memory_human:1.66M
+  redis queue depth: 0

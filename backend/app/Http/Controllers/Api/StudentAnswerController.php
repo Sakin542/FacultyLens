@@ -73,7 +73,11 @@ class StudentAnswerController extends Controller
             return $this->forbidden('Unauthorized access to this answer.');
         }
 
-        $this->service->deleteAnswer($answer, $request->user());
+        try {
+            $this->service->deleteAnswer($answer, $request->user());
+        } catch (SubmissionException $e) {
+            return $this->error($e);
+        }
 
         return response()->json(['status' => 'success', 'message' => 'Answer deleted.']);
     }

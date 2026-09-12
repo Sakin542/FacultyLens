@@ -1,0 +1,134 @@
+
+{
+  "notifications": {
+    "avg": 190.3,
+    "min": 10,
+    "med": 20,
+    "p90": 353.8,
+    "p95": 957.5,
+    "p99": 3078.7,
+    "max": 3549,
+    "count": 1263
+  },
+  "courses_list": {
+    "avg": 130.5,
+    "min": 10,
+    "med": 20,
+    "p90": 348.8,
+    "p95": 551.4,
+    "p99": 1533.6,
+    "max": 3521,
+    "count": 1263
+  },
+  "course_show": {
+    "avg": 104.6,
+    "min": 13,
+    "med": 27,
+    "p90": 307,
+    "p95": 435.6,
+    "p99": 730,
+    "max": 1658,
+    "count": 1263
+  },
+  "journey_total": {
+    "avg": 1586.5,
+    "min": 150,
+    "med": 451,
+    "p90": 5477,
+    "p95": 8541.8,
+    "p99": 9372.4,
+    "max": 9795,
+    "count": 1263
+  },
+  "analytics_course": {
+    "avg": 249.9,
+    "min": 16,
+    "med": 170,
+    "p90": 594.2,
+    "p95": 722.9,
+    "p99": 999.4,
+    "max": 1261,
+    "count": 1263
+  },
+  "assessment_show": {
+    "avg": 115.5,
+    "min": 16,
+    "med": 49,
+    "p90": 305.8,
+    "p95": 413.4,
+    "p99": 543,
+    "max": 891,
+    "count": 1263
+  },
+  "report_create_small": {
+    "avg": 103.3,
+    "min": 37,
+    "med": 63,
+    "p90": 186.9,
+    "p95": 251.2,
+    "p99": 652,
+    "max": 751,
+    "count": 222
+  },
+  "login": {
+    "avg": 453.4,
+    "min": 156,
+    "med": 408,
+    "p90": 845,
+    "p95": 970.1,
+    "p99": 1108.8,
+    "max": 1191,
+    "count": 100
+  },
+  "report_download_csv": {
+    "avg": 37.7,
+    "min": 14,
+    "med": 22,
+    "p90": 77,
+    "p95": 104.9,
+    "p99": 179.7,
+    "max": 312,
+    "count": 222
+  },
+  "analysis_read": {
+    "avg": 120.8,
+    "min": 13,
+    "med": 50,
+    "p90": 333.8,
+    "p95": 423,
+    "p99": 594.7,
+    "max": 856,
+    "count": 1263
+  },
+  "assessments_list": {
+    "avg": 89.1,
+    "min": 11,
+    "med": 24,
+    "p90": 253.8,
+    "p95": 365.2,
+    "p99": 514.8,
+    "max": 804,
+    "count": 1263
+  },
+  "analytics_overview": {
+    "avg": 511.9,
+    "min": 35,
+    "med": 64,
+    "p90": 1823.4,
+    "p95": 3295,
+    "p99": 5311,
+    "max": 6399,
+    "count": 1263
+  }
+}
+── resources during full-workflow-spike-after (211s) ──
+  facultylens-perf-ai-service      cpu avg    0.1%  max    0.1%   mem max   5.8% (438.2MiB)  samples 29
+  facultylens-perf-app             cpu avg  161.1%  max  939.5%   mem max  14.4% (1.052GiB)  samples 29
+  facultylens-perf-mysql           cpu avg  104.4%  max  862.9%   mem max  12.4% (925.7MiB)  samples 29
+  facultylens-perf-nginx           cpu avg    2.6%  max   14.8%   mem max   0.2% (17.38MiB)  samples 29
+  facultylens-perf-redis           cpu avg    4.5%  max   28.7%   mem max   1.0% (76.65MiB)  samples 29
+  facultylens-perf-scheduler       cpu avg    0.3%  max    2.3%   mem max   0.4% (32.64MiB)  samples 29
+  facultylens-perf-worker          cpu avg    0.2%  max    6.5%   mem max   0.8% (56.2MiB)  samples 29
+  mysql: Threads_connected	2 Max_used_connections	35 max_connections	200  (max_used before run: 3)
+  redis: used_memory_human:65.41M
+  redis queue depth: 0

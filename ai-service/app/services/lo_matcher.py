@@ -2,6 +2,7 @@ import logging
 from typing import List, Dict, Any, Optional
 from app.services.huggingface_service import HuggingFaceService, get_hf_service
 from app.services.similarity_service import SimilarityService
+from app.services.threshold_bands import classify_alignment, reported_score
 from app.schemas.alignment import LearningOutcomeItem, QuestionItem, ThresholdsConfig
 
 logger = logging.getLogger("facultylens.ai")
@@ -75,22 +76,17 @@ class LearningOutcomeMatcher:
             sorted_indices = q_sims.argsort()[::-1]
 
             best_idx = int(sorted_indices[0])
-            best_sim = float(q_sims[best_idx])
+            best_sim = reported_score(q_sims[best_idx])
             best_lo = learning_outcomes[best_idx]
 
-            # Categorize best alignment
-            if best_sim >= thresholds.strong:
-                status = "STRONG"
-            elif best_sim >= thresholds.weak:
-                status = "WEAK"
-            else:
-                status = "NOT_ALIGNED"
+            # Categorize best alignment on the score exactly as reported
+            status = classify_alignment(best_sim, thresholds.strong, thresholds.weak)
 
             matched_lo = {
                 "id": best_lo.id,
                 "code": best_lo.code,
                 "description": best_lo.description,
-                "similarity": round(best_sim, 4),
+                "similarity": best_sim,
                 "alignment_level": status,
             }
 
@@ -98,16 +94,16 @@ class LearningOutcomeMatcher:
             alt_matches = []
             for alt_idx in sorted_indices[1:]:
                 alt_idx_int = int(alt_idx)
-                alt_sim = float(q_sims[alt_idx_int])
+                alt_sim = reported_score(q_sims[alt_idx_int])
                 alt_lo = learning_outcomes[alt_idx_int]
 
-                if alt_sim >= thresholds.weak:
-                    alt_level = "STRONG" if alt_sim >= thresholds.strong else "WEAK"
+                alt_level = classify_alignment(alt_sim, thresholds.strong, thresholds.weak)
+                if alt_level != "NOT_ALIGNED":
                     alt_matches.append({
                         "id": alt_lo.id,
                         "code": alt_lo.code,
                         "description": alt_lo.description,
-                        "similarity": round(alt_sim, 4),
+                        "similarity": alt_sim,
                         "alignment_level": alt_level,
                     })
 

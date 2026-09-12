@@ -1,9 +1,64 @@
 import os
+import hashlib
 import logging
-from typing import List, Optional, Any
+import threading
+from collections import OrderedDict
+from typing import List, Optional, Any, Dict
 from app.config import get_settings
 
 logger = logging.getLogger("facultylens.ai")
+
+
+class EmbeddingCache:
+    """
+    STEP 43: bounded, thread-safe LRU cache of sentence embeddings keyed by (model, sha1(text)).
+    Embeddings are a pure function of the text for a given model, so a hit returns exactly the vector a fresh
+    encode would return; the cache changes latency only, never results. Measured: similarity against 5 000
+    previous questions re-embedded every one of them per request (~8.9 s) although the bank rarely changes.
+    """
+
+    def __init__(self, max_entries: int) -> None:
+        self.max_entries = max(0, int(max_entries))
+        self._data: "OrderedDict[str, Any]" = OrderedDict()  # values: float32 numpy vectors (~1.5 KB for MiniLM)
+        self._lock = threading.Lock()
+        self.hits = 0
+        self.misses = 0
+
+    @staticmethod
+    def key(model: str, text: str) -> str:
+        return hashlib.sha1(f"{model}\x00{text}".encode("utf-8"), usedforsecurity=False).hexdigest()
+
+    def get_many(self, keys: List[str]) -> Dict[str, Any]:
+        if self.max_entries == 0:
+            self.misses += len(keys)
+            return {}
+        found: Dict[str, Any] = {}
+        with self._lock:
+            for k in keys:
+                v = self._data.get(k)
+                if v is not None:
+                    self._data.move_to_end(k)
+                    found[k] = v
+        self.hits += len(found)
+        self.misses += len(keys) - len(found)
+        return found
+
+    def put_many(self, items: Dict[str, Any]) -> None:
+        if self.max_entries == 0 or not items:
+            return
+        with self._lock:
+            for k, v in items.items():
+                self._data[k] = v
+                self._data.move_to_end(k)
+            while len(self._data) > self.max_entries:
+                self._data.popitem(last=False)
+
+    def clear(self) -> None:
+        with self._lock:
+            self._data.clear()
+
+    def stats(self) -> Dict[str, int]:
+        return {"entries": len(self._data), "max_entries": self.max_entries, "hits": self.hits, "misses": self.misses}
 
 
 class HuggingFaceService:
@@ -28,10 +83,15 @@ class HuggingFaceService:
     def _init_service(self) -> None:
         settings = get_settings()
         self._model_name = settings.hf_model_name
+        self._cache = EmbeddingCache(getattr(settings, "embedding_cache_size", 20000))
         if settings.hf_home:
             os.environ["HF_HOME"] = settings.hf_home
         if settings.hf_token:
             os.environ["HF_TOKEN"] = settings.hf_token
+
+    @property
+    def cache(self) -> EmbeddingCache:
+        return self._cache
 
     def load_model(self) -> bool:
         """
@@ -97,13 +157,12 @@ class HuggingFaceService:
         if not text or not text.strip():
             return [0.0] * self._embedding_dim
 
-        # Inference on CPU
-        vector = self._model.encode(text.strip(), convert_to_numpy=True)
-        return vector.tolist()
+        return self.generate_batch_embeddings([text])[0]
 
     def generate_batch_embeddings(self, texts: List[str]) -> List[List[float]]:
         """
-        Generate embeddings for a list of text snippets efficiently.
+        Generate embeddings for a list of text snippets efficiently. Texts already embedded since the service
+        started are served from the LRU cache; only the misses go through the model, in one batch.
         """
         if not self._is_loaded or self._model is None:
             success = self.load_model()
@@ -114,8 +173,20 @@ class HuggingFaceService:
             return []
 
         cleaned_texts = [t.strip() if t and t.strip() else " " for t in texts]
-        vectors = self._model.encode(cleaned_texts, convert_to_numpy=True)
-        return [v.tolist() for v in vectors]
+        keys = [EmbeddingCache.key(self._model_name, t) for t in cleaned_texts]
+        cached = self._cache.get_many(keys)
+
+        miss_index: Dict[str, int] = {}
+        for i, k in enumerate(keys):
+            if k not in cached and k not in miss_index:
+                miss_index[k] = i
+        if miss_index:
+            vectors = self._model.encode([cleaned_texts[i] for i in miss_index.values()], convert_to_numpy=True)
+            fresh = {k: v.astype("float32", copy=False) for k, v in zip(miss_index.keys(), vectors)}
+            self._cache.put_many(fresh)
+            cached.update(fresh)
+
+        return [cached[k].tolist() for k in keys]
 
 
 def get_hf_service() -> HuggingFaceService:

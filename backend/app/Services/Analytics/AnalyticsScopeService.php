@@ -135,8 +135,11 @@ class AnalyticsScopeService
                 SUM(CASE LOWER(COALESCE(cognitive_level, ai_cognitive_level)) WHEN 'remember' THEN 1 WHEN 'understand' THEN 10 WHEN 'apply' THEN 100 WHEN 'analyze' THEN 1000 WHEN 'evaluate' THEN 10000 WHEN 'create' THEN 100000 ELSE 0 END) s4")->first(),
             AnalysisReport::whereIn('assessment_id', $a)->selectRaw('COUNT(*) c, MAX(updated_at) m, SUM(CASE WHEN is_current THEN id ELSE 0 END) s1')->first(),
             PerformanceAnalysisRun::whereIn('assessment_id', $a)->selectRaw('COUNT(*) c, MAX(updated_at) m, SUM(CASE WHEN is_current THEN id ELSE 0 END) s1')->first(),
-            StudentSubmission::whereIn('assessment_id', $a)->selectRaw('COUNT(*) c, MAX(updated_at) m, SUM(CASE grading_status WHEN \'FINALIZED\' THEN 1 WHEN \'FACULTY_REVIEWED\' THEN 1 ELSE 0 END) s1')->first(),
-            DB::table('student_answers')->whereIn('student_submission_id', fn ($q) => $q->select('id')->from('student_submissions')->whereIn('assessment_id', $a))->selectRaw('COUNT(*) c, MAX(updated_at) m, SUM(COALESCE(awarded_marks, 0)) s1')->first(),
+            // Answers are folded into their submission: every answer write path calls
+            // StudentSubmissionService::recalculateSubmission(), which rewrites awarded_marks and bumps updated_at,
+            // so a submission-level aggregate (20k rows, indexed by assessment_id) is as change-sensitive as scanning
+            // every answer (100k+ rows through a sub-select) at a fraction of the cost (STEP 43, measured 76 ms → <10 ms).
+            StudentSubmission::whereIn('assessment_id', $a)->selectRaw('COUNT(*) c, MAX(updated_at) m, SUM(CASE grading_status WHEN \'FINALIZED\' THEN 1 WHEN \'FACULTY_REVIEWED\' THEN 1 ELSE 0 END) s1, SUM(COALESCE(awarded_marks, 0)) s2, SUM(CASE status WHEN \'GRADED\' THEN 1 WHEN \'RETURNED\' THEN 1 ELSE 0 END) s3')->first(),
             CoPoMappingAnalysisRun::whereIn('course_id', $courseIds)->selectRaw('COUNT(*) c, MAX(updated_at) m')->first(),
             DB::table('co_po_mappings')->whereIn('course_id', $courseIds)->selectRaw('COUNT(*) c, MAX(updated_at) m, SUM(mapping_level) s1')->first(),
             DB::table('recommendations')->whereIn('analysis_report_id', fn ($q) => $q->select('id')->from('analysis_reports')->whereIn('assessment_id', $a))->selectRaw('COUNT(*) c, MAX(updated_at) m')->first(),

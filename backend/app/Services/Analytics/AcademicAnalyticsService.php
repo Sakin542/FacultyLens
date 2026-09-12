@@ -37,6 +37,7 @@ class AcademicAnalyticsService
         $data = Cache::remember($key, $ttl, fn () => $this->build($user, $filters, $courseIds, $assessmentIds));
         $data['meta']['cached'] = $cached;
         $data['meta']['cache_ttl_seconds'] = $ttl;
+        $data['meta']['data_version'] = substr($version, 0, 12);
         $data['meta']['served_at'] = now()->toISOString();
 
         return $data;

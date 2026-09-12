@@ -1,0 +1,15 @@
+ts,container,cpu_pct,mem_used,mem_pct,net_io,block_io
+17:45:12,facultylens-perf-ai-service,345.29%,456.2MiB / 7.317GiB,6.09%,6.53MB / 15.4MB,0B / 0B
+17:45:12,facultylens-perf-scheduler,0.07%,40.41MiB / 7.317GiB,0.54%,2.8kB / 911B,9.43MB / 709kB
+17:45:12,facultylens-perf-worker,48.01%,59.41MiB / 7.317GiB,0.79%,14.5MB / 17.3MB,13.3MB / 709kB
+17:45:12,facultylens-perf-app,0.00%,101.6MiB / 7.317GiB,1.36%,1.37GB / 732MB,14.7MB / 14.1MB
+17:45:12,facultylens-perf-nginx,0.00%,15.53MiB / 7.317GiB,0.21%,1.38GB / 1.41GB,14.1MB / 4.1kB
+17:45:12,facultylens-perf-redis,7.74%,11.39MiB / 7.317GiB,0.15%,651MB / 2.02GB,43.8MB / 839MB
+17:45:12,facultylens-perf-mysql,39.33%,743.9MiB / 7.317GiB,9.93%,395MB / 1.37GB,54.4MB / 3.5GB
+17:45:19,facultylens-perf-ai-service,153.76%,472.1MiB / 7.317GiB,6.30%,7.96MB / 19MB,0B / 0B
+17:45:19,facultylens-perf-scheduler,0.05%,40.41MiB / 7.317GiB,0.54%,2.8kB / 911B,9.43MB / 709kB
+17:45:19,facultylens-perf-worker,49.43%,59.51MiB / 7.317GiB,0.79%,25MB / 28.5MB,13.3MB / 709kB
+17:45:19,facultylens-perf-app,3.58%,101.4MiB / 7.317GiB,1.35%,1.38GB / 733MB,14.7MB / 14.1MB
+17:45:19,facultylens-perf-nginx,0.19%,15.52MiB / 7.317GiB,0.21%,1.38GB / 1.41GB,14.1MB / 4.1kB
+17:45:19,facultylens-perf-redis,3.40%,11.13MiB / 7.317GiB,0.15%,652MB / 2.02GB,43.9MB / 839MB
+17:45:19,facultylens-perf-mysql,35.48%,750.2MiB / 7.317GiB,10.01%,403MB / 1.38GB,54.4MB / 3.53GB

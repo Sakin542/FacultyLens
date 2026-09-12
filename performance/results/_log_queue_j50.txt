@@ -1,0 +1,95 @@
+time="2026-09-12T17:55:47+06:00" level=info msg="[queue] VU3 dispatching 10 analyses" source=console
+time="2026-09-12T17:55:47+06:00" level=info msg="[queue] VU1 dispatching 10 analyses" source=console
+time="2026-09-12T17:55:47+06:00" level=info msg="[queue] VU2 dispatching 10 analyses" source=console
+time="2026-09-12T17:55:47+06:00" level=info msg="[queue] VU4 dispatching 10 analyses" source=console
+time="2026-09-12T17:55:47+06:00" level=info msg="[queue] VU5 dispatching 10 analyses" source=console
+time="2026-09-12T17:55:48+06:00" level=info msg="[queue] duplicate POST → 202 status=processing same_id=true" source=console
+time="2026-09-12T17:55:48+06:00" level=info msg="[queue] duplicate POST → 202 status=processing same_id=true" source=console
+time="2026-09-12T17:55:48+06:00" level=info msg="[queue] duplicate POST → 202 status=processing same_id=false" source=console
+time="2026-09-12T17:55:48+06:00" level=info msg="[queue] duplicate POST → 202 status=processing same_id=true" source=console
+time="2026-09-12T17:55:48+06:00" level=info msg="[queue] duplicate POST → 202 status=processing same_id=true" source=console
+time="2026-09-12T17:56:48+06:00" level=info msg="[queue] VU4: 10 jobs finished in 60.2s (10.0 jobs/min from this account), failed=0" source=console
+time="2026-09-12T17:56:48+06:00" level=info msg="[queue] VU1: 10 jobs finished in 60.2s (10.0 jobs/min from this account), failed=0" source=console
+time="2026-09-12T17:56:48+06:00" level=info msg="[queue] VU4: duplicate/missing report versions across 10 assessments: 0" source=console
+time="2026-09-12T17:56:48+06:00" level=info msg="[queue] VU1: duplicate/missing report versions across 10 assessments: 0" source=console
+time="2026-09-12T17:56:49+06:00" level=info msg="[queue] VU5: 10 jobs finished in 61.2s (9.8 jobs/min from this account), failed=0" source=console
+time="2026-09-12T17:56:49+06:00" level=info msg="[queue] assessment 183: versions 2 → 4 (expected +1)" source=console
+time="2026-09-12T17:56:49+06:00" level=info msg="[queue] VU5: duplicate/missing report versions across 10 assessments: 1" source=console
+time="2026-09-12T17:56:49+06:00" level=info msg="[queue] VU2: 10 jobs finished in 61.8s (9.7 jobs/min from this account), failed=0" source=console
+time="2026-09-12T17:56:49+06:00" level=info msg="[queue] VU3: 10 jobs finished in 61.8s (9.7 jobs/min from this account), failed=0" source=console
+time="2026-09-12T17:56:49+06:00" level=info msg="[queue] VU2: duplicate/missing report versions across 10 assessments: 0" source=console
+time="2026-09-12T17:56:49+06:00" level=info msg="[queue] VU3: duplicate/missing report versions across 10 assessments: 0" source=console
+
+{
+  "queue_accept": {
+    "avg": 28.4,
+    "min": 23,
+    "med": 27,
+    "p90": 36,
+    "p95": 37,
+    "p99": 37.5,
+    "max": 38,
+    "count": 50
+  },
+  "idempotency_duplicate_reports": {
+    "avg": 0.2,
+    "min": 0,
+    "med": 0,
+    "p90": 0.6,
+    "p95": 0.8,
+    "p99": 1,
+    "max": 1,
+    "count": 5
+  },
+  "queue_processing": {
+    "avg": 6194.4,
+    "min": 3000,
+    "med": 6000,
+    "p90": 9500,
+    "p95": 10000,
+    "p99": 10650,
+    "max": 11000,
+    "count": 36
+  },
+  "queue_all_jobs_wall": {
+    "avg": 61037.2,
+    "min": 60153,
+    "med": 61219,
+    "p90": 61825.6,
+    "p95": 61825.8,
+    "p99": 61826,
+    "max": 61826,
+    "count": 5
+  },
+  "queue_wait_to_processing": {
+    "avg": 2,
+    "min": 0,
+    "med": 0,
+    "p90": 0,
+    "p95": 0,
+    "p99": 47.4,
+    "max": 73,
+    "count": 36
+  },
+  "queue_job_total": {
+    "avg": 27815.8,
+    "min": 2298,
+    "med": 6520,
+    "p90": 61540.3,
+    "p95": 61553,
+    "p99": 61568.5,
+    "max": 61569,
+    "count": 50
+  }
+}
+── resources during queue-baseline-after (63s) ──
+  facultylens-perf-ai-service      cpu avg  116.7%  max  613.4%   mem max   6.3% (472.1MiB)  samples 9
+  facultylens-perf-app             cpu avg   30.0%  max  211.2%   mem max   0.9% (65.64MiB)  samples 9
+  facultylens-perf-mysql           cpu avg   11.5%  max   40.9%   mem max  10.5% (787.4MiB)  samples 9
+  facultylens-perf-nginx           cpu avg    0.7%  max    3.0%   mem max   0.2% (16.44MiB)  samples 9
+  facultylens-perf-redis           cpu avg    2.4%  max    8.5%   mem max   0.1% (11.09MiB)  samples 9
+  facultylens-perf-scheduler       cpu avg    0.1%  max    0.1%   mem max   0.4% (32.28MiB)  samples 9
+  facultylens-perf-worker          cpu avg    9.9%  max   45.4%   mem max   0.7% (53.06MiB)  samples 9
+  mysql: Threads_connected	2 Max_used_connections	33 max_connections	200  (max_used before run: 33)
+  redis: used_memory_human:1.67M
+  redis queue depth: 0

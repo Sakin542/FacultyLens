@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { User } from '@/types';
 import { authService, LoginPayload, RegisterPayload } from '@/services/authService';
+import { SESSION_EXPIRED_EVENT } from '@/services/api';
 
 interface AuthContextType {
   user: User | null;
@@ -74,6 +75,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => {
       isMounted = false;
     };
+  }, []);
+
+  // A 401 on any authenticated request means the server session is gone: drop the client session
+  // so ProtectedRoute redirects to /login instead of leaving a dead "logged-in" shell (BUG-007).
+  useEffect(() => {
+    const onExpired = () => setUser(null);
+    window.addEventListener(SESSION_EXPIRED_EVENT, onExpired);
+    return () => window.removeEventListener(SESSION_EXPIRED_EVENT, onExpired);
   }, []);
 
   const login = async (credentials: LoginPayload): Promise<User> => {

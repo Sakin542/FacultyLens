@@ -466,7 +466,7 @@ class AssessmentBlueprintService
     /** STEP 14: surface blueprint mismatches through the existing recommendation infrastructure (deduplicated by title). */
     public function syncRecommendations(AssessmentBlueprint $bp, array $comparison): array
     {
-        $report = AnalysisReport::where('assessment_id', $bp->assessment_id)->where('is_current', true)->orderByDesc('id')->first();
+        $report = AnalysisReport::where('assessment_id', $bp->assessment_id)->where('is_current', true)->orderByDesc('id')->first(['id', 'assessment_id']);
         if (!$report) {
             return ['created' => 0, 'skipped' => 0, 'note' => 'No analysis report exists yet; recommendations will be attached after the assessment is analyzed.'];
         }

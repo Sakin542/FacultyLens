@@ -1,0 +1,2679 @@
+{
+ "data": {
+  "alignment_analysis": null,
+  "analysis_status": "completed",
+  "assessment": {
+   "assessment_date": "2026-07-19",
+   "course_code": "PERF-001",
+   "course_id": 1013,
+   "course_name": "Performance Course 1",
+   "duration_minutes": 90,
+   "title": "Assessment 5 (100 questions)",
+   "total_marks": 500,
+   "total_questions": 100,
+   "type": "final"
+  },
+  "findings": [],
+  "learning_outcome_alignments": [],
+  "quality_analysis": null,
+  "questions": [
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Understand",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "indexing"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Understand",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO2",
+     "cognitive_level": "Apply",
+     "course_id": 1013,
+     "description": "Apply transactions in relational database systems.",
+     "sort_order": 2
+    },
+    "learning_outcome_id": 59,
+    "marks": "5.00",
+    "question_number": 1,
+    "question_text": "Compare a 3NF decomposition for indexing, and discuss the trade-offs in a workload with 11 concurrent transactions (variant 1).",
+    "question_type": "short_answer"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Apply",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "transactions"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Apply",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO3",
+     "cognitive_level": "Analyze",
+     "course_id": 1013,
+     "description": "Analyze query optimisation in relational database systems.",
+     "sort_order": 3
+    },
+    "learning_outcome_id": 60,
+    "marks": "5.00",
+    "question_number": 2,
+    "question_text": "Design a two-phase locking schedule for transactions, and discuss the trade-offs in a workload with 12 concurrent transactions (variant 2).",
+    "question_type": "descriptive"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Analyze",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "query optimisation"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Analyze",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO4",
+     "cognitive_level": "Evaluate",
+     "course_id": 1013,
+     "description": "Evaluate ER modelling in relational database systems.",
+     "sort_order": 4
+    },
+    "learning_outcome_id": 61,
+    "marks": "5.00",
+    "question_number": 3,
+    "question_text": "Evaluate a write-ahead log for query optimisation, and discuss the trade-offs in a workload with 13 concurrent transactions (variant 3).",
+    "question_type": "problem_solving"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Evaluate",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "ER modelling"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Evaluate",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO5",
+     "cognitive_level": "Create",
+     "course_id": 1013,
+     "description": "Create concurrency control in relational database systems.",
+     "sort_order": 5
+    },
+    "learning_outcome_id": 62,
+    "marks": "5.00",
+    "question_number": 4,
+    "question_text": "Describe a star schema for ER modelling, and discuss the trade-offs in a workload with 14 concurrent transactions (variant 4).",
+    "question_type": "true_false"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Create",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "concurrency control"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Create",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO1",
+     "cognitive_level": "Understand",
+     "course_id": 1013,
+     "description": "Understand indexing in relational database systems.",
+     "sort_order": 1
+    },
+    "learning_outcome_id": 58,
+    "marks": "5.00",
+    "question_number": 5,
+    "question_text": "Analyse a hash join for concurrency control, and discuss the trade-offs in a workload with 15 concurrent transactions (variant 5).",
+    "question_type": "mcq"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Remember",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "recovery"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Remember",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO2",
+     "cognitive_level": "Apply",
+     "course_id": 1013,
+     "description": "Apply transactions in relational database systems.",
+     "sort_order": 2
+    },
+    "learning_outcome_id": 59,
+    "marks": "5.00",
+    "question_number": 6,
+    "question_text": "Justify an ER diagram for recovery, and discuss the trade-offs in a workload with 16 concurrent transactions (variant 6).",
+    "question_type": "short_answer"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Understand",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "distributed databases"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Understand",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO3",
+     "cognitive_level": "Analyze",
+     "course_id": 1013,
+     "description": "Analyze query optimisation in relational database systems.",
+     "sort_order": 3
+    },
+    "learning_outcome_id": 60,
+    "marks": "5.00",
+    "question_number": 7,
+    "question_text": "Derive a cost-based plan for distributed databases, and discuss the trade-offs in a workload with 17 concurrent transactions (variant 7).",
+    "question_type": "descriptive"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Apply",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "NoSQL stores"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Apply",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO4",
+     "cognitive_level": "Evaluate",
+     "course_id": 1013,
+     "description": "Evaluate ER modelling in relational database systems.",
+     "sort_order": 4
+    },
+    "learning_outcome_id": 61,
+    "marks": "5.00",
+    "question_number": 8,
+    "question_text": "Explain a B+ tree index for NoSQL stores, and discuss the trade-offs in a workload with 18 concurrent transactions (variant 8).",
+    "question_type": "problem_solving"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Analyze",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "data warehousing"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Analyze",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO5",
+     "cognitive_level": "Create",
+     "course_id": 1013,
+     "description": "Create concurrency control in relational database systems.",
+     "sort_order": 5
+    },
+    "learning_outcome_id": 62,
+    "marks": "5.00",
+    "question_number": 9,
+    "question_text": "Compare a 3NF decomposition for data warehousing, and discuss the trade-offs in a workload with 19 concurrent transactions (variant 9).",
+    "question_type": "true_false"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Evaluate",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "normalization"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Evaluate",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO1",
+     "cognitive_level": "Understand",
+     "course_id": 1013,
+     "description": "Understand indexing in relational database systems.",
+     "sort_order": 1
+    },
+    "learning_outcome_id": 58,
+    "marks": "5.00",
+    "question_number": 10,
+    "question_text": "Design a two-phase locking schedule for normalization, and discuss the trade-offs in a workload with 20 concurrent transactions (variant 10).",
+    "question_type": "mcq"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Create",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "indexing"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Create",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO2",
+     "cognitive_level": "Apply",
+     "course_id": 1013,
+     "description": "Apply transactions in relational database systems.",
+     "sort_order": 2
+    },
+    "learning_outcome_id": 59,
+    "marks": "5.00",
+    "question_number": 11,
+    "question_text": "Evaluate a write-ahead log for indexing, and discuss the trade-offs in a workload with 21 concurrent transactions (variant 11).",
+    "question_type": "short_answer"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Remember",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "transactions"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Remember",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO3",
+     "cognitive_level": "Analyze",
+     "course_id": 1013,
+     "description": "Analyze query optimisation in relational database systems.",
+     "sort_order": 3
+    },
+    "learning_outcome_id": 60,
+    "marks": "5.00",
+    "question_number": 12,
+    "question_text": "Describe a star schema for transactions, and discuss the trade-offs in a workload with 22 concurrent transactions (variant 12).",
+    "question_type": "descriptive"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Understand",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "query optimisation"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Understand",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO4",
+     "cognitive_level": "Evaluate",
+     "course_id": 1013,
+     "description": "Evaluate ER modelling in relational database systems.",
+     "sort_order": 4
+    },
+    "learning_outcome_id": 61,
+    "marks": "5.00",
+    "question_number": 13,
+    "question_text": "Analyse a hash join for query optimisation, and discuss the trade-offs in a workload with 23 concurrent transactions (variant 13).",
+    "question_type": "problem_solving"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Apply",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "ER modelling"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Apply",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO5",
+     "cognitive_level": "Create",
+     "course_id": 1013,
+     "description": "Create concurrency control in relational database systems.",
+     "sort_order": 5
+    },
+    "learning_outcome_id": 62,
+    "marks": "5.00",
+    "question_number": 14,
+    "question_text": "Justify an ER diagram for ER modelling, and discuss the trade-offs in a workload with 24 concurrent transactions (variant 14).",
+    "question_type": "true_false"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Analyze",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "concurrency control"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Analyze",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO1",
+     "cognitive_level": "Understand",
+     "course_id": 1013,
+     "description": "Understand indexing in relational database systems.",
+     "sort_order": 1
+    },
+    "learning_outcome_id": 58,
+    "marks": "5.00",
+    "question_number": 15,
+    "question_text": "Derive a cost-based plan for concurrency control, and discuss the trade-offs in a workload with 25 concurrent transactions (variant 15).",
+    "question_type": "mcq"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Evaluate",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "recovery"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Evaluate",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO2",
+     "cognitive_level": "Apply",
+     "course_id": 1013,
+     "description": "Apply transactions in relational database systems.",
+     "sort_order": 2
+    },
+    "learning_outcome_id": 59,
+    "marks": "5.00",
+    "question_number": 16,
+    "question_text": "Explain a B+ tree index for recovery, and discuss the trade-offs in a workload with 26 concurrent transactions (variant 16).",
+    "question_type": "short_answer"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Create",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "distributed databases"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Create",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO3",
+     "cognitive_level": "Analyze",
+     "course_id": 1013,
+     "description": "Analyze query optimisation in relational database systems.",
+     "sort_order": 3
+    },
+    "learning_outcome_id": 60,
+    "marks": "5.00",
+    "question_number": 17,
+    "question_text": "Compare a 3NF decomposition for distributed databases, and discuss the trade-offs in a workload with 27 concurrent transactions (variant 17).",
+    "question_type": "descriptive"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Remember",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "NoSQL stores"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Remember",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO4",
+     "cognitive_level": "Evaluate",
+     "course_id": 1013,
+     "description": "Evaluate ER modelling in relational database systems.",
+     "sort_order": 4
+    },
+    "learning_outcome_id": 61,
+    "marks": "5.00",
+    "question_number": 18,
+    "question_text": "Design a two-phase locking schedule for NoSQL stores, and discuss the trade-offs in a workload with 28 concurrent transactions (variant 18).",
+    "question_type": "problem_solving"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Understand",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "data warehousing"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Understand",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO5",
+     "cognitive_level": "Create",
+     "course_id": 1013,
+     "description": "Create concurrency control in relational database systems.",
+     "sort_order": 5
+    },
+    "learning_outcome_id": 62,
+    "marks": "5.00",
+    "question_number": 19,
+    "question_text": "Evaluate a write-ahead log for data warehousing, and discuss the trade-offs in a workload with 29 concurrent transactions (variant 19).",
+    "question_type": "true_false"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Apply",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "normalization"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Apply",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO1",
+     "cognitive_level": "Understand",
+     "course_id": 1013,
+     "description": "Understand indexing in relational database systems.",
+     "sort_order": 1
+    },
+    "learning_outcome_id": 58,
+    "marks": "5.00",
+    "question_number": 20,
+    "question_text": "Describe a star schema for normalization, and discuss the trade-offs in a workload with 30 concurrent transactions (variant 20).",
+    "question_type": "mcq"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Analyze",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "indexing"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Analyze",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO2",
+     "cognitive_level": "Apply",
+     "course_id": 1013,
+     "description": "Apply transactions in relational database systems.",
+     "sort_order": 2
+    },
+    "learning_outcome_id": 59,
+    "marks": "5.00",
+    "question_number": 21,
+    "question_text": "Analyse a hash join for indexing, and discuss the trade-offs in a workload with 31 concurrent transactions (variant 21).",
+    "question_type": "short_answer"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Evaluate",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "transactions"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Evaluate",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO3",
+     "cognitive_level": "Analyze",
+     "course_id": 1013,
+     "description": "Analyze query optimisation in relational database systems.",
+     "sort_order": 3
+    },
+    "learning_outcome_id": 60,
+    "marks": "5.00",
+    "question_number": 22,
+    "question_text": "Justify an ER diagram for transactions, and discuss the trade-offs in a workload with 32 concurrent transactions (variant 22).",
+    "question_type": "descriptive"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Create",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "query optimisation"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Create",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO4",
+     "cognitive_level": "Evaluate",
+     "course_id": 1013,
+     "description": "Evaluate ER modelling in relational database systems.",
+     "sort_order": 4
+    },
+    "learning_outcome_id": 61,
+    "marks": "5.00",
+    "question_number": 23,
+    "question_text": "Derive a cost-based plan for query optimisation, and discuss the trade-offs in a workload with 33 concurrent transactions (variant 23).",
+    "question_type": "problem_solving"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Remember",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "ER modelling"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Remember",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO5",
+     "cognitive_level": "Create",
+     "course_id": 1013,
+     "description": "Create concurrency control in relational database systems.",
+     "sort_order": 5
+    },
+    "learning_outcome_id": 62,
+    "marks": "5.00",
+    "question_number": 24,
+    "question_text": "Explain a B+ tree index for ER modelling, and discuss the trade-offs in a workload with 34 concurrent transactions (variant 24).",
+    "question_type": "true_false"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Understand",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "concurrency control"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Understand",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO1",
+     "cognitive_level": "Understand",
+     "course_id": 1013,
+     "description": "Understand indexing in relational database systems.",
+     "sort_order": 1
+    },
+    "learning_outcome_id": 58,
+    "marks": "5.00",
+    "question_number": 25,
+    "question_text": "Compare a 3NF decomposition for concurrency control, and discuss the trade-offs in a workload with 35 concurrent transactions (variant 25).",
+    "question_type": "mcq"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Apply",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "recovery"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Apply",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO2",
+     "cognitive_level": "Apply",
+     "course_id": 1013,
+     "description": "Apply transactions in relational database systems.",
+     "sort_order": 2
+    },
+    "learning_outcome_id": 59,
+    "marks": "5.00",
+    "question_number": 26,
+    "question_text": "Design a two-phase locking schedule for recovery, and discuss the trade-offs in a workload with 36 concurrent transactions (variant 26).",
+    "question_type": "short_answer"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Analyze",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "distributed databases"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Analyze",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO3",
+     "cognitive_level": "Analyze",
+     "course_id": 1013,
+     "description": "Analyze query optimisation in relational database systems.",
+     "sort_order": 3
+    },
+    "learning_outcome_id": 60,
+    "marks": "5.00",
+    "question_number": 27,
+    "question_text": "Evaluate a write-ahead log for distributed databases, and discuss the trade-offs in a workload with 37 concurrent transactions (variant 27).",
+    "question_type": "descriptive"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Evaluate",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "NoSQL stores"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Evaluate",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO4",
+     "cognitive_level": "Evaluate",
+     "course_id": 1013,
+     "description": "Evaluate ER modelling in relational database systems.",
+     "sort_order": 4
+    },
+    "learning_outcome_id": 61,
+    "marks": "5.00",
+    "question_number": 28,
+    "question_text": "Describe a star schema for NoSQL stores, and discuss the trade-offs in a workload with 38 concurrent transactions (variant 28).",
+    "question_type": "problem_solving"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Create",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "data warehousing"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Create",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO5",
+     "cognitive_level": "Create",
+     "course_id": 1013,
+     "description": "Create concurrency control in relational database systems.",
+     "sort_order": 5
+    },
+    "learning_outcome_id": 62,
+    "marks": "5.00",
+    "question_number": 29,
+    "question_text": "Analyse a hash join for data warehousing, and discuss the trade-offs in a workload with 39 concurrent transactions (variant 29).",
+    "question_type": "true_false"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Remember",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "normalization"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Remember",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO1",
+     "cognitive_level": "Understand",
+     "course_id": 1013,
+     "description": "Understand indexing in relational database systems.",
+     "sort_order": 1
+    },
+    "learning_outcome_id": 58,
+    "marks": "5.00",
+    "question_number": 30,
+    "question_text": "Justify an ER diagram for normalization, and discuss the trade-offs in a workload with 40 concurrent transactions (variant 30).",
+    "question_type": "mcq"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Understand",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "indexing"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Understand",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO2",
+     "cognitive_level": "Apply",
+     "course_id": 1013,
+     "description": "Apply transactions in relational database systems.",
+     "sort_order": 2
+    },
+    "learning_outcome_id": 59,
+    "marks": "5.00",
+    "question_number": 31,
+    "question_text": "Derive a cost-based plan for indexing, and discuss the trade-offs in a workload with 41 concurrent transactions (variant 31).",
+    "question_type": "short_answer"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Apply",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "transactions"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Apply",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO3",
+     "cognitive_level": "Analyze",
+     "course_id": 1013,
+     "description": "Analyze query optimisation in relational database systems.",
+     "sort_order": 3
+    },
+    "learning_outcome_id": 60,
+    "marks": "5.00",
+    "question_number": 32,
+    "question_text": "Explain a B+ tree index for transactions, and discuss the trade-offs in a workload with 42 concurrent transactions (variant 32).",
+    "question_type": "descriptive"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Analyze",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "query optimisation"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Analyze",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO4",
+     "cognitive_level": "Evaluate",
+     "course_id": 1013,
+     "description": "Evaluate ER modelling in relational database systems.",
+     "sort_order": 4
+    },
+    "learning_outcome_id": 61,
+    "marks": "5.00",
+    "question_number": 33,
+    "question_text": "Compare a 3NF decomposition for query optimisation, and discuss the trade-offs in a workload with 43 concurrent transactions (variant 33).",
+    "question_type": "problem_solving"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Evaluate",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "ER modelling"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Evaluate",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO5",
+     "cognitive_level": "Create",
+     "course_id": 1013,
+     "description": "Create concurrency control in relational database systems.",
+     "sort_order": 5
+    },
+    "learning_outcome_id": 62,
+    "marks": "5.00",
+    "question_number": 34,
+    "question_text": "Design a two-phase locking schedule for ER modelling, and discuss the trade-offs in a workload with 44 concurrent transactions (variant 34).",
+    "question_type": "true_false"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Create",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "concurrency control"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Create",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO1",
+     "cognitive_level": "Understand",
+     "course_id": 1013,
+     "description": "Understand indexing in relational database systems.",
+     "sort_order": 1
+    },
+    "learning_outcome_id": 58,
+    "marks": "5.00",
+    "question_number": 35,
+    "question_text": "Evaluate a write-ahead log for concurrency control, and discuss the trade-offs in a workload with 45 concurrent transactions (variant 35).",
+    "question_type": "mcq"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Remember",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "recovery"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Remember",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO2",
+     "cognitive_level": "Apply",
+     "course_id": 1013,
+     "description": "Apply transactions in relational database systems.",
+     "sort_order": 2
+    },
+    "learning_outcome_id": 59,
+    "marks": "5.00",
+    "question_number": 36,
+    "question_text": "Describe a star schema for recovery, and discuss the trade-offs in a workload with 46 concurrent transactions (variant 36).",
+    "question_type": "short_answer"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Understand",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "distributed databases"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Understand",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO3",
+     "cognitive_level": "Analyze",
+     "course_id": 1013,
+     "description": "Analyze query optimisation in relational database systems.",
+     "sort_order": 3
+    },
+    "learning_outcome_id": 60,
+    "marks": "5.00",
+    "question_number": 37,
+    "question_text": "Analyse a hash join for distributed databases, and discuss the trade-offs in a workload with 47 concurrent transactions (variant 37).",
+    "question_type": "descriptive"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Apply",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "NoSQL stores"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Apply",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO4",
+     "cognitive_level": "Evaluate",
+     "course_id": 1013,
+     "description": "Evaluate ER modelling in relational database systems.",
+     "sort_order": 4
+    },
+    "learning_outcome_id": 61,
+    "marks": "5.00",
+    "question_number": 38,
+    "question_text": "Justify an ER diagram for NoSQL stores, and discuss the trade-offs in a workload with 48 concurrent transactions (variant 38).",
+    "question_type": "problem_solving"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Analyze",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "data warehousing"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Analyze",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO5",
+     "cognitive_level": "Create",
+     "course_id": 1013,
+     "description": "Create concurrency control in relational database systems.",
+     "sort_order": 5
+    },
+    "learning_outcome_id": 62,
+    "marks": "5.00",
+    "question_number": 39,
+    "question_text": "Derive a cost-based plan for data warehousing, and discuss the trade-offs in a workload with 49 concurrent transactions (variant 39).",
+    "question_type": "true_false"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Evaluate",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "normalization"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Evaluate",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO1",
+     "cognitive_level": "Understand",
+     "course_id": 1013,
+     "description": "Understand indexing in relational database systems.",
+     "sort_order": 1
+    },
+    "learning_outcome_id": 58,
+    "marks": "5.00",
+    "question_number": 40,
+    "question_text": "Explain a B+ tree index for normalization, and discuss the trade-offs in a workload with 50 concurrent transactions (variant 40).",
+    "question_type": "mcq"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Create",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "indexing"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Create",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO2",
+     "cognitive_level": "Apply",
+     "course_id": 1013,
+     "description": "Apply transactions in relational database systems.",
+     "sort_order": 2
+    },
+    "learning_outcome_id": 59,
+    "marks": "5.00",
+    "question_number": 41,
+    "question_text": "Compare a 3NF decomposition for indexing, and discuss the trade-offs in a workload with 51 concurrent transactions (variant 41).",
+    "question_type": "short_answer"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Remember",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "transactions"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Remember",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO3",
+     "cognitive_level": "Analyze",
+     "course_id": 1013,
+     "description": "Analyze query optimisation in relational database systems.",
+     "sort_order": 3
+    },
+    "learning_outcome_id": 60,
+    "marks": "5.00",
+    "question_number": 42,
+    "question_text": "Design a two-phase locking schedule for transactions, and discuss the trade-offs in a workload with 52 concurrent transactions (variant 42).",
+    "question_type": "descriptive"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Understand",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "query optimisation"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Understand",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO4",
+     "cognitive_level": "Evaluate",
+     "course_id": 1013,
+     "description": "Evaluate ER modelling in relational database systems.",
+     "sort_order": 4
+    },
+    "learning_outcome_id": 61,
+    "marks": "5.00",
+    "question_number": 43,
+    "question_text": "Evaluate a write-ahead log for query optimisation, and discuss the trade-offs in a workload with 53 concurrent transactions (variant 43).",
+    "question_type": "problem_solving"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Apply",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "ER modelling"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Apply",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO5",
+     "cognitive_level": "Create",
+     "course_id": 1013,
+     "description": "Create concurrency control in relational database systems.",
+     "sort_order": 5
+    },
+    "learning_outcome_id": 62,
+    "marks": "5.00",
+    "question_number": 44,
+    "question_text": "Describe a star schema for ER modelling, and discuss the trade-offs in a workload with 54 concurrent transactions (variant 44).",
+    "question_type": "true_false"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Analyze",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "concurrency control"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Analyze",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO1",
+     "cognitive_level": "Understand",
+     "course_id": 1013,
+     "description": "Understand indexing in relational database systems.",
+     "sort_order": 1
+    },
+    "learning_outcome_id": 58,
+    "marks": "5.00",
+    "question_number": 45,
+    "question_text": "Analyse a hash join for concurrency control, and discuss the trade-offs in a workload with 55 concurrent transactions (variant 45).",
+    "question_type": "mcq"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Evaluate",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "recovery"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Evaluate",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO2",
+     "cognitive_level": "Apply",
+     "course_id": 1013,
+     "description": "Apply transactions in relational database systems.",
+     "sort_order": 2
+    },
+    "learning_outcome_id": 59,
+    "marks": "5.00",
+    "question_number": 46,
+    "question_text": "Justify an ER diagram for recovery, and discuss the trade-offs in a workload with 56 concurrent transactions (variant 46).",
+    "question_type": "short_answer"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Create",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "distributed databases"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Create",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO3",
+     "cognitive_level": "Analyze",
+     "course_id": 1013,
+     "description": "Analyze query optimisation in relational database systems.",
+     "sort_order": 3
+    },
+    "learning_outcome_id": 60,
+    "marks": "5.00",
+    "question_number": 47,
+    "question_text": "Derive a cost-based plan for distributed databases, and discuss the trade-offs in a workload with 57 concurrent transactions (variant 47).",
+    "question_type": "descriptive"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Remember",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "NoSQL stores"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Remember",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO4",
+     "cognitive_level": "Evaluate",
+     "course_id": 1013,
+     "description": "Evaluate ER modelling in relational database systems.",
+     "sort_order": 4
+    },
+    "learning_outcome_id": 61,
+    "marks": "5.00",
+    "question_number": 48,
+    "question_text": "Explain a B+ tree index for NoSQL stores, and discuss the trade-offs in a workload with 58 concurrent transactions (variant 48).",
+    "question_type": "problem_solving"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Understand",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "data warehousing"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Understand",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO5",
+     "cognitive_level": "Create",
+     "course_id": 1013,
+     "description": "Create concurrency control in relational database systems.",
+     "sort_order": 5
+    },
+    "learning_outcome_id": 62,
+    "marks": "5.00",
+    "question_number": 49,
+    "question_text": "Compare a 3NF decomposition for data warehousing, and discuss the trade-offs in a workload with 59 concurrent transactions (variant 49).",
+    "question_type": "true_false"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Apply",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "normalization"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Apply",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO1",
+     "cognitive_level": "Understand",
+     "course_id": 1013,
+     "description": "Understand indexing in relational database systems.",
+     "sort_order": 1
+    },
+    "learning_outcome_id": 58,
+    "marks": "5.00",
+    "question_number": 50,
+    "question_text": "Design a two-phase locking schedule for normalization, and discuss the trade-offs in a workload with 60 concurrent transactions (variant 50).",
+    "question_type": "mcq"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Analyze",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "indexing"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Analyze",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO2",
+     "cognitive_level": "Apply",
+     "course_id": 1013,
+     "description": "Apply transactions in relational database systems.",
+     "sort_order": 2
+    },
+    "learning_outcome_id": 59,
+    "marks": "5.00",
+    "question_number": 51,
+    "question_text": "Evaluate a write-ahead log for indexing, and discuss the trade-offs in a workload with 61 concurrent transactions (variant 51).",
+    "question_type": "short_answer"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Evaluate",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "transactions"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Evaluate",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO3",
+     "cognitive_level": "Analyze",
+     "course_id": 1013,
+     "description": "Analyze query optimisation in relational database systems.",
+     "sort_order": 3
+    },
+    "learning_outcome_id": 60,
+    "marks": "5.00",
+    "question_number": 52,
+    "question_text": "Describe a star schema for transactions, and discuss the trade-offs in a workload with 62 concurrent transactions (variant 52).",
+    "question_type": "descriptive"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Create",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "query optimisation"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Create",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO4",
+     "cognitive_level": "Evaluate",
+     "course_id": 1013,
+     "description": "Evaluate ER modelling in relational database systems.",
+     "sort_order": 4
+    },
+    "learning_outcome_id": 61,
+    "marks": "5.00",
+    "question_number": 53,
+    "question_text": "Analyse a hash join for query optimisation, and discuss the trade-offs in a workload with 63 concurrent transactions (variant 53).",
+    "question_type": "problem_solving"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Remember",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "ER modelling"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Remember",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO5",
+     "cognitive_level": "Create",
+     "course_id": 1013,
+     "description": "Create concurrency control in relational database systems.",
+     "sort_order": 5
+    },
+    "learning_outcome_id": 62,
+    "marks": "5.00",
+    "question_number": 54,
+    "question_text": "Justify an ER diagram for ER modelling, and discuss the trade-offs in a workload with 64 concurrent transactions (variant 54).",
+    "question_type": "true_false"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Understand",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "concurrency control"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Understand",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO1",
+     "cognitive_level": "Understand",
+     "course_id": 1013,
+     "description": "Understand indexing in relational database systems.",
+     "sort_order": 1
+    },
+    "learning_outcome_id": 58,
+    "marks": "5.00",
+    "question_number": 55,
+    "question_text": "Derive a cost-based plan for concurrency control, and discuss the trade-offs in a workload with 65 concurrent transactions (variant 55).",
+    "question_type": "mcq"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Apply",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "recovery"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Apply",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO2",
+     "cognitive_level": "Apply",
+     "course_id": 1013,
+     "description": "Apply transactions in relational database systems.",
+     "sort_order": 2
+    },
+    "learning_outcome_id": 59,
+    "marks": "5.00",
+    "question_number": 56,
+    "question_text": "Explain a B+ tree index for recovery, and discuss the trade-offs in a workload with 66 concurrent transactions (variant 56).",
+    "question_type": "short_answer"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Analyze",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "distributed databases"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Analyze",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO3",
+     "cognitive_level": "Analyze",
+     "course_id": 1013,
+     "description": "Analyze query optimisation in relational database systems.",
+     "sort_order": 3
+    },
+    "learning_outcome_id": 60,
+    "marks": "5.00",
+    "question_number": 57,
+    "question_text": "Compare a 3NF decomposition for distributed databases, and discuss the trade-offs in a workload with 67 concurrent transactions (variant 57).",
+    "question_type": "descriptive"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Evaluate",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "NoSQL stores"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Evaluate",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO4",
+     "cognitive_level": "Evaluate",
+     "course_id": 1013,
+     "description": "Evaluate ER modelling in relational database systems.",
+     "sort_order": 4
+    },
+    "learning_outcome_id": 61,
+    "marks": "5.00",
+    "question_number": 58,
+    "question_text": "Design a two-phase locking schedule for NoSQL stores, and discuss the trade-offs in a workload with 68 concurrent transactions (variant 58).",
+    "question_type": "problem_solving"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Create",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "data warehousing"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Create",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO5",
+     "cognitive_level": "Create",
+     "course_id": 1013,
+     "description": "Create concurrency control in relational database systems.",
+     "sort_order": 5
+    },
+    "learning_outcome_id": 62,
+    "marks": "5.00",
+    "question_number": 59,
+    "question_text": "Evaluate a write-ahead log for data warehousing, and discuss the trade-offs in a workload with 69 concurrent transactions (variant 59).",
+    "question_type": "true_false"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Remember",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "normalization"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Remember",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO1",
+     "cognitive_level": "Understand",
+     "course_id": 1013,
+     "description": "Understand indexing in relational database systems.",
+     "sort_order": 1
+    },
+    "learning_outcome_id": 58,
+    "marks": "5.00",
+    "question_number": 60,
+    "question_text": "Describe a star schema for normalization, and discuss the trade-offs in a workload with 70 concurrent transactions (variant 60).",
+    "question_type": "mcq"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Understand",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "indexing"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Understand",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO2",
+     "cognitive_level": "Apply",
+     "course_id": 1013,
+     "description": "Apply transactions in relational database systems.",
+     "sort_order": 2
+    },
+    "learning_outcome_id": 59,
+    "marks": "5.00",
+    "question_number": 61,
+    "question_text": "Analyse a hash join for indexing, and discuss the trade-offs in a workload with 71 concurrent transactions (variant 61).",
+    "question_type": "short_answer"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Apply",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "transactions"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Apply",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO3",
+     "cognitive_level": "Analyze",
+     "course_id": 1013,
+     "description": "Analyze query optimisation in relational database systems.",
+     "sort_order": 3
+    },
+    "learning_outcome_id": 60,
+    "marks": "5.00",
+    "question_number": 62,
+    "question_text": "Justify an ER diagram for transactions, and discuss the trade-offs in a workload with 72 concurrent transactions (variant 62).",
+    "question_type": "descriptive"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Analyze",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "query optimisation"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Analyze",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO4",
+     "cognitive_level": "Evaluate",
+     "course_id": 1013,
+     "description": "Evaluate ER modelling in relational database systems.",
+     "sort_order": 4
+    },
+    "learning_outcome_id": 61,
+    "marks": "5.00",
+    "question_number": 63,
+    "question_text": "Derive a cost-based plan for query optimisation, and discuss the trade-offs in a workload with 73 concurrent transactions (variant 63).",
+    "question_type": "problem_solving"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Evaluate",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "ER modelling"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Evaluate",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO5",
+     "cognitive_level": "Create",
+     "course_id": 1013,
+     "description": "Create concurrency control in relational database systems.",
+     "sort_order": 5
+    },
+    "learning_outcome_id": 62,
+    "marks": "5.00",
+    "question_number": 64,
+    "question_text": "Explain a B+ tree index for ER modelling, and discuss the trade-offs in a workload with 74 concurrent transactions (variant 64).",
+    "question_type": "true_false"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Create",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "concurrency control"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Create",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO1",
+     "cognitive_level": "Understand",
+     "course_id": 1013,
+     "description": "Understand indexing in relational database systems.",
+     "sort_order": 1
+    },
+    "learning_outcome_id": 58,
+    "marks": "5.00",
+    "question_number": 65,
+    "question_text": "Compare a 3NF decomposition for concurrency control, and discuss the trade-offs in a workload with 75 concurrent transactions (variant 65).",
+    "question_type": "mcq"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Remember",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "recovery"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Remember",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO2",
+     "cognitive_level": "Apply",
+     "course_id": 1013,
+     "description": "Apply transactions in relational database systems.",
+     "sort_order": 2
+    },
+    "learning_outcome_id": 59,
+    "marks": "5.00",
+    "question_number": 66,
+    "question_text": "Design a two-phase locking schedule for recovery, and discuss the trade-offs in a workload with 76 concurrent transactions (variant 66).",
+    "question_type": "short_answer"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Understand",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "distributed databases"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Understand",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO3",
+     "cognitive_level": "Analyze",
+     "course_id": 1013,
+     "description": "Analyze query optimisation in relational database systems.",
+     "sort_order": 3
+    },
+    "learning_outcome_id": 60,
+    "marks": "5.00",
+    "question_number": 67,
+    "question_text": "Evaluate a write-ahead log for distributed databases, and discuss the trade-offs in a workload with 77 concurrent transactions (variant 67).",
+    "question_type": "descriptive"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Apply",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "NoSQL stores"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Apply",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO4",
+     "cognitive_level": "Evaluate",
+     "course_id": 1013,
+     "description": "Evaluate ER modelling in relational database systems.",
+     "sort_order": 4
+    },
+    "learning_outcome_id": 61,
+    "marks": "5.00",
+    "question_number": 68,
+    "question_text": "Describe a star schema for NoSQL stores, and discuss the trade-offs in a workload with 78 concurrent transactions (variant 68).",
+    "question_type": "problem_solving"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Analyze",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "data warehousing"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Analyze",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO5",
+     "cognitive_level": "Create",
+     "course_id": 1013,
+     "description": "Create concurrency control in relational database systems.",
+     "sort_order": 5
+    },
+    "learning_outcome_id": 62,
+    "marks": "5.00",
+    "question_number": 69,
+    "question_text": "Analyse a hash join for data warehousing, and discuss the trade-offs in a workload with 79 concurrent transactions (variant 69).",
+    "question_type": "true_false"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Evaluate",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "normalization"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Evaluate",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO1",
+     "cognitive_level": "Understand",
+     "course_id": 1013,
+     "description": "Understand indexing in relational database systems.",
+     "sort_order": 1
+    },
+    "learning_outcome_id": 58,
+    "marks": "5.00",
+    "question_number": 70,
+    "question_text": "Justify an ER diagram for normalization, and discuss the trade-offs in a workload with 80 concurrent transactions (variant 70).",
+    "question_type": "mcq"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Create",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "indexing"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Create",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO2",
+     "cognitive_level": "Apply",
+     "course_id": 1013,
+     "description": "Apply transactions in relational database systems.",
+     "sort_order": 2
+    },
+    "learning_outcome_id": 59,
+    "marks": "5.00",
+    "question_number": 71,
+    "question_text": "Derive a cost-based plan for indexing, and discuss the trade-offs in a workload with 81 concurrent transactions (variant 71).",
+    "question_type": "short_answer"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Remember",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "transactions"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Remember",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO3",
+     "cognitive_level": "Analyze",
+     "course_id": 1013,
+     "description": "Analyze query optimisation in relational database systems.",
+     "sort_order": 3
+    },
+    "learning_outcome_id": 60,
+    "marks": "5.00",
+    "question_number": 72,
+    "question_text": "Explain a B+ tree index for transactions, and discuss the trade-offs in a workload with 82 concurrent transactions (variant 72).",
+    "question_type": "descriptive"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Understand",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "query optimisation"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Understand",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO4",
+     "cognitive_level": "Evaluate",
+     "course_id": 1013,
+     "description": "Evaluate ER modelling in relational database systems.",
+     "sort_order": 4
+    },
+    "learning_outcome_id": 61,
+    "marks": "5.00",
+    "question_number": 73,
+    "question_text": "Compare a 3NF decomposition for query optimisation, and discuss the trade-offs in a workload with 83 concurrent transactions (variant 73).",
+    "question_type": "problem_solving"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Apply",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "ER modelling"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Apply",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO5",
+     "cognitive_level": "Create",
+     "course_id": 1013,
+     "description": "Create concurrency control in relational database systems.",
+     "sort_order": 5
+    },
+    "learning_outcome_id": 62,
+    "marks": "5.00",
+    "question_number": 74,
+    "question_text": "Design a two-phase locking schedule for ER modelling, and discuss the trade-offs in a workload with 84 concurrent transactions (variant 74).",
+    "question_type": "true_false"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Analyze",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "concurrency control"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Analyze",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO1",
+     "cognitive_level": "Understand",
+     "course_id": 1013,
+     "description": "Understand indexing in relational database systems.",
+     "sort_order": 1
+    },
+    "learning_outcome_id": 58,
+    "marks": "5.00",
+    "question_number": 75,
+    "question_text": "Evaluate a write-ahead log for concurrency control, and discuss the trade-offs in a workload with 85 concurrent transactions (variant 75).",
+    "question_type": "mcq"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Evaluate",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "recovery"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Evaluate",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO2",
+     "cognitive_level": "Apply",
+     "course_id": 1013,
+     "description": "Apply transactions in relational database systems.",
+     "sort_order": 2
+    },
+    "learning_outcome_id": 59,
+    "marks": "5.00",
+    "question_number": 76,
+    "question_text": "Describe a star schema for recovery, and discuss the trade-offs in a workload with 86 concurrent transactions (variant 76).",
+    "question_type": "short_answer"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Create",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "distributed databases"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Create",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO3",
+     "cognitive_level": "Analyze",
+     "course_id": 1013,
+     "description": "Analyze query optimisation in relational database systems.",
+     "sort_order": 3
+    },
+    "learning_outcome_id": 60,
+    "marks": "5.00",
+    "question_number": 77,
+    "question_text": "Analyse a hash join for distributed databases, and discuss the trade-offs in a workload with 87 concurrent transactions (variant 77).",
+    "question_type": "descriptive"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Remember",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "NoSQL stores"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Remember",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO4",
+     "cognitive_level": "Evaluate",
+     "course_id": 1013,
+     "description": "Evaluate ER modelling in relational database systems.",
+     "sort_order": 4
+    },
+    "learning_outcome_id": 61,
+    "marks": "5.00",
+    "question_number": 78,
+    "question_text": "Justify an ER diagram for NoSQL stores, and discuss the trade-offs in a workload with 88 concurrent transactions (variant 78).",
+    "question_type": "problem_solving"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Understand",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "data warehousing"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Understand",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO5",
+     "cognitive_level": "Create",
+     "course_id": 1013,
+     "description": "Create concurrency control in relational database systems.",
+     "sort_order": 5
+    },
+    "learning_outcome_id": 62,
+    "marks": "5.00",
+    "question_number": 79,
+    "question_text": "Derive a cost-based plan for data warehousing, and discuss the trade-offs in a workload with 89 concurrent transactions (variant 79).",
+    "question_type": "true_false"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Apply",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "normalization"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Apply",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO1",
+     "cognitive_level": "Understand",
+     "course_id": 1013,
+     "description": "Understand indexing in relational database systems.",
+     "sort_order": 1
+    },
+    "learning_outcome_id": 58,
+    "marks": "5.00",
+    "question_number": 80,
+    "question_text": "Explain a B+ tree index for normalization, and discuss the trade-offs in a workload with 90 concurrent transactions (variant 80).",
+    "question_type": "mcq"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Analyze",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "indexing"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Analyze",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO2",
+     "cognitive_level": "Apply",
+     "course_id": 1013,
+     "description": "Apply transactions in relational database systems.",
+     "sort_order": 2
+    },
+    "learning_outcome_id": 59,
+    "marks": "5.00",
+    "question_number": 81,
+    "question_text": "Compare a 3NF decomposition for indexing, and discuss the trade-offs in a workload with 91 concurrent transactions (variant 81).",
+    "question_type": "short_answer"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Evaluate",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "transactions"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Evaluate",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO3",
+     "cognitive_level": "Analyze",
+     "course_id": 1013,
+     "description": "Analyze query optimisation in relational database systems.",
+     "sort_order": 3
+    },
+    "learning_outcome_id": 60,
+    "marks": "5.00",
+    "question_number": 82,
+    "question_text": "Design a two-phase locking schedule for transactions, and discuss the trade-offs in a workload with 92 concurrent transactions (variant 82).",
+    "question_type": "descriptive"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Create",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "query optimisation"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Create",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO4",
+     "cognitive_level": "Evaluate",
+     "course_id": 1013,
+     "description": "Evaluate ER modelling in relational database systems.",
+     "sort_order": 4
+    },
+    "learning_outcome_id": 61,
+    "marks": "5.00",
+    "question_number": 83,
+    "question_text": "Evaluate a write-ahead log for query optimisation, and discuss the trade-offs in a workload with 93 concurrent transactions (variant 83).",
+    "question_type": "problem_solving"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Remember",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "ER modelling"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Remember",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO5",
+     "cognitive_level": "Create",
+     "course_id": 1013,
+     "description": "Create concurrency control in relational database systems.",
+     "sort_order": 5
+    },
+    "learning_outcome_id": 62,
+    "marks": "5.00",
+    "question_number": 84,
+    "question_text": "Describe a star schema for ER modelling, and discuss the trade-offs in a workload with 94 concurrent transactions (variant 84).",
+    "question_type": "true_false"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Understand",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "concurrency control"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Understand",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO1",
+     "cognitive_level": "Understand",
+     "course_id": 1013,
+     "description": "Understand indexing in relational database systems.",
+     "sort_order": 1
+    },
+    "learning_outcome_id": 58,
+    "marks": "5.00",
+    "question_number": 85,
+    "question_text": "Analyse a hash join for concurrency control, and discuss the trade-offs in a workload with 95 concurrent transactions (variant 85).",
+    "question_type": "mcq"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Apply",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "recovery"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Apply",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO2",
+     "cognitive_level": "Apply",
+     "course_id": 1013,
+     "description": "Apply transactions in relational database systems.",
+     "sort_order": 2
+    },
+    "learning_outcome_id": 59,
+    "marks": "5.00",
+    "question_number": 86,
+    "question_text": "Justify an ER diagram for recovery, and discuss the trade-offs in a workload with 96 concurrent transactions (variant 86).",
+    "question_type": "short_answer"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Analyze",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "distributed databases"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Analyze",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO3",
+     "cognitive_level": "Analyze",
+     "course_id": 1013,
+     "description": "Analyze query optimisation in relational database systems.",
+     "sort_order": 3
+    },
+    "learning_outcome_id": 60,
+    "marks": "5.00",
+    "question_number": 87,
+    "question_text": "Derive a cost-based plan for distributed databases, and discuss the trade-offs in a workload with 97 concurrent transactions (variant 87).",
+    "question_type": "descriptive"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Evaluate",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "NoSQL stores"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Evaluate",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO4",
+     "cognitive_level": "Evaluate",
+     "course_id": 1013,
+     "description": "Evaluate ER modelling in relational database systems.",
+     "sort_order": 4
+    },
+    "learning_outcome_id": 61,
+    "marks": "5.00",
+    "question_number": 88,
+    "question_text": "Explain a B+ tree index for NoSQL stores, and discuss the trade-offs in a workload with 98 concurrent transactions (variant 88).",
+    "question_type": "problem_solving"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Create",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "data warehousing"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Create",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO5",
+     "cognitive_level": "Create",
+     "course_id": 1013,
+     "description": "Create concurrency control in relational database systems.",
+     "sort_order": 5
+    },
+    "learning_outcome_id": 62,
+    "marks": "5.00",
+    "question_number": 89,
+    "question_text": "Compare a 3NF decomposition for data warehousing, and discuss the trade-offs in a workload with 99 concurrent transactions (variant 89).",
+    "question_type": "true_false"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Remember",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "normalization"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Remember",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO1",
+     "cognitive_level": "Understand",
+     "course_id": 1013,
+     "description": "Understand indexing in relational database systems.",
+     "sort_order": 1
+    },
+    "learning_outcome_id": 58,
+    "marks": "5.00",
+    "question_number": 90,
+    "question_text": "Design a two-phase locking schedule for normalization, and discuss the trade-offs in a workload with 10 concurrent transactions (variant 90).",
+    "question_type": "mcq"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Understand",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "indexing"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Understand",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO2",
+     "cognitive_level": "Apply",
+     "course_id": 1013,
+     "description": "Apply transactions in relational database systems.",
+     "sort_order": 2
+    },
+    "learning_outcome_id": 59,
+    "marks": "5.00",
+    "question_number": 91,
+    "question_text": "Evaluate a write-ahead log for indexing, and discuss the trade-offs in a workload with 11 concurrent transactions (variant 91).",
+    "question_type": "short_answer"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Apply",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "transactions"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Apply",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO3",
+     "cognitive_level": "Analyze",
+     "course_id": 1013,
+     "description": "Analyze query optimisation in relational database systems.",
+     "sort_order": 3
+    },
+    "learning_outcome_id": 60,
+    "marks": "5.00",
+    "question_number": 92,
+    "question_text": "Describe a star schema for transactions, and discuss the trade-offs in a workload with 12 concurrent transactions (variant 92).",
+    "question_type": "descriptive"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Analyze",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "query optimisation"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Analyze",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO4",
+     "cognitive_level": "Evaluate",
+     "course_id": 1013,
+     "description": "Evaluate ER modelling in relational database systems.",
+     "sort_order": 4
+    },
+    "learning_outcome_id": 61,
+    "marks": "5.00",
+    "question_number": 93,
+    "question_text": "Analyse a hash join for query optimisation, and discuss the trade-offs in a workload with 13 concurrent transactions (variant 93).",
+    "question_type": "problem_solving"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Evaluate",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "ER modelling"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Evaluate",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO5",
+     "cognitive_level": "Create",
+     "course_id": 1013,
+     "description": "Create concurrency control in relational database systems.",
+     "sort_order": 5
+    },
+    "learning_outcome_id": 62,
+    "marks": "5.00",
+    "question_number": 94,
+    "question_text": "Justify an ER diagram for ER modelling, and discuss the trade-offs in a workload with 14 concurrent transactions (variant 94).",
+    "question_type": "true_false"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Create",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "concurrency control"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Create",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO1",
+     "cognitive_level": "Understand",
+     "course_id": 1013,
+     "description": "Understand indexing in relational database systems.",
+     "sort_order": 1
+    },
+    "learning_outcome_id": 58,
+    "marks": "5.00",
+    "question_number": 95,
+    "question_text": "Derive a cost-based plan for concurrency control, and discuss the trade-offs in a workload with 15 concurrent transactions (variant 95).",
+    "question_type": "mcq"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Remember",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "recovery"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Remember",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO2",
+     "cognitive_level": "Apply",
+     "course_id": 1013,
+     "description": "Apply transactions in relational database systems.",
+     "sort_order": 2
+    },
+    "learning_outcome_id": 59,
+    "marks": "5.00",
+    "question_number": 96,
+    "question_text": "Explain a B+ tree index for recovery, and discuss the trade-offs in a workload with 16 concurrent transactions (variant 96).",
+    "question_type": "short_answer"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Understand",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "distributed databases"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Understand",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO3",
+     "cognitive_level": "Analyze",
+     "course_id": 1013,
+     "description": "Analyze query optimisation in relational database systems.",
+     "sort_order": 3
+    },
+    "learning_outcome_id": 60,
+    "marks": "5.00",
+    "question_number": 97,
+    "question_text": "Compare a 3NF decomposition for distributed databases, and discuss the trade-offs in a workload with 17 concurrent transactions (variant 97).",
+    "question_type": "descriptive"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Apply",
+    "ai_difficulty_level": "hard",
+    "ai_question_type": null,
+    "ai_topics": [
+     "NoSQL stores"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Apply",
+    "difficulty_level": "hard",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO4",
+     "cognitive_level": "Evaluate",
+     "course_id": 1013,
+     "description": "Evaluate ER modelling in relational database systems.",
+     "sort_order": 4
+    },
+    "learning_outcome_id": 61,
+    "marks": "5.00",
+    "question_number": 98,
+    "question_text": "Design a two-phase locking schedule for NoSQL stores, and discuss the trade-offs in a workload with 18 concurrent transactions (variant 98).",
+    "question_type": "problem_solving"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Analyze",
+    "ai_difficulty_level": "easy",
+    "ai_question_type": null,
+    "ai_topics": [
+     "data warehousing"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Analyze",
+    "difficulty_level": "easy",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO5",
+     "cognitive_level": "Create",
+     "course_id": 1013,
+     "description": "Create concurrency control in relational database systems.",
+     "sort_order": 5
+    },
+    "learning_outcome_id": 62,
+    "marks": "5.00",
+    "question_number": 99,
+    "question_text": "Evaluate a write-ahead log for data warehousing, and discuss the trade-offs in a workload with 19 concurrent transactions (variant 99).",
+    "question_type": "true_false"
+   },
+   {
+    "ai_analysis_status": "completed",
+    "ai_analyzed_at": null,
+    "ai_cognitive_level": "Evaluate",
+    "ai_difficulty_level": "medium",
+    "ai_question_type": null,
+    "ai_topics": [
+     "normalization"
+    ],
+    "assessment_id": 108,
+    "cognitive_level": "Evaluate",
+    "difficulty_level": "medium",
+    "expected_answer": null,
+    "learning_outcome": {
+     "code": "LO1",
+     "cognitive_level": "Understand",
+     "course_id": 1013,
+     "description": "Understand indexing in relational database systems.",
+     "sort_order": 1
+    },
+    "learning_outcome_id": 58,
+    "marks": "5.00",
+    "question_number": 100,
+    "question_text": "Describe a star schema for normalization, and discuss the trade-offs in a workload with 20 concurrent transactions (variant 100).",
+    "question_type": "mcq"
+   }
+  ],
+  "recommendation_summary": {
+   "accepted_count": 0,
+   "dismissed_count": 0,
+   "high_priority_count": 1,
+   "low_priority_count": 0,
+   "medium_priority_count": 1,
+   "pending_count": 2,
+   "reviewed_count": 0,
+   "total_recommendations": 2
+  },
+  "recommendations": [
+   {
+    "category": "coverage",
+    "description": "d",
+    "evidence": null,
+    "explanation": "e",
+    "faculty_notes": null,
+    "priority": "high",
+    "problem": "Cover LO5",
+    "recommendation": "Consider adding an item for LO5.",
+    "source_metric": null,
+    "status": "pending",
+    "title": "Cover LO5"
+   },
+   {
+    "category": "difficulty",
+    "description": "d",
+    "evidence": null,
+    "explanation": "e",
+    "faculty_notes": null,
+    "priority": "medium",
+    "problem": "Rebalance difficulty",
+    "recommendation": "Consider adding harder items.",
+    "source_metric": null,
+    "status": "pending",
+    "title": "Rebalance difficulty"
+   }
+  ],
+  "report": {
+   "analysis_status": "completed",
+   "cognitive_level_balance_score": 68,
+   "difficulty_balance_score": 75,
+   "learning_outcome_alignment_score": 65,
+   "overall_score": 75,
+   "processing_error": null,
+   "rating": "FAIR",
+   "similar_questions_count": 1,
+   "similarity_score": 0.3,
+   "topic_coverage_score": 70,
+   "total_questions": 100
+  },
+  "similarity_analysis": null,
+  "similarity_matches": [],
+  "summary": {
+   "overall_quality_score": 70
+  }
+ },
+ "status": "success"
+}

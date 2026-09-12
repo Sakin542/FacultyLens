@@ -1,0 +1,135 @@
+{
+  "scenario": "full-workflow",
+  "profile": "fixed",
+  "generated_at": "2026-09-12T11:26:13.710Z",
+  "base_url": "http://127.0.0.1:8090",
+  "vus_max": 1,
+  "iterations": 9,
+  "http_reqs": 76,
+  "http_req_failed_rate": 0,
+  "app_errors": 0,
+  "rate_limited_429": 0,
+  "endpoints": {
+    "notifications": {
+      "avg": 12.8,
+      "min": 12,
+      "med": 13,
+      "p90": 13.2,
+      "p95": 13.6,
+      "p99": 13.9,
+      "max": 14,
+      "count": 9
+    },
+    "report_create_small": {
+      "avg": 75,
+      "min": 75,
+      "med": 75,
+      "p90": 75,
+      "p95": 75,
+      "p99": 75,
+      "max": 75,
+      "count": 1
+    },
+    "assessments_list": {
+      "avg": 15.2,
+      "min": 14,
+      "med": 15,
+      "p90": 16.4,
+      "p95": 17.2,
+      "p99": 17.8,
+      "max": 18,
+      "count": 9
+    },
+    "login": {
+      "avg": 164,
+      "min": 164,
+      "med": 164,
+      "p90": 164,
+      "p95": 164,
+      "p99": 164,
+      "max": 164,
+      "count": 1
+    },
+    "analytics_course": {
+      "avg": 110.4,
+      "min": 104,
+      "med": 108,
+      "p90": 118.4,
+      "p95": 123.2,
+      "p99": 127,
+      "max": 128,
+      "count": 9
+    },
+    "analytics_overview": {
+      "avg": 100,
+      "min": 38,
+      "med": 42,
+      "p90": 148.6,
+      "p95": 359.8,
+      "p99": 528.8,
+      "max": 571,
+      "count": 9
+    },
+    "analysis_read": {
+      "avg": 35.7,
+      "min": 22,
+      "med": 35,
+      "p90": 46,
+      "p95": 46,
+      "p99": 46,
+      "max": 46,
+      "count": 9
+    },
+    "journey_total": {
+      "avg": 365,
+      "min": 257,
+      "med": 286,
+      "p90": 480.6,
+      "p95": 727.8,
+      "p99": 925.6,
+      "max": 975,
+      "count": 9
+    },
+    "assessment_show": {
+      "avg": 28.2,
+      "min": 20,
+      "med": 26,
+      "p90": 37.2,
+      "p95": 37.6,
+      "p99": 37.9,
+      "max": 38,
+      "count": 9
+    },
+    "courses_list": {
+      "avg": 14,
+      "min": 13,
+      "med": 13,
+      "p90": 15.4,
+      "p95": 18.2,
+      "p99": 20.4,
+      "max": 21,
+      "count": 9
+    },
+    "course_show": {
+      "avg": 17.1,
+      "min": 16,
+      "med": 17,
+      "p90": 18.4,
+      "p95": 19.2,
+      "p99": 19.8,
+      "max": 20,
+      "count": 9
+    },
+    "report_download_csv": {
+      "avg": 22,
+      "min": 22,
+      "med": 22,
+      "p90": 22,
+      "p95": 22,
+      "p99": 22,
+      "max": 22,
+      "count": 1
+    }
+  },
+  "extra": {}
+}

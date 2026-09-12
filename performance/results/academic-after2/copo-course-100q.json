@@ -1,0 +1,74 @@
+{
+ "data": {
+  "course": {
+   "course_code": "PERF-001",
+   "course_name": "Performance Course 1"
+  },
+  "course_outcomes": [
+   {
+    "code": "LO1",
+    "cognitive_level": "Understand",
+    "description": "Understand indexing in relational database systems.",
+    "display_code": "CO1",
+    "sort_order": 1
+   },
+   {
+    "code": "LO2",
+    "cognitive_level": "Apply",
+    "description": "Apply transactions in relational database systems.",
+    "display_code": "CO2",
+    "sort_order": 2
+   },
+   {
+    "code": "LO3",
+    "cognitive_level": "Analyze",
+    "description": "Analyze query optimisation in relational database systems.",
+    "display_code": "CO3",
+    "sort_order": 3
+   },
+   {
+    "code": "LO4",
+    "cognitive_level": "Evaluate",
+    "description": "Evaluate ER modelling in relational database systems.",
+    "display_code": "CO4",
+    "sort_order": 4
+   },
+   {
+    "code": "LO5",
+    "cognitive_level": "Create",
+    "description": "Create concurrency control in relational database systems.",
+    "display_code": "CO5",
+    "sort_order": 5
+   }
+  ],
+  "current_run": null,
+  "disclaimer": "CO/PO mapping analysis provides evidence and review signals based on configured course outcomes, program outcomes, assessment mappings, and available performance data. It does not constitute an accreditation decision or guarantee institutional compliance. Faculty and authorized academic personnel remain responsible for final curriculum and outcome-mapping decisions.",
+  "mappings": [],
+  "program": null,
+  "program_outcomes": [],
+  "summary": {
+   "active_mapping_count": 0,
+   "co_count": 5,
+   "mapping_density_percent": 0,
+   "po_count": 0,
+   "possible_mapping_count": 0,
+   "question_count": 935,
+   "questions_mapped": 935
+  },
+  "thresholds": {
+   "co_concentration_percent": 60,
+   "co_min_coverage_percent": 5,
+   "cognitive_mismatch_percent": 60,
+   "expected_performance_percent": 70,
+   "mapping_density_review_percent": 90,
+   "mapping_levels": [
+    "NONE",
+    "LOW",
+    "MEDIUM",
+    "HIGH"
+   ],
+   "po_evidence_min_percent": 10
+  }
+ },
+ "status": "success"
+}

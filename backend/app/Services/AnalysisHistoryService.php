@@ -18,12 +18,17 @@ class AnalysisHistoryService
         $this->reportService = $reportService;
     }
 
+    /** List columns: everything except `findings` (100 KB+ JSON per row) — selecting it under ORDER BY made MySQL 8 raise error 1038 "Out of sort memory" at 100 reports (STEP 43). */
+    protected const LIST_COLUMNS = ['id', 'assessment_id', 'assessment_version_id', 'version_content_hash', 'analysis_version', 'is_current', 'overall_score', 'topic_coverage_score',
+        'learning_outcome_alignment_score', 'difficulty_balance_score', 'cognitive_level_balance_score', 'similarity_score', 'total_questions', 'similar_questions_count', 'analysis_status', 'analyzed_at', 'created_at', 'updated_at'];
+
     /**
      * Get paginated analysis history for a faculty user with multi-criteria filtering.
      */
     public function getHistory(User $user, array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
         $query = AnalysisReport::query()
+            ->select(self::LIST_COLUMNS)
             ->whereHas('assessment.course', function ($q) use ($user) {
                 $q->accessibleBy($user);
             })
@@ -150,6 +155,7 @@ class AnalysisHistoryService
         }
 
         $reports = AnalysisReport::where('assessment_id', $assessment->id)
+            ->select(self::LIST_COLUMNS)
             ->with(['assessmentReports' => fn($q) => $q->where('generation_status', 'completed')->latest(), 'assessmentVersion:id,version_number,version_label,status,content_hash'])
             ->orderByDesc('analysis_version')
             ->get();
@@ -442,7 +448,7 @@ class AnalysisHistoryService
     {
         $course = Course::query()->accessibleBy($user)->where('courses.id', $courseId)->firstOrFail();
 
-        $query = AnalysisReport::whereHas('assessment', function ($q) use ($courseId, $assessmentType) {
+        $query = AnalysisReport::select(self::LIST_COLUMNS)->whereHas('assessment', function ($q) use ($courseId, $assessmentType) {
             $q->where('course_id', $courseId);
             if ($assessmentType) {
                 $q->where('type', $assessmentType);

@@ -40,7 +40,7 @@ return [
             'connection' => env('DB_QUEUE_CONNECTION'),
             'table' => env('DB_QUEUE_TABLE', 'jobs'),
             'queue' => env('DB_QUEUE', 'default'),
-            'retry_after' => (int) env('DB_QUEUE_RETRY_AFTER', 90),
+            'retry_after' => (int) env('DB_QUEUE_RETRY_AFTER', 1900),
             'after_commit' => false,
         ],
 
@@ -68,8 +68,11 @@ return [
             'driver' => 'redis',
             'connection' => env('REDIS_QUEUE_CONNECTION', 'default'),
             'queue' => env('REDIS_QUEUE', 'default'),
-            'retry_after' => (int) env('REDIS_QUEUE_RETRY_AFTER', 90),
-            'block_for' => null,
+            // STEP 43: must exceed the longest job timeout (RunAiEvaluationJob 1800 s, worker --timeout=900),
+            // otherwise a second worker re-runs a job that is still executing. 90 s allowed duplicate execution.
+            'retry_after' => (int) env('REDIS_QUEUE_RETRY_AFTER', 1900),
+            // STEP 43: block on the Redis list instead of polling every --sleep seconds (measured ~2.1 s queue wait per job).
+            'block_for' => (int) env('REDIS_QUEUE_BLOCK_FOR', 5),
             'after_commit' => false,
         ],
 

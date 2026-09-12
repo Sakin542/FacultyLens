@@ -1,0 +1,22 @@
+ts,container,cpu_pct,mem_used,mem_pct,net_io,block_io
+17:12:34,facultylens-perf-scheduler,0.07%,32.28MiB / 7.317GiB,0.43%,1.79kB / 911B,0B / 365kB
+17:12:34,facultylens-perf-worker,0.07%,32.62MiB / 7.317GiB,0.44%,11.4kB / 74.8kB,0B / 709kB
+17:12:34,facultylens-perf-app,23.81%,57.38MiB / 7.317GiB,0.77%,89.6kB / 66.6kB,1.65MB / 717kB
+17:12:34,facultylens-perf-nginx,0.29%,15.47MiB / 7.317GiB,0.21%,862MB / 880MB,12.8MB / 4.1kB
+17:12:34,facultylens-perf-redis,0.43%,11.13MiB / 7.317GiB,0.15%,534MB / 1.12GB,35.2MB / 723MB
+17:12:34,facultylens-perf-mysql,6.20%,615.2MiB / 7.317GiB,8.21%,266MB / 916MB,44.2MB / 2.47GB
+17:12:34,facultylens-perf-ai-service,0.11%,464.9MiB / 7.317GiB,6.21%,144MB / 7.06MB,553MB / 0B
+17:12:41,facultylens-perf-scheduler,0.09%,32.28MiB / 7.317GiB,0.43%,1.79kB / 911B,0B / 709kB
+17:12:41,facultylens-perf-worker,0.00%,32.62MiB / 7.317GiB,0.44%,12.5kB / 84.5kB,0B / 709kB
+17:12:41,facultylens-perf-app,22.65%,56.49MiB / 7.317GiB,0.75%,380kB / 274kB,1.65MB / 717kB
+17:12:41,facultylens-perf-nginx,0.27%,15.48MiB / 7.317GiB,0.21%,863MB / 880MB,12.8MB / 4.1kB
+17:12:41,facultylens-perf-redis,0.43%,11.14MiB / 7.317GiB,0.15%,534MB / 1.12GB,35.3MB / 723MB
+17:12:41,facultylens-perf-mysql,2.61%,615.2MiB / 7.317GiB,8.21%,266MB / 916MB,44.2MB / 2.47GB
+17:12:41,facultylens-perf-ai-service,0.10%,464.9MiB / 7.317GiB,6.21%,144MB / 7.06MB,553MB / 0B
+17:12:48,facultylens-perf-scheduler,0.07%,32.28MiB / 7.317GiB,0.43%,1.79kB / 911B,0B / 709kB
+17:12:48,facultylens-perf-worker,0.07%,32.62MiB / 7.317GiB,0.44%,13.9kB / 97.5kB,0B / 709kB
+17:12:48,facultylens-perf-app,23.64%,55.98MiB / 7.317GiB,0.75%,675kB / 488kB,1.65MB / 717kB
+17:12:48,facultylens-perf-nginx,0.26%,15.47MiB / 7.317GiB,0.21%,863MB / 880MB,12.8MB / 4.1kB
+17:12:48,facultylens-perf-redis,2.84%,11.29MiB / 7.317GiB,0.15%,534MB / 1.12GB,35.3MB / 723MB
+17:12:48,facultylens-perf-mysql,3.06%,615.2MiB / 7.317GiB,8.21%,266MB / 916MB,44.2MB / 2.48GB
+17:12:48,facultylens-perf-ai-service,0.09%,464.9MiB / 7.317GiB,6.21%,144MB / 7.06MB,553MB / 0B

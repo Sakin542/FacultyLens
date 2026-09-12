@@ -1,0 +1,57 @@
+{
+  "scenario": "queue",
+  "profile": "baseline",
+  "generated_at": "2026-09-12T11:51:55.741Z",
+  "base_url": "http://127.0.0.1:8090",
+  "vus_max": 1,
+  "iterations": 1,
+  "http_reqs": 44,
+  "http_req_failed_rate": 0,
+  "app_errors": 0,
+  "rate_limited_429": 0,
+  "endpoints": {
+    "queue_all_jobs_wall": {
+      "avg": 2504,
+      "min": 2504,
+      "med": 2504,
+      "p90": 2504,
+      "p95": 2504,
+      "p99": 2504,
+      "max": 2504,
+      "count": 1
+    },
+    "queue_accept": {
+      "avg": 31.9,
+      "min": 24,
+      "med": 27.5,
+      "p90": 34,
+      "p95": 56.5,
+      "p99": 74.5,
+      "max": 79,
+      "count": 10
+    },
+    "idempotency_duplicate_reports": {
+      "avg": 0,
+      "min": 0,
+      "med": 0,
+      "p90": 0,
+      "p95": 0,
+      "p99": 0,
+      "max": 0,
+      "count": 1
+    },
+    "queue_job_total": {
+      "avg": 2226.3,
+      "min": 2185,
+      "med": 2224.5,
+      "p90": 2263.3,
+      "p95": 2269.2,
+      "p99": 2273.8,
+      "max": 2275,
+      "count": 10
+    }
+  },
+  "extra": {
+    "jobs": 10
+  }
+}

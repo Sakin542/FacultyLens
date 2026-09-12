@@ -1,0 +1,171 @@
+{
+ "final_status": "failed",
+ "timeline": [
+  {
+   "t": 3.3,
+   "status": "processing "
+  },
+  {
+   "t": 6.5,
+   "status": "processing "
+  },
+  {
+   "t": 9.8,
+   "status": "processing "
+  },
+  {
+   "t": 13.0,
+   "status": "processing "
+  },
+  {
+   "t": 16.3,
+   "status": "processing "
+  },
+  {
+   "t": 19.6,
+   "status": "processing "
+  },
+  {
+   "t": 22.8,
+   "status": "processing "
+  },
+  {
+   "t": 26.1,
+   "status": "processing "
+  },
+  {
+   "t": 29.3,
+   "status": "processing "
+  },
+  {
+   "t": 32.6,
+   "status": "processing "
+  },
+  {
+   "t": 35.8,
+   "status": "processing "
+  },
+  {
+   "t": 39.0,
+   "status": "processing "
+  },
+  {
+   "t": 42.3,
+   "status": "processing "
+  },
+  {
+   "t": 45.5,
+   "status": "processing "
+  },
+  {
+   "t": 48.7,
+   "status": "processing "
+  },
+  {
+   "t": 51.9,
+   "status": "processing "
+  },
+  {
+   "t": 55.1,
+   "status": "processing "
+  },
+  {
+   "t": 58.4,
+   "status": "processing "
+  },
+  {
+   "t": 61.7,
+   "status": "processing "
+  },
+  {
+   "t": 64.9,
+   "status": "processing "
+  },
+  {
+   "t": 68.2,
+   "status": "processing "
+  },
+  {
+   "t": 71.4,
+   "status": "processing "
+  },
+  {
+   "t": 74.7,
+   "status": "processing "
+  },
+  {
+   "t": 77.9,
+   "status": "processing "
+  },
+  {
+   "t": 81.2,
+   "status": "processing "
+  },
+  {
+   "t": 84.4,
+   "status": "processing "
+  },
+  {
+   "t": 87.7,
+   "status": "processing "
+  },
+  {
+   "t": 91.0,
+   "status": "processing "
+  },
+  {
+   "t": 94.2,
+   "status": "processing "
+  },
+  {
+   "t": 97.5,
+   "status": "processing "
+  },
+  {
+   "t": 100.7,
+   "status": "processing "
+  },
+  {
+   "t": 104.0,
+   "status": "processing "
+  },
+  {
+   "t": 107.2,
+   "status": "processing "
+  },
+  {
+   "t": 110.5,
+   "status": "processing "
+  },
+  {
+   "t": 113.8,
+   "status": "processing "
+  },
+  {
+   "t": 117.0,
+   "status": "processing "
+  },
+  {
+   "t": 120.2,
+   "status": "failed "
+  },
+  {
+   "t": 123.5,
+   "status": "failed "
+  },
+  {
+   "t": 126.7,
+   "status": "failed "
+  },
+  {
+   "t": 129.9,
+   "status": "failed "
+  },
+  {
+   "t": 133.2,
+   "status": "failed "
+  }
+ ],
+ "pause_seconds": 45,
+ "ai_service_timeout_seconds": 120
+}

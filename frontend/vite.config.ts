@@ -32,8 +32,9 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/tests/setup.ts',
-    // Browser journeys live in tests/e2e and run with Playwright (`npm run test:e2e`)
-    exclude: ['node_modules/**', 'dist/**', 'tests/e2e/**'],
+    // Browser journeys live in tests/e2e (Playwright, `npm run test:e2e`); tests/perf holds the STEP 43 Playwright
+    // page-timing probe that runs against the performance stack (see performance/README.md)
+    exclude: ['node_modules/**', 'dist/**', 'tests/e2e/**', 'tests/perf/**'],
   },
 });
 

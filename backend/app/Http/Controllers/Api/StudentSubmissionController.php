@@ -259,7 +259,11 @@ class StudentSubmissionController extends Controller
             return $this->forbidden('Unauthorized access to this submission.');
         }
 
-        $this->service->deleteSubmission($submission, $request->user());
+        try {
+            $this->service->deleteSubmission($submission, $request->user());
+        } catch (SubmissionException $e) {
+            return $this->error($e);
+        }
 
         return response()->json(['status' => 'success', 'message' => 'Submission deleted.']);
     }

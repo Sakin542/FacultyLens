@@ -5,9 +5,10 @@
 #   ai-service: ruff + pytest
 #   e2e       : Playwright journeys 1-8     (needs `docker compose up -d`; -E2E)
 #   golden    : bash Golden Path            (needs Docker stack + Git Bash; -Golden)
+#   outage    : AI outage regression        (stops/starts the ai-service container; -Outage) — STEP 42
 #
-# Usage: powershell -ExecutionPolicy Bypass -File scripts/test-all.ps1 [-E2E] [-Golden] [-SkipAi] [-SkipFrontend] [-SkipBackend]
-param([switch]$E2E, [switch]$Golden, [switch]$SkipAi, [switch]$SkipFrontend, [switch]$SkipBackend)
+# Usage: powershell -ExecutionPolicy Bypass -File scripts/test-all.ps1 [-E2E] [-Golden] [-Outage] [-SkipAi] [-SkipFrontend] [-SkipBackend]
+param([switch]$E2E, [switch]$Golden, [switch]$Outage, [switch]$SkipAi, [switch]$SkipFrontend, [switch]$SkipBackend)
 $ErrorActionPreference = 'Continue'
 Set-Location (Join-Path $PSScriptRoot '..')
 $results = New-Object System.Collections.ArrayList
@@ -44,6 +45,14 @@ if ($E2E) {
 if ($Golden) {
     if (Backend-Up) { Run-Suite 'golden path (Docker, live AI)' '.' 'bash backend/tests/e2e_golden_path.sh' }
     else { Write-Host "`n> golden path - SKIPPED (backend not reachable on :8080)"; [void]$results.Add([pscustomobject]@{ Suite = 'golden path'; Result = 'SKIPPED'; Time = '-' }) }
+}
+if ($Outage) {
+    if (Backend-Up) { Run-Suite 'AI outage regression (Docker stop/start ai-service)' '.' 'bash backend/tests/e2e_ai_outage.sh' }
+    else { Write-Host "`n> AI outage regression - SKIPPED (backend not reachable on :8080)"; [void]$results.Add([pscustomobject]@{ Suite = 'AI outage regression'; Result = 'SKIPPED'; Time = '-' }) }
+}
+if ($Outage) {
+    if (Backend-Up) { Run-Suite 'AI outage regression (Docker stop/start ai-service)' '.' 'bash backend/tests/e2e_ai_outage.sh' }
+    else { Write-Host "`n> AI outage regression - SKIPPED (backend not reachable on :8080)"; [void]$results.Add([pscustomobject]@{ Suite = 'AI outage regression'; Result = 'SKIPPED'; Time = '-' }) }
 }
 
 Write-Host ""; Write-Host ("=" * 62); Write-Host " FacultyLens test summary"; Write-Host ("=" * 62)

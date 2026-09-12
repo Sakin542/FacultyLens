@@ -1,0 +1,63 @@
+time="2026-09-12T23:27:19+06:00" level=info msg="[rate] login (20/min/IP): first 429 at request #21 · statuses {\"401\":20,\"429\":10}" source=console
+time="2026-09-12T23:27:20+06:00" level=info msg="[rate] GET /auth/user (120/min/user): first 429 at request #121 · statuses {\"200\":120,\"429\":10}" source=console
+time="2026-09-12T23:27:21+06:00" level=info msg="[rate] POST analyze?async=1 (30/min/user): first 429 at request #31 · statuses {\"202\":30,\"429\":5}" source=console
+time="2026-09-12T23:27:21+06:00" level=info msg="[rate] POST submissions/import (25/min/user): first 429 at request #26 · statuses {\"422\":25,\"429\":5}" source=console
+
+{
+  "other_user_status": {
+    "avg": 200,
+    "min": 200,
+    "med": 200,
+    "p90": 200,
+    "p95": 200,
+    "p99": null,
+    "max": 200
+  },
+  "first429_uploads": {
+    "avg": 26,
+    "min": 26,
+    "med": 26,
+    "p90": 26,
+    "p95": 26,
+    "p99": null,
+    "max": 26
+  },
+  "first429_ai": {
+    "avg": 31,
+    "min": 31,
+    "med": 31,
+    "p90": 31,
+    "p95": 31,
+    "p99": null,
+    "max": 31
+  },
+  "first429_api": {
+    "avg": 121,
+    "min": 121,
+    "med": 121,
+    "p90": 121,
+    "p95": 121,
+    "p99": null,
+    "max": 121
+  },
+  "first429_login": {
+    "avg": 21,
+    "min": 21,
+    "med": 21,
+    "p90": 21,
+    "p95": 21,
+    "p99": null,
+    "max": 21
+  }
+}
+── resources during rate-limits-baseline-after (8s) ──
+  facultylens-perf-ai-service      cpu avg    0.1%  max    0.1%   mem max   5.8% (438.2MiB)  samples 1
+  facultylens-perf-app             cpu avg   72.7%  max   72.7%   mem max   0.7% (54.8MiB)  samples 1
+  facultylens-perf-mysql           cpu avg   12.2%  max   12.2%   mem max   8.8% (655.5MiB)  samples 1
+  facultylens-perf-nginx           cpu avg    0.3%  max    0.3%   mem max   0.2% (14.73MiB)  samples 1
+  facultylens-perf-redis           cpu avg    0.7%  max    0.7%   mem max   0.1% (7.918MiB)  samples 1
+  facultylens-perf-scheduler       cpu avg    0.1%  max    0.1%   mem max   0.4% (32.3MiB)  samples 1
+  facultylens-perf-worker          cpu avg    0.1%  max    0.1%   mem max   0.4% (32.62MiB)  samples 1
+  mysql: Threads_connected	2 Max_used_connections	3 max_connections	200  (max_used before run: 3)
+  redis: used_memory_human:1.46M
+  redis queue depth: 0
