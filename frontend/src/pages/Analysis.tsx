@@ -266,6 +266,14 @@ export const Analysis: React.FC = () => {
         analysisStatus={analysis_status}
       />
 
+      {/* A failed "Run AI Analysis" attempt must be visible even when a previous dashboard is still shown */}
+      {error && !isRunningAnalysis && (
+        <div role="alert" className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 dark:bg-red-950/30 dark:border-red-900 px-4 py-3 text-sm text-red-700 dark:text-red-300">
+          <span className="font-semibold shrink-0">Analysis could not run.</span>
+          <span>{error}</span>
+        </div>
+      )}
+
       {/* Processing State */}
       {isProcessing ? (
         <AnalysisLoading isProcessing={true} />

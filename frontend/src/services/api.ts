@@ -59,6 +59,29 @@ export class ApiError extends Error {
 }
 
 /**
+ * Human-readable fallback for HTTP failures where the backend did not supply a message
+ * (gateway error pages, timeouts, throttling). Never exposes technical details.
+ */
+export function friendlyStatusMessage(status: number): string {
+  switch (status) {
+    case 400: return 'The request could not be processed. Please review your input and try again.';
+    case 403: return 'You do not have permission to perform this action.';
+    case 404: return 'The requested record could not be found. It may have been removed.';
+    case 409: return 'This action conflicts with the current state of the record. Refresh and try again.';
+    case 413: return 'The uploaded file is too large.';
+    case 422: return 'Some of the submitted values are invalid.';
+    case 429: return 'Too many requests. Please wait a moment and try again.';
+    case 502:
+    case 503: return 'A required service is temporarily unavailable. Please try again shortly.';
+    case 504: return 'The server took too long to respond. Please try again.';
+    default:
+      return status >= 500
+        ? 'Something went wrong on our side. Please try again later.'
+        : `Request failed with status ${status}`;
+  }
+}
+
+/**
  * Get cookie value by name from document.cookie
  */
 export function getCookie(name: string): string | null {
@@ -113,24 +136,32 @@ export async function apiClient<T>(
     ...(xsrfToken ? { 'X-XSRF-TOKEN': xsrfToken } : {}),
   };
 
-  const response = await fetch(url, {
-    ...options,
-    credentials: 'include', // Always include Sanctum session cookies
-    headers: {
-      ...defaultHeaders,
-      ...(options.headers as Record<string, string>),
-    },
-  });
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      ...options,
+      credentials: 'include', // Always include Sanctum session cookies
+      headers: {
+        ...defaultHeaders,
+        ...(options.headers as Record<string, string>),
+      },
+    });
+  } catch (networkError) {
+    // fetch() only rejects on network-level failures (server down, DNS, CORS, offline)
+    throw new ApiError(0, 'Unable to reach the FacultyLens server. Check your connection and try again.', {
+      cause: networkError instanceof Error ? networkError.message : String(networkError),
+    });
+  }
 
   if (!response.ok) {
     let errorData: Record<string, unknown> = {};
     try {
       errorData = await response.json();
     } catch {
-      // response is not JSON
+      // response is not JSON (e.g. a gateway error page)
     }
 
-    let message = (errorData.message as string) || `Request failed with status ${response.status}`;
+    let message = (errorData.message as string) || friendlyStatusMessage(response.status);
 
     if (response.status === 401) {
       message = (errorData.message as string) || 'Invalid email or password';
@@ -141,6 +172,9 @@ export async function apiClient<T>(
       if (firstError) {
         message = firstError;
       }
+    } else if (response.status >= 500 && typeof errorData.message === 'string' && /exception|stack|trace|sqlstate|\.php/i.test(errorData.message)) {
+      // Never surface internal details even if a misconfigured server returns them
+      message = friendlyStatusMessage(response.status);
     }
 
     throw new ApiError(

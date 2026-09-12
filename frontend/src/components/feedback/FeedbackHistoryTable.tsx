@@ -116,6 +116,7 @@ export const FeedbackHistoryTable: React.FC<FeedbackHistoryTableProps> = ({
         {/* Filter Selects */}
         <div className="flex items-center gap-2">
           <select
+            aria-label="Filter feedback by decision"
             value={decisionFilter}
             onChange={(e) => onDecisionFilterChange(e.target.value)}
             className="px-2.5 py-1.5 rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] text-xs text-sage-800 dark:text-white"
@@ -127,6 +128,7 @@ export const FeedbackHistoryTable: React.FC<FeedbackHistoryTableProps> = ({
           </select>
 
           <select
+            aria-label="Filter feedback by rating"
             value={ratingFilter}
             onChange={(e) => onRatingFilterChange(e.target.value)}
             className="px-2.5 py-1.5 rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] text-xs text-sage-800 dark:text-white"

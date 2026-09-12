@@ -110,6 +110,7 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
           <div className="flex items-center gap-1">
             <span className="text-sage-500 font-medium">Priority:</span>
             <select
+              aria-label="Filter recommendations by priority"
               value={priorityFilter}
               onChange={(e) => setPriorityFilter(e.target.value)}
               className="px-2 py-1 rounded-md border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] text-xs text-sage-800 dark:text-white"
@@ -125,6 +126,7 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
           <div className="flex items-center gap-1">
             <span className="text-sage-500 font-medium">Status:</span>
             <select
+              aria-label="Filter recommendations by status"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
               className="px-2 py-1 rounded-md border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] text-xs text-sage-800 dark:text-white"
@@ -142,6 +144,7 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
             <div className="flex items-center gap-1">
               <span className="text-sage-500 font-medium">Category:</span>
               <select
+                aria-label="Filter recommendations by category"
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
                 className="px-2 py-1 rounded-md border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] text-xs text-sage-800 dark:text-white capitalize"

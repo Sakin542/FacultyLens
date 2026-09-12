@@ -220,6 +220,7 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
             </div>
 
             <select
+              aria-label="Filter recommendations by priority"
               value={selectedPriority}
               onChange={(e) => setSelectedPriority(e.target.value)}
               className="text-xs px-2.5 py-1.5 rounded-lg border border-sage-200 bg-white font-medium text-sage-800 focus:outline-none focus:border-sage-700"
@@ -231,6 +232,7 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
             </select>
 
             <select
+              aria-label="Filter recommendations by category"
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="text-xs px-2.5 py-1.5 rounded-lg border border-sage-200 bg-white font-medium text-sage-800 focus:outline-none focus:border-sage-700"

@@ -1,0 +1,32 @@
+# STEP 41 — override used ONLY by scripts/clean-start-test.sh.
+# Runs a second, fully isolated copy of the dev stack (project "facultylens-clean"): new container names,
+# different host ports and brand-new named volumes, so the developer's running stack and data are untouched.
+# The application key is injected as an environment variable so `key:generate` never has to touch the shared .env.
+services:
+  app:
+    container_name: facultylens-clean-app
+    ports: !override
+      - "8090:8000"
+    environment:
+      - APP_KEY=${CLEAN_APP_KEY}
+      - CACHE_STORE=database
+      - SESSION_DRIVER=database
+      - QUEUE_CONNECTION=database
+  queue-worker:
+    container_name: facultylens-clean-queue-worker
+    environment:
+      - APP_KEY=${CLEAN_APP_KEY}
+      - CACHE_STORE=database
+      - SESSION_DRIVER=database
+  mysql:
+    container_name: facultylens-clean-mysql
+    ports: !override
+      - "3308:3306"
+  phpmyadmin:
+    container_name: facultylens-clean-phpmyadmin
+    ports: !override
+      - "8181:80"
+  ai-service:
+    container_name: facultylens-clean-ai-service
+    ports: !override
+      - "8011:8001"

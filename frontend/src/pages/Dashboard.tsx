@@ -156,7 +156,9 @@ export const Dashboard: React.FC = () => {
   useEffect(() => { void load(); }, [load]);
 
   const displayName = user?.name || user?.fullName || 'Faculty Member';
-  const firstName = displayName.split(/\s+/)[0];
+  // "Dr. Grace Hopper" → "Grace" (never greet with a bare honorific such as "Dr.")
+  const nameTokens = displayName.split(/\s+/).filter(Boolean);
+  const firstName = (nameTokens.find((t) => !/^(dr|prof|professor|mr|mrs|ms|mx|md|phd)\.?$/i.test(t)) ?? nameTokens[0] ?? 'Faculty').replace(/[.,]+$/, '');
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
 

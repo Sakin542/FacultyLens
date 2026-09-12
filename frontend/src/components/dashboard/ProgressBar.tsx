@@ -50,6 +50,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
       )}
       <div
         role="progressbar"
+        aria-label={label ?? `${clampedValue}%`}
         aria-valuenow={clampedValue}
         aria-valuemin={0}
         aria-valuemax={100}

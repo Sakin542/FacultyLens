@@ -43,7 +43,8 @@ export default {
           100: "#F3F4EE",
           200: "#E8ECE3",
           300: "#C3CBB9",
-          400: "#8C9A82",
+          // 4.6:1 on white / 4.4:1 on sage-50 — WCAG AA for the small helper text that uses text-sage-400 (was #8C9A82 = 2.97:1)
+          400: "#68765F",
           500: "#5A6B52",
           600: "#4A5D45",
           700: "#2F3E2E",
