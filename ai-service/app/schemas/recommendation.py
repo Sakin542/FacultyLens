@@ -6,7 +6,37 @@ evidence-grounded recommendation outputs for university faculty decision support
 
 from typing import List, Optional, Dict, Any
 from enum import Enum
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
+
+
+# STEP 44 finding: the quality engine (STEP 13) and this recommendation engine (STEP 14) name the same facts
+# differently (e.g. ``question_percentage`` vs ``percentage``, ``assessment_expected_marks`` vs
+# ``total_marks_expected``). Feeding a quality result straight into these inputs silently left the unmatched
+# fields at their defaults, so "no easy questions" fired for every assessment while marks-mismatch,
+# mark-concentration and single-format problems could never fire. The validators below accept either shape.
+
+
+def _pct(items: List[Dict[str, Any]], key: str, names: List[str], field: str = "question_percentage") -> float:
+    wanted = {n.lower() for n in names}
+    return round(sum(float(i.get(field) or 0.0) for i in items if isinstance(i, dict) and str(i.get(key, "")).lower() in wanted), 2)
+
+
+def _with_percentage(items: Any, extra: Optional[Dict[str, str]] = None) -> Any:
+    if not isinstance(items, list):
+        return items
+    out = []
+    for i in items:
+        if isinstance(i, dict):
+            row = dict(i)
+            if row.get("percentage") is None and row.get("question_percentage") is not None:
+                row["percentage"] = row["question_percentage"]
+            for target, source in (extra or {}).items():
+                if row.get(target) is None and row.get(source) is not None:
+                    row[target] = row[source]
+            out.append(row)
+        else:
+            out.append(i)
+    return out
 
 
 class RecommendationPriority(str, Enum):
@@ -49,6 +79,20 @@ class TopicAnalysisInput(BaseModel):
     coverage_percentage: Optional[float] = 0.0
     topics: Optional[List[Dict[str, Any]]] = []
 
+    @model_validator(mode="before")
+    @classmethod
+    def _from_quality_engine(cls, data: Any) -> Any:
+        if not isinstance(data, dict) or "total_topics_defined" not in data:
+            return data
+        d = dict(data)
+        total, covered = int(d.get("total_topics_defined") or 0), int(d.get("covered_topics_count") or 0)
+        d.setdefault("total_topics", total)
+        d.setdefault("covered_topics", covered)
+        d.setdefault("uncovered_topics", max(0, total - covered))
+        d.setdefault("coverage_percentage", d.get("score") or 0.0)
+        d["topics"] = _with_percentage(d.get("topics"), {"name": "topic", "status": "coverage_status"})
+        return d
+
 
 class LoAnalysisInput(BaseModel):
     status: Optional[str] = None
@@ -58,6 +102,22 @@ class LoAnalysisInput(BaseModel):
     uncovered_los: Optional[int] = 0
     coverage_percentage: Optional[float] = 0.0
     learning_outcomes: Optional[List[Dict[str, Any]]] = []
+
+    @model_validator(mode="before")
+    @classmethod
+    def _from_quality_engine(cls, data: Any) -> Any:
+        if not isinstance(data, dict) or "total_los_defined" not in data:
+            return data
+        d = dict(data)
+        total, covered = int(d.get("total_los_defined") or 0), int(d.get("covered_los_count") or 0)
+        los = d.get("learning_outcomes") or []
+        d.setdefault("total_los", total)
+        d.setdefault("covered_los", covered)
+        d.setdefault("uncovered_los", max(0, total - covered))
+        d.setdefault("weakly_covered_los", sum(1 for lo in los if isinstance(lo, dict) and str(lo.get("coverage_status", "")).upper() == "WEAK"))
+        d.setdefault("coverage_percentage", d.get("score") or 0.0)
+        d["learning_outcomes"] = _with_percentage(los, {"status": "coverage_status", "strong_matches_count": "strongly_aligned_questions", "weak_matches_count": "weakly_aligned_questions"})
+        return d
 
 
 class DifficultyAnalysisInput(BaseModel):
@@ -73,6 +133,23 @@ class DifficultyAnalysisInput(BaseModel):
     total_deviation: Optional[float] = 0.0
     distribution: Optional[List[Dict[str, Any]]] = []
 
+    @model_validator(mode="before")
+    @classmethod
+    def _from_quality_engine(cls, data: Any) -> Any:
+        if not isinstance(data, dict) or not isinstance(data.get("distribution"), list) or "easy_percentage" in data:
+            return data
+        d = dict(data)
+        dist = [i for i in d["distribution"] if isinstance(i, dict)]
+        if not dist or "question_percentage" not in dist[0]:
+            return data
+        targets = {str(i.get("level", "")).lower(): i.get("target_percentage") for i in dist}
+        d.setdefault("balance_score", d.get("score") or 0.0)
+        d["easy_percentage"], d["medium_percentage"], d["hard_percentage"] = _pct(dist, "level", ["Easy"]), _pct(dist, "level", ["Medium"]), _pct(dist, "level", ["Hard"])
+        for level, default in (("easy", 30.0), ("medium", 50.0), ("hard", 20.0)):
+            d.setdefault(f"target_{level}_percentage", targets.get(level) if targets.get(level) is not None else default)
+        d["distribution"] = _with_percentage(dist)
+        return d
+
 
 class CognitiveAnalysisInput(BaseModel):
     status: Optional[str] = None
@@ -85,6 +162,23 @@ class CognitiveAnalysisInput(BaseModel):
     higher_order_percentage: Optional[float] = 0.0
     distribution: Optional[List[Dict[str, Any]]] = []
 
+    @model_validator(mode="before")
+    @classmethod
+    def _from_quality_engine(cls, data: Any) -> Any:
+        if not isinstance(data, dict) or "shannon_entropy" not in data:
+            return data
+        d = dict(data)
+        dist = [i for i in (d.get("distribution") or []) if isinstance(i, dict)]
+        entropy, max_entropy = float(d.get("shannon_entropy") or 0.0), float(d.get("max_possible_entropy") or 0.0)
+        d.setdefault("diversity_score", d.get("score") or 0.0)
+        d.setdefault("entropy", entropy)
+        d.setdefault("normalized_entropy", round(entropy / max_entropy * 100.0, 2) if max_entropy > 0 else 0.0)
+        d.setdefault("lower_order_percentage", _pct(dist, "level", ["Remember", "Understand"]))
+        d.setdefault("medium_order_percentage", _pct(dist, "level", ["Apply", "Analyze"]))
+        d.setdefault("higher_order_percentage", _pct(dist, "level", ["Evaluate", "Create"]))
+        d["distribution"] = _with_percentage(dist)
+        return d
+
 
 class QuestionDiversityInput(BaseModel):
     status: Optional[str] = None
@@ -93,6 +187,17 @@ class QuestionDiversityInput(BaseModel):
     entropy: Optional[float] = 0.0
     normalized_entropy: Optional[float] = 0.0
     distribution: Optional[List[Dict[str, Any]]] = []
+
+    @model_validator(mode="before")
+    @classmethod
+    def _from_quality_engine(cls, data: Any) -> Any:
+        if not isinstance(data, dict) or "unique_types_count" not in data:
+            return data
+        d = dict(data)
+        d.setdefault("diversity_score", d.get("score") or 0.0)
+        d.setdefault("entropy", d.get("shannon_entropy") or 0.0)
+        d["distribution"] = _with_percentage(d.get("distribution"), {"type": "question_type"})
+        return d
 
 
 class MarksAnalysisInput(BaseModel):
@@ -107,6 +212,25 @@ class MarksAnalysisInput(BaseModel):
     has_mark_concentration: Optional[bool] = False
     mean_marks: Optional[float] = 0.0
     std_dev_marks: Optional[float] = 0.0
+
+    @model_validator(mode="before")
+    @classmethod
+    def _from_quality_engine(cls, data: Any) -> Any:
+        if not isinstance(data, dict) or "total_question_marks" not in data:
+            return data
+        d = dict(data)
+        actual = float(d.get("total_question_marks") or 0.0)
+        expected = d.get("assessment_expected_marks")
+        d.setdefault("integrity_score", d.get("score") or 0.0)
+        d.setdefault("total_marks_actual", actual)
+        d.setdefault("total_marks_expected", float(expected) if expected is not None else actual)
+        d.setdefault("marks_match", bool(d.get("marks_match_assessment", True)))
+        d.setdefault("discrepancy", round(actual - float(expected), 2) if expected is not None else 0.0)
+        d.setdefault("max_single_question_marks", d.get("max_marks") or 0.0)
+        d.setdefault("max_single_question_percentage", d.get("highest_single_question_share") or 0.0)
+        d.setdefault("has_mark_concentration", bool(d.get("high_concentration_detected", False)))
+        d.setdefault("mean_marks", d.get("average_marks") or 0.0)
+        return d
 
 
 class SimilarityAnalysisInput(BaseModel):

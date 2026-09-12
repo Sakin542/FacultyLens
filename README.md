@@ -666,7 +666,9 @@ The dashboard at `/ai-evaluation` shows classification metrics (accuracy, macro/
 similarity precision/recall at the production thresholds plus an evaluation-only threshold sweep, grading MAE/RMSE/agreement rates,
 RAG groundedness/citation/refusal/prompt-injection results, question-generation constraint satisfaction, quality gates, regression
 detection, run comparison, example-level error analysis and PDF/CSV/JSON export. Every number comes from a persisted evaluation run;
-tasks without a run show **Not evaluated yet**. See [docs/ai-evaluation.md](docs/ai-evaluation.md).
+tasks without a run show **Not evaluated yet**. See [docs/ai-evaluation.md](docs/ai-evaluation.md). Measured accuracy of every AI
+component on the STEP 44 benchmark (with confidence intervals, error analysis and regression gates) is in
+[docs/AI_ACCURACY_EVALUATION_REPORT.md](docs/AI_ACCURACY_EVALUATION_REPORT.md); run it with `bash scripts/run-ai-evaluation.sh`.
 
 ---
 

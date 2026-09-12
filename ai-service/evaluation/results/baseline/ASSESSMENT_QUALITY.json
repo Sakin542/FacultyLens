@@ -1,0 +1,266 @@
+{
+  "component": "ASSESSMENT_QUALITY",
+  "status": "ACCEPTABLE",
+  "split": "ALL(cases)",
+  "sample_size": 8,
+  "headline": {
+    "metric": "flag_agreement",
+    "value": 0.75,
+    "ci95": [
+      0.6122,
+      0.8508
+    ],
+    "higher_is_better": true,
+    "sample_size": 8
+  },
+  "metrics": {
+    "flag_agreement": 0.75,
+    "flag_agreement_ci95": [
+      0.6122,
+      0.8508
+    ],
+    "flag_decisions": 48,
+    "flag_kappa": 0.5,
+    "rating_band_agreement_pipeline": 1.0,
+    "rating_band_agreement_engine_only": 1.0,
+    "pairwise_ordering_agreement": 1.0,
+    "pairwise_comparisons": 6,
+    "mean_component_score_reviewer_flagged": 58.79,
+    "mean_component_score_reviewer_ok": 85.4
+  },
+  "structured": {
+    "per_dimension": {
+      "topic_coverage": {
+        "tp": 6,
+        "fp": 2,
+        "fn": 0,
+        "tn": 0,
+        "agreement": 0.75
+      },
+      "learning_outcome_coverage": {
+        "tp": 4,
+        "fp": 1,
+        "fn": 1,
+        "tn": 2,
+        "agreement": 0.75
+      },
+      "difficulty_balance": {
+        "tp": 5,
+        "fp": 3,
+        "fn": 0,
+        "tn": 0,
+        "agreement": 0.625
+      },
+      "cognitive_diversity": {
+        "tp": 3,
+        "fp": 0,
+        "fn": 0,
+        "tn": 5,
+        "agreement": 1.0
+      },
+      "question_diversity": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 3,
+        "tn": 5,
+        "agreement": 0.625
+      },
+      "marks_distribution": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 2,
+        "tn": 6,
+        "agreement": 0.75
+      }
+    },
+    "case_scores": {
+      "AQ1": {
+        "pipeline_score": 91.25,
+        "pipeline_rating": "EXCELLENT",
+        "engine_score": 96.43,
+        "engine_rating": "EXCELLENT"
+      },
+      "AQ2": {
+        "pipeline_score": 63.71,
+        "pipeline_rating": "NEEDS_REVIEW",
+        "engine_score": 52.82,
+        "engine_rating": "REQUIRES_ATTENTION"
+      },
+      "AQ3": {
+        "pipeline_score": 69.13,
+        "pipeline_rating": "NEEDS_REVIEW",
+        "engine_score": 80.3,
+        "engine_rating": "GOOD"
+      },
+      "AQ4": {
+        "pipeline_score": 72.62,
+        "pipeline_rating": "FAIR",
+        "engine_score": 57.62,
+        "engine_rating": "REQUIRES_ATTENTION"
+      },
+      "AQ5": {
+        "pipeline_score": 46.5,
+        "pipeline_rating": "REQUIRES_ATTENTION",
+        "engine_score": 51.0,
+        "engine_rating": "REQUIRES_ATTENTION"
+      },
+      "AQ6": {
+        "pipeline_score": 97.47,
+        "pipeline_rating": "EXCELLENT",
+        "engine_score": 97.27,
+        "engine_rating": "EXCELLENT"
+      },
+      "AQ7": {
+        "pipeline_score": 85.53,
+        "pipeline_rating": "GOOD",
+        "engine_score": 78.77,
+        "engine_rating": "FAIR"
+      },
+      "AQ8": {
+        "pipeline_score": 55.55,
+        "pipeline_rating": "REQUIRES_ATTENTION",
+        "engine_score": 54.6,
+        "engine_rating": "REQUIRES_ATTENTION"
+      }
+    }
+  },
+  "latency_ms": {
+    "count": 8,
+    "mean_ms": 2.57,
+    "p50_ms": 2.53,
+    "p95_ms": 4.34,
+    "max_ms": 4.34
+  },
+  "failure_count": 0,
+  "failure_rate": 0.0,
+  "error_breakdown": {
+    "WRONG_CLASSIFICATION": 12
+  },
+  "errors": [
+    {
+      "id": "AQ1",
+      "case": "Balanced CS301 midterm",
+      "dimension": "topic_coverage",
+      "expected": "OK",
+      "actual": "FLAG",
+      "component_score": 100.0,
+      "error_type": "WRONG_CLASSIFICATION",
+      "reviewer_note": "All six topics and all five LOs covered; 4 easy / 4 medium / 2 hard; six question types; five Bloom levels; marks match."
+    },
+    {
+      "id": "AQ1",
+      "case": "Balanced CS301 midterm",
+      "dimension": "difficulty_balance",
+      "expected": "OK",
+      "actual": "FLAG",
+      "component_score": 71.05,
+      "error_type": "WRONG_CLASSIFICATION",
+      "reviewer_note": "All six topics and all five LOs covered; 4 easy / 4 medium / 2 hard; six question types; five Bloom levels; marks match."
+    },
+    {
+      "id": "AQ2",
+      "case": "Recall-only CS301 quiz",
+      "dimension": "question_diversity",
+      "expected": "FLAG",
+      "actual": "OK",
+      "component_score": 45.91,
+      "error_type": "WRONG_CLASSIFICATION",
+      "reviewer_note": "Only 3 of 6 topics and 3 of 5 LOs; every question EASY; only REMEMBER/UNDERSTAND; only MCQ and CONCEPTUAL."
+    },
+    {
+      "id": "AQ3",
+      "case": "CS402 test with marks mismatch",
+      "dimension": "learning_outcome_coverage",
+      "expected": "OK",
+      "actual": "FLAG",
+      "component_score": 60.0,
+      "error_type": "WRONG_CLASSIFICATION",
+      "reviewer_note": "Question marks sum to 30 against a declared 40; Regression Models topic not covered; one question carries a third of the marks."
+    },
+    {
+      "id": "AQ3",
+      "case": "CS402 test with marks mismatch",
+      "dimension": "difficulty_balance",
+      "expected": "OK",
+      "actual": "FLAG",
+      "component_score": 53.33,
+      "error_type": "WRONG_CLASSIFICATION",
+      "reviewer_note": "Question marks sum to 30 against a declared 40; Regression Models topic not covered; one question carries a third of the marks."
+    },
+    {
+      "id": "AQ3",
+      "case": "CS402 test with marks mismatch",
+      "dimension": "marks_distribution",
+      "expected": "FLAG",
+      "actual": "OK",
+      "component_score": 75.0,
+      "error_type": "WRONG_CLASSIFICATION",
+      "reviewer_note": "Question marks sum to 30 against a declared 40; Regression Models topic not covered; one question carries a third of the marks."
+    },
+    {
+      "id": "AQ4",
+      "case": "All-hard CS305 exam",
+      "dimension": "question_diversity",
+      "expected": "FLAG",
+      "actual": "OK",
+      "component_score": 45.91,
+      "error_type": "WRONG_CLASSIFICATION",
+      "reviewer_note": "No easy or medium questions; 3 of 4 questions ANALYTICAL; Process Management and Memory Management untested; LO1 and LO2 untested. Higher-order Bloom levels only, which the reviewer considers acceptable for a final."
+    },
+    {
+      "id": "AQ5",
+      "case": "All-descriptive CS306 test",
+      "dimension": "question_diversity",
+      "expected": "FLAG",
+      "actual": "OK",
+      "component_score": 0.0,
+      "error_type": "WRONG_CLASSIFICATION",
+      "reviewer_note": "Every question DESCRIPTIVE and UNDERSTAND; no HARD question; Routing and Security untested; LO2 and LO4 untested."
+    },
+    {
+      "id": "AQ6",
+      "case": "Balanced ECO101 final",
+      "dimension": "topic_coverage",
+      "expected": "OK",
+      "actual": "FLAG",
+      "component_score": 100.0,
+      "error_type": "WRONG_CLASSIFICATION",
+      "reviewer_note": "All four topics and LOs; 5 easy / 5 medium / 2 hard; all six Bloom levels; seven question types; marks match."
+    },
+    {
+      "id": "AQ6",
+      "case": "Balanced ECO101 final",
+      "dimension": "difficulty_balance",
+      "expected": "OK",
+      "actual": "FLAG",
+      "component_score": 85.91,
+      "error_type": "WRONG_CLASSIFICATION",
+      "reviewer_note": "All four topics and LOs; 5 easy / 5 medium / 2 hard; all six Bloom levels; seven question types; marks match."
+    },
+    {
+      "id": "AQ7",
+      "case": "CS201 test reusing past questions",
+      "dimension": "learning_outcome_coverage",
+      "expected": "FLAG",
+      "actual": "OK",
+      "component_score": 100.0,
+      "error_type": "WRONG_CLASSIFICATION",
+      "reviewer_note": "Q041 is a near-duplicate of a 2025 question; no HARD question; Arrays and Stacks untested; LO1 untested."
+    },
+    {
+      "id": "AQ8",
+      "case": "CS308 quiz dominated by one question",
+      "dimension": "marks_distribution",
+      "expected": "FLAG",
+      "actual": "OK",
+      "component_score": 85.0,
+      "error_type": "WRONG_CLASSIFICATION",
+      "reviewer_note": "One question carries 80% of the marks; three REMEMBER questions plus one CREATE; 3 easy / 0 medium / 1 hard; Process Models and Requirements untested; LO1 and LO2 untested."
+    }
+  ],
+  "human_review": {},
+  "notes": [
+    "8 reviewer-labelled assessments composed from the question set. A dimension counts as system-FLAG when the unified pipeline raised a recommendation in the mapped category; rating bands are the reviewer's acceptable set.",
+    "Pipeline results include AI re-detection of type/difficulty/Bloom; engine-only results use the reviewer's faculty metadata. The gap between the two rating agreements isolates classifier error from engine logic."
+  ]
+}

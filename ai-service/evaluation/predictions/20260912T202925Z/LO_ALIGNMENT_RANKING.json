@@ -1,0 +1,854 @@
+[
+  {
+    "id": "Q002",
+    "expected": "LO2",
+    "ranking": [
+      "LO2",
+      "LO1",
+      "LO3"
+    ],
+    "top1_correct": true,
+    "similarity": 0.323,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q004",
+    "expected": "LO2",
+    "ranking": [
+      "LO2",
+      "LO1",
+      "LO3"
+    ],
+    "top1_correct": true,
+    "similarity": 0.2976,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q006",
+    "expected": "LO4",
+    "ranking": [
+      "LO4",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.6746,
+    "band": "WEAK"
+  },
+  {
+    "id": "Q008",
+    "expected": "LO5",
+    "ranking": [
+      "LO5",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.3971,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q012",
+    "expected": "LO4",
+    "ranking": [
+      "LO4",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.5042,
+    "band": "WEAK"
+  },
+  {
+    "id": "Q014",
+    "expected": "LO2",
+    "ranking": [
+      "LO1",
+      "LO2",
+      "LO3"
+    ],
+    "top1_correct": false,
+    "similarity": 0.4735,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q016",
+    "expected": "LO3",
+    "ranking": [
+      "LO3",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.3931,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q018",
+    "expected": "LO5",
+    "ranking": [
+      "LO5",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.4773,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q020",
+    "expected": "LO2",
+    "ranking": [
+      "LO2",
+      "LO1",
+      "LO3"
+    ],
+    "top1_correct": true,
+    "similarity": 0.2586,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q022",
+    "expected": "LO2",
+    "ranking": [
+      "LO1",
+      "LO2",
+      "LO3"
+    ],
+    "top1_correct": false,
+    "similarity": 0.216,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q024",
+    "expected": "LO4",
+    "ranking": [
+      "LO4",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.5042,
+    "band": "WEAK"
+  },
+  {
+    "id": "Q026",
+    "expected": "LO1",
+    "ranking": [
+      "LO1",
+      "LO2",
+      "LO3"
+    ],
+    "top1_correct": true,
+    "similarity": 0.3357,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q028",
+    "expected": "LO2",
+    "ranking": [
+      "LO5",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": false,
+    "similarity": 0.2144,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q030",
+    "expected": "LO5",
+    "ranking": [
+      "LO5",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.3943,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q032",
+    "expected": "LO3",
+    "ranking": [
+      "LO5",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": false,
+    "similarity": 0.2461,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q034",
+    "expected": "LO2",
+    "ranking": [
+      "LO1",
+      "LO2",
+      "LO3"
+    ],
+    "top1_correct": false,
+    "similarity": 0.4119,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q036",
+    "expected": "LO3",
+    "ranking": [
+      "LO1",
+      "LO2",
+      "LO3"
+    ],
+    "top1_correct": false,
+    "similarity": 0.3463,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q038",
+    "expected": "LO1",
+    "ranking": [
+      "LO2",
+      "LO1",
+      "LO3"
+    ],
+    "top1_correct": false,
+    "similarity": 0.4647,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q040",
+    "expected": "LO3",
+    "ranking": [
+      "LO3",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.4599,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q042",
+    "expected": "LO4",
+    "ranking": [
+      "LO4",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.493,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q044",
+    "expected": "LO2",
+    "ranking": [
+      "LO5",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.52,
+    "band": "WEAK"
+  },
+  {
+    "id": "Q046",
+    "expected": "LO2",
+    "ranking": [
+      "LO2",
+      "LO1",
+      "LO3"
+    ],
+    "top1_correct": true,
+    "similarity": 0.3824,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q048",
+    "expected": "LO3",
+    "ranking": [
+      "LO3",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.4751,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q050",
+    "expected": "LO4",
+    "ranking": [
+      "LO2",
+      "LO1",
+      "LO3"
+    ],
+    "top1_correct": false,
+    "similarity": 0.4656,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q052",
+    "expected": "LO1",
+    "ranking": [
+      "LO1",
+      "LO2",
+      "LO3"
+    ],
+    "top1_correct": true,
+    "similarity": 0.538,
+    "band": "WEAK"
+  },
+  {
+    "id": "Q054",
+    "expected": "LO4",
+    "ranking": [
+      "LO4",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.4344,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q056",
+    "expected": "LO1",
+    "ranking": [
+      "LO1",
+      "LO2",
+      "LO3"
+    ],
+    "top1_correct": true,
+    "similarity": 0.4254,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q058",
+    "expected": "LO2",
+    "ranking": [
+      "LO2",
+      "LO1",
+      "LO3"
+    ],
+    "top1_correct": true,
+    "similarity": 0.5467,
+    "band": "WEAK"
+  },
+  {
+    "id": "Q060",
+    "expected": "LO3",
+    "ranking": [
+      "LO1",
+      "LO2",
+      "LO3"
+    ],
+    "top1_correct": false,
+    "similarity": 0.4681,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q062",
+    "expected": "LO5",
+    "ranking": [
+      "LO5",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.4554,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q064",
+    "expected": "LO1",
+    "ranking": [
+      "LO1",
+      "LO2",
+      "LO3"
+    ],
+    "top1_correct": true,
+    "similarity": 0.485,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q066",
+    "expected": "LO3",
+    "ranking": [
+      "LO3",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.5056,
+    "band": "WEAK"
+  },
+  {
+    "id": "Q068",
+    "expected": "LO1",
+    "ranking": [
+      "LO1",
+      "LO2",
+      "LO3"
+    ],
+    "top1_correct": true,
+    "similarity": 0.7097,
+    "band": "STRONG"
+  },
+  {
+    "id": "Q070",
+    "expected": "LO1",
+    "ranking": [
+      "LO5",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": false,
+    "similarity": 0.4993,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q072",
+    "expected": "LO5",
+    "ranking": [
+      "LO5",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.484,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q074",
+    "expected": "LO3",
+    "ranking": [
+      "LO3",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.4414,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q076",
+    "expected": "LO5",
+    "ranking": [
+      "LO5",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.5903,
+    "band": "WEAK"
+  },
+  {
+    "id": "Q078",
+    "expected": "LO3",
+    "ranking": [
+      "LO3",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.4073,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q080",
+    "expected": "LO3",
+    "ranking": [
+      "LO3",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.4885,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q082",
+    "expected": "LO2",
+    "ranking": [
+      "LO2",
+      "LO1",
+      "LO3"
+    ],
+    "top1_correct": true,
+    "similarity": 0.4366,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q084",
+    "expected": "LO4",
+    "ranking": [
+      "LO4",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.3941,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q086",
+    "expected": "LO4",
+    "ranking": [
+      "LO4",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.4074,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q088",
+    "expected": "LO3",
+    "ranking": [
+      "LO3",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.3407,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q090",
+    "expected": "LO2",
+    "ranking": [
+      "LO2",
+      "LO1",
+      "LO3"
+    ],
+    "top1_correct": true,
+    "similarity": 0.5464,
+    "band": "WEAK"
+  },
+  {
+    "id": "Q092",
+    "expected": "LO1",
+    "ranking": [
+      "LO1",
+      "LO2",
+      "LO3"
+    ],
+    "top1_correct": true,
+    "similarity": 0.5102,
+    "band": "WEAK"
+  },
+  {
+    "id": "Q094",
+    "expected": "LO3",
+    "ranking": [
+      "LO3",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.3193,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q096",
+    "expected": "LO5",
+    "ranking": [
+      "LO5",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.4485,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q098",
+    "expected": "LO5",
+    "ranking": [
+      "LO5",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.601,
+    "band": "WEAK"
+  },
+  {
+    "id": "Q100",
+    "expected": "LO2",
+    "ranking": [
+      "LO1",
+      "LO2",
+      "LO3"
+    ],
+    "top1_correct": false,
+    "similarity": 0.3304,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q102",
+    "expected": "LO4",
+    "ranking": [
+      "LO4",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.4578,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q104",
+    "expected": "LO5",
+    "ranking": [
+      "LO2",
+      "LO1",
+      "LO3"
+    ],
+    "top1_correct": false,
+    "similarity": 0.4053,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q106",
+    "expected": "LO3",
+    "ranking": [
+      "LO3",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.4211,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q108",
+    "expected": "LO3",
+    "ranking": [
+      "LO2",
+      "LO1",
+      "LO3"
+    ],
+    "top1_correct": false,
+    "similarity": 0.3082,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q110",
+    "expected": "LO1",
+    "ranking": [
+      "LO1",
+      "LO2",
+      "LO3"
+    ],
+    "top1_correct": true,
+    "similarity": 0.4813,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q112",
+    "expected": "LO2",
+    "ranking": [
+      "LO1",
+      "LO2",
+      "LO3"
+    ],
+    "top1_correct": false,
+    "similarity": 0.4688,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q114",
+    "expected": "LO3",
+    "ranking": [
+      "LO3",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.2298,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q116",
+    "expected": "LO3",
+    "ranking": [
+      "LO3",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.2083,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q118",
+    "expected": "LO1",
+    "ranking": [
+      "LO1",
+      "LO2",
+      "LO3"
+    ],
+    "top1_correct": true,
+    "similarity": 0.4834,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q120",
+    "expected": "LO3",
+    "ranking": [
+      "LO3",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.4657,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q122",
+    "expected": "LO1",
+    "ranking": [
+      "LO1",
+      "LO2",
+      "LO3"
+    ],
+    "top1_correct": true,
+    "similarity": 0.6558,
+    "band": "WEAK"
+  },
+  {
+    "id": "Q124",
+    "expected": "LO3",
+    "ranking": [
+      "LO3",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.569,
+    "band": "WEAK"
+  },
+  {
+    "id": "Q126",
+    "expected": "LO3",
+    "ranking": [
+      "LO3",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.7167,
+    "band": "STRONG"
+  },
+  {
+    "id": "Q128",
+    "expected": "LO4",
+    "ranking": [
+      "LO2",
+      "LO1",
+      "LO3"
+    ],
+    "top1_correct": false,
+    "similarity": 0.3581,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q130",
+    "expected": "LO1",
+    "ranking": [
+      "LO2",
+      "LO1",
+      "LO3"
+    ],
+    "top1_correct": false,
+    "similarity": 0.5003,
+    "band": "WEAK"
+  },
+  {
+    "id": "Q132",
+    "expected": "LO4",
+    "ranking": [
+      "LO4",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.5564,
+    "band": "WEAK"
+  },
+  {
+    "id": "Q134",
+    "expected": "LO5",
+    "ranking": [
+      "LO3",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.4122,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q136",
+    "expected": "LO3",
+    "ranking": [
+      "LO3",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.5583,
+    "band": "WEAK"
+  },
+  {
+    "id": "Q138",
+    "expected": "LO1",
+    "ranking": [
+      "LO1",
+      "LO2",
+      "LO3"
+    ],
+    "top1_correct": true,
+    "similarity": 0.4865,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q140",
+    "expected": "LO2",
+    "ranking": [
+      "LO2",
+      "LO1",
+      "LO3"
+    ],
+    "top1_correct": true,
+    "similarity": 0.5492,
+    "band": "WEAK"
+  },
+  {
+    "id": "Q142",
+    "expected": "LO5",
+    "ranking": [
+      "LO5",
+      "LO1",
+      "LO2"
+    ],
+    "top1_correct": true,
+    "similarity": 0.3279,
+    "band": "NOT_ALIGNED"
+  },
+  {
+    "id": "Q144",
+    "expected": "LO2",
+    "ranking": [
+      "LO1",
+      "LO5",
+      "LO2"
+    ],
+    "top1_correct": false,
+    "similarity": 0.6193,
+    "band": "WEAK"
+  }
+]

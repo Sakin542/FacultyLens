@@ -1,0 +1,95 @@
+{
+  "component": "RAG_RETRIEVAL",
+  "status": "EXCELLENT",
+  "split": "ALL(queries)",
+  "sample_size": 20,
+  "headline": {
+    "metric": "recall_at_5",
+    "value": 1.0,
+    "ci95": [
+      0.8389,
+      1.0
+    ],
+    "higher_is_better": true,
+    "sample_size": 20
+  },
+  "metrics": {
+    "mrr": 0.975,
+    "ndcg_at_5": 0.9745,
+    "corpus_chunks": 16,
+    "relevance_threshold": 0.35,
+    "top_k": 5,
+    "queries_where_threshold_dropped_all_relevant": 1,
+    "precision_at_1": 0.95,
+    "recall_at_1": 0.9,
+    "hit_rate_at_1": 0.95,
+    "precision_at_3": 0.3666,
+    "recall_at_3": 1.0,
+    "hit_rate_at_3": 1.0,
+    "precision_at_5": 0.22,
+    "recall_at_5": 1.0,
+    "hit_rate_at_5": 1.0,
+    "recall_at_5_ci95": [
+      0.8389,
+      1.0
+    ]
+  },
+  "structured": {},
+  "latency_ms": {
+    "count": 24,
+    "mean_ms": 7.24,
+    "p50_ms": 7.43,
+    "p95_ms": 8.27,
+    "max_ms": 8.33
+  },
+  "failure_count": 0,
+  "failure_rate": 0.0,
+  "error_breakdown": {
+    "MISSED_SIMILARITY": 2
+  },
+  "errors": [
+    {
+      "id": "G008",
+      "query": "Why might a designer prefer 3NF over BCNF?",
+      "expected_top": [
+        "204"
+      ],
+      "actual_top3": [
+        "203",
+        "204",
+        "202"
+      ],
+      "scores_top3": [
+        0.537,
+        0.5053,
+        0.2869
+      ],
+      "error_type": "MISSED_SIMILARITY",
+      "note": "answer chunk not ranked first"
+    },
+    {
+      "id": "G024",
+      "query": "What is exponential averaging used for in scheduling?",
+      "expected_top": [
+        "302"
+      ],
+      "actual_top3": [
+        "303",
+        "302",
+        "304"
+      ],
+      "scores_top3": [
+        0.3855,
+        0.3826,
+        0.3074
+      ],
+      "error_type": "MISSED_SIMILARITY",
+      "note": "answer chunk not ranked first"
+    }
+  ],
+  "human_review": {},
+  "notes": [
+    "Corpus: 4 synthetic documents / 16 chunks (one is a prompt-injection payload). 20 answerable queries carry graded chunk relevance.",
+    "Ranking metrics use the unfiltered cosine ranking; 'queries_where_threshold_dropped_all_relevant' shows how often the production relevance threshold (chat_min_relevance_score) removed every relevant chunk. recall_at_5_ci95 is the Wilson interval of the share of queries with full recall@5."
+  ]
+}

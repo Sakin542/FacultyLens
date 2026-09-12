@@ -1,0 +1,1300 @@
+{
+  "name": "STEP44 benchmark – LO Alignment pairs (v1.0)",
+  "task": "LO_ALIGNMENT",
+  "version": "v1.0",
+  "source": "CURATED_DATASET",
+  "split": "TEST",
+  "description": "86 expert-labelled (question, learning outcome) pairs: STRONG / WEAK / NOT_ALIGNED.",
+  "examples": [
+    {
+      "input_data": {
+        "question": "Define a primary key and explain why a relation can have at most one primary key.",
+        "learning_outcome": "Explain relational database concepts including keys, integrity constraints and the relational model."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P001",
+        "question_id": "Q001",
+        "lo": "CS301:LO1",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Write an SQL query to list the names of students who are enrolled in more than three courses.",
+        "learning_outcome": "Write SQL queries to retrieve, aggregate and manipulate data."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P002",
+        "question_id": "Q004",
+        "lo": "CS301:LO2",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Given the relation R(A, B, C, D) with functional dependencies A -> B, B -> C and C -> D, identify all candidate keys and determine the highest normal form of R. Justify your answer.",
+        "learning_outcome": "Apply normalization techniques to design well-structured relational schemas."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P003",
+        "question_id": "Q005",
+        "lo": "CS301:LO3",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Compare optimistic and pessimistic concurrency control in terms of throughput and abort rate under high contention.",
+        "learning_outcome": "Analyze transaction management, concurrency control and recovery mechanisms."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P004",
+        "question_id": "Q006",
+        "lo": "CS301:LO4",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "A query filters a 50-million-row table on a column with only three distinct values. Evaluate whether adding a B+ tree index on that column is worthwhile and recommend an alternative if it is not.",
+        "learning_outcome": "Evaluate indexing and query optimization strategies for database performance."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P005",
+        "question_id": "Q009",
+        "lo": "CS301:LO5",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Explain the difference between supervised and unsupervised learning, giving one example algorithm of each.",
+        "learning_outcome": "Describe the fundamental paradigms of machine learning and their typical applications."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P006",
+        "question_id": "Q019",
+        "lo": "CS402:LO1",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Compute the information gain of splitting on attribute A given that the parent node contains 8 positive and 8 negative examples and the split produces children with (6+, 2-) and (2+, 6-).",
+        "learning_outcome": "Apply regression and classification algorithms to real datasets."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P007",
+        "question_id": "Q022",
+        "lo": "CS402:LO2",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "A classifier achieves 99% accuracy on a dataset where 99% of examples belong to one class. Critique the use of accuracy here and propose two alternative metrics.",
+        "learning_outcome": "Evaluate models using appropriate metrics, validation strategies and error analysis."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P008",
+        "question_id": "Q021",
+        "lo": "CS402:LO3",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Design a neural network architecture for classifying 28x28 grayscale handwritten digits. Specify the layers, activation functions, loss function and one regularization technique, and justify each choice.",
+        "learning_outcome": "Design neural network architectures and training procedures for a given task."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P009",
+        "question_id": "Q024",
+        "lo": "CS402:LO4",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Why does a model with very low training error but high validation error indicate high variance rather than high bias?",
+        "learning_outcome": "Analyze the bias-variance trade-off, overfitting and regularization."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P010",
+        "question_id": "Q027",
+        "lo": "CS402:LO5",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Implement a function that reverses a singly linked list in place and state its time complexity.",
+        "learning_outcome": "Explain the properties and operations of fundamental data structures such as arrays, linked lists, stacks and queues."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P011",
+        "question_id": "Q038",
+        "lo": "CS201:LO1",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Given the recurrence T(n) = 2T(n/2) + n, solve for T(n) using the master theorem.",
+        "learning_outcome": "Analyze the time and space complexity of algorithms using asymptotic notation."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P012",
+        "question_id": "Q046",
+        "lo": "CS201:LO2",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "List the steps involved in deleting a node with two children from a binary search tree.",
+        "learning_outcome": "Apply tree and heap data structures to solve computational problems."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P013",
+        "question_id": "Q048",
+        "lo": "CS201:LO3",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Trace Dijkstra's algorithm on the given weighted graph from source vertex A, showing the distance table after each iteration.",
+        "learning_outcome": "Implement graph traversal and shortest-path algorithms."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P014",
+        "question_id": "Q042",
+        "lo": "CS201:LO4",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Compare merge sort and quicksort in terms of worst-case time complexity, space usage and stability.",
+        "learning_outcome": "Select and justify appropriate sorting and searching algorithms for a given problem."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P015",
+        "question_id": "Q041",
+        "lo": "CS201:LO5",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Define a process and list the states in a five-state process model.",
+        "learning_outcome": "Describe process states, process control blocks and CPU scheduling algorithms."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P016",
+        "question_id": "Q055",
+        "lo": "CS305:LO1",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Given the reference string 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5 and three frames, compute the number of page faults for LRU replacement.",
+        "learning_outcome": "Apply memory management techniques such as paging, segmentation and page replacement."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P017",
+        "question_id": "Q067",
+        "lo": "CS305:LO2",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Evaluate the Banker's algorithm as a practical deadlock avoidance strategy for a general-purpose operating system.",
+        "learning_outcome": "Analyze synchronization problems and deadlock handling strategies."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P018",
+        "question_id": "Q069",
+        "lo": "CS305:LO3",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Illustrate how journaling improves file system recovery after a crash.",
+        "learning_outcome": "Explain file system structures and storage allocation methods."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P019",
+        "question_id": "Q071",
+        "lo": "CS305:LO4",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Distinguish between user-level threads and kernel-level threads, and state one situation where each is preferable.",
+        "learning_outcome": "Design concurrent programs using threads and synchronization primitives."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P020",
+        "question_id": "Q072",
+        "lo": "CS305:LO5",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "List the seven layers of the OSI model in order.",
+        "learning_outcome": "Describe the layered architecture of computer networks and the responsibilities of each layer."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P021",
+        "question_id": "Q073",
+        "lo": "CS306:LO1",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Compare distance-vector and link-state routing with respect to convergence time and the count-to-infinity problem.",
+        "learning_outcome": "Analyze routing algorithms and their behavior in dynamic networks."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P022",
+        "question_id": "Q075",
+        "lo": "CS306:LO2",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Describe how TCP slow start and congestion avoidance adjust the congestion window.",
+        "learning_outcome": "Explain transport layer mechanisms for reliability, flow control and congestion control."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P023",
+        "question_id": "Q080",
+        "lo": "CS306:LO3",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Evaluate the trade-offs of using symmetric versus asymmetric encryption for securing a high-volume video streaming service, and recommend a hybrid scheme.",
+        "learning_outcome": "Evaluate network security threats and cryptographic countermeasures."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P024",
+        "question_id": "Q079",
+        "lo": "CS306:LO4",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Why is HTTP considered a stateless protocol, and how do cookies compensate for this?",
+        "learning_outcome": "Apply application layer protocols such as HTTP, DNS and SMTP."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P025",
+        "question_id": "Q083",
+        "lo": "CS306:LO5",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Compare the waterfall model with an iterative model, and recommend one for a start-up building a mobile app with rapidly changing requirements.",
+        "learning_outcome": "Compare software development process models and select one for a given project context."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P026",
+        "question_id": "Q092",
+        "lo": "CS308:LO1",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "List three techniques for requirements elicitation.",
+        "learning_outcome": "Elicit, specify and validate software requirements."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P027",
+        "question_id": "Q103",
+        "lo": "CS308:LO2",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Write unit tests for a function that validates email addresses, covering at least four equivalence classes.",
+        "learning_outcome": "Design and execute software test strategies at unit, integration and system level."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P028",
+        "question_id": "Q094",
+        "lo": "CS308:LO3",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Design a class structure using the Strategy pattern for a payment system that supports credit card, PayPal and bank transfer, and explain how a new payment method could be added without modifying existing classes.",
+        "learning_outcome": "Apply design patterns to improve software structure and maintainability."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P029",
+        "question_id": "Q099",
+        "lo": "CS308:LO4",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Critique the statement 'Agile teams do not need documentation.'",
+        "learning_outcome": "Explain agile principles and practices such as Scrum and continuous integration."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P030",
+        "question_id": "Q097",
+        "lo": "CS308:LO5",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "A 2 kg block is pushed across a frictionless surface by a horizontal force of 10 N. Calculate its acceleration.",
+        "learning_outcome": "Apply Newton's laws to solve problems involving forces and motion."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P031",
+        "question_id": "Q110",
+        "lo": "PHY101:LO1",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "A 0.5 kg ball is dropped from a height of 20 m. Using energy conservation, determine its speed just before it hits the ground, ignoring air resistance.",
+        "learning_outcome": "Use the work-energy theorem and conservation of energy in mechanical systems."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P032",
+        "question_id": "Q112",
+        "lo": "PHY101:LO2",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Describe Faraday's law of electromagnetic induction and give one everyday application.",
+        "learning_outcome": "Explain electric and magnetic phenomena using field concepts."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P033",
+        "question_id": "Q120",
+        "lo": "PHY101:LO3",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Evaluate whether a heat engine operating between 500 K and 300 K can achieve 50% efficiency, and justify your answer using the Carnot limit.",
+        "learning_outcome": "Analyze thermodynamic processes using the laws of thermodynamics."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P034",
+        "question_id": "Q119",
+        "lo": "PHY101:LO4",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Explain what happens to equilibrium price and quantity when the supply of a good decreases while demand remains unchanged.",
+        "learning_outcome": "Explain how supply and demand determine market equilibrium."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P035",
+        "question_id": "Q122",
+        "lo": "ECO101:LO1",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "The price of coffee rises from $4 to $5 and quantity demanded falls from 100 to 80 cups per day. Calculate the price elasticity of demand using the midpoint method and interpret the result.",
+        "learning_outcome": "Calculate and interpret price elasticity of demand and supply."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P036",
+        "question_id": "Q123",
+        "lo": "ECO101:LO2",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Compare the long-run outcomes of perfect competition and monopoly in terms of price, output and efficiency.",
+        "learning_outcome": "Compare market structures such as perfect competition, monopoly and oligopoly."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P037",
+        "question_id": "Q126",
+        "lo": "ECO101:LO3",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Evaluate the likely effects of a central bank raising interest rates during a period of high inflation and slowing growth, and recommend whether the policy should be pursued.",
+        "learning_outcome": "Evaluate the effects of monetary policy on inflation and output."
+      },
+      "expected_output": {
+        "expected_alignment": "STRONG"
+      },
+      "metadata": {
+        "benchmark_id": "P038",
+        "question_id": "Q127",
+        "lo": "ECO101:LO4",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Write an SQL query to list the names of students who are enrolled in more than three courses.",
+        "learning_outcome": "Explain relational database concepts including keys, integrity constraints and the relational model."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P039",
+        "question_id": "Q004",
+        "lo": "CS301:LO1",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "A query filters a 50-million-row table on a column with only three distinct values. Evaluate whether adding a B+ tree index on that column is worthwhile and recommend an alternative if it is not.",
+        "learning_outcome": "Write SQL queries to retrieve, aggregate and manipulate data."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P040",
+        "question_id": "Q009",
+        "lo": "CS301:LO2",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Given the relation R(A, B, C, D) with functional dependencies A -> B, B -> C and C -> D, identify all candidate keys and determine the highest normal form of R. Justify your answer.",
+        "learning_outcome": "Explain relational database concepts including keys, integrity constraints and the relational model."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P041",
+        "question_id": "Q005",
+        "lo": "CS301:LO1",
+        "label_confidence": "LOW"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Compare bagging and boosting with respect to how they build ensemble members and how they reduce error.",
+        "learning_outcome": "Apply regression and classification algorithms to real datasets."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P042",
+        "question_id": "Q030",
+        "lo": "CS402:LO2",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Evaluate the claim that deep neural networks always outperform gradient-boosted trees on tabular data.",
+        "learning_outcome": "Design neural network architectures and training procedures for a given task."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P043",
+        "question_id": "Q033",
+        "lo": "CS402:LO4",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "What is the time complexity of binary search on a sorted array of n elements?",
+        "learning_outcome": "Select and justify appropriate sorting and searching algorithms for a given problem."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P044",
+        "question_id": "Q037",
+        "lo": "CS201:LO5",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Explain why a queue is more appropriate than a stack for breadth-first search.",
+        "learning_outcome": "Explain the properties and operations of fundamental data structures such as arrays, linked lists, stacks and queues."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P045",
+        "question_id": "Q039",
+        "lo": "CS201:LO1",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Prove that any comparison-based sorting algorithm requires Omega(n log n) comparisons in the worst case.",
+        "learning_outcome": "Select and justify appropriate sorting and searching algorithms for a given problem."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P046",
+        "question_id": "Q044",
+        "lo": "CS201:LO5",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Analyze the following code for the producer-consumer problem and identify the race condition. Propose a fix using semaphores.",
+        "learning_outcome": "Design concurrent programs using threads and synchronization primitives."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P047",
+        "question_id": "Q060",
+        "lo": "CS305:LO5",
+        "label_confidence": "LOW"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Why can a spinlock waste CPU cycles on a single-processor system?",
+        "learning_outcome": "Design concurrent programs using threads and synchronization primitives."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P048",
+        "question_id": "Q066",
+        "lo": "CS305:LO5",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "A host with IP address 192.168.10.77 and subnet mask 255.255.255.192 sends a packet to 192.168.10.130. Determine whether the destination is on the same subnet and show your working.",
+        "learning_outcome": "Analyze routing algorithms and their behavior in dynamic networks."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P049",
+        "question_id": "Q077",
+        "lo": "CS306:LO2",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Analyze how a SYN flood attack exploits the TCP handshake and assess the effectiveness of SYN cookies as a countermeasure.",
+        "learning_outcome": "Explain transport layer mechanisms for reliability, flow control and congestion control."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P050",
+        "question_id": "Q086",
+        "lo": "CS306:LO3",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Describe the V-model and its relationship between development and testing phases.",
+        "learning_outcome": "Design and execute software test strategies at unit, integration and system level."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P051",
+        "question_id": "Q101",
+        "lo": "CS308:LO3",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Discuss how user stories differ from formal requirement specifications in terms of precision and adaptability.",
+        "learning_outcome": "Explain agile principles and practices such as Scrum and continuous integration."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P052",
+        "question_id": "Q107",
+        "lo": "CS308:LO5",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Which of the following quantities is a scalar? (a) Velocity (b) Force (c) Work (d) Acceleration",
+        "learning_outcome": "Apply Newton's laws to solve problems involving forces and motion."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P053",
+        "question_id": "Q113",
+        "lo": "PHY101:LO1",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "A block slides down a rough inclined plane at constant velocity. Analyze the forces acting on it and determine the relationship between the coefficient of kinetic friction and the angle of the incline.",
+        "learning_outcome": "Use the work-energy theorem and conservation of energy in mechanical systems."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P054",
+        "question_id": "Q118",
+        "lo": "PHY101:LO2",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Draw a supply and demand diagram showing the effect of a per-unit tax on sellers and identify the tax burden borne by consumers and producers.",
+        "learning_outcome": "Calculate and interpret price elasticity of demand and supply."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P055",
+        "question_id": "Q130",
+        "lo": "ECO101:LO2",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Briefly explain the difference between demand-pull and cost-push inflation.",
+        "learning_outcome": "Explain how supply and demand determine market equilibrium."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P056",
+        "question_id": "Q128",
+        "lo": "ECO101:LO1",
+        "label_confidence": "LOW"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Which of the following techniques is used to reduce overfitting in neural networks? (a) Dropout (b) Increasing the learning rate (c) Removing the validation set (d) Using more output neurons",
+        "learning_outcome": "Design neural network architectures and training procedures for a given task."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P057",
+        "question_id": "Q025",
+        "lo": "CS402:LO4",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Name two applications of a priority queue.",
+        "learning_outcome": "Explain the properties and operations of fundamental data structures such as arrays, linked lists, stacks and queues."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P058",
+        "question_id": "Q053",
+        "lo": "CS201:LO1",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "True or False: A thread shares its stack with other threads of the same process.",
+        "learning_outcome": "Describe process states, process control blocks and CPU scheduling algorithms."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P059",
+        "question_id": "Q062",
+        "lo": "CS305:LO1",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Define bandwidth and latency and state how each affects file download time.",
+        "learning_outcome": "Explain transport layer mechanisms for reliability, flow control and congestion control."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P060",
+        "question_id": "Q085",
+        "lo": "CS306:LO3",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Calculate the cyclomatic complexity of the given control flow graph with 9 edges and 7 nodes, and interpret the result for test planning.",
+        "learning_outcome": "Apply design patterns to improve software structure and maintainability."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P061",
+        "question_id": "Q105",
+        "lo": "CS308:LO4",
+        "label_confidence": "LOW"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Suppose two processes each hold one resource and request the other. Name the situation and describe one way the operating system could recover.",
+        "learning_outcome": "Design concurrent programs using threads and synchronization primitives."
+      },
+      "expected_output": {
+        "expected_alignment": "WEAK"
+      },
+      "metadata": {
+        "benchmark_id": "P062",
+        "question_id": "Q136",
+        "lo": "CS305:LO5",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Which of the following is NOT a valid SQL aggregate function? (a) SUM (b) AVG (c) CONCAT (d) COUNT",
+        "learning_outcome": "Design neural network architectures and training procedures for a given task."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P063",
+        "question_id": "Q002",
+        "lo": "CS402:LO4",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "What is a foreign key?",
+        "learning_outcome": "Apply Newton's laws to solve problems involving forces and motion."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P064",
+        "question_id": "Q011",
+        "lo": "PHY101:LO1",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Explain the difference between supervised and unsupervised learning, giving one example algorithm of each.",
+        "learning_outcome": "Apply normalization techniques to design well-structured relational schemas."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P065",
+        "question_id": "Q019",
+        "lo": "CS301:LO3",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "True or False: Inserting an element into a binary min-heap takes O(log n) time in the worst case.",
+        "learning_outcome": "Calculate and interpret price elasticity of demand and supply."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P066",
+        "question_id": "Q040",
+        "lo": "ECO101:LO2",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Calculate the average waiting time for the processes P1 (burst 8), P2 (burst 4) and P3 (burst 1), all arriving at time 0, under Shortest Job First scheduling.",
+        "learning_outcome": "Evaluate network security threats and cryptographic countermeasures."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P067",
+        "question_id": "Q056",
+        "lo": "CS306:LO4",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "List the seven layers of the OSI model in order.",
+        "learning_outcome": "Apply tree and heap data structures to solve computational problems."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P068",
+        "question_id": "Q073",
+        "lo": "CS201:LO3",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Write unit tests for a function that validates email addresses, covering at least four equivalence classes.",
+        "learning_outcome": "Analyze thermodynamic processes using the laws of thermodynamics."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P069",
+        "question_id": "Q094",
+        "lo": "PHY101:LO4",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "State Newton's second law of motion.",
+        "learning_outcome": "Elicit, specify and validate software requirements."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P070",
+        "question_id": "Q109",
+        "lo": "CS308:LO2",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Define price elasticity of demand.",
+        "learning_outcome": "Apply memory management techniques such as paging, segmentation and page replacement."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P071",
+        "question_id": "Q121",
+        "lo": "CS305:LO2",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Compare the long-run outcomes of perfect competition and monopoly in terms of price, output and efficiency.",
+        "learning_outcome": "Describe the fundamental paradigms of machine learning and their typical applications."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P072",
+        "question_id": "Q126",
+        "lo": "CS402:LO1",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Given the recurrence T(n) = 2T(n/2) + n, solve for T(n) using the master theorem.",
+        "learning_outcome": "Evaluate the effects of monetary policy on inflation and output."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P073",
+        "question_id": "Q046",
+        "lo": "ECO101:LO4",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Describe how TCP slow start and congestion avoidance adjust the congestion window.",
+        "learning_outcome": "Apply design patterns to improve software structure and maintainability."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P074",
+        "question_id": "Q080",
+        "lo": "CS308:LO4",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Consider the schedule: T1 reads X, T2 writes X, T1 writes X, T2 commits, T1 commits. Determine whether this schedule is conflict-serializable and show the precedence graph.",
+        "learning_outcome": "Evaluate indexing and query optimization strategies for database performance."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P075",
+        "question_id": "Q013",
+        "lo": "CS301:LO5",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Describe how k-means clustering assigns points to clusters and how the centroids are updated.",
+        "learning_outcome": "Apply regression and classification algorithms to real datasets."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P076",
+        "question_id": "Q026",
+        "lo": "CS402:LO2",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "A system uses 32-bit virtual addresses, 4 KB pages and 4-byte page table entries. Determine the size of a single-level page table and explain why a two-level page table reduces memory overhead.",
+        "learning_outcome": "Explain file system structures and storage allocation methods."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P077",
+        "question_id": "Q058",
+        "lo": "CS305:LO4",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Which protocol resolves domain names to IP addresses? (a) DHCP (b) DNS (c) ARP (d) SMTP",
+        "learning_outcome": "Analyze routing algorithms and their behavior in dynamic networks."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P078",
+        "question_id": "Q076",
+        "lo": "CS306:LO2",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "True or False: In Scrum, the sprint length may be changed in the middle of a sprint if the team is behind schedule.",
+        "learning_outcome": "Design and execute software test strategies at unit, integration and system level."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P079",
+        "question_id": "Q096",
+        "lo": "CS308:LO3",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Derive an expression for the magnetic field at the centre of a circular current loop of radius R carrying current I.",
+        "learning_outcome": "Analyze thermodynamic processes using the laws of thermodynamics."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P080",
+        "question_id": "Q116",
+        "lo": "PHY101:LO4",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Which of the following is a characteristic of perfect competition? (a) A single seller (b) Differentiated products (c) Many buyers and sellers (d) High barriers to entry",
+        "learning_outcome": "Evaluate the effects of monetary policy on inflation and output."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P081",
+        "question_id": "Q124",
+        "lo": "ECO101:LO4",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Which data structure follows the Last-In-First-Out principle? (a) Queue (b) Stack (c) Heap (d) Graph",
+        "learning_outcome": "Implement graph traversal and shortest-path algorithms."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P082",
+        "question_id": "Q043",
+        "lo": "CS201:LO4",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "Draw an ER diagram for a library system in which members borrow books, each book has one or more authors, and every loan records a due date.",
+        "learning_outcome": "Write SQL queries to retrieve, aggregate and manipulate data."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P083",
+        "question_id": "Q010",
+        "lo": "CS301:LO2",
+        "label_confidence": "MEDIUM"
+      }
+    },
+    {
+      "input_data": {
+        "question": "What is a context switch?",
+        "learning_outcome": "Explain file system structures and storage allocation methods."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P084",
+        "question_id": "Q070",
+        "lo": "CS305:LO4",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "What does the acronym SMTP stand for and which layer does it belong to?",
+        "learning_outcome": "Evaluate network security threats and cryptographic countermeasures."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P085",
+        "question_id": "Q087",
+        "lo": "CS306:LO4",
+        "label_confidence": "HIGH"
+      }
+    },
+    {
+      "input_data": {
+        "question": "What is regression testing?",
+        "learning_outcome": "Elicit, specify and validate software requirements."
+      },
+      "expected_output": {
+        "expected_alignment": "NOT_ALIGNED"
+      },
+      "metadata": {
+        "benchmark_id": "P086",
+        "question_id": "Q106",
+        "lo": "CS308:LO2",
+        "label_confidence": "HIGH"
+      }
+    }
+  ]
+}

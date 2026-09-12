@@ -1,0 +1,810 @@
+{
+  "name": "STEP44 benchmark – Rubric generation (v1.0)",
+  "task": "RUBRIC_GENERATION",
+  "version": "v1.0",
+  "source": "CURATED_DATASET",
+  "split": "TEST",
+  "description": "50 rubric requests; structural validity only until faculty ratings are collected.",
+  "examples": [
+    {
+      "input_data": {
+        "question": "Define a primary key and explain why a relation can have at most one primary key.",
+        "total_marks": 2,
+        "difficulty": "EASY",
+        "cognitive_level": "UNDERSTAND",
+        "question_type": "CONCEPTUAL",
+        "learning_outcome": "Explain relational database concepts including keys, integrity constraints and the relational model."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q001",
+        "course": "CS301",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Write an SQL query to list the names of students who are enrolled in more than three courses.",
+        "total_marks": 4,
+        "difficulty": "MEDIUM",
+        "cognitive_level": "APPLY",
+        "question_type": "PROBLEM_SOLVING",
+        "learning_outcome": "Write SQL queries to retrieve, aggregate and manipulate data."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q004",
+        "course": "CS301",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Given the relation R(A, B, C, D) with functional dependencies A -> B, B -> C and C -> D, identify all candidate keys and determine the highest normal form of R. Justify your answer.",
+        "total_marks": 6,
+        "difficulty": "HARD",
+        "cognitive_level": "ANALYZE",
+        "question_type": "PROBLEM_SOLVING",
+        "learning_outcome": "Apply normalization techniques to design well-structured relational schemas."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q005",
+        "course": "CS301",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Compare optimistic and pessimistic concurrency control in terms of throughput and abort rate under high contention.",
+        "total_marks": 6,
+        "difficulty": "HARD",
+        "cognitive_level": "ANALYZE",
+        "question_type": "ANALYTICAL",
+        "learning_outcome": "Analyze transaction management, concurrency control and recovery mechanisms."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q006",
+        "course": "CS301",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Describe the four ACID properties of a transaction with one example each.",
+        "total_marks": 4,
+        "difficulty": "EASY",
+        "cognitive_level": "UNDERSTAND",
+        "question_type": "DESCRIPTIVE",
+        "learning_outcome": "Analyze transaction management, concurrency control and recovery mechanisms."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q007",
+        "course": "CS301",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "A query filters a 50-million-row table on a column with only three distinct values. Evaluate whether adding a B+ tree index on that column is worthwhile and recommend an alternative if it is not.",
+        "total_marks": 8,
+        "difficulty": "HARD",
+        "cognitive_level": "EVALUATE",
+        "question_type": "ANALYTICAL",
+        "learning_outcome": "Evaluate indexing and query optimization strategies for database performance."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q009",
+        "course": "CS301",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Explain, with an example, how a lost update anomaly can occur when two transactions run concurrently without locking.",
+        "total_marks": 5,
+        "difficulty": "MEDIUM",
+        "cognitive_level": "UNDERSTAND",
+        "question_type": "DESCRIPTIVE",
+        "learning_outcome": "Analyze transaction management, concurrency control and recovery mechanisms."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q012",
+        "course": "CS301",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Consider the schedule: T1 reads X, T2 writes X, T1 writes X, T2 commits, T1 commits. Determine whether this schedule is conflict-serializable and show the precedence graph.",
+        "total_marks": 6,
+        "difficulty": "HARD",
+        "cognitive_level": "ANALYZE",
+        "question_type": "PROBLEM_SOLVING",
+        "learning_outcome": "Analyze transaction management, concurrency control and recovery mechanisms."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q013",
+        "course": "CS301",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Write short notes on write-ahead logging.",
+        "total_marks": 3,
+        "difficulty": "MEDIUM",
+        "cognitive_level": "UNDERSTAND",
+        "question_type": "SHORT_ANSWER",
+        "learning_outcome": "Analyze transaction management, concurrency control and recovery mechanisms."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q017",
+        "course": "CS301",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Explain the difference between supervised and unsupervised learning, giving one example algorithm of each.",
+        "total_marks": 4,
+        "difficulty": "EASY",
+        "cognitive_level": "UNDERSTAND",
+        "question_type": "DESCRIPTIVE",
+        "learning_outcome": "Describe the fundamental paradigms of machine learning and their typical applications."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q019",
+        "course": "CS402",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "A classifier achieves 99% accuracy on a dataset where 99% of examples belong to one class. Critique the use of accuracy here and propose two alternative metrics.",
+        "total_marks": 5,
+        "difficulty": "MEDIUM",
+        "cognitive_level": "EVALUATE",
+        "question_type": "ANALYTICAL",
+        "learning_outcome": "Evaluate models using appropriate metrics, validation strategies and error analysis."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q021",
+        "course": "CS402",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Compute the information gain of splitting on attribute A given that the parent node contains 8 positive and 8 negative examples and the split produces children with (6+, 2-) and (2+, 6-).",
+        "total_marks": 5,
+        "difficulty": "MEDIUM",
+        "cognitive_level": "APPLY",
+        "question_type": "PROBLEM_SOLVING",
+        "learning_outcome": "Apply regression and classification algorithms to real datasets."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q022",
+        "course": "CS402",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Design a neural network architecture for classifying 28x28 grayscale handwritten digits. Specify the layers, activation functions, loss function and one regularization technique, and justify each choice.",
+        "total_marks": 10,
+        "difficulty": "HARD",
+        "cognitive_level": "CREATE",
+        "question_type": "PROBLEM_SOLVING",
+        "learning_outcome": "Design neural network architectures and training procedures for a given task."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q024",
+        "course": "CS402",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Derive the gradient of the mean squared error loss with respect to the weights of a linear regression model.",
+        "total_marks": 6,
+        "difficulty": "HARD",
+        "cognitive_level": "APPLY",
+        "question_type": "PROBLEM_SOLVING",
+        "learning_outcome": "Apply regression and classification algorithms to real datasets."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q028",
+        "course": "CS402",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Compare bagging and boosting with respect to how they build ensemble members and how they reduce error.",
+        "total_marks": 5,
+        "difficulty": "MEDIUM",
+        "cognitive_level": "ANALYZE",
+        "question_type": "ANALYTICAL",
+        "learning_outcome": "Analyze the bias-variance trade-off, overfitting and regularization."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q030",
+        "course": "CS402",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Propose a complete experimental protocol to compare three clustering algorithms on an unlabelled customer dataset, including the choice of internal validation indices and how you would handle the choice of k.",
+        "total_marks": 8,
+        "difficulty": "HARD",
+        "cognitive_level": "CREATE",
+        "question_type": "DESCRIPTIVE",
+        "learning_outcome": "Evaluate models using appropriate metrics, validation strategies and error analysis."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q036",
+        "course": "CS402",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Compare merge sort and quicksort in terms of worst-case time complexity, space usage and stability.",
+        "total_marks": 5,
+        "difficulty": "MEDIUM",
+        "cognitive_level": "ANALYZE",
+        "question_type": "ANALYTICAL",
+        "learning_outcome": "Select and justify appropriate sorting and searching algorithms for a given problem."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q041",
+        "course": "CS201",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Trace Dijkstra's algorithm on the given weighted graph from source vertex A, showing the distance table after each iteration.",
+        "total_marks": 6,
+        "difficulty": "MEDIUM",
+        "cognitive_level": "APPLY",
+        "question_type": "PROBLEM_SOLVING",
+        "learning_outcome": "Implement graph traversal and shortest-path algorithms."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q042",
+        "course": "CS201",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Prove that any comparison-based sorting algorithm requires Omega(n log n) comparisons in the worst case.",
+        "total_marks": 8,
+        "difficulty": "HARD",
+        "cognitive_level": "ANALYZE",
+        "question_type": "PROBLEM_SOLVING",
+        "learning_outcome": "Analyze the time and space complexity of algorithms using asymptotic notation."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q044",
+        "course": "CS201",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Design a data structure that supports push, pop and retrieving the minimum element, all in O(1) time. Explain your design.",
+        "total_marks": 6,
+        "difficulty": "HARD",
+        "cognitive_level": "CREATE",
+        "question_type": "PROBLEM_SOLVING",
+        "learning_outcome": "Explain the properties and operations of fundamental data structures such as arrays, linked lists, stacks and queues."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q047",
+        "course": "CS201",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "A social network stores friendships as an adjacency list with 10 million users. Evaluate whether BFS or bidirectional BFS is preferable for finding the shortest friendship chain between two users, considering memory and expected search space.",
+        "total_marks": 8,
+        "difficulty": "HARD",
+        "cognitive_level": "EVALUATE",
+        "question_type": "ANALYTICAL",
+        "learning_outcome": "Implement graph traversal and shortest-path algorithms."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q054",
+        "course": "CS201",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "A system uses 32-bit virtual addresses, 4 KB pages and 4-byte page table entries. Determine the size of a single-level page table and explain why a two-level page table reduces memory overhead.",
+        "total_marks": 5,
+        "difficulty": "MEDIUM",
+        "cognitive_level": "APPLY",
+        "question_type": "PROBLEM_SOLVING",
+        "learning_outcome": "Apply memory management techniques such as paging, segmentation and page replacement."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q058",
+        "course": "CS305",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Analyze the following code for the producer-consumer problem and identify the race condition. Propose a fix using semaphores.",
+        "total_marks": 8,
+        "difficulty": "HARD",
+        "cognitive_level": "ANALYZE",
+        "question_type": "ANALYTICAL",
+        "learning_outcome": "Analyze synchronization problems and deadlock handling strategies."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q060",
+        "course": "CS305",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Design a multithreaded program structure for a web server that handles thousands of simultaneous connections, and explain how you would avoid both deadlock and thread starvation.",
+        "total_marks": 10,
+        "difficulty": "HARD",
+        "cognitive_level": "CREATE",
+        "question_type": "PROBLEM_SOLVING",
+        "learning_outcome": "Design concurrent programs using threads and synchronization primitives."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q065",
+        "course": "CS305",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Explain how TCP's three-way handshake establishes a connection.",
+        "total_marks": 3,
+        "difficulty": "EASY",
+        "cognitive_level": "UNDERSTAND",
+        "question_type": "DESCRIPTIVE",
+        "learning_outcome": "Explain transport layer mechanisms for reliability, flow control and congestion control."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q074",
+        "course": "CS306",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Evaluate the trade-offs of using symmetric versus asymmetric encryption for securing a high-volume video streaming service, and recommend a hybrid scheme.",
+        "total_marks": 8,
+        "difficulty": "HARD",
+        "cognitive_level": "EVALUATE",
+        "question_type": "ANALYTICAL",
+        "learning_outcome": "Evaluate network security threats and cryptographic countermeasures."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q079",
+        "course": "CS306",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Design a secure authentication scheme for a campus Wi-Fi network that resists replay attacks; specify the messages exchanged and the cryptographic primitives used.",
+        "total_marks": 8,
+        "difficulty": "HARD",
+        "cognitive_level": "CREATE",
+        "question_type": "PROBLEM_SOLVING",
+        "learning_outcome": "Evaluate network security threats and cryptographic countermeasures."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q084",
+        "course": "CS306",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Compare the waterfall model with an iterative model, and recommend one for a start-up building a mobile app with rapidly changing requirements.",
+        "total_marks": 5,
+        "difficulty": "MEDIUM",
+        "cognitive_level": "EVALUATE",
+        "question_type": "ANALYTICAL",
+        "learning_outcome": "Compare software development process models and select one for a given project context."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q092",
+        "course": "CS308",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Write unit tests for a function that validates email addresses, covering at least four equivalence classes.",
+        "total_marks": 5,
+        "difficulty": "MEDIUM",
+        "cognitive_level": "APPLY",
+        "question_type": "PROBLEM_SOLVING",
+        "learning_outcome": "Design and execute software test strategies at unit, integration and system level."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q094",
+        "course": "CS308",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Design a class structure using the Strategy pattern for a payment system that supports credit card, PayPal and bank transfer, and explain how a new payment method could be added without modifying existing classes.",
+        "total_marks": 8,
+        "difficulty": "HARD",
+        "cognitive_level": "CREATE",
+        "question_type": "PROBLEM_SOLVING",
+        "learning_outcome": "Apply design patterns to improve software structure and maintainability."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q099",
+        "course": "CS308",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Identify the code smells in the following class and propose refactorings, naming the design pattern applied where relevant.",
+        "total_marks": 8,
+        "difficulty": "HARD",
+        "cognitive_level": "ANALYZE",
+        "question_type": "ANALYTICAL",
+        "learning_outcome": "Apply design patterns to improve software structure and maintainability."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q102",
+        "course": "CS308",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Construct a decision table for a loan approval rule that depends on credit score, income and existing debt, and derive the minimum set of test cases.",
+        "total_marks": 6,
+        "difficulty": "HARD",
+        "cognitive_level": "CREATE",
+        "question_type": "PROBLEM_SOLVING",
+        "learning_outcome": "Design and execute software test strategies at unit, integration and system level."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q108",
+        "course": "CS308",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Compare the behaviour of an ideal gas during an isothermal expansion and an adiabatic expansion, with reference to the first law of thermodynamics.",
+        "total_marks": 6,
+        "difficulty": "HARD",
+        "cognitive_level": "ANALYZE",
+        "question_type": "ANALYTICAL",
+        "learning_outcome": "Analyze thermodynamic processes using the laws of thermodynamics."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q115",
+        "course": "PHY101",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Derive an expression for the magnetic field at the centre of a circular current loop of radius R carrying current I.",
+        "total_marks": 6,
+        "difficulty": "HARD",
+        "cognitive_level": "APPLY",
+        "question_type": "PROBLEM_SOLVING",
+        "learning_outcome": "Explain electric and magnetic phenomena using field concepts."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q116",
+        "course": "PHY101",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "A block slides down a rough inclined plane at constant velocity. Analyze the forces acting on it and determine the relationship between the coefficient of kinetic friction and the angle of the incline.",
+        "total_marks": 5,
+        "difficulty": "MEDIUM",
+        "cognitive_level": "ANALYZE",
+        "question_type": "PROBLEM_SOLVING",
+        "learning_outcome": "Apply Newton's laws to solve problems involving forces and motion."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q118",
+        "course": "PHY101",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "The price of coffee rises from $4 to $5 and quantity demanded falls from 100 to 80 cups per day. Calculate the price elasticity of demand using the midpoint method and interpret the result.",
+        "total_marks": 4,
+        "difficulty": "MEDIUM",
+        "cognitive_level": "APPLY",
+        "question_type": "PROBLEM_SOLVING",
+        "learning_outcome": "Calculate and interpret price elasticity of demand and supply."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q123",
+        "course": "ECO101",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Compare the long-run outcomes of perfect competition and monopoly in terms of price, output and efficiency.",
+        "total_marks": 5,
+        "difficulty": "MEDIUM",
+        "cognitive_level": "ANALYZE",
+        "question_type": "ANALYTICAL",
+        "learning_outcome": "Compare market structures such as perfect competition, monopoly and oligopoly."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q126",
+        "course": "ECO101",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Evaluate the likely effects of a central bank raising interest rates during a period of high inflation and slowing growth, and recommend whether the policy should be pursued.",
+        "total_marks": 8,
+        "difficulty": "HARD",
+        "cognitive_level": "EVALUATE",
+        "question_type": "ANALYTICAL",
+        "learning_outcome": "Evaluate the effects of monetary policy on inflation and output."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q127",
+        "course": "ECO101",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Draw a supply and demand diagram showing the effect of a per-unit tax on sellers and identify the tax burden borne by consumers and producers.",
+        "total_marks": 5,
+        "difficulty": "MEDIUM",
+        "cognitive_level": "APPLY",
+        "question_type": "PROBLEM_SOLVING",
+        "learning_outcome": "Explain how supply and demand determine market equilibrium."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q130",
+        "course": "ECO101",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Propose a monetary policy package for an economy facing stagflation and justify the trade-offs involved.",
+        "total_marks": 8,
+        "difficulty": "HARD",
+        "cognitive_level": "CREATE",
+        "question_type": "DESCRIPTIVE",
+        "learning_outcome": "Evaluate the effects of monetary policy on inflation and output."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q132",
+        "course": "ECO101",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Which of the following is NOT a valid SQL aggregate function? (a) SUM (b) AVG (c) CONCAT (d) COUNT",
+        "total_marks": 1,
+        "difficulty": "EASY",
+        "cognitive_level": "REMEMBER",
+        "question_type": "MCQ",
+        "learning_outcome": "Write SQL queries to retrieve, aggregate and manipulate data."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q002",
+        "course": "CS301",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "True or False: Inserting an element into a binary min-heap takes O(log n) time in the worst case.",
+        "total_marks": 1,
+        "difficulty": "EASY",
+        "cognitive_level": "REMEMBER",
+        "question_type": "TRUE_FALSE",
+        "learning_outcome": "Apply tree and heap data structures to solve computational problems."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q040",
+        "course": "CS201",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "True or False: A thread shares its stack with other threads of the same process.",
+        "total_marks": 1,
+        "difficulty": "EASY",
+        "cognitive_level": "UNDERSTAND",
+        "question_type": "TRUE_FALSE",
+        "learning_outcome": "Design concurrent programs using threads and synchronization primitives."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q062",
+        "course": "CS305",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "True or False: In Scrum, the sprint length may be changed in the middle of a sprint if the team is behind schedule.",
+        "total_marks": 1,
+        "difficulty": "EASY",
+        "cognitive_level": "REMEMBER",
+        "question_type": "TRUE_FALSE",
+        "learning_outcome": "Explain agile principles and practices such as Scrum and continuous integration."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q096",
+        "course": "CS308",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "True or False: A monopolist can charge any price it wants and still sell any quantity it wants.",
+        "total_marks": 1,
+        "difficulty": "EASY",
+        "cognitive_level": "UNDERSTAND",
+        "question_type": "TRUE_FALSE",
+        "learning_outcome": "Compare market structures such as perfect competition, monopoly and oligopoly."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q125",
+        "course": "ECO101",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Briefly explain the difference between a clustered and a non-clustered index.",
+        "total_marks": 2,
+        "difficulty": "EASY",
+        "cognitive_level": "UNDERSTAND",
+        "question_type": "SHORT_ANSWER",
+        "learning_outcome": "Evaluate indexing and query optimization strategies for database performance."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q008",
+        "course": "CS301",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Briefly explain what a confusion matrix shows.",
+        "total_marks": 2,
+        "difficulty": "EASY",
+        "cognitive_level": "UNDERSTAND",
+        "question_type": "SHORT_ANSWER",
+        "learning_outcome": "Evaluate models using appropriate metrics, validation strategies and error analysis."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q029",
+        "course": "CS402",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Write short notes on the round-robin scheduling algorithm and the effect of the time quantum.",
+        "total_marks": 3,
+        "difficulty": "MEDIUM",
+        "cognitive_level": "UNDERSTAND",
+        "question_type": "SHORT_ANSWER",
+        "learning_outcome": "Describe process states, process control blocks and CPU scheduling algorithms."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q064",
+        "course": "CS305",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Briefly outline the roles in a Scrum team.",
+        "total_marks": 2,
+        "difficulty": "EASY",
+        "cognitive_level": "REMEMBER",
+        "question_type": "SHORT_ANSWER",
+        "learning_outcome": "Explain agile principles and practices such as Scrum and continuous integration."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q098",
+        "course": "CS308",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    },
+    {
+      "input_data": {
+        "question": "Short notes: thrashing.",
+        "total_marks": 2,
+        "difficulty": "EASY",
+        "cognitive_level": "UNDERSTAND",
+        "question_type": "SHORT_ANSWER",
+        "learning_outcome": "Apply memory management techniques such as paging, segmentation and page replacement."
+      },
+      "expected_output": {},
+      "metadata": {
+        "benchmark_id": "Q144",
+        "course": "CS305",
+        "note": "No faculty ratings yet — marks validity only."
+      }
+    }
+  ]
+}

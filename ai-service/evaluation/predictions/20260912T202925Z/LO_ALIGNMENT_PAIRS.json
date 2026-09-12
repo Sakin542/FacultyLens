@@ -1,0 +1,948 @@
+[
+  {
+    "id": "P001",
+    "expected": "STRONG",
+    "predicted": "WEAK",
+    "similarity": 0.5917,
+    "correct": false,
+    "topics": [
+      "Relational Model and Keys",
+      "Entity-Relationship Modeling"
+    ]
+  },
+  {
+    "id": "P002",
+    "expected": "STRONG",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.2976,
+    "correct": false,
+    "topics": [
+      "SQL Queries"
+    ]
+  },
+  {
+    "id": "P003",
+    "expected": "STRONG",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.4706,
+    "correct": false,
+    "topics": [
+      "Relational Model and Keys",
+      "Normalization"
+    ]
+  },
+  {
+    "id": "P004",
+    "expected": "STRONG",
+    "predicted": "WEAK",
+    "similarity": 0.6746,
+    "correct": false,
+    "topics": [
+      "Transactions and Concurrency Control"
+    ]
+  },
+  {
+    "id": "P005",
+    "expected": "STRONG",
+    "predicted": "WEAK",
+    "similarity": 0.5688,
+    "correct": false,
+    "topics": [
+      "Indexing and Query Processing",
+      "SQL Queries"
+    ]
+  },
+  {
+    "id": "P006",
+    "expected": "STRONG",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.354,
+    "correct": false,
+    "topics": [
+      "Supervised and Unsupervised Learning",
+      "Clustering",
+      "Decision Trees and Ensembles"
+    ]
+  },
+  {
+    "id": "P007",
+    "expected": "STRONG",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.1338,
+    "correct": false,
+    "topics": [
+      "Clustering"
+    ]
+  },
+  {
+    "id": "P008",
+    "expected": "STRONG",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.3257,
+    "correct": false,
+    "topics": [
+      "Model Evaluation and Overfitting",
+      "Decision Trees and Ensembles",
+      "Supervised and Unsupervised Learning"
+    ]
+  },
+  {
+    "id": "P009",
+    "expected": "STRONG",
+    "predicted": "WEAK",
+    "similarity": 0.5042,
+    "correct": false,
+    "topics": [
+      "Neural Networks"
+    ]
+  },
+  {
+    "id": "P010",
+    "expected": "STRONG",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.4608,
+    "correct": false,
+    "topics": [
+      "Model Evaluation and Overfitting"
+    ]
+  },
+  {
+    "id": "P011",
+    "expected": "STRONG",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.4504,
+    "correct": false,
+    "topics": [
+      "Arrays and Linked Lists",
+      "Algorithm Complexity",
+      "Graph Algorithms"
+    ]
+  },
+  {
+    "id": "P012",
+    "expected": "STRONG",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.3824,
+    "correct": false,
+    "topics": [
+      "Algorithm Complexity"
+    ]
+  },
+  {
+    "id": "P013",
+    "expected": "STRONG",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.4751,
+    "correct": false,
+    "topics": [
+      "Trees and Heaps"
+    ]
+  },
+  {
+    "id": "P014",
+    "expected": "STRONG",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.493,
+    "correct": false,
+    "topics": [
+      "Graph Algorithms",
+      "Algorithm Complexity"
+    ]
+  },
+  {
+    "id": "P015",
+    "expected": "STRONG",
+    "predicted": "WEAK",
+    "similarity": 0.5097,
+    "correct": false,
+    "topics": [
+      "Sorting and Searching",
+      "Algorithm Complexity",
+      "Trees and Heaps"
+    ]
+  },
+  {
+    "id": "P016",
+    "expected": "STRONG",
+    "predicted": "WEAK",
+    "similarity": 0.5625,
+    "correct": false,
+    "topics": [
+      "Process Management and Scheduling"
+    ]
+  },
+  {
+    "id": "P017",
+    "expected": "STRONG",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.3983,
+    "correct": false,
+    "topics": [
+      "Given",
+      "Reference",
+      "String"
+    ]
+  },
+  {
+    "id": "P018",
+    "expected": "STRONG",
+    "predicted": "WEAK",
+    "similarity": 0.6975,
+    "correct": false,
+    "topics": [
+      "Deadlocks and Synchronization",
+      "Threads and Concurrency",
+      "File Systems"
+    ]
+  },
+  {
+    "id": "P019",
+    "expected": "STRONG",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.4601,
+    "correct": false,
+    "topics": [
+      "File Systems",
+      "Deadlocks and Synchronization"
+    ]
+  },
+  {
+    "id": "P020",
+    "expected": "STRONG",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.484,
+    "correct": false,
+    "topics": [
+      "Threads and Concurrency",
+      "Deadlocks and Synchronization",
+      "Process Management and Scheduling"
+    ]
+  },
+  {
+    "id": "P021",
+    "expected": "STRONG",
+    "predicted": "WEAK",
+    "similarity": 0.6017,
+    "correct": false,
+    "topics": [
+      "OSI and TCP/IP Models",
+      "Application Layer Protocols",
+      "Transport Layer and Congestion Control"
+    ]
+  },
+  {
+    "id": "P022",
+    "expected": "STRONG",
+    "predicted": "WEAK",
+    "similarity": 0.5249,
+    "correct": false,
+    "topics": [
+      "Routing Algorithms",
+      "Transport Layer and Congestion Control"
+    ]
+  },
+  {
+    "id": "P023",
+    "expected": "STRONG",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.4885,
+    "correct": false,
+    "topics": [
+      "Transport Layer and Congestion Control",
+      "OSI and TCP/IP Models",
+      "Application Layer Protocols"
+    ]
+  },
+  {
+    "id": "P024",
+    "expected": "STRONG",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.3683,
+    "correct": false,
+    "topics": [
+      "Network Security"
+    ]
+  },
+  {
+    "id": "P025",
+    "expected": "STRONG",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.3125,
+    "correct": false,
+    "topics": [
+      "Application Layer Protocols"
+    ]
+  },
+  {
+    "id": "P026",
+    "expected": "STRONG",
+    "predicted": "WEAK",
+    "similarity": 0.5102,
+    "correct": false,
+    "topics": [
+      "Agile Methods",
+      "Software Process Models",
+      "Requirements Engineering"
+    ]
+  },
+  {
+    "id": "P027",
+    "expected": "STRONG",
+    "predicted": "WEAK",
+    "similarity": 0.5428,
+    "correct": false,
+    "topics": [
+      "Requirements Engineering",
+      "Agile Methods",
+      "Design Patterns"
+    ]
+  },
+  {
+    "id": "P028",
+    "expected": "STRONG",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.3193,
+    "correct": false,
+    "topics": [
+      "Software Testing"
+    ]
+  },
+  {
+    "id": "P029",
+    "expected": "STRONG",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.3828,
+    "correct": false,
+    "topics": [
+      "Design Patterns",
+      "Agile Methods"
+    ]
+  },
+  {
+    "id": "P030",
+    "expected": "STRONG",
+    "predicted": "WEAK",
+    "similarity": 0.5135,
+    "correct": false,
+    "topics": [
+      "Agile Methods",
+      "Requirements Engineering"
+    ]
+  },
+  {
+    "id": "P031",
+    "expected": "STRONG",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.4813,
+    "correct": false,
+    "topics": [
+      "Newton's Laws of Motion"
+    ]
+  },
+  {
+    "id": "P032",
+    "expected": "STRONG",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.3554,
+    "correct": false,
+    "topics": [
+      "Newton's Laws of Motion",
+      "Work, Energy and Power"
+    ]
+  },
+  {
+    "id": "P033",
+    "expected": "STRONG",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.4657,
+    "correct": false,
+    "topics": [
+      "Electromagnetism",
+      "Work, Energy and Power"
+    ]
+  },
+  {
+    "id": "P034",
+    "expected": "STRONG",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.2622,
+    "correct": false,
+    "topics": [
+      "Thermodynamics"
+    ]
+  },
+  {
+    "id": "P035",
+    "expected": "STRONG",
+    "predicted": "WEAK",
+    "similarity": 0.6558,
+    "correct": false,
+    "topics": [
+      "Supply and Demand",
+      "Market Structures",
+      "Inflation and Monetary Policy"
+    ]
+  },
+  {
+    "id": "P036",
+    "expected": "STRONG",
+    "predicted": "WEAK",
+    "similarity": 0.6252,
+    "correct": false,
+    "topics": [
+      "Supply and Demand",
+      "Elasticity"
+    ]
+  },
+  {
+    "id": "P037",
+    "expected": "STRONG",
+    "predicted": "STRONG",
+    "similarity": 0.7167,
+    "correct": true,
+    "topics": [
+      "Supply and Demand",
+      "Market Structures"
+    ]
+  },
+  {
+    "id": "P038",
+    "expected": "STRONG",
+    "predicted": "WEAK",
+    "similarity": 0.554,
+    "correct": false,
+    "topics": [
+      "Inflation and Monetary Policy",
+      "Supply and Demand"
+    ]
+  },
+  {
+    "id": "P039",
+    "expected": "WEAK",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.1758,
+    "correct": false,
+    "topics": [
+      "SQL Queries"
+    ]
+  },
+  {
+    "id": "P040",
+    "expected": "WEAK",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.2908,
+    "correct": false,
+    "topics": [
+      "Indexing and Query Processing",
+      "SQL Queries"
+    ]
+  },
+  {
+    "id": "P041",
+    "expected": "WEAK",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.3727,
+    "correct": false,
+    "topics": [
+      "Relational Model and Keys",
+      "Normalization"
+    ]
+  },
+  {
+    "id": "P042",
+    "expected": "WEAK",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.3504,
+    "correct": false,
+    "topics": [
+      "Decision Trees and Ensembles",
+      "Model Evaluation and Overfitting",
+      "Clustering"
+    ]
+  },
+  {
+    "id": "P043",
+    "expected": "WEAK",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.3763,
+    "correct": false,
+    "topics": [
+      "Neural Networks",
+      "Decision Trees and Ensembles",
+      "Model Evaluation and Overfitting"
+    ]
+  },
+  {
+    "id": "P044",
+    "expected": "WEAK",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.4645,
+    "correct": false,
+    "topics": [
+      "Algorithm Complexity",
+      "Sorting and Searching"
+    ]
+  },
+  {
+    "id": "P045",
+    "expected": "WEAK",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.4651,
+    "correct": false,
+    "topics": [
+      "Stacks and Queues",
+      "Trees and Heaps",
+      "Graph Algorithms"
+    ]
+  },
+  {
+    "id": "P046",
+    "expected": "WEAK",
+    "predicted": "WEAK",
+    "similarity": 0.52,
+    "correct": true,
+    "topics": [
+      "Sorting and Searching",
+      "Algorithm Complexity",
+      "Trees and Heaps"
+    ]
+  },
+  {
+    "id": "P047",
+    "expected": "WEAK",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.4551,
+    "correct": false,
+    "topics": [
+      "Threads and Concurrency",
+      "Process Management and Scheduling"
+    ]
+  },
+  {
+    "id": "P048",
+    "expected": "WEAK",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.4632,
+    "correct": false,
+    "topics": [
+      "Threads and Concurrency",
+      "Deadlocks and Synchronization"
+    ]
+  },
+  {
+    "id": "P049",
+    "expected": "WEAK",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.3698,
+    "correct": false,
+    "topics": [
+      "Routing Algorithms"
+    ]
+  },
+  {
+    "id": "P050",
+    "expected": "WEAK",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.2352,
+    "correct": false,
+    "topics": [
+      "OSI and TCP/IP Models",
+      "Network Security",
+      "Application Layer Protocols"
+    ]
+  },
+  {
+    "id": "P051",
+    "expected": "WEAK",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.4887,
+    "correct": false,
+    "topics": [
+      "Software Testing",
+      "Software Process Models",
+      "Requirements Engineering"
+    ]
+  },
+  {
+    "id": "P052",
+    "expected": "WEAK",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.4747,
+    "correct": false,
+    "topics": [
+      "Requirements Engineering",
+      "Agile Methods",
+      "Design Patterns"
+    ]
+  },
+  {
+    "id": "P053",
+    "expected": "WEAK",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.4769,
+    "correct": false,
+    "topics": [
+      "Newton's Laws of Motion",
+      "Work, Energy and Power"
+    ]
+  },
+  {
+    "id": "P054",
+    "expected": "WEAK",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.2976,
+    "correct": false,
+    "topics": [
+      "Newton's Laws of Motion"
+    ]
+  },
+  {
+    "id": "P055",
+    "expected": "WEAK",
+    "predicted": "WEAK",
+    "similarity": 0.5003,
+    "correct": true,
+    "topics": [
+      "Supply and Demand",
+      "Market Structures"
+    ]
+  },
+  {
+    "id": "P056",
+    "expected": "WEAK",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.3579,
+    "correct": false,
+    "topics": [
+      "Inflation and Monetary Policy",
+      "Supply and Demand"
+    ]
+  },
+  {
+    "id": "P057",
+    "expected": "WEAK",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.3326,
+    "correct": false,
+    "topics": [
+      "Model Evaluation and Overfitting",
+      "Neural Networks"
+    ]
+  },
+  {
+    "id": "P058",
+    "expected": "WEAK",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.4452,
+    "correct": false,
+    "topics": [
+      "Stacks and Queues"
+    ]
+  },
+  {
+    "id": "P059",
+    "expected": "WEAK",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.4442,
+    "correct": false,
+    "topics": [
+      "Threads and Concurrency",
+      "Deadlocks and Synchronization",
+      "Process Management and Scheduling"
+    ]
+  },
+  {
+    "id": "P060",
+    "expected": "WEAK",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.3873,
+    "correct": false,
+    "topics": [
+      "OSI and TCP/IP Models",
+      "Transport Layer and Congestion Control",
+      "Application Layer Protocols"
+    ]
+  },
+  {
+    "id": "P061",
+    "expected": "WEAK",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.1728,
+    "correct": false,
+    "topics": [
+      "Software Testing"
+    ]
+  },
+  {
+    "id": "P062",
+    "expected": "WEAK",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.4241,
+    "correct": false,
+    "topics": [
+      "Process Management and Scheduling",
+      "File Systems",
+      "Deadlocks and Synchronization"
+    ]
+  },
+  {
+    "id": "P063",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.0135,
+    "correct": true,
+    "topics": [
+      "SQL Queries"
+    ]
+  },
+  {
+    "id": "P064",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.1186,
+    "correct": true,
+    "topics": [
+      "Relational Model and Keys",
+      "Entity-Relationship Modeling"
+    ]
+  },
+  {
+    "id": "P065",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.0005,
+    "correct": true,
+    "topics": [
+      "Supervised and Unsupervised Learning",
+      "Clustering",
+      "Decision Trees and Ensembles"
+    ]
+  },
+  {
+    "id": "P066",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.0073,
+    "correct": true,
+    "topics": [
+      "Trees and Heaps",
+      "Algorithm Complexity"
+    ]
+  },
+  {
+    "id": "P067",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.0585,
+    "correct": true,
+    "topics": [
+      "Process Management and Scheduling"
+    ]
+  },
+  {
+    "id": "P068",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.2016,
+    "correct": true,
+    "topics": [
+      "OSI and TCP/IP Models",
+      "Application Layer Protocols",
+      "Transport Layer and Congestion Control"
+    ]
+  },
+  {
+    "id": "P069",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.1218,
+    "correct": true,
+    "topics": [
+      "Software Testing"
+    ]
+  },
+  {
+    "id": "P070",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.0377,
+    "correct": true,
+    "topics": [
+      "Newton's Laws of Motion",
+      "Thermodynamics",
+      "Work, Energy and Power"
+    ]
+  },
+  {
+    "id": "P071",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.064,
+    "correct": true,
+    "topics": [
+      "Elasticity",
+      "Supply and Demand",
+      "Market Structures"
+    ]
+  },
+  {
+    "id": "P072",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.03,
+    "correct": true,
+    "topics": [
+      "Supply and Demand",
+      "Market Structures"
+    ]
+  },
+  {
+    "id": "P073",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": -0.0771,
+    "correct": true,
+    "topics": [
+      "Algorithm Complexity"
+    ]
+  },
+  {
+    "id": "P074",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.1335,
+    "correct": true,
+    "topics": [
+      "Transport Layer and Congestion Control",
+      "OSI and TCP/IP Models",
+      "Application Layer Protocols"
+    ]
+  },
+  {
+    "id": "P075",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.1603,
+    "correct": true,
+    "topics": [
+      "Transactions and Concurrency Control"
+    ]
+  },
+  {
+    "id": "P076",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.2799,
+    "correct": true,
+    "topics": [
+      "Clustering",
+      "Supervised and Unsupervised Learning",
+      "Decision Trees and Ensembles"
+    ]
+  },
+  {
+    "id": "P077",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.4148,
+    "correct": true,
+    "topics": [
+      "Memory Management and Virtual Memory"
+    ]
+  },
+  {
+    "id": "P078",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.29,
+    "correct": true,
+    "topics": [
+      "Application Layer Protocols",
+      "Routing Algorithms"
+    ]
+  },
+  {
+    "id": "P079",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.0965,
+    "correct": true,
+    "topics": [
+      "Agile Methods"
+    ]
+  },
+  {
+    "id": "P080",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": -0.0016,
+    "correct": true,
+    "topics": [
+      "Electromagnetism"
+    ]
+  },
+  {
+    "id": "P081",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.0649,
+    "correct": true,
+    "topics": [
+      "Market Structures",
+      "Supply and Demand"
+    ]
+  },
+  {
+    "id": "P082",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.4403,
+    "correct": true,
+    "topics": [
+      "Stacks and Queues",
+      "Trees and Heaps",
+      "Graph Algorithms"
+    ]
+  },
+  {
+    "id": "P083",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.2703,
+    "correct": true,
+    "topics": [
+      "Entity-Relationship Modeling"
+    ]
+  },
+  {
+    "id": "P084",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.257,
+    "correct": true,
+    "topics": [
+      "Threads and Concurrency"
+    ]
+  },
+  {
+    "id": "P085",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.2046,
+    "correct": true,
+    "topics": [
+      "Application Layer Protocols",
+      "Transport Layer and Congestion Control"
+    ]
+  },
+  {
+    "id": "P086",
+    "expected": "NOT_ALIGNED",
+    "predicted": "NOT_ALIGNED",
+    "similarity": 0.3513,
+    "correct": true,
+    "topics": [
+      "Software Testing"
+    ]
+  }
+]

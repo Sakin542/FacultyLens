@@ -1,0 +1,565 @@
+{
+  "component": "QUESTION_CLASSIFICATION",
+  "status": "ACCEPTABLE",
+  "split": "TEST",
+  "sample_size": 72,
+  "headline": {
+    "metric": "macro_f1",
+    "value": 0.7525,
+    "ci95": [
+      0.6579,
+      0.8295
+    ],
+    "higher_is_better": true,
+    "sample_size": 72
+  },
+  "metrics": {
+    "accuracy": 0.6667,
+    "macro_precision": 0.7762,
+    "macro_recall": 0.7957,
+    "macro_f1": 0.7525,
+    "weighted_f1": 0.6574,
+    "lenient_accuracy": null,
+    "accuracy_ci95": [
+      0.5518,
+      0.7647
+    ],
+    "accuracy_high_confidence_labels": 0.7692307692307693,
+    "accuracy_medium_low_confidence_labels": 0.5454545454545454,
+    "ece": 0.175
+  },
+  "structured": {
+    "confusion_matrix": {
+      "MCQ": {
+        "MCQ": 4,
+        "SHORT_ANSWER": 0,
+        "DESCRIPTIVE": 0,
+        "PROBLEM_SOLVING": 0,
+        "TRUE_FALSE": 0,
+        "CONCEPTUAL": 0,
+        "ANALYTICAL": 0
+      },
+      "SHORT_ANSWER": {
+        "MCQ": 0,
+        "SHORT_ANSWER": 5,
+        "DESCRIPTIVE": 0,
+        "PROBLEM_SOLVING": 0,
+        "TRUE_FALSE": 0,
+        "CONCEPTUAL": 0,
+        "ANALYTICAL": 1
+      },
+      "DESCRIPTIVE": {
+        "MCQ": 0,
+        "SHORT_ANSWER": 1,
+        "DESCRIPTIVE": 10,
+        "PROBLEM_SOLVING": 0,
+        "TRUE_FALSE": 0,
+        "CONCEPTUAL": 0,
+        "ANALYTICAL": 2
+      },
+      "PROBLEM_SOLVING": {
+        "MCQ": 0,
+        "SHORT_ANSWER": 0,
+        "DESCRIPTIVE": 10,
+        "PROBLEM_SOLVING": 9,
+        "TRUE_FALSE": 0,
+        "CONCEPTUAL": 3,
+        "ANALYTICAL": 3
+      },
+      "TRUE_FALSE": {
+        "MCQ": 0,
+        "SHORT_ANSWER": 0,
+        "DESCRIPTIVE": 0,
+        "PROBLEM_SOLVING": 0,
+        "TRUE_FALSE": 5,
+        "CONCEPTUAL": 0,
+        "ANALYTICAL": 0
+      },
+      "CONCEPTUAL": {
+        "MCQ": 0,
+        "SHORT_ANSWER": 0,
+        "DESCRIPTIVE": 1,
+        "PROBLEM_SOLVING": 0,
+        "TRUE_FALSE": 0,
+        "CONCEPTUAL": 6,
+        "ANALYTICAL": 0
+      },
+      "ANALYTICAL": {
+        "MCQ": 0,
+        "SHORT_ANSWER": 0,
+        "DESCRIPTIVE": 1,
+        "PROBLEM_SOLVING": 0,
+        "TRUE_FALSE": 0,
+        "CONCEPTUAL": 2,
+        "ANALYTICAL": 9
+      }
+    },
+    "per_class": [
+      {
+        "label": "MCQ",
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 4,
+        "predicted": 4
+      },
+      {
+        "label": "SHORT_ANSWER",
+        "precision": 0.8333,
+        "recall": 0.8333,
+        "f1": 0.8333,
+        "support": 6,
+        "predicted": 6
+      },
+      {
+        "label": "DESCRIPTIVE",
+        "precision": 0.4545,
+        "recall": 0.7692,
+        "f1": 0.5714,
+        "support": 13,
+        "predicted": 22
+      },
+      {
+        "label": "PROBLEM_SOLVING",
+        "precision": 1.0,
+        "recall": 0.36,
+        "f1": 0.5294,
+        "support": 25,
+        "predicted": 9
+      },
+      {
+        "label": "TRUE_FALSE",
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 5,
+        "predicted": 5
+      },
+      {
+        "label": "CONCEPTUAL",
+        "precision": 0.5455,
+        "recall": 0.8571,
+        "f1": 0.6667,
+        "support": 7,
+        "predicted": 11
+      },
+      {
+        "label": "ANALYTICAL",
+        "precision": 0.6,
+        "recall": 0.75,
+        "f1": 0.6667,
+        "support": 12,
+        "predicted": 15
+      }
+    ],
+    "top_confusions": [
+      {
+        "transition": "PROBLEM_SOLVING->DESCRIPTIVE",
+        "count": 10
+      },
+      {
+        "transition": "PROBLEM_SOLVING->CONCEPTUAL",
+        "count": 3
+      },
+      {
+        "transition": "PROBLEM_SOLVING->ANALYTICAL",
+        "count": 3
+      },
+      {
+        "transition": "DESCRIPTIVE->ANALYTICAL",
+        "count": 2
+      },
+      {
+        "transition": "ANALYTICAL->CONCEPTUAL",
+        "count": 2
+      },
+      {
+        "transition": "DESCRIPTIVE->SHORT_ANSWER",
+        "count": 1
+      },
+      {
+        "transition": "ANALYTICAL->DESCRIPTIVE",
+        "count": 1
+      },
+      {
+        "transition": "CONCEPTUAL->DESCRIPTIVE",
+        "count": 1
+      }
+    ],
+    "accuracy_by_course": {
+      "CS201": 0.4444,
+      "CS301": 0.6667,
+      "CS305": 0.8182,
+      "CS306": 0.7778,
+      "CS308": 0.7,
+      "CS402": 0.6364,
+      "ECO101": 0.5714,
+      "PHY101": 0.6667
+    },
+    "label_distribution": {
+      "MCQ": 4,
+      "PROBLEM_SOLVING": 25,
+      "ANALYTICAL": 12,
+      "SHORT_ANSWER": 6,
+      "DESCRIPTIVE": 13,
+      "CONCEPTUAL": 7,
+      "TRUE_FALSE": 5
+    },
+    "calibration": {
+      "ece": 0.175,
+      "bins": [
+        {
+          "range": [
+            0.0,
+            0.2
+          ],
+          "count": 0,
+          "mean_confidence": null,
+          "accuracy": null
+        },
+        {
+          "range": [
+            0.2,
+            0.4
+          ],
+          "count": 0,
+          "mean_confidence": null,
+          "accuracy": null
+        },
+        {
+          "range": [
+            0.4,
+            0.6
+          ],
+          "count": 0,
+          "mean_confidence": null,
+          "accuracy": null
+        },
+        {
+          "range": [
+            0.6,
+            0.8
+          ],
+          "count": 13,
+          "mean_confidence": 0.6962,
+          "accuracy": 0.2308
+        },
+        {
+          "range": [
+            0.8,
+            1.0
+          ],
+          "count": 59,
+          "mean_confidence": 0.8737,
+          "accuracy": 0.7627
+        }
+      ]
+    }
+  },
+  "latency_ms": {
+    "count": 72,
+    "mean_ms": 8.27,
+    "p50_ms": 7.51,
+    "p95_ms": 16.08,
+    "max_ms": 20.71
+  },
+  "failure_count": 0,
+  "failure_rate": 0.0,
+  "error_breakdown": {
+    "WRONG_CLASSIFICATION": 24
+  },
+  "errors": [
+    {
+      "id": "Q004",
+      "course": "CS301",
+      "input": "Write an SQL query to list the names of students who are enrolled in more than three courses.",
+      "expected": "PROBLEM_SOLVING",
+      "actual": "CONCEPTUAL",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.85
+    },
+    {
+      "id": "Q010",
+      "course": "CS301",
+      "input": "Draw an ER diagram for a library system in which members borrow books, each book has one or more authors, and every loan records a due date.",
+      "expected": "PROBLEM_SOLVING",
+      "actual": "DESCRIPTIVE",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.7
+    },
+    {
+      "id": "Q018",
+      "course": "CS301",
+      "input": "Estimate the number of disk I/Os required to find a record using a B+ tree of order 100 over 10 million records, and explain how this compares with a full tabl…",
+      "expected": "PROBLEM_SOLVING",
+      "actual": "DESCRIPTIVE",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.86
+    },
+    {
+      "id": "Q024",
+      "course": "CS402",
+      "input": "Design a neural network architecture for classifying 28x28 grayscale handwritten digits. Specify the layers, activation functions, loss function and one regula…",
+      "expected": "PROBLEM_SOLVING",
+      "actual": "ANALYTICAL",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.87
+    },
+    {
+      "id": "Q032",
+      "course": "CS402",
+      "input": "A logistic regression model outputs a probability of 0.7 for the positive class with a decision threshold of 0.5. Determine the predicted label and explain wha…",
+      "expected": "PROBLEM_SOLVING",
+      "actual": "DESCRIPTIVE",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.86
+    },
+    {
+      "id": "Q036",
+      "course": "CS402",
+      "input": "Propose a complete experimental protocol to compare three clustering algorithms on an unlabelled customer dataset, including the choice of internal validation …",
+      "expected": "DESCRIPTIVE",
+      "actual": "ANALYTICAL",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.87
+    },
+    {
+      "id": "Q038",
+      "course": "CS201",
+      "input": "Implement a function that reverses a singly linked list in place and state its time complexity.",
+      "expected": "PROBLEM_SOLVING",
+      "actual": "CONCEPTUAL",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.85
+    },
+    {
+      "id": "Q042",
+      "course": "CS201",
+      "input": "Trace Dijkstra's algorithm on the given weighted graph from source vertex A, showing the distance table after each iteration.",
+      "expected": "PROBLEM_SOLVING",
+      "actual": "DESCRIPTIVE",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.7
+    },
+    {
+      "id": "Q044",
+      "course": "CS201",
+      "input": "Prove that any comparison-based sorting algorithm requires Omega(n log n) comparisons in the worst case.",
+      "expected": "PROBLEM_SOLVING",
+      "actual": "DESCRIPTIVE",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "LOW",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.7
+    },
+    {
+      "id": "Q050",
+      "course": "CS201",
+      "input": "Detect whether a directed graph contains a cycle. Write an algorithm and analyze its complexity.",
+      "expected": "PROBLEM_SOLVING",
+      "actual": "ANALYTICAL",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.87
+    },
+    {
+      "id": "Q054",
+      "course": "CS201",
+      "input": "A social network stores friendships as an adjacency list with 10 million users. Evaluate whether BFS or bidirectional BFS is preferable for finding the shortes…",
+      "expected": "ANALYTICAL",
+      "actual": "CONCEPTUAL",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.85
+    },
+    {
+      "id": "Q058",
+      "course": "CS305",
+      "input": "A system uses 32-bit virtual addresses, 4 KB pages and 4-byte page table entries. Determine the size of a single-level page table and explain why a two-level p…",
+      "expected": "PROBLEM_SOLVING",
+      "actual": "DESCRIPTIVE",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.86
+    },
+    {
+      "id": "Q066",
+      "course": "CS305",
+      "input": "Why can a spinlock waste CPU cycles on a single-processor system?",
+      "expected": "DESCRIPTIVE",
+      "actual": "SHORT_ANSWER",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.65
+    },
+    {
+      "id": "Q082",
+      "course": "CS306",
+      "input": "Run the Bellman-Ford algorithm on the given graph for three iterations and give the distance vector at node D after each iteration.",
+      "expected": "PROBLEM_SOLVING",
+      "actual": "DESCRIPTIVE",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.7
+    },
+    {
+      "id": "Q084",
+      "course": "CS306",
+      "input": "Design a secure authentication scheme for a campus Wi-Fi network that resists replay attacks; specify the messages exchanged and the cryptographic primitives u…",
+      "expected": "PROBLEM_SOLVING",
+      "actual": "DESCRIPTIVE",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.7
+    },
+    {
+      "id": "Q094",
+      "course": "CS308",
+      "input": "Write unit tests for a function that validates email addresses, covering at least four equivalence classes.",
+      "expected": "PROBLEM_SOLVING",
+      "actual": "DESCRIPTIVE",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.7
+    },
+    {
+      "id": "Q102",
+      "course": "CS308",
+      "input": "Identify the code smells in the following class and propose refactorings, naming the design pattern applied where relevant.",
+      "expected": "ANALYTICAL",
+      "actual": "CONCEPTUAL",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.85
+    },
+    {
+      "id": "Q104",
+      "course": "CS308",
+      "input": "Evaluate the suitability of continuous integration for a safety-critical avionics project, considering certification requirements.",
+      "expected": "ANALYTICAL",
+      "actual": "DESCRIPTIVE",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.7
+    },
+    {
+      "id": "Q112",
+      "course": "PHY101",
+      "input": "A 0.5 kg ball is dropped from a height of 20 m. Using energy conservation, determine its speed just before it hits the ground, ignoring air resistance.",
+      "expected": "PROBLEM_SOLVING",
+      "actual": "DESCRIPTIVE",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.7
+    },
+    {
+      "id": "Q118",
+      "course": "PHY101",
+      "input": "A block slides down a rough inclined plane at constant velocity. Analyze the forces acting on it and determine the relationship between the coefficient of kine…",
+      "expected": "PROBLEM_SOLVING",
+      "actual": "ANALYTICAL",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.87
+    },
+    {
+      "id": "Q130",
+      "course": "ECO101",
+      "input": "Draw a supply and demand diagram showing the effect of a per-unit tax on sellers and identify the tax burden borne by consumers and producers.",
+      "expected": "PROBLEM_SOLVING",
+      "actual": "CONCEPTUAL",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.85
+    },
+    {
+      "id": "Q132",
+      "course": "ECO101",
+      "input": "Propose a monetary policy package for an economy facing stagflation and justify the trade-offs involved.",
+      "expected": "DESCRIPTIVE",
+      "actual": "ANALYTICAL",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.87
+    },
+    {
+      "id": "Q140",
+      "course": "ECO101",
+      "input": "Sketch the demand curve for a good with perfectly inelastic demand and give one real-world example.",
+      "expected": "CONCEPTUAL",
+      "actual": "DESCRIPTIVE",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "LOW",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.7
+    },
+    {
+      "id": "Q142",
+      "course": "CS402",
+      "input": "Fill in the blank and justify: Increasing the regularization parameter lambda in ridge regression generally ______ the variance of the model.",
+      "expected": "SHORT_ANSWER",
+      "actual": "ANALYTICAL",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_CLASSIFICATION",
+      "confidence": 0.87
+    }
+  ],
+  "human_review": {},
+  "notes": [
+    "Rule-based classifier (facultylens-question-analyzer 1.0.0); labels are single-annotator, see labels/LABELING_PROTOCOL.md."
+  ]
+}

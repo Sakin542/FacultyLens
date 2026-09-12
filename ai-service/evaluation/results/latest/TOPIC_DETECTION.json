@@ -1,0 +1,365 @@
+{
+  "component": "TOPIC_DETECTION",
+  "status": "ACCEPTABLE",
+  "split": "TEST",
+  "sample_size": 72,
+  "headline": {
+    "metric": "top1_accuracy",
+    "value": 0.7916666666666666,
+    "ci95": [
+      0.6843,
+      0.8695
+    ],
+    "higher_is_better": true,
+    "sample_size": 72
+  },
+  "metrics": {
+    "top1_accuracy": 0.7916666666666666,
+    "top3_accuracy": 0.9444444444444444,
+    "top1_accuracy_ci95": [
+      0.6843,
+      0.8695
+    ],
+    "micro_precision": 0.5182,
+    "micro_recall": 0.8765,
+    "micro_f1": 0.6514,
+    "macro_f1": 0.619,
+    "hamming_loss": 0.1759,
+    "ece": 0.3514
+  },
+  "structured": {
+    "calibration": {
+      "ece": 0.3514,
+      "bins": [
+        {
+          "range": [
+            0.0,
+            0.2
+          ],
+          "count": 0,
+          "mean_confidence": null,
+          "accuracy": null
+        },
+        {
+          "range": [
+            0.2,
+            0.4
+          ],
+          "count": 29,
+          "mean_confidence": 0.3238,
+          "accuracy": 0.6897
+        },
+        {
+          "range": [
+            0.4,
+            0.6
+          ],
+          "count": 38,
+          "mean_confidence": 0.5005,
+          "accuracy": 0.8684
+        },
+        {
+          "range": [
+            0.6,
+            0.8
+          ],
+          "count": 5,
+          "mean_confidence": 0.658,
+          "accuracy": 0.8
+        },
+        {
+          "range": [
+            0.8,
+            1.0
+          ],
+          "count": 0,
+          "mean_confidence": null,
+          "accuracy": null
+        }
+      ]
+    }
+  },
+  "latency_ms": {
+    "count": 72,
+    "mean_ms": 7.38,
+    "p50_ms": 6.54,
+    "p95_ms": 13.84,
+    "max_ms": 19.78
+  },
+  "failure_count": 0,
+  "failure_rate": 0.0,
+  "error_breakdown": {
+    "WRONG_TOPIC": 15
+  },
+  "errors": [
+    {
+      "id": "Q014",
+      "course": "CS301",
+      "input": "List three advantages of using views in a relational database.",
+      "expected": "SQL Queries",
+      "acceptable": [
+        "SQL Queries"
+      ],
+      "actual": "Relational Model and Keys",
+      "actual_top3": [
+        "Relational Model and Keys",
+        "SQL Queries",
+        "Entity-Relationship Modeling"
+      ],
+      "error_type": "WRONG_TOPIC",
+      "confidence": 0.39,
+      "label_confidence": "HIGH"
+    },
+    {
+      "id": "Q022",
+      "course": "CS402",
+      "input": "Compute the information gain of splitting on attribute A given that the parent node contains 8 positive and 8 negative examples and the split produces children…",
+      "expected": "Decision Trees and Ensembles",
+      "acceptable": [
+        "Decision Trees and Ensembles"
+      ],
+      "actual": "Clustering",
+      "actual_top3": [
+        "Clustering"
+      ],
+      "error_type": "WRONG_TOPIC",
+      "confidence": 0.27,
+      "label_confidence": "HIGH"
+    },
+    {
+      "id": "Q034",
+      "course": "CS402",
+      "input": "Write pseudocode for the k-nearest neighbours classification algorithm.",
+      "expected": "Supervised and Unsupervised Learning",
+      "acceptable": [
+        "Supervised and Unsupervised Learning"
+      ],
+      "actual": "Clustering",
+      "actual_top3": [
+        "Clustering",
+        "Supervised and Unsupervised Learning",
+        "Decision Trees and Ensembles"
+      ],
+      "error_type": "WRONG_TOPIC",
+      "confidence": 0.43,
+      "label_confidence": "HIGH"
+    },
+    {
+      "id": "Q070",
+      "course": "CS305",
+      "input": "What is a context switch?",
+      "expected": "Process Management and Scheduling",
+      "acceptable": [
+        "Process Management and Scheduling"
+      ],
+      "actual": "Threads and Concurrency",
+      "actual_top3": [
+        "Threads and Concurrency"
+      ],
+      "error_type": "WRONG_TOPIC",
+      "confidence": 0.21,
+      "label_confidence": "HIGH"
+    },
+    {
+      "id": "Q074",
+      "course": "CS306",
+      "input": "Explain how TCP's three-way handshake establishes a connection.",
+      "expected": "Transport Layer and Congestion Control",
+      "acceptable": [
+        "Transport Layer and Congestion Control"
+      ],
+      "actual": "OSI and TCP/IP Models",
+      "actual_top3": [
+        "OSI and TCP/IP Models",
+        "Application Layer Protocols",
+        "Transport Layer and Congestion Control"
+      ],
+      "error_type": "WRONG_TOPIC",
+      "confidence": 0.37,
+      "label_confidence": "HIGH"
+    },
+    {
+      "id": "Q078",
+      "course": "CS306",
+      "input": "True or False: UDP guarantees in-order delivery of datagrams.",
+      "expected": "Transport Layer and Congestion Control",
+      "acceptable": [
+        "Transport Layer and Congestion Control"
+      ],
+      "actual": "OSI and TCP/IP Models",
+      "actual_top3": [
+        "OSI and TCP/IP Models",
+        "Application Layer Protocols",
+        "Transport Layer and Congestion Control"
+      ],
+      "error_type": "WRONG_TOPIC",
+      "confidence": 0.31,
+      "label_confidence": "HIGH"
+    },
+    {
+      "id": "Q086",
+      "course": "CS306",
+      "input": "Analyze how a SYN flood attack exploits the TCP handshake and assess the effectiveness of SYN cookies as a countermeasure.",
+      "expected": "Network Security",
+      "acceptable": [
+        "Network Security",
+        "Transport Layer and Congestion Control"
+      ],
+      "actual": "OSI and TCP/IP Models",
+      "actual_top3": [
+        "OSI and TCP/IP Models",
+        "Network Security",
+        "Application Layer Protocols"
+      ],
+      "error_type": "WRONG_TOPIC",
+      "confidence": 0.34,
+      "label_confidence": "HIGH"
+    },
+    {
+      "id": "Q092",
+      "course": "CS308",
+      "input": "Compare the waterfall model with an iterative model, and recommend one for a start-up building a mobile app with rapidly changing requirements.",
+      "expected": "Software Process Models",
+      "acceptable": [
+        "Software Process Models"
+      ],
+      "actual": "Agile Methods",
+      "actual_top3": [
+        "Agile Methods",
+        "Software Process Models",
+        "Requirements Engineering"
+      ],
+      "error_type": "WRONG_TOPIC",
+      "confidence": 0.4,
+      "label_confidence": "HIGH"
+    },
+    {
+      "id": "Q104",
+      "course": "CS308",
+      "input": "Evaluate the suitability of continuous integration for a safety-critical avionics project, considering certification requirements.",
+      "expected": "Agile Methods",
+      "acceptable": [
+        "Agile Methods"
+      ],
+      "actual": "Requirements Engineering",
+      "actual_top3": [
+        "Requirements Engineering",
+        "Software Testing"
+      ],
+      "error_type": "WRONG_TOPIC",
+      "confidence": 0.34,
+      "label_confidence": "HIGH"
+    },
+    {
+      "id": "Q112",
+      "course": "PHY101",
+      "input": "A 0.5 kg ball is dropped from a height of 20 m. Using energy conservation, determine its speed just before it hits the ground, ignoring air resistance.",
+      "expected": "Work, Energy and Power",
+      "acceptable": [
+        "Work, Energy and Power"
+      ],
+      "actual": "Newton's Laws of Motion",
+      "actual_top3": [
+        "Newton's Laws of Motion",
+        "Work, Energy and Power"
+      ],
+      "error_type": "WRONG_TOPIC",
+      "confidence": 0.38,
+      "label_confidence": "MEDIUM"
+    },
+    {
+      "id": "Q126",
+      "course": "ECO101",
+      "input": "Compare the long-run outcomes of perfect competition and monopoly in terms of price, output and efficiency.",
+      "expected": "Market Structures",
+      "acceptable": [
+        "Market Structures"
+      ],
+      "actual": "Supply and Demand",
+      "actual_top3": [
+        "Supply and Demand",
+        "Market Structures"
+      ],
+      "error_type": "WRONG_TOPIC",
+      "confidence": 0.43,
+      "label_confidence": "HIGH"
+    },
+    {
+      "id": "Q136",
+      "course": "CS305",
+      "input": "Suppose two processes each hold one resource and request the other. Name the situation and describe one way the operating system could recover.",
+      "expected": "Deadlocks and Synchronization",
+      "acceptable": [
+        "Deadlocks and Synchronization"
+      ],
+      "actual": "Process Management and Scheduling",
+      "actual_top3": [
+        "Process Management and Scheduling",
+        "File Systems",
+        "Deadlocks and Synchronization"
+      ],
+      "error_type": "WRONG_TOPIC",
+      "confidence": 0.5,
+      "label_confidence": "MEDIUM"
+    },
+    {
+      "id": "Q140",
+      "course": "ECO101",
+      "input": "Sketch the demand curve for a good with perfectly inelastic demand and give one real-world example.",
+      "expected": "Elasticity",
+      "acceptable": [
+        "Elasticity"
+      ],
+      "actual": "Supply and Demand",
+      "actual_top3": [
+        "Supply and Demand",
+        "Elasticity",
+        "Market Structures"
+      ],
+      "error_type": "WRONG_TOPIC",
+      "confidence": 0.57,
+      "label_confidence": "LOW"
+    },
+    {
+      "id": "Q142",
+      "course": "CS402",
+      "input": "Fill in the blank and justify: Increasing the regularization parameter lambda in ridge regression generally ______ the variance of the model.",
+      "expected": "Model Evaluation and Overfitting",
+      "acceptable": [
+        "Model Evaluation and Overfitting",
+        "Regression Models"
+      ],
+      "actual": "Fill",
+      "actual_top3": [
+        "Fill",
+        "Blank",
+        "Justify"
+      ],
+      "error_type": "WRONG_TOPIC",
+      "confidence": 0.7,
+      "label_confidence": "MEDIUM"
+    },
+    {
+      "id": "Q144",
+      "course": "CS305",
+      "input": "Short notes: thrashing.",
+      "expected": "Memory Management and Virtual Memory",
+      "acceptable": [
+        "Memory Management and Virtual Memory"
+      ],
+      "actual": "Threads and Concurrency",
+      "actual_top3": [
+        "Threads and Concurrency",
+        "Memory Management and Virtual Memory",
+        "Process Management and Scheduling"
+      ],
+      "error_type": "WRONG_TOPIC",
+      "confidence": 0.35,
+      "label_confidence": "HIGH"
+    }
+  ],
+  "human_review": {},
+  "notes": [
+    "Topic detection = MiniLM cosine between question and the course's syllabus topics (threshold 0.25, fallback 0.20, top-3). Multi-label metrics treat the annotator's acceptable set as ground truth."
+  ]
+}

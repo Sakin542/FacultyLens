@@ -1,0 +1,143 @@
+{
+  "dataset": "facultylens-courses",
+  "version": "v1.0",
+  "created": "2026-09-13",
+  "description": "Course catalogue used by the evaluation datasets: syllabus topics and learning outcomes per course. Topics are the candidate labels for topic detection; learning outcomes are the candidate targets for LO alignment.",
+  "courses": {
+    "CS201": {
+      "name": "Data Structures and Algorithms",
+      "topics": [
+        "Arrays and Linked Lists",
+        "Stacks and Queues",
+        "Trees and Heaps",
+        "Graph Algorithms",
+        "Sorting and Searching",
+        "Algorithm Complexity"
+      ],
+      "learning_outcomes": {
+        "LO1": "Explain the properties and operations of fundamental data structures such as arrays, linked lists, stacks and queues.",
+        "LO2": "Analyze the time and space complexity of algorithms using asymptotic notation.",
+        "LO3": "Apply tree and heap data structures to solve computational problems.",
+        "LO4": "Implement graph traversal and shortest-path algorithms.",
+        "LO5": "Select and justify appropriate sorting and searching algorithms for a given problem."
+      }
+    },
+    "CS301": {
+      "name": "Database Management Systems",
+      "topics": [
+        "Relational Model and Keys",
+        "SQL Queries",
+        "Normalization",
+        "Transactions and Concurrency Control",
+        "Indexing and Query Processing",
+        "Entity-Relationship Modeling"
+      ],
+      "learning_outcomes": {
+        "LO1": "Explain relational database concepts including keys, integrity constraints and the relational model.",
+        "LO2": "Write SQL queries to retrieve, aggregate and manipulate data.",
+        "LO3": "Apply normalization techniques to design well-structured relational schemas.",
+        "LO4": "Analyze transaction management, concurrency control and recovery mechanisms.",
+        "LO5": "Evaluate indexing and query optimization strategies for database performance."
+      }
+    },
+    "CS305": {
+      "name": "Operating Systems",
+      "topics": [
+        "Process Management and Scheduling",
+        "Memory Management and Virtual Memory",
+        "Deadlocks and Synchronization",
+        "File Systems",
+        "Threads and Concurrency"
+      ],
+      "learning_outcomes": {
+        "LO1": "Describe process states, process control blocks and CPU scheduling algorithms.",
+        "LO2": "Apply memory management techniques such as paging, segmentation and page replacement.",
+        "LO3": "Analyze synchronization problems and deadlock handling strategies.",
+        "LO4": "Explain file system structures and storage allocation methods.",
+        "LO5": "Design concurrent programs using threads and synchronization primitives."
+      }
+    },
+    "CS306": {
+      "name": "Computer Networks",
+      "topics": [
+        "OSI and TCP/IP Models",
+        "Routing Algorithms",
+        "Transport Layer and Congestion Control",
+        "Network Security",
+        "Application Layer Protocols"
+      ],
+      "learning_outcomes": {
+        "LO1": "Describe the layered architecture of computer networks and the responsibilities of each layer.",
+        "LO2": "Analyze routing algorithms and their behavior in dynamic networks.",
+        "LO3": "Explain transport layer mechanisms for reliability, flow control and congestion control.",
+        "LO4": "Evaluate network security threats and cryptographic countermeasures.",
+        "LO5": "Apply application layer protocols such as HTTP, DNS and SMTP."
+      }
+    },
+    "CS308": {
+      "name": "Software Engineering",
+      "topics": [
+        "Software Process Models",
+        "Requirements Engineering",
+        "Software Testing",
+        "Design Patterns",
+        "Agile Methods"
+      ],
+      "learning_outcomes": {
+        "LO1": "Compare software development process models and select one for a given project context.",
+        "LO2": "Elicit, specify and validate software requirements.",
+        "LO3": "Design and execute software test strategies at unit, integration and system level.",
+        "LO4": "Apply design patterns to improve software structure and maintainability.",
+        "LO5": "Explain agile principles and practices such as Scrum and continuous integration."
+      }
+    },
+    "CS402": {
+      "name": "Machine Learning",
+      "topics": [
+        "Supervised and Unsupervised Learning",
+        "Regression Models",
+        "Decision Trees and Ensembles",
+        "Neural Networks",
+        "Model Evaluation and Overfitting",
+        "Clustering"
+      ],
+      "learning_outcomes": {
+        "LO1": "Describe the fundamental paradigms of machine learning and their typical applications.",
+        "LO2": "Apply regression and classification algorithms to real datasets.",
+        "LO3": "Evaluate models using appropriate metrics, validation strategies and error analysis.",
+        "LO4": "Design neural network architectures and training procedures for a given task.",
+        "LO5": "Analyze the bias-variance trade-off, overfitting and regularization."
+      }
+    },
+    "PHY101": {
+      "name": "Physics I",
+      "topics": [
+        "Newton's Laws of Motion",
+        "Work, Energy and Power",
+        "Electromagnetism",
+        "Thermodynamics"
+      ],
+      "learning_outcomes": {
+        "LO1": "Apply Newton's laws to solve problems involving forces and motion.",
+        "LO2": "Use the work-energy theorem and conservation of energy in mechanical systems.",
+        "LO3": "Explain electric and magnetic phenomena using field concepts.",
+        "LO4": "Analyze thermodynamic processes using the laws of thermodynamics."
+      }
+    },
+    "ECO101": {
+      "name": "Principles of Economics",
+      "topics": [
+        "Supply and Demand",
+        "Elasticity",
+        "Market Structures",
+        "Inflation and Monetary Policy"
+      ],
+      "learning_outcomes": {
+        "LO1": "Explain how supply and demand determine market equilibrium.",
+        "LO2": "Calculate and interpret price elasticity of demand and supply.",
+        "LO3": "Compare market structures such as perfect competition, monopoly and oligopoly.",
+        "LO4": "Evaluate the effects of monetary policy on inflation and output."
+      }
+    }
+  }
+}

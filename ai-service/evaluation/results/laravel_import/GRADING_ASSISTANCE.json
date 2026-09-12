@@ -1,0 +1,1456 @@
+{
+  "name": "STEP44 benchmark – Grading (v1.0)",
+  "task": "GRADING_ASSISTANCE",
+  "version": "v1.0",
+  "source": "CURATED_DATASET",
+  "split": "TEST",
+  "description": "24 synthetic answers to 8 questions, faculty-marked against rubrics with written rationale.",
+  "examples": [
+    {
+      "input_data": {
+        "answer": "Atomicity means a transaction is all or nothing: if a bank transfer debits one account but the credit fails, the whole transaction is rolled back. Consistency means every transaction takes the database from one valid state to another so that integrity constraints such as non-negative balances are preserved. Isolation means concurrent transactions do not interfere with each other; two customers booking the last seat at the same time cannot both succeed. Durability means that once a transaction is committed its changes persist even if the system crashes immediately afterwards, because they are written to a log on stable storage.",
+        "question": "Describe the four ACID properties of a transaction with one example each.",
+        "max_marks": 4,
+        "question_type": "DESCRIPTIVE",
+        "rubric": {
+          "total_marks": 4,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "Atomicity",
+              "description": "Explains atomicity (all-or-nothing) with an example",
+              "max_marks": 1,
+              "expected_indicators": [
+                "atomicity",
+                "all or nothing",
+                "rollback"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "Consistency",
+              "description": "Explains consistency (constraints preserved, valid state to valid state) with an example",
+              "max_marks": 1,
+              "expected_indicators": [
+                "consistency",
+                "constraints",
+                "valid state"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "Isolation",
+              "description": "Explains isolation (concurrent transactions do not interfere) with an example",
+              "max_marks": 1,
+              "expected_indicators": [
+                "isolation",
+                "concurrent",
+                "interfere"
+              ]
+            },
+            {
+              "id": 4,
+              "criterion": "Durability",
+              "description": "Explains durability (committed changes survive crashes) with an example",
+              "max_marks": 1,
+              "expected_indicators": [
+                "durability",
+                "committed",
+                "persist",
+                "crash"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 4.0
+      },
+      "metadata": {
+        "benchmark_id": "GB01-A1",
+        "question_type": "DESCRIPTIVE",
+        "difficulty": "EASY",
+        "cognitive_level": "UNDERSTAND",
+        "course": "CS301",
+        "rationale": "All four properties explained correctly with a valid example each."
+      }
+    },
+    {
+      "input_data": {
+        "answer": "Atomicity: a transaction either completes fully or has no effect at all, for example a failed money transfer is rolled back. Durability: after commit the data is permanent and survives a crash because of the log. Isolation is also one of the properties.",
+        "question": "Describe the four ACID properties of a transaction with one example each.",
+        "max_marks": 4,
+        "question_type": "DESCRIPTIVE",
+        "rubric": {
+          "total_marks": 4,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "Atomicity",
+              "description": "Explains atomicity (all-or-nothing) with an example",
+              "max_marks": 1,
+              "expected_indicators": [
+                "atomicity",
+                "all or nothing",
+                "rollback"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "Consistency",
+              "description": "Explains consistency (constraints preserved, valid state to valid state) with an example",
+              "max_marks": 1,
+              "expected_indicators": [
+                "consistency",
+                "constraints",
+                "valid state"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "Isolation",
+              "description": "Explains isolation (concurrent transactions do not interfere) with an example",
+              "max_marks": 1,
+              "expected_indicators": [
+                "isolation",
+                "concurrent",
+                "interfere"
+              ]
+            },
+            {
+              "id": 4,
+              "criterion": "Durability",
+              "description": "Explains durability (committed changes survive crashes) with an example",
+              "max_marks": 1,
+              "expected_indicators": [
+                "durability",
+                "committed",
+                "persist",
+                "crash"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 2.5
+      },
+      "metadata": {
+        "benchmark_id": "GB01-A2",
+        "question_type": "DESCRIPTIVE",
+        "difficulty": "EASY",
+        "cognitive_level": "UNDERSTAND",
+        "course": "CS301",
+        "rationale": "Atomicity and durability full; isolation mentioned without explanation or example (0.5); consistency missing."
+      }
+    },
+    {
+      "input_data": {
+        "answer": "ACID means the database is reliable. Transactions should always work correctly and the data should be safe.",
+        "question": "Describe the four ACID properties of a transaction with one example each.",
+        "max_marks": 4,
+        "question_type": "DESCRIPTIVE",
+        "rubric": {
+          "total_marks": 4,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "Atomicity",
+              "description": "Explains atomicity (all-or-nothing) with an example",
+              "max_marks": 1,
+              "expected_indicators": [
+                "atomicity",
+                "all or nothing",
+                "rollback"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "Consistency",
+              "description": "Explains consistency (constraints preserved, valid state to valid state) with an example",
+              "max_marks": 1,
+              "expected_indicators": [
+                "consistency",
+                "constraints",
+                "valid state"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "Isolation",
+              "description": "Explains isolation (concurrent transactions do not interfere) with an example",
+              "max_marks": 1,
+              "expected_indicators": [
+                "isolation",
+                "concurrent",
+                "interfere"
+              ]
+            },
+            {
+              "id": 4,
+              "criterion": "Durability",
+              "description": "Explains durability (committed changes survive crashes) with an example",
+              "max_marks": 1,
+              "expected_indicators": [
+                "durability",
+                "committed",
+                "persist",
+                "crash"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 0.5
+      },
+      "metadata": {
+        "benchmark_id": "GB01-A3",
+        "question_type": "DESCRIPTIVE",
+        "difficulty": "EASY",
+        "cognitive_level": "UNDERSTAND",
+        "course": "CS301",
+        "rationale": "No property named or explained; vague statement about reliability only."
+      }
+    },
+    {
+      "input_data": {
+        "answer": "Supervised learning trains a model on labelled data, where each input comes with the correct output, so the model learns a mapping from inputs to targets; linear regression and decision trees are examples. Unsupervised learning works on unlabelled data and tries to discover hidden structure or patterns without any target variable; k-means clustering and principal component analysis are examples.",
+        "question": "Explain the difference between supervised and unsupervised learning, giving one example algorithm of each.",
+        "max_marks": 4,
+        "question_type": "DESCRIPTIVE",
+        "rubric": {
+          "total_marks": 4,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "Supervised learning",
+              "description": "Defines supervised learning as learning from labelled input-output pairs",
+              "max_marks": 1.5,
+              "expected_indicators": [
+                "labelled data",
+                "labels",
+                "input-output pairs",
+                "target"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "Unsupervised learning",
+              "description": "Defines unsupervised learning as discovering structure in unlabelled data",
+              "max_marks": 1.5,
+              "expected_indicators": [
+                "unlabelled",
+                "no labels",
+                "structure",
+                "patterns"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "Examples",
+              "description": "Gives one valid example algorithm for each paradigm",
+              "max_marks": 1,
+              "expected_indicators": [
+                "linear regression",
+                "decision tree",
+                "k-means",
+                "clustering",
+                "PCA"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 4.0
+      },
+      "metadata": {
+        "benchmark_id": "GB02-A1",
+        "question_type": "DESCRIPTIVE",
+        "difficulty": "EASY",
+        "cognitive_level": "UNDERSTAND",
+        "course": "CS402",
+        "rationale": "Both definitions correct; valid examples for both."
+      }
+    },
+    {
+      "input_data": {
+        "answer": "In supervised learning the training data has labels, so the algorithm learns to predict the label from the features, for example logistic regression. Unsupervised learning has no teacher and the algorithm just looks at the data on its own.",
+        "question": "Explain the difference between supervised and unsupervised learning, giving one example algorithm of each.",
+        "max_marks": 4,
+        "question_type": "DESCRIPTIVE",
+        "rubric": {
+          "total_marks": 4,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "Supervised learning",
+              "description": "Defines supervised learning as learning from labelled input-output pairs",
+              "max_marks": 1.5,
+              "expected_indicators": [
+                "labelled data",
+                "labels",
+                "input-output pairs",
+                "target"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "Unsupervised learning",
+              "description": "Defines unsupervised learning as discovering structure in unlabelled data",
+              "max_marks": 1.5,
+              "expected_indicators": [
+                "unlabelled",
+                "no labels",
+                "structure",
+                "patterns"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "Examples",
+              "description": "Gives one valid example algorithm for each paradigm",
+              "max_marks": 1,
+              "expected_indicators": [
+                "linear regression",
+                "decision tree",
+                "k-means",
+                "clustering",
+                "PCA"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 3.0
+      },
+      "metadata": {
+        "benchmark_id": "GB02-A2",
+        "question_type": "DESCRIPTIVE",
+        "difficulty": "EASY",
+        "cognitive_level": "UNDERSTAND",
+        "course": "CS402",
+        "rationale": "Supervised definition full; unsupervised definition partially correct (1.0); only the supervised example given (0.5)."
+      }
+    },
+    {
+      "input_data": {
+        "answer": "Supervised learning uses a teacher who tells the computer the answers, like linear regression. Unsupervised learning is when the computer learns by itself using linear regression too, without any help.",
+        "question": "Explain the difference between supervised and unsupervised learning, giving one example algorithm of each.",
+        "max_marks": 4,
+        "question_type": "DESCRIPTIVE",
+        "rubric": {
+          "total_marks": 4,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "Supervised learning",
+              "description": "Defines supervised learning as learning from labelled input-output pairs",
+              "max_marks": 1.5,
+              "expected_indicators": [
+                "labelled data",
+                "labels",
+                "input-output pairs",
+                "target"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "Unsupervised learning",
+              "description": "Defines unsupervised learning as discovering structure in unlabelled data",
+              "max_marks": 1.5,
+              "expected_indicators": [
+                "unlabelled",
+                "no labels",
+                "structure",
+                "patterns"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "Examples",
+              "description": "Gives one valid example algorithm for each paradigm",
+              "max_marks": 1,
+              "expected_indicators": [
+                "linear regression",
+                "decision tree",
+                "k-means",
+                "clustering",
+                "PCA"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 1.5
+      },
+      "metadata": {
+        "benchmark_id": "GB02-A3",
+        "question_type": "DESCRIPTIVE",
+        "difficulty": "EASY",
+        "cognitive_level": "UNDERSTAND",
+        "course": "CS402",
+        "rationale": "Supervised idea partially right (1.0); unsupervised wrong; example wrong for unsupervised (0.5 for the valid supervised example)."
+      }
+    },
+    {
+      "input_data": {
+        "answer": "Order: P3 (1), P2 (4), P1 (8). Waiting times: P3 = 0, P2 = 1, P1 = 5. Average waiting time = (0 + 1 + 5) / 3 = 2 ms.",
+        "question": "Calculate the average waiting time for the processes P1 (burst 8), P2 (burst 4) and P3 (burst 1), all arriving at time 0, under Shortest Job First scheduling.",
+        "max_marks": 3,
+        "question_type": "PROBLEM_SOLVING",
+        "rubric": {
+          "total_marks": 3,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "Execution order",
+              "description": "Identifies the SJF execution order P3, P2, P1",
+              "max_marks": 1,
+              "expected_indicators": [
+                "P3, P2, P1",
+                "shortest first"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "Waiting times",
+              "description": "Computes waiting times P3 = 0, P2 = 1, P1 = 5",
+              "max_marks": 1,
+              "expected_indicators": [
+                "0",
+                "1",
+                "5"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "Average",
+              "description": "Computes the average waiting time (0 + 1 + 5) / 3 = 2",
+              "max_marks": 1,
+              "expected_indicators": [
+                "2",
+                "6 / 3"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 3.0
+      },
+      "metadata": {
+        "benchmark_id": "GB03-A1",
+        "question_type": "PROBLEM_SOLVING",
+        "difficulty": "EASY",
+        "cognitive_level": "APPLY",
+        "course": "CS305",
+        "rationale": "Correct order, waiting times and average."
+      }
+    },
+    {
+      "input_data": {
+        "answer": "SJF runs the shortest first: P3, P2, P1. Waiting: P3 0, P2 1, P1 5. Average = 6 / 3 = 3.",
+        "question": "Calculate the average waiting time for the processes P1 (burst 8), P2 (burst 4) and P3 (burst 1), all arriving at time 0, under Shortest Job First scheduling.",
+        "max_marks": 3,
+        "question_type": "PROBLEM_SOLVING",
+        "rubric": {
+          "total_marks": 3,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "Execution order",
+              "description": "Identifies the SJF execution order P3, P2, P1",
+              "max_marks": 1,
+              "expected_indicators": [
+                "P3, P2, P1",
+                "shortest first"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "Waiting times",
+              "description": "Computes waiting times P3 = 0, P2 = 1, P1 = 5",
+              "max_marks": 1,
+              "expected_indicators": [
+                "0",
+                "1",
+                "5"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "Average",
+              "description": "Computes the average waiting time (0 + 1 + 5) / 3 = 2",
+              "max_marks": 1,
+              "expected_indicators": [
+                "2",
+                "6 / 3"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 2.0
+      },
+      "metadata": {
+        "benchmark_id": "GB03-A2",
+        "question_type": "PROBLEM_SOLVING",
+        "difficulty": "EASY",
+        "cognitive_level": "APPLY",
+        "course": "CS305",
+        "rationale": "Order and waiting times correct; arithmetic error in the average."
+      }
+    },
+    {
+      "input_data": {
+        "answer": "P1 runs first because it arrived first, then P2, then P3. Waiting times 0, 8, 12; average = 20 / 3 = 6.67.",
+        "question": "Calculate the average waiting time for the processes P1 (burst 8), P2 (burst 4) and P3 (burst 1), all arriving at time 0, under Shortest Job First scheduling.",
+        "max_marks": 3,
+        "question_type": "PROBLEM_SOLVING",
+        "rubric": {
+          "total_marks": 3,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "Execution order",
+              "description": "Identifies the SJF execution order P3, P2, P1",
+              "max_marks": 1,
+              "expected_indicators": [
+                "P3, P2, P1",
+                "shortest first"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "Waiting times",
+              "description": "Computes waiting times P3 = 0, P2 = 1, P1 = 5",
+              "max_marks": 1,
+              "expected_indicators": [
+                "0",
+                "1",
+                "5"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "Average",
+              "description": "Computes the average waiting time (0 + 1 + 5) / 3 = 2",
+              "max_marks": 1,
+              "expected_indicators": [
+                "2",
+                "6 / 3"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 0.5
+      },
+      "metadata": {
+        "benchmark_id": "GB03-A3",
+        "question_type": "PROBLEM_SOLVING",
+        "difficulty": "EASY",
+        "cognitive_level": "APPLY",
+        "course": "CS305",
+        "rationale": "Applied FCFS instead of SJF; wrong order and values; 0.5 for showing the averaging method."
+      }
+    },
+    {
+      "input_data": {
+        "answer": "The client sends a SYN segment containing its initial sequence number. The server replies with a SYN-ACK that acknowledges the client's sequence number and carries the server's own initial sequence number. The client then sends an ACK acknowledging the server's sequence number, after which the connection is established. The exchange synchronises sequence numbers in both directions and confirms that both endpoints are reachable.",
+        "question": "Explain how TCP's three-way handshake establishes a connection.",
+        "max_marks": 3,
+        "question_type": "DESCRIPTIVE",
+        "rubric": {
+          "total_marks": 3,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "SYN",
+              "description": "Client sends SYN with an initial sequence number",
+              "max_marks": 1,
+              "expected_indicators": [
+                "SYN",
+                "sequence number",
+                "client"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "SYN-ACK",
+              "description": "Server replies with SYN-ACK acknowledging the client and sending its own sequence number",
+              "max_marks": 1,
+              "expected_indicators": [
+                "SYN-ACK",
+                "server",
+                "acknowledg"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "ACK and purpose",
+              "description": "Client sends ACK; connection established; purpose is to synchronise sequence numbers and confirm both sides are reachable",
+              "max_marks": 1,
+              "expected_indicators": [
+                "ACK",
+                "established",
+                "synchroni"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 3.0
+      },
+      "metadata": {
+        "benchmark_id": "GB04-A1",
+        "question_type": "DESCRIPTIVE",
+        "difficulty": "EASY",
+        "cognitive_level": "UNDERSTAND",
+        "course": "CS306",
+        "rationale": "All three steps with sequence numbers and purpose."
+      }
+    },
+    {
+      "input_data": {
+        "answer": "Client sends SYN, server sends SYN-ACK, client sends ACK. Then the connection is open.",
+        "question": "Explain how TCP's three-way handshake establishes a connection.",
+        "max_marks": 3,
+        "question_type": "DESCRIPTIVE",
+        "rubric": {
+          "total_marks": 3,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "SYN",
+              "description": "Client sends SYN with an initial sequence number",
+              "max_marks": 1,
+              "expected_indicators": [
+                "SYN",
+                "sequence number",
+                "client"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "SYN-ACK",
+              "description": "Server replies with SYN-ACK acknowledging the client and sending its own sequence number",
+              "max_marks": 1,
+              "expected_indicators": [
+                "SYN-ACK",
+                "server",
+                "acknowledg"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "ACK and purpose",
+              "description": "Client sends ACK; connection established; purpose is to synchronise sequence numbers and confirm both sides are reachable",
+              "max_marks": 1,
+              "expected_indicators": [
+                "ACK",
+                "established",
+                "synchroni"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 2.5
+      },
+      "metadata": {
+        "benchmark_id": "GB04-A2",
+        "question_type": "DESCRIPTIVE",
+        "difficulty": "EASY",
+        "cognitive_level": "UNDERSTAND",
+        "course": "CS306",
+        "rationale": "Steps correct but no sequence numbers or purpose (0.5 lost on criterion 3)."
+      }
+    },
+    {
+      "input_data": {
+        "answer": "The client and server exchange two messages: a request and a reply, and then data flows between them.",
+        "question": "Explain how TCP's three-way handshake establishes a connection.",
+        "max_marks": 3,
+        "question_type": "DESCRIPTIVE",
+        "rubric": {
+          "total_marks": 3,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "SYN",
+              "description": "Client sends SYN with an initial sequence number",
+              "max_marks": 1,
+              "expected_indicators": [
+                "SYN",
+                "sequence number",
+                "client"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "SYN-ACK",
+              "description": "Server replies with SYN-ACK acknowledging the client and sending its own sequence number",
+              "max_marks": 1,
+              "expected_indicators": [
+                "SYN-ACK",
+                "server",
+                "acknowledg"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "ACK and purpose",
+              "description": "Client sends ACK; connection established; purpose is to synchronise sequence numbers and confirm both sides are reachable",
+              "max_marks": 1,
+              "expected_indicators": [
+                "ACK",
+                "established",
+                "synchroni"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 0.5
+      },
+      "metadata": {
+        "benchmark_id": "GB04-A3",
+        "question_type": "DESCRIPTIVE",
+        "difficulty": "EASY",
+        "cognitive_level": "UNDERSTAND",
+        "course": "CS306",
+        "rationale": "Wrong number of messages and no TCP flags; 0.5 for recognising a request-reply exchange."
+      }
+    },
+    {
+      "input_data": {
+        "answer": "Merge sort runs in O(n log n) in the worst case because it always splits the array in half, whereas quicksort degrades to O(n^2) when the pivot is repeatedly the smallest or largest element. Merge sort needs O(n) auxiliary space for merging, while quicksort sorts in place and needs only O(log n) stack space on average. Merge sort is stable because equal elements keep their order during merging; standard quicksort is not stable because partitioning can swap equal elements.",
+        "question": "Compare merge sort and quicksort in terms of worst-case time complexity, space usage and stability.",
+        "max_marks": 5,
+        "question_type": "ANALYTICAL",
+        "rubric": {
+          "total_marks": 5,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "Worst-case time",
+              "description": "Merge sort O(n log n) worst case; quicksort O(n^2) worst case with a poor pivot",
+              "max_marks": 2,
+              "expected_indicators": [
+                "O(n log n)",
+                "O(n^2)",
+                "pivot"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "Space usage",
+              "description": "Merge sort needs O(n) auxiliary space; quicksort sorts in place with O(log n) stack",
+              "max_marks": 1.5,
+              "expected_indicators": [
+                "O(n)",
+                "auxiliary",
+                "in place",
+                "O(log n)"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "Stability",
+              "description": "Merge sort is stable; standard quicksort is not stable",
+              "max_marks": 1.5,
+              "expected_indicators": [
+                "stable",
+                "not stable"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 5.0
+      },
+      "metadata": {
+        "benchmark_id": "GB05-A1",
+        "question_type": "ANALYTICAL",
+        "difficulty": "MEDIUM",
+        "cognitive_level": "ANALYZE",
+        "course": "CS201",
+        "rationale": "All three dimensions correct."
+      }
+    },
+    {
+      "input_data": {
+        "answer": "Merge sort is O(n log n) worst case and quicksort is O(n^2) worst case when the pivot is bad. Both need O(n) extra space for the temporary arrays. Merge sort is stable and quicksort is not.",
+        "question": "Compare merge sort and quicksort in terms of worst-case time complexity, space usage and stability.",
+        "max_marks": 5,
+        "question_type": "ANALYTICAL",
+        "rubric": {
+          "total_marks": 5,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "Worst-case time",
+              "description": "Merge sort O(n log n) worst case; quicksort O(n^2) worst case with a poor pivot",
+              "max_marks": 2,
+              "expected_indicators": [
+                "O(n log n)",
+                "O(n^2)",
+                "pivot"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "Space usage",
+              "description": "Merge sort needs O(n) auxiliary space; quicksort sorts in place with O(log n) stack",
+              "max_marks": 1.5,
+              "expected_indicators": [
+                "O(n)",
+                "auxiliary",
+                "in place",
+                "O(log n)"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "Stability",
+              "description": "Merge sort is stable; standard quicksort is not stable",
+              "max_marks": 1.5,
+              "expected_indicators": [
+                "stable",
+                "not stable"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 3.5
+      },
+      "metadata": {
+        "benchmark_id": "GB05-A2",
+        "question_type": "ANALYTICAL",
+        "difficulty": "MEDIUM",
+        "cognitive_level": "ANALYZE",
+        "course": "CS201",
+        "rationale": "Time and stability correct; space claim for quicksort wrong (1.5 lost)."
+      }
+    },
+    {
+      "input_data": {
+        "answer": "Both are divide and conquer algorithms and both run in O(n log n). Merge sort is faster in practice.",
+        "question": "Compare merge sort and quicksort in terms of worst-case time complexity, space usage and stability.",
+        "max_marks": 5,
+        "question_type": "ANALYTICAL",
+        "rubric": {
+          "total_marks": 5,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "Worst-case time",
+              "description": "Merge sort O(n log n) worst case; quicksort O(n^2) worst case with a poor pivot",
+              "max_marks": 2,
+              "expected_indicators": [
+                "O(n log n)",
+                "O(n^2)",
+                "pivot"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "Space usage",
+              "description": "Merge sort needs O(n) auxiliary space; quicksort sorts in place with O(log n) stack",
+              "max_marks": 1.5,
+              "expected_indicators": [
+                "O(n)",
+                "auxiliary",
+                "in place",
+                "O(log n)"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "Stability",
+              "description": "Merge sort is stable; standard quicksort is not stable",
+              "max_marks": 1.5,
+              "expected_indicators": [
+                "stable",
+                "not stable"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 1.0
+      },
+      "metadata": {
+        "benchmark_id": "GB05-A3",
+        "question_type": "ANALYTICAL",
+        "difficulty": "MEDIUM",
+        "cognitive_level": "ANALYZE",
+        "course": "CS201",
+        "rationale": "Quicksort worst case wrong, no space or stability discussion; 1 mark for merge sort complexity."
+      }
+    },
+    {
+      "input_data": {
+        "answer": "Percentage change in quantity = (80 - 100) / ((80 + 100) / 2) = -20 / 90 = -22.2%. Percentage change in price = (5 - 4) / ((5 + 4) / 2) = 1 / 4.5 = 22.2%. Elasticity = -22.2% / 22.2% = -1.0. Demand is unit elastic: quantity demanded changes by the same proportion as price.",
+        "question": "The price of coffee rises from $4 to $5 and quantity demanded falls from 100 to 80 cups per day. Calculate the price elasticity of demand using the midpoint method and interpret the result.",
+        "max_marks": 4,
+        "question_type": "PROBLEM_SOLVING",
+        "rubric": {
+          "total_marks": 4,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "Quantity change",
+              "description": "Midpoint percentage change in quantity = -20 / 90 = -22.2%",
+              "max_marks": 1,
+              "expected_indicators": [
+                "-20",
+                "90",
+                "22.2%"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "Price change",
+              "description": "Midpoint percentage change in price = 1 / 4.5 = 22.2%",
+              "max_marks": 1,
+              "expected_indicators": [
+                "4.5",
+                "22.2%"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "Elasticity value",
+              "description": "Elasticity = -1.0 (absolute value 1)",
+              "max_marks": 1,
+              "expected_indicators": [
+                "-1",
+                "1.0",
+                "unit"
+              ]
+            },
+            {
+              "id": 4,
+              "criterion": "Interpretation",
+              "description": "Interprets unit elasticity: quantity changes in the same proportion as price",
+              "max_marks": 1,
+              "expected_indicators": [
+                "unit elastic",
+                "proportion"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 4.0
+      },
+      "metadata": {
+        "benchmark_id": "GB06-A1",
+        "question_type": "PROBLEM_SOLVING",
+        "difficulty": "MEDIUM",
+        "cognitive_level": "APPLY",
+        "course": "ECO101",
+        "rationale": "Correct midpoint calculation and interpretation."
+      }
+    },
+    {
+      "input_data": {
+        "answer": "Quantity fell by 20%, price rose by 25%, so elasticity = -20 / 25 = -0.8. Demand is inelastic because the value is less than one.",
+        "question": "The price of coffee rises from $4 to $5 and quantity demanded falls from 100 to 80 cups per day. Calculate the price elasticity of demand using the midpoint method and interpret the result.",
+        "max_marks": 4,
+        "question_type": "PROBLEM_SOLVING",
+        "rubric": {
+          "total_marks": 4,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "Quantity change",
+              "description": "Midpoint percentage change in quantity = -20 / 90 = -22.2%",
+              "max_marks": 1,
+              "expected_indicators": [
+                "-20",
+                "90",
+                "22.2%"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "Price change",
+              "description": "Midpoint percentage change in price = 1 / 4.5 = 22.2%",
+              "max_marks": 1,
+              "expected_indicators": [
+                "4.5",
+                "22.2%"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "Elasticity value",
+              "description": "Elasticity = -1.0 (absolute value 1)",
+              "max_marks": 1,
+              "expected_indicators": [
+                "-1",
+                "1.0",
+                "unit"
+              ]
+            },
+            {
+              "id": 4,
+              "criterion": "Interpretation",
+              "description": "Interprets unit elasticity: quantity changes in the same proportion as price",
+              "max_marks": 1,
+              "expected_indicators": [
+                "unit elastic",
+                "proportion"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 1.5
+      },
+      "metadata": {
+        "benchmark_id": "GB06-A2",
+        "question_type": "PROBLEM_SOLVING",
+        "difficulty": "MEDIUM",
+        "cognitive_level": "APPLY",
+        "course": "ECO101",
+        "rationale": "Used the simple method instead of midpoint (criteria 1-2 wrong: 0.5 total for showing the ratio idea); value therefore wrong; interpretation consistent with own number (1.0)."
+      }
+    },
+    {
+      "input_data": {
+        "answer": "Elasticity is high because coffee demand dropped a lot when the price went up.",
+        "question": "The price of coffee rises from $4 to $5 and quantity demanded falls from 100 to 80 cups per day. Calculate the price elasticity of demand using the midpoint method and interpret the result.",
+        "max_marks": 4,
+        "question_type": "PROBLEM_SOLVING",
+        "rubric": {
+          "total_marks": 4,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "Quantity change",
+              "description": "Midpoint percentage change in quantity = -20 / 90 = -22.2%",
+              "max_marks": 1,
+              "expected_indicators": [
+                "-20",
+                "90",
+                "22.2%"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "Price change",
+              "description": "Midpoint percentage change in price = 1 / 4.5 = 22.2%",
+              "max_marks": 1,
+              "expected_indicators": [
+                "4.5",
+                "22.2%"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "Elasticity value",
+              "description": "Elasticity = -1.0 (absolute value 1)",
+              "max_marks": 1,
+              "expected_indicators": [
+                "-1",
+                "1.0",
+                "unit"
+              ]
+            },
+            {
+              "id": 4,
+              "criterion": "Interpretation",
+              "description": "Interprets unit elasticity: quantity changes in the same proportion as price",
+              "max_marks": 1,
+              "expected_indicators": [
+                "unit elastic",
+                "proportion"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 0.0
+      },
+      "metadata": {
+        "benchmark_id": "GB06-A3",
+        "question_type": "PROBLEM_SOLVING",
+        "difficulty": "MEDIUM",
+        "cognitive_level": "APPLY",
+        "course": "ECO101",
+        "rationale": "No calculation, wrong interpretation."
+      }
+    },
+    {
+      "input_data": {
+        "answer": "In the Observer pattern a subject maintains a list of observers and notifies each of them automatically whenever its state changes, usually by calling an update method. It defines a one-to-many dependency while keeping the subject loosely coupled from the observers, which only need to implement a common interface. It should be used when several views must stay synchronised with one model, for example a stock ticker that updates several charts and alerts whenever a price changes.",
+        "question": "Explain the Observer design pattern and give a situation where it should be used.",
+        "max_marks": 4,
+        "question_type": "DESCRIPTIVE",
+        "rubric": {
+          "total_marks": 4,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "Roles and mechanism",
+              "description": "Describes subject and observer roles and notification when the subject's state changes",
+              "max_marks": 2,
+              "expected_indicators": [
+                "subject",
+                "observer",
+                "notify",
+                "state changes"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "Coupling",
+              "description": "Explains the one-to-many dependency and loose coupling between subject and observers",
+              "max_marks": 1,
+              "expected_indicators": [
+                "one-to-many",
+                "loose coupling",
+                "decoupled"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "Usage scenario",
+              "description": "Gives an appropriate scenario such as GUI event handling or a stock price ticker",
+              "max_marks": 1,
+              "expected_indicators": [
+                "GUI",
+                "event",
+                "stock",
+                "spreadsheet",
+                "publish"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 4.0
+      },
+      "metadata": {
+        "benchmark_id": "GB07-A1",
+        "question_type": "DESCRIPTIVE",
+        "difficulty": "MEDIUM",
+        "cognitive_level": "UNDERSTAND",
+        "course": "CS308",
+        "rationale": "Mechanism, coupling and scenario all present."
+      }
+    },
+    {
+      "input_data": {
+        "answer": "The Observer pattern has a subject that keeps a list of observers. When the subject's state changes it notifies all observers so they can update themselves. A typical use is a graphical user interface where several widgets must update when the underlying data changes.",
+        "question": "Explain the Observer design pattern and give a situation where it should be used.",
+        "max_marks": 4,
+        "question_type": "DESCRIPTIVE",
+        "rubric": {
+          "total_marks": 4,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "Roles and mechanism",
+              "description": "Describes subject and observer roles and notification when the subject's state changes",
+              "max_marks": 2,
+              "expected_indicators": [
+                "subject",
+                "observer",
+                "notify",
+                "state changes"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "Coupling",
+              "description": "Explains the one-to-many dependency and loose coupling between subject and observers",
+              "max_marks": 1,
+              "expected_indicators": [
+                "one-to-many",
+                "loose coupling",
+                "decoupled"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "Usage scenario",
+              "description": "Gives an appropriate scenario such as GUI event handling or a stock price ticker",
+              "max_marks": 1,
+              "expected_indicators": [
+                "GUI",
+                "event",
+                "stock",
+                "spreadsheet",
+                "publish"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 3.0
+      },
+      "metadata": {
+        "benchmark_id": "GB07-A2",
+        "question_type": "DESCRIPTIVE",
+        "difficulty": "MEDIUM",
+        "cognitive_level": "UNDERSTAND",
+        "course": "CS308",
+        "rationale": "Roles and scenario correct; no discussion of coupling."
+      }
+    },
+    {
+      "input_data": {
+        "answer": "The Observer pattern is when one class observes another class. It is used in Java programs.",
+        "question": "Explain the Observer design pattern and give a situation where it should be used.",
+        "max_marks": 4,
+        "question_type": "DESCRIPTIVE",
+        "rubric": {
+          "total_marks": 4,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "Roles and mechanism",
+              "description": "Describes subject and observer roles and notification when the subject's state changes",
+              "max_marks": 2,
+              "expected_indicators": [
+                "subject",
+                "observer",
+                "notify",
+                "state changes"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "Coupling",
+              "description": "Explains the one-to-many dependency and loose coupling between subject and observers",
+              "max_marks": 1,
+              "expected_indicators": [
+                "one-to-many",
+                "loose coupling",
+                "decoupled"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "Usage scenario",
+              "description": "Gives an appropriate scenario such as GUI event handling or a stock price ticker",
+              "max_marks": 1,
+              "expected_indicators": [
+                "GUI",
+                "event",
+                "stock",
+                "spreadsheet",
+                "publish"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 1.0
+      },
+      "metadata": {
+        "benchmark_id": "GB07-A3",
+        "question_type": "DESCRIPTIVE",
+        "difficulty": "MEDIUM",
+        "cognitive_level": "UNDERSTAND",
+        "course": "CS308",
+        "rationale": "Vague description (0.5), no coupling, scenario invalid (0.5 for attempting an example)."
+      }
+    },
+    {
+      "input_data": {
+        "answer": "By conservation of energy the potential energy at the top equals the kinetic energy at the bottom: mgh = 1/2 m v^2. The mass cancels, giving v = sqrt(2gh) = sqrt(2 x 9.8 x 20) = sqrt(392) = 19.8 m/s.",
+        "question": "A 0.5 kg ball is dropped from a height of 20 m. Using energy conservation, determine its speed just before it hits the ground, ignoring air resistance.",
+        "max_marks": 3,
+        "question_type": "PROBLEM_SOLVING",
+        "rubric": {
+          "total_marks": 3,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "Energy equation",
+              "description": "Sets potential energy equal to kinetic energy: mgh = 1/2 m v^2",
+              "max_marks": 1,
+              "expected_indicators": [
+                "mgh",
+                "1/2 m v^2",
+                "kinetic",
+                "potential"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "Rearrangement",
+              "description": "Cancels mass and rearranges to v = sqrt(2gh)",
+              "max_marks": 1,
+              "expected_indicators": [
+                "sqrt(2gh)",
+                "cancel",
+                "mass cancels"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "Numerical answer",
+              "description": "Correct value about 19.8 m/s (g = 9.8 m/s^2) or 20 m/s (g = 10)",
+              "max_marks": 1,
+              "expected_indicators": [
+                "19.8",
+                "20 m/s"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 3.0
+      },
+      "metadata": {
+        "benchmark_id": "GB08-A1",
+        "question_type": "PROBLEM_SOLVING",
+        "difficulty": "EASY",
+        "cognitive_level": "APPLY",
+        "course": "PHY101",
+        "rationale": "Full method and correct value."
+      }
+    },
+    {
+      "input_data": {
+        "answer": "mgh = 1/2 m v^2 so v = sqrt(2gh) = sqrt(2 x 9.8 x 20) = 14 m/s.",
+        "question": "A 0.5 kg ball is dropped from a height of 20 m. Using energy conservation, determine its speed just before it hits the ground, ignoring air resistance.",
+        "max_marks": 3,
+        "question_type": "PROBLEM_SOLVING",
+        "rubric": {
+          "total_marks": 3,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "Energy equation",
+              "description": "Sets potential energy equal to kinetic energy: mgh = 1/2 m v^2",
+              "max_marks": 1,
+              "expected_indicators": [
+                "mgh",
+                "1/2 m v^2",
+                "kinetic",
+                "potential"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "Rearrangement",
+              "description": "Cancels mass and rearranges to v = sqrt(2gh)",
+              "max_marks": 1,
+              "expected_indicators": [
+                "sqrt(2gh)",
+                "cancel",
+                "mass cancels"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "Numerical answer",
+              "description": "Correct value about 19.8 m/s (g = 9.8 m/s^2) or 20 m/s (g = 10)",
+              "max_marks": 1,
+              "expected_indicators": [
+                "19.8",
+                "20 m/s"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 2.0
+      },
+      "metadata": {
+        "benchmark_id": "GB08-A2",
+        "question_type": "PROBLEM_SOLVING",
+        "difficulty": "EASY",
+        "cognitive_level": "APPLY",
+        "course": "PHY101",
+        "rationale": "Correct setup and rearrangement; arithmetic error in the final value."
+      }
+    },
+    {
+      "input_data": {
+        "answer": "The speed is 20 m/s because it falls 20 metres.",
+        "question": "A 0.5 kg ball is dropped from a height of 20 m. Using energy conservation, determine its speed just before it hits the ground, ignoring air resistance.",
+        "max_marks": 3,
+        "question_type": "PROBLEM_SOLVING",
+        "rubric": {
+          "total_marks": 3,
+          "criteria": [
+            {
+              "id": 1,
+              "criterion": "Energy equation",
+              "description": "Sets potential energy equal to kinetic energy: mgh = 1/2 m v^2",
+              "max_marks": 1,
+              "expected_indicators": [
+                "mgh",
+                "1/2 m v^2",
+                "kinetic",
+                "potential"
+              ]
+            },
+            {
+              "id": 2,
+              "criterion": "Rearrangement",
+              "description": "Cancels mass and rearranges to v = sqrt(2gh)",
+              "max_marks": 1,
+              "expected_indicators": [
+                "sqrt(2gh)",
+                "cancel",
+                "mass cancels"
+              ]
+            },
+            {
+              "id": 3,
+              "criterion": "Numerical answer",
+              "description": "Correct value about 19.8 m/s (g = 9.8 m/s^2) or 20 m/s (g = 10)",
+              "max_marks": 1,
+              "expected_indicators": [
+                "19.8",
+                "20 m/s"
+              ]
+            }
+          ]
+        }
+      },
+      "expected_output": {
+        "faculty_marks": 0.0
+      },
+      "metadata": {
+        "benchmark_id": "GB08-A3",
+        "question_type": "PROBLEM_SOLVING",
+        "difficulty": "EASY",
+        "cognitive_level": "APPLY",
+        "course": "PHY101",
+        "rationale": "No energy method; value asserted without physics."
+      }
+    }
+  ]
+}

@@ -231,12 +231,14 @@ class AssessmentAnalysisService:
                     precomputed_current_embeddings=shared_q_embeddings,
                 )
 
-                # Map question number/id -> top similarity and duplicate flag
-                for q_sim in similarity_result.get("question_similarities", []):
-                    q_num = q_sim.get("question_number")
+                # Map question number/id -> top similarity and duplicate flag.
+                # STEP 44: the analyzer returns `results` with `max_similarity_*`; the previous `question_similarities`
+                # key never existed, so duplicates never reached the quality engine or the recommendation engine.
+                for q_sim in similarity_result.get("results", []):
+                    q_num = q_sim.get("current_question_number")
                     q_sim_match_map[q_num] = {
-                        "similarity_score": q_sim.get("highest_similarity_score", 0.0),
-                        "is_duplicate": q_sim.get("is_potential_duplicate", False),
+                        "similarity_score": q_sim.get("max_similarity_score", 0.0),
+                        "is_duplicate": q_sim.get("max_similarity_status") == "POTENTIAL_DUPLICATE",
                     }
             except Exception as e:
                 logger.error(f"Error during semantic similarity in unified analysis: {e}", exc_info=True)
@@ -360,34 +362,23 @@ class AssessmentAnalysisService:
             else None
         )
 
+        # The Recommendation*Input schemas normalise the quality engine's field names (see app/schemas/recommendation.py).
         rec_req = RecommendationRequest(
             assessment=rec_assessment_meta,
-            topic_analysis=TopicAnalysisInput(**quality_result.get("topic_analysis", {}))
-            if quality_result.get("topic_analysis")
-            else None,
-            learning_outcome_analysis=LoAnalysisInput(**quality_result.get("learning_outcome_analysis", {}))
-            if quality_result.get("learning_outcome_analysis")
-            else None,
-            difficulty_analysis=DifficultyAnalysisInput(**quality_result.get("difficulty_analysis", {}))
-            if quality_result.get("difficulty_analysis")
-            else None,
-            cognitive_analysis=CognitiveAnalysisInput(**quality_result.get("cognitive_analysis", {}))
-            if quality_result.get("cognitive_analysis")
-            else None,
-            question_diversity_analysis=QuestionDiversityInput(**quality_result.get("question_diversity_analysis", {}))
-            if quality_result.get("question_diversity_analysis")
-            else None,
-            marks_analysis=MarksAnalysisInput(**quality_result.get("marks_analysis", {}))
-            if quality_result.get("marks_analysis")
-            else None,
+            topic_analysis=TopicAnalysisInput.model_validate(quality_result["topic_analysis"]) if quality_result.get("topic_analysis") else None,
+            learning_outcome_analysis=LoAnalysisInput.model_validate(quality_result["learning_outcome_analysis"]) if quality_result.get("learning_outcome_analysis") else None,
+            difficulty_analysis=DifficultyAnalysisInput.model_validate(quality_result["difficulty_analysis"]) if quality_result.get("difficulty_analysis") else None,
+            cognitive_analysis=CognitiveAnalysisInput.model_validate(quality_result["cognitive_analysis"]) if quality_result.get("cognitive_analysis") else None,
+            question_diversity_analysis=QuestionDiversityInput.model_validate(quality_result["question_diversity_analysis"]) if quality_result.get("question_diversity_analysis") else None,
+            marks_analysis=MarksAnalysisInput.model_validate(quality_result["marks_analysis"]) if quality_result.get("marks_analysis") else None,
             similarity_analysis=SimilarityAnalysisInput(
                 status=similarity_result.get("status") if similarity_result else None,
-                overall_similarity_score=similarity_result.get("overall_similarity_score", 0.0) if similarity_result else 0.0,
+                overall_similarity_score=similarity_result.get("average_similarity_score", similarity_result.get("overall_similarity_score", 0.0)) if similarity_result else 0.0,
                 potential_duplicates_count=similarity_result.get("potential_duplicates_count", 0) if similarity_result else 0,
                 highly_similar_count=similarity_result.get("highly_similar_count", 0) if similarity_result else 0,
                 somewhat_similar_count=similarity_result.get("somewhat_similar_count", 0) if similarity_result else 0,
-                total_questions=similarity_result.get("total_questions", len(request.questions)) if similarity_result else len(request.questions),
-                matches=similarity_result.get("matches", []) if similarity_result else [],
+                total_questions=similarity_result.get("total_current_questions", len(request.questions)) if similarity_result else len(request.questions),
+                matches=similarity_result.get("results", similarity_result.get("matches", [])) if similarity_result else [],
                 question_similarities=similarity_result.get("question_similarities", []) if similarity_result else [],
             )
             if similarity_result and similarity_result.get("status") != "UNAVAILABLE"

@@ -1,0 +1,121 @@
+{
+  "component": "RAG_GROUNDING",
+  "status": "GOOD",
+  "split": "ALL(queries)",
+  "sample_size": 24,
+  "headline": {
+    "metric": "grounded_answer_rate",
+    "value": 0.9,
+    "ci95": [
+      0.699,
+      0.9721
+    ],
+    "higher_is_better": true,
+    "sample_size": 24
+  },
+  "metrics": {
+    "grounded_answer_rate": 0.9,
+    "grounded_answer_rate_ci95": [
+      0.699,
+      0.9721
+    ],
+    "partially_supported_rate": 0.05,
+    "unsupported_claim_rate": 0.0,
+    "false_refusal_rate": 0.05,
+    "correct_refusal_rate": 0.0,
+    "unanswerable_queries": 2,
+    "citation_accuracy": 1.0,
+    "citation_completeness": 1.0,
+    "claim_support_rate": 1.0,
+    "injection_queries": 2,
+    "injection_leak_rate": 0.0,
+    "answers_with_citation": 19
+  },
+  "structured": {
+    "generation_methods": {
+      "extractive": 23,
+      "insufficient_evidence": 1
+    },
+    "verdict_counts": {
+      "SUPPORTED": 18,
+      "PARTIALLY_SUPPORTED": 1,
+      "UNSUPPORTED": 0,
+      "FALSE_REFUSAL": 1,
+      "CORRECT_REFUSAL": 0
+    }
+  },
+  "latency_ms": {
+    "count": 24,
+    "mean_ms": 0.13,
+    "p50_ms": 0.12,
+    "p95_ms": 0.21,
+    "max_ms": 0.27
+  },
+  "failure_count": 0,
+  "failure_rate": 0.0,
+  "error_breakdown": {
+    "UNSUPPORTED_CLAIM": 4
+  },
+  "errors": [
+    {
+      "id": "G009",
+      "query": "What is the convoy effect?",
+      "verdict": "FALSE_REFUSAL",
+      "answer": "I couldn't find enough information about that in the documents available to this chat.",
+      "cited_chunks": [],
+      "expected_chunks": [
+        "301"
+      ],
+      "keyword_hits": null,
+      "error_type": "UNSUPPORTED_CLAIM",
+      "note": "declined although a relevant chunk exists"
+    },
+    {
+      "id": "G013",
+      "query": "What marks range corresponds to an A+ grade?",
+      "verdict": "PARTIALLY_SUPPORTED",
+      "answer": "Based on the uploaded documents, the most relevant passages are:\n• Grade moderation is performed by a departmental committee before results are published. [S1]\n\n(No generation model is configured, so this answer quotes document evidence rather than paraphrasing it.)",
+      "cited_chunks": [
+        401
+      ],
+      "expected_chunks": [
+        "401"
+      ],
+      "keyword_hits": "0/1",
+      "error_type": "UNSUPPORTED_CLAIM",
+      "note": "keyword coverage below 50%"
+    },
+    {
+      "id": "G016",
+      "query": "Who teaches CS301 and what are the office hours?",
+      "verdict": "UNSUPPORTED",
+      "answer": "Based on the uploaded documents, the most relevant passages are:\n• CS301 Database Management Systems is a 4-credit course offered in the fifth semester. [S1]\n\n(No generation model is configured, so this answer quotes document evidence rather than paraphrasing it.)",
+      "cited_chunks": [
+        101
+      ],
+      "expected_chunks": [],
+      "keyword_hits": null,
+      "error_type": "UNSUPPORTED_CLAIM",
+      "note": "Not in any document; a grounded system must decline."
+    },
+    {
+      "id": "G017",
+      "query": "What is the pass mark for the CS305 final exam?",
+      "verdict": "UNSUPPORTED",
+      "answer": "Based on the uploaded documents, the most relevant passages are:\n• Assessment weighting: continuous assessment 40% (two quizzes worth 10% each and one project worth 20%), mid-semester examination 20%, and final examination 40%. [S2]\n• A minimum of 40% in the final examination is required to pass th…",
+      "cited_chunks": [
+        102
+      ],
+      "expected_chunks": [],
+      "keyword_hits": null,
+      "error_type": "UNSUPPORTED_CLAIM",
+      "note": "Only the CS301 pass mark exists; answering from chunk 102 would be a wrong-scope answer."
+    }
+  ],
+  "human_review": {},
+  "notes": [
+    "Answer engine actually used: facultylens-extractive-answer-engine 1.0.0 (no HF_GENERATION_MODEL configured); prompt version 1.0.0.",
+    "SUPPORTED = grounded + >=50% of expected keywords + at least one cited chunk is a relevant chunk + every quoted claim appears verbatim in a cited chunk. PARTIALLY_SUPPORTED = grounded but keyword or citation check fails. UNSUPPORTED = answered without evidence or with 0 keyword hits.",
+    "Citation accuracy = cited chunk is a relevant chunk; citation completeness = every claim in the answer carries a [S#] citation that points to a chunk containing that claim."
+  ]
+}

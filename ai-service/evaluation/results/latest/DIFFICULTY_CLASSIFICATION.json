@@ -1,0 +1,511 @@
+{
+  "component": "DIFFICULTY_CLASSIFICATION",
+  "status": "NEEDS_IMPROVEMENT",
+  "split": "TEST",
+  "sample_size": 72,
+  "headline": {
+    "metric": "macro_f1",
+    "value": 0.5594,
+    "ci95": [
+      0.4271,
+      0.6686
+    ],
+    "higher_is_better": true,
+    "sample_size": 72
+  },
+  "metrics": {
+    "accuracy": 0.5694,
+    "macro_precision": 0.5605,
+    "macro_recall": 0.5691,
+    "macro_f1": 0.5594,
+    "weighted_f1": 0.5736,
+    "lenient_accuracy": null,
+    "accuracy_ci95": [
+      0.4544,
+      0.6774
+    ],
+    "accuracy_high_confidence_labels": 0.5641025641025641,
+    "accuracy_medium_low_confidence_labels": 0.5757575757575758,
+    "mean_ordinal_shift": 0.125,
+    "over_classified": 19,
+    "under_classified": 12,
+    "ece": null
+  },
+  "structured": {
+    "confusion_matrix": {
+      "EASY": {
+        "EASY": 14,
+        "MEDIUM": 8,
+        "HARD": 3
+      },
+      "MEDIUM": {
+        "EASY": 6,
+        "MEDIUM": 19,
+        "HARD": 8
+      },
+      "HARD": {
+        "EASY": 1,
+        "MEDIUM": 5,
+        "HARD": 8
+      }
+    },
+    "per_class": [
+      {
+        "label": "EASY",
+        "precision": 0.6667,
+        "recall": 0.56,
+        "f1": 0.6087,
+        "support": 25,
+        "predicted": 21
+      },
+      {
+        "label": "MEDIUM",
+        "precision": 0.5938,
+        "recall": 0.5758,
+        "f1": 0.5846,
+        "support": 33,
+        "predicted": 32
+      },
+      {
+        "label": "HARD",
+        "precision": 0.4211,
+        "recall": 0.5714,
+        "f1": 0.4848,
+        "support": 14,
+        "predicted": 19
+      }
+    ],
+    "top_confusions": [
+      {
+        "transition": "EASY->MEDIUM",
+        "count": 8
+      },
+      {
+        "transition": "MEDIUM->HARD",
+        "count": 8
+      },
+      {
+        "transition": "MEDIUM->EASY",
+        "count": 6
+      },
+      {
+        "transition": "HARD->MEDIUM",
+        "count": 5
+      },
+      {
+        "transition": "EASY->HARD",
+        "count": 3
+      },
+      {
+        "transition": "HARD->EASY",
+        "count": 1
+      }
+    ],
+    "accuracy_by_course": {
+      "CS201": 0.6667,
+      "CS301": 0.4444,
+      "CS305": 0.7273,
+      "CS306": 0.4444,
+      "CS308": 0.7,
+      "CS402": 0.5455,
+      "ECO101": 0.5714,
+      "PHY101": 0.3333
+    },
+    "label_distribution": {
+      "EASY": 25,
+      "MEDIUM": 33,
+      "HARD": 14
+    }
+  },
+  "latency_ms": {
+    "count": 72,
+    "mean_ms": 7.38,
+    "p50_ms": 6.54,
+    "p95_ms": 13.84,
+    "max_ms": 19.78
+  },
+  "failure_count": 0,
+  "failure_rate": 0.0,
+  "error_breakdown": {
+    "WRONG_DIFFICULTY": 31
+  },
+  "errors": [
+    {
+      "id": "Q004",
+      "course": "CS301",
+      "input": "Write an SQL query to list the names of students who are enrolled in more than three courses.",
+      "expected": "MEDIUM",
+      "actual": "EASY",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q006",
+      "course": "CS301",
+      "input": "Compare optimistic and pessimistic concurrency control in terms of throughput and abort rate under high contention.",
+      "expected": "HARD",
+      "actual": "MEDIUM",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q008",
+      "course": "CS301",
+      "input": "Briefly explain the difference between a clustered and a non-clustered index.",
+      "expected": "EASY",
+      "actual": "MEDIUM",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q016",
+      "course": "CS301",
+      "input": "Which normal form removes partial dependencies? (a) 1NF (b) 2NF (c) 3NF (d) BCNF",
+      "expected": "EASY",
+      "actual": "MEDIUM",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q018",
+      "course": "CS301",
+      "input": "Estimate the number of disk I/Os required to find a record using a B+ tree of order 100 over 10 million records, and explain how this compares with a full tabl…",
+      "expected": "MEDIUM",
+      "actual": "HARD",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q022",
+      "course": "CS402",
+      "input": "Compute the information gain of splitting on attribute A given that the parent node contains 8 positive and 8 negative examples and the split produces children…",
+      "expected": "MEDIUM",
+      "actual": "HARD",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q026",
+      "course": "CS402",
+      "input": "Describe how k-means clustering assigns points to clusters and how the centroids are updated.",
+      "expected": "EASY",
+      "actual": "MEDIUM",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q032",
+      "course": "CS402",
+      "input": "A logistic regression model outputs a probability of 0.7 for the positive class with a decision threshold of 0.5. Determine the predicted label and explain wha…",
+      "expected": "MEDIUM",
+      "actual": "HARD",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q034",
+      "course": "CS402",
+      "input": "Write pseudocode for the k-nearest neighbours classification algorithm.",
+      "expected": "MEDIUM",
+      "actual": "EASY",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q038",
+      "course": "CS201",
+      "input": "Implement a function that reverses a singly linked list in place and state its time complexity.",
+      "expected": "MEDIUM",
+      "actual": "EASY",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q048",
+      "course": "CS201",
+      "input": "List the steps involved in deleting a node with two children from a binary search tree.",
+      "expected": "MEDIUM",
+      "actual": "EASY",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q054",
+      "course": "CS201",
+      "input": "A social network stores friendships as an adjacency list with 10 million users. Evaluate whether BFS or bidirectional BFS is preferable for finding the shortes…",
+      "expected": "HARD",
+      "actual": "MEDIUM",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q056",
+      "course": "CS305",
+      "input": "Calculate the average waiting time for the processes P1 (burst 8), P2 (burst 4) and P3 (burst 1), all arriving at time 0, under Shortest Job First scheduling.",
+      "expected": "EASY",
+      "actual": "HARD",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q058",
+      "course": "CS305",
+      "input": "A system uses 32-bit virtual addresses, 4 KB pages and 4-byte page table entries. Determine the size of a single-level page table and explain why a two-level p…",
+      "expected": "MEDIUM",
+      "actual": "HARD",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q060",
+      "course": "CS305",
+      "input": "Analyze the following code for the producer-consumer problem and identify the race condition. Propose a fix using semaphores.",
+      "expected": "HARD",
+      "actual": "EASY",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q074",
+      "course": "CS306",
+      "input": "Explain how TCP's three-way handshake establishes a connection.",
+      "expected": "EASY",
+      "actual": "MEDIUM",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q076",
+      "course": "CS306",
+      "input": "Which protocol resolves domain names to IP addresses? (a) DHCP (b) DNS (c) ARP (d) SMTP",
+      "expected": "EASY",
+      "actual": "MEDIUM",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q086",
+      "course": "CS306",
+      "input": "Analyze how a SYN flood attack exploits the TCP handshake and assess the effectiveness of SYN cookies as a countermeasure.",
+      "expected": "HARD",
+      "actual": "MEDIUM",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q088",
+      "course": "CS306",
+      "input": "Calculate the maximum throughput of a TCP connection with a receiver window of 64 KB and a round-trip time of 100 ms, ignoring losses.",
+      "expected": "MEDIUM",
+      "actual": "HARD",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q090",
+      "course": "CS306",
+      "input": "Justify the use of hierarchical routing in the Internet instead of a single flat routing table.",
+      "expected": "MEDIUM",
+      "actual": "HARD",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q092",
+      "course": "CS308",
+      "input": "Compare the waterfall model with an iterative model, and recommend one for a start-up building a mobile app with rapidly changing requirements.",
+      "expected": "MEDIUM",
+      "actual": "HARD",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q102",
+      "course": "CS308",
+      "input": "Identify the code smells in the following class and propose refactorings, naming the design pattern applied where relevant.",
+      "expected": "HARD",
+      "actual": "MEDIUM",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q104",
+      "course": "CS308",
+      "input": "Evaluate the suitability of continuous integration for a safety-critical avionics project, considering certification requirements.",
+      "expected": "HARD",
+      "actual": "MEDIUM",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q110",
+      "course": "PHY101",
+      "input": "A 2 kg block is pushed across a frictionless surface by a horizontal force of 10 N. Calculate its acceleration.",
+      "expected": "EASY",
+      "actual": "HARD",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q112",
+      "course": "PHY101",
+      "input": "A 0.5 kg ball is dropped from a height of 20 m. Using energy conservation, determine its speed just before it hits the ground, ignoring air resistance.",
+      "expected": "EASY",
+      "actual": "MEDIUM",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q114",
+      "course": "PHY101",
+      "input": "True or False: The electric field inside a charged conductor in electrostatic equilibrium is zero.",
+      "expected": "MEDIUM",
+      "actual": "EASY",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q120",
+      "course": "PHY101",
+      "input": "Describe Faraday's law of electromagnetic induction and give one everyday application.",
+      "expected": "EASY",
+      "actual": "MEDIUM",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q122",
+      "course": "ECO101",
+      "input": "Explain what happens to equilibrium price and quantity when the supply of a good decreases while demand remains unchanged.",
+      "expected": "EASY",
+      "actual": "HARD",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q130",
+      "course": "ECO101",
+      "input": "Draw a supply and demand diagram showing the effect of a per-unit tax on sellers and identify the tax burden borne by consumers and producers.",
+      "expected": "MEDIUM",
+      "actual": "EASY",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q140",
+      "course": "ECO101",
+      "input": "Sketch the demand curve for a good with perfectly inelastic demand and give one real-world example.",
+      "expected": "EASY",
+      "actual": "MEDIUM",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "LOW",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    },
+    {
+      "id": "Q142",
+      "course": "CS402",
+      "input": "Fill in the blank and justify: Increasing the regularization parameter lambda in ridge regression generally ______ the variance of the model.",
+      "expected": "MEDIUM",
+      "actual": "HARD",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_DIFFICULTY",
+      "confidence": null
+    }
+  ],
+  "human_review": {},
+  "notes": [
+    "Confidence: Not available — this engine does not emit a calibrated confidence for this label.",
+    "Rule-based classifier (facultylens-question-analyzer 1.0.0); labels are single-annotator, see labels/LABELING_PROTOCOL.md."
+  ]
+}

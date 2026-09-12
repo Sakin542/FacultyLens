@@ -1,0 +1,89 @@
+{
+  "dataset": "facultylens-assessment-review-cases",
+  "version": "v1.0",
+  "created": "2026-09-13",
+  "labeling_protocol": "labels/LABELING_PROTOCOL.md#assessment-quality",
+  "annotators": ["A1"],
+  "note": "Each case is an assessment composed from datasets/questions_v1.json (with the annotator's type/difficulty/Bloom labels supplied as faculty metadata). expected_flags is the reviewer's manual judgement per quality dimension (OK = acceptable, FLAG = the reviewer would raise this dimension). expected_problem_categories lists the recommendation categories the reviewer expects FacultyLens to raise; rating_band is the acceptable overall rating set. Labels were written from the question list before any engine output was inspected.",
+  "flag_dimensions": ["topic_coverage", "learning_outcome_coverage", "difficulty_balance", "cognitive_diversity", "question_diversity", "marks_distribution"],
+  "pairwise_expectations": [
+    {"better": "AQ1", "worse": "AQ2"},
+    {"better": "AQ6", "worse": "AQ8"},
+    {"better": "AQ1", "worse": "AQ4"},
+    {"better": "AQ6", "worse": "AQ5"},
+    {"better": "AQ3", "worse": "AQ2"},
+    {"better": "AQ1", "worse": "AQ3"}
+  ],
+  "cases": [
+    {
+      "id": "AQ1", "title": "Balanced CS301 midterm", "course": "CS301", "declared_total_marks": 38,
+      "question_ids": ["Q001", "Q002", "Q004", "Q006", "Q008", "Q009", "Q010", "Q012", "Q016", "Q017"],
+      "expected_flags": {"topic_coverage": "OK", "learning_outcome_coverage": "OK", "difficulty_balance": "OK", "cognitive_diversity": "OK", "question_diversity": "OK", "marks_distribution": "OK"},
+      "expected_problem_categories": [],
+      "rating_band": ["EXCELLENT", "GOOD"],
+      "review_note": "All six topics and all five LOs covered; 4 easy / 4 medium / 2 hard; six question types; five Bloom levels; marks match."
+    },
+    {
+      "id": "AQ2", "title": "Recall-only CS301 quiz", "course": "CS301", "declared_total_marks": 9,
+      "question_ids": ["Q002", "Q011", "Q014", "Q016", "Q141", "Q001"],
+      "expected_flags": {"topic_coverage": "FLAG", "learning_outcome_coverage": "FLAG", "difficulty_balance": "FLAG", "cognitive_diversity": "FLAG", "question_diversity": "FLAG", "marks_distribution": "OK"},
+      "expected_problem_categories": ["topic_coverage", "learning_outcome", "difficulty", "cognitive_level", "question_diversity"],
+      "rating_band": ["NEEDS_REVIEW", "REQUIRES_ATTENTION"],
+      "review_note": "Only 3 of 6 topics and 3 of 5 LOs; every question EASY; only REMEMBER/UNDERSTAND; only MCQ and CONCEPTUAL."
+    },
+    {
+      "id": "AQ3", "title": "CS402 test with marks mismatch", "course": "CS402", "declared_total_marks": 40,
+      "question_ids": ["Q019", "Q021", "Q022", "Q024", "Q026", "Q029"],
+      "expected_flags": {"topic_coverage": "FLAG", "learning_outcome_coverage": "OK", "difficulty_balance": "OK", "cognitive_diversity": "OK", "question_diversity": "OK", "marks_distribution": "FLAG"},
+      "expected_problem_categories": ["marks_distribution", "topic_coverage"],
+      "rating_band": ["GOOD", "FAIR", "NEEDS_REVIEW"],
+      "review_note": "Question marks sum to 30 against a declared 40; Regression Models topic not covered; one question carries a third of the marks."
+    },
+    {
+      "id": "AQ4", "title": "All-hard CS305 exam", "course": "CS305", "declared_total_marks": 30,
+      "question_ids": ["Q060", "Q063", "Q065", "Q069"],
+      "expected_flags": {"topic_coverage": "FLAG", "learning_outcome_coverage": "FLAG", "difficulty_balance": "FLAG", "cognitive_diversity": "OK", "question_diversity": "FLAG", "marks_distribution": "OK"},
+      "expected_problem_categories": ["difficulty", "question_diversity", "topic_coverage", "learning_outcome"],
+      "rating_band": ["FAIR", "NEEDS_REVIEW", "REQUIRES_ATTENTION"],
+      "review_note": "No easy or medium questions; 3 of 4 questions ANALYTICAL; Process Management and Memory Management untested; LO1 and LO2 untested. Higher-order Bloom levels only, which the reviewer considers acceptable for a final."
+    },
+    {
+      "id": "AQ5", "title": "All-descriptive CS306 test", "course": "CS306", "declared_total_marks": 14,
+      "question_ids": ["Q074", "Q080", "Q083", "Q089"],
+      "expected_flags": {"topic_coverage": "FLAG", "learning_outcome_coverage": "FLAG", "difficulty_balance": "FLAG", "cognitive_diversity": "FLAG", "question_diversity": "FLAG", "marks_distribution": "OK"},
+      "expected_problem_categories": ["question_diversity", "cognitive_level", "difficulty", "topic_coverage", "learning_outcome"],
+      "rating_band": ["NEEDS_REVIEW", "REQUIRES_ATTENTION"],
+      "review_note": "Every question DESCRIPTIVE and UNDERSTAND; no HARD question; Routing and Security untested; LO2 and LO4 untested."
+    },
+    {
+      "id": "AQ6", "title": "Balanced ECO101 final", "course": "ECO101", "declared_total_marks": 44,
+      "question_ids": ["Q121", "Q122", "Q123", "Q124", "Q125", "Q126", "Q127", "Q128", "Q129", "Q130", "Q131", "Q132"],
+      "expected_flags": {"topic_coverage": "OK", "learning_outcome_coverage": "OK", "difficulty_balance": "OK", "cognitive_diversity": "OK", "question_diversity": "OK", "marks_distribution": "OK"},
+      "expected_problem_categories": [],
+      "rating_band": ["EXCELLENT", "GOOD"],
+      "review_note": "All four topics and LOs; 5 easy / 5 medium / 2 hard; all six Bloom levels; seven question types; marks match."
+    },
+    {
+      "id": "AQ7", "title": "CS201 test reusing past questions", "course": "CS201", "declared_total_marks": 20,
+      "question_ids": ["Q037", "Q041", "Q046", "Q042", "Q045", "Q053"],
+      "previous_questions": [
+        {"id": "PQ1", "text": "Contrast quicksort with merge sort regarding worst-case running time, memory requirements and stability.", "assessment_title": "CS201 Final 2025", "year": 2025},
+        {"id": "PQ2", "text": "Explain the working of Dijkstra's shortest path algorithm with an example.", "assessment_title": "CS201 Final 2025", "year": 2025},
+        {"id": "PQ3", "text": "Describe the Observer pattern and provide a scenario in which it is appropriate.", "assessment_title": "CS308 Final 2025", "year": 2025}
+      ],
+      "expected_flags": {"topic_coverage": "FLAG", "learning_outcome_coverage": "FLAG", "difficulty_balance": "FLAG", "cognitive_diversity": "OK", "question_diversity": "OK", "marks_distribution": "OK"},
+      "expected_problem_categories": ["semantic_similarity", "topic_coverage", "learning_outcome", "difficulty"],
+      "rating_band": ["GOOD", "FAIR", "NEEDS_REVIEW"],
+      "review_note": "Q041 is a near-duplicate of a 2025 question; no HARD question; Arrays and Stacks untested; LO1 untested."
+    },
+    {
+      "id": "AQ8", "title": "CS308 quiz dominated by one question", "course": "CS308", "declared_total_marks": 20,
+      "question_ids": ["Q106", "Q093", "Q098", "Q099"],
+      "marks_override": {"Q099": 16},
+      "expected_flags": {"topic_coverage": "FLAG", "learning_outcome_coverage": "FLAG", "difficulty_balance": "FLAG", "cognitive_diversity": "FLAG", "question_diversity": "OK", "marks_distribution": "FLAG"},
+      "expected_problem_categories": ["marks_distribution", "topic_coverage", "learning_outcome", "difficulty", "cognitive_level"],
+      "rating_band": ["NEEDS_REVIEW", "REQUIRES_ATTENTION"],
+      "review_note": "One question carries 80% of the marks; three REMEMBER questions plus one CREATE; 3 easy / 0 medium / 1 hard; Process Models and Requirements untested; LO1 and LO2 untested."
+    }
+  ]
+}

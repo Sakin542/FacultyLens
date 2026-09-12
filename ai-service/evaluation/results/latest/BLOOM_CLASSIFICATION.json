@@ -1,0 +1,568 @@
+{
+  "component": "BLOOM_CLASSIFICATION",
+  "status": "ACCEPTABLE",
+  "split": "TEST",
+  "sample_size": 72,
+  "headline": {
+    "metric": "macro_f1",
+    "value": 0.6364,
+    "ci95": [
+      0.504,
+      0.7361
+    ],
+    "higher_is_better": true,
+    "sample_size": 72
+  },
+  "metrics": {
+    "accuracy": 0.5833,
+    "macro_precision": 0.748,
+    "macro_recall": 0.6291,
+    "macro_f1": 0.6364,
+    "weighted_f1": 0.5709,
+    "lenient_accuracy": 0.6527777777777778,
+    "accuracy_ci95": [
+      0.4681,
+      0.6901
+    ],
+    "accuracy_high_confidence_labels": 0.5897435897435898,
+    "accuracy_medium_low_confidence_labels": 0.5757575757575758,
+    "mean_ordinal_shift": -0.2222,
+    "over_classified": 11,
+    "under_classified": 19,
+    "ece": null
+  },
+  "structured": {
+    "confusion_matrix": {
+      "REMEMBER": {
+        "REMEMBER": 4,
+        "UNDERSTAND": 9,
+        "APPLY": 0,
+        "ANALYZE": 0,
+        "EVALUATE": 0,
+        "CREATE": 0
+      },
+      "UNDERSTAND": {
+        "REMEMBER": 1,
+        "UNDERSTAND": 16,
+        "APPLY": 0,
+        "ANALYZE": 0,
+        "EVALUATE": 1,
+        "CREATE": 0
+      },
+      "APPLY": {
+        "REMEMBER": 2,
+        "UNDERSTAND": 11,
+        "APPLY": 6,
+        "ANALYZE": 1,
+        "EVALUATE": 0,
+        "CREATE": 0
+      },
+      "ANALYZE": {
+        "REMEMBER": 1,
+        "UNDERSTAND": 1,
+        "APPLY": 0,
+        "ANALYZE": 7,
+        "EVALUATE": 0,
+        "CREATE": 0
+      },
+      "EVALUATE": {
+        "REMEMBER": 0,
+        "UNDERSTAND": 1,
+        "APPLY": 0,
+        "ANALYZE": 1,
+        "EVALUATE": 4,
+        "CREATE": 0
+      },
+      "CREATE": {
+        "REMEMBER": 0,
+        "UNDERSTAND": 1,
+        "APPLY": 0,
+        "ANALYZE": 0,
+        "EVALUATE": 0,
+        "CREATE": 5
+      }
+    },
+    "per_class": [
+      {
+        "label": "REMEMBER",
+        "precision": 0.5,
+        "recall": 0.3077,
+        "f1": 0.381,
+        "support": 13,
+        "predicted": 8
+      },
+      {
+        "label": "UNDERSTAND",
+        "precision": 0.4103,
+        "recall": 0.8889,
+        "f1": 0.5614,
+        "support": 18,
+        "predicted": 39
+      },
+      {
+        "label": "APPLY",
+        "precision": 1.0,
+        "recall": 0.3,
+        "f1": 0.4615,
+        "support": 20,
+        "predicted": 6
+      },
+      {
+        "label": "ANALYZE",
+        "precision": 0.7778,
+        "recall": 0.7778,
+        "f1": 0.7778,
+        "support": 9,
+        "predicted": 9
+      },
+      {
+        "label": "EVALUATE",
+        "precision": 0.8,
+        "recall": 0.6667,
+        "f1": 0.7273,
+        "support": 6,
+        "predicted": 5
+      },
+      {
+        "label": "CREATE",
+        "precision": 1.0,
+        "recall": 0.8333,
+        "f1": 0.9091,
+        "support": 6,
+        "predicted": 5
+      }
+    ],
+    "top_confusions": [
+      {
+        "transition": "APPLY->UNDERSTAND",
+        "count": 11
+      },
+      {
+        "transition": "REMEMBER->UNDERSTAND",
+        "count": 9
+      },
+      {
+        "transition": "APPLY->REMEMBER",
+        "count": 2
+      },
+      {
+        "transition": "CREATE->UNDERSTAND",
+        "count": 1
+      },
+      {
+        "transition": "ANALYZE->UNDERSTAND",
+        "count": 1
+      },
+      {
+        "transition": "UNDERSTAND->REMEMBER",
+        "count": 1
+      },
+      {
+        "transition": "APPLY->ANALYZE",
+        "count": 1
+      },
+      {
+        "transition": "EVALUATE->ANALYZE",
+        "count": 1
+      }
+    ],
+    "accuracy_by_course": {
+      "CS201": 0.4444,
+      "CS301": 0.4444,
+      "CS305": 0.9091,
+      "CS306": 0.6667,
+      "CS308": 0.4,
+      "CS402": 0.5455,
+      "ECO101": 0.7143,
+      "PHY101": 0.5
+    },
+    "label_distribution": {
+      "REMEMBER": 13,
+      "APPLY": 20,
+      "ANALYZE": 9,
+      "UNDERSTAND": 18,
+      "CREATE": 6,
+      "EVALUATE": 6
+    }
+  },
+  "latency_ms": {
+    "count": 72,
+    "mean_ms": 7.38,
+    "p50_ms": 6.54,
+    "p95_ms": 13.84,
+    "max_ms": 19.78
+  },
+  "failure_count": 0,
+  "failure_rate": 0.0,
+  "error_breakdown": {
+    "WRONG_BLOOM_LEVEL": 30
+  },
+  "errors": [
+    {
+      "id": "Q002",
+      "course": "CS301",
+      "input": "Which of the following is NOT a valid SQL aggregate function? (a) SUM (b) AVG (c) CONCAT (d) COUNT",
+      "expected": "REMEMBER",
+      "actual": "UNDERSTAND",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q004",
+      "course": "CS301",
+      "input": "Write an SQL query to list the names of students who are enrolled in more than three courses.",
+      "expected": "APPLY",
+      "actual": "REMEMBER",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q010",
+      "course": "CS301",
+      "input": "Draw an ER diagram for a library system in which members borrow books, each book has one or more authors, and every loan records a due date.",
+      "expected": "CREATE",
+      "actual": "UNDERSTAND",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q016",
+      "course": "CS301",
+      "input": "Which normal form removes partial dependencies? (a) 1NF (b) 2NF (c) 3NF (d) BCNF",
+      "expected": "REMEMBER",
+      "actual": "UNDERSTAND",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q018",
+      "course": "CS301",
+      "input": "Estimate the number of disk I/Os required to find a record using a B+ tree of order 100 over 10 million records, and explain how this compares with a full tabl…",
+      "expected": "APPLY",
+      "actual": "UNDERSTAND",
+      "secondary_expected": "ANALYZE",
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q028",
+      "course": "CS402",
+      "input": "Derive the gradient of the mean squared error loss with respect to the weights of a linear regression model.",
+      "expected": "APPLY",
+      "actual": "UNDERSTAND",
+      "secondary_expected": "ANALYZE",
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q032",
+      "course": "CS402",
+      "input": "A logistic regression model outputs a probability of 0.7 for the positive class with a decision threshold of 0.5. Determine the predicted label and explain wha…",
+      "expected": "APPLY",
+      "actual": "UNDERSTAND",
+      "secondary_expected": "ANALYZE",
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q034",
+      "course": "CS402",
+      "input": "Write pseudocode for the k-nearest neighbours classification algorithm.",
+      "expected": "APPLY",
+      "actual": "UNDERSTAND",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q040",
+      "course": "CS201",
+      "input": "True or False: Inserting an element into a binary min-heap takes O(log n) time in the worst case.",
+      "expected": "REMEMBER",
+      "actual": "UNDERSTAND",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q042",
+      "course": "CS201",
+      "input": "Trace Dijkstra's algorithm on the given weighted graph from source vertex A, showing the distance table after each iteration.",
+      "expected": "APPLY",
+      "actual": "UNDERSTAND",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q044",
+      "course": "CS201",
+      "input": "Prove that any comparison-based sorting algorithm requires Omega(n log n) comparisons in the worst case.",
+      "expected": "ANALYZE",
+      "actual": "UNDERSTAND",
+      "secondary_expected": "EVALUATE",
+      "counts_as_error_lenient": true,
+      "label_confidence": "LOW",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q048",
+      "course": "CS201",
+      "input": "List the steps involved in deleting a node with two children from a binary search tree.",
+      "expected": "UNDERSTAND",
+      "actual": "REMEMBER",
+      "secondary_expected": "REMEMBER",
+      "counts_as_error_lenient": false,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q050",
+      "course": "CS201",
+      "input": "Detect whether a directed graph contains a cycle. Write an algorithm and analyze its complexity.",
+      "expected": "APPLY",
+      "actual": "ANALYZE",
+      "secondary_expected": "ANALYZE",
+      "counts_as_error_lenient": false,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q058",
+      "course": "CS305",
+      "input": "A system uses 32-bit virtual addresses, 4 KB pages and 4-byte page table entries. Determine the size of a single-level page table and explain why a two-level p…",
+      "expected": "APPLY",
+      "actual": "UNDERSTAND",
+      "secondary_expected": "ANALYZE",
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q076",
+      "course": "CS306",
+      "input": "Which protocol resolves domain names to IP addresses? (a) DHCP (b) DNS (c) ARP (d) SMTP",
+      "expected": "REMEMBER",
+      "actual": "UNDERSTAND",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q078",
+      "course": "CS306",
+      "input": "True or False: UDP guarantees in-order delivery of datagrams.",
+      "expected": "REMEMBER",
+      "actual": "UNDERSTAND",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q082",
+      "course": "CS306",
+      "input": "Run the Bellman-Ford algorithm on the given graph for three iterations and give the distance vector at node D after each iteration.",
+      "expected": "APPLY",
+      "actual": "UNDERSTAND",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q092",
+      "course": "CS308",
+      "input": "Compare the waterfall model with an iterative model, and recommend one for a start-up building a mobile app with rapidly changing requirements.",
+      "expected": "EVALUATE",
+      "actual": "ANALYZE",
+      "secondary_expected": "ANALYZE",
+      "counts_as_error_lenient": false,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q094",
+      "course": "CS308",
+      "input": "Write unit tests for a function that validates email addresses, covering at least four equivalence classes.",
+      "expected": "APPLY",
+      "actual": "UNDERSTAND",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q096",
+      "course": "CS308",
+      "input": "True or False: In Scrum, the sprint length may be changed in the middle of a sprint if the team is behind schedule.",
+      "expected": "REMEMBER",
+      "actual": "UNDERSTAND",
+      "secondary_expected": "UNDERSTAND",
+      "counts_as_error_lenient": false,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q098",
+      "course": "CS308",
+      "input": "Briefly outline the roles in a Scrum team.",
+      "expected": "REMEMBER",
+      "actual": "UNDERSTAND",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q102",
+      "course": "CS308",
+      "input": "Identify the code smells in the following class and propose refactorings, naming the design pattern applied where relevant.",
+      "expected": "ANALYZE",
+      "actual": "REMEMBER",
+      "secondary_expected": "CREATE",
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q112",
+      "course": "PHY101",
+      "input": "A 0.5 kg ball is dropped from a height of 20 m. Using energy conservation, determine its speed just before it hits the ground, ignoring air resistance.",
+      "expected": "APPLY",
+      "actual": "UNDERSTAND",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q114",
+      "course": "PHY101",
+      "input": "True or False: The electric field inside a charged conductor in electrostatic equilibrium is zero.",
+      "expected": "REMEMBER",
+      "actual": "UNDERSTAND",
+      "secondary_expected": "UNDERSTAND",
+      "counts_as_error_lenient": false,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q116",
+      "course": "PHY101",
+      "input": "Derive an expression for the magnetic field at the centre of a circular current loop of radius R carrying current I.",
+      "expected": "APPLY",
+      "actual": "UNDERSTAND",
+      "secondary_expected": "ANALYZE",
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q124",
+      "course": "ECO101",
+      "input": "Which of the following is a characteristic of perfect competition? (a) A single seller (b) Differentiated products (c) Many buyers and sellers (d) High barrier…",
+      "expected": "REMEMBER",
+      "actual": "UNDERSTAND",
+      "secondary_expected": null,
+      "counts_as_error_lenient": true,
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q130",
+      "course": "ECO101",
+      "input": "Draw a supply and demand diagram showing the effect of a per-unit tax on sellers and identify the tax burden borne by consumers and producers.",
+      "expected": "APPLY",
+      "actual": "REMEMBER",
+      "secondary_expected": "ANALYZE",
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q134",
+      "course": "CS402",
+      "input": "2(b) Your colleague trains a model for 500 epochs and reports 100% training accuracy. What would you check before trusting the model, and why?",
+      "expected": "EVALUATE",
+      "actual": "UNDERSTAND",
+      "secondary_expected": "ANALYZE",
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q138",
+      "course": "CS308",
+      "input": "A customer keeps changing their mind about features every week. Which process model would you adopt and how would you manage scope?",
+      "expected": "APPLY",
+      "actual": "UNDERSTAND",
+      "secondary_expected": "EVALUATE",
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    },
+    {
+      "id": "Q142",
+      "course": "CS402",
+      "input": "Fill in the blank and justify: Increasing the regularization parameter lambda in ridge regression generally ______ the variance of the model.",
+      "expected": "UNDERSTAND",
+      "actual": "EVALUATE",
+      "secondary_expected": "ANALYZE",
+      "counts_as_error_lenient": true,
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_BLOOM_LEVEL",
+      "confidence": null
+    }
+  ],
+  "human_review": {},
+  "notes": [
+    "Confidence: Not available — this engine does not emit a calibrated confidence for this label.",
+    "Rule-based classifier (facultylens-question-analyzer 1.0.0); labels are single-annotator, see labels/LABELING_PROTOCOL.md.",
+    "lenient_accuracy accepts the annotator's secondary Bloom label; the gap to accuracy approximates human ambiguity, not model error."
+  ]
+}

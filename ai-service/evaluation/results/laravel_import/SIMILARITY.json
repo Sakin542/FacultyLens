@@ -1,0 +1,850 @@
+{
+  "name": "STEP44 benchmark – Similarity pairs (v1.0)",
+  "task": "SIMILARITY",
+  "version": "v1.0",
+  "source": "CURATED_DATASET",
+  "split": "TEST",
+  "description": "60 expert-labelled question pairs across four similarity bands, including hard negatives.",
+  "examples": [
+    {
+      "input_data": {
+        "question_a": "Define a primary key and explain why a relation can have at most one primary key.",
+        "question_b": "What is a primary key, and why can a relation not have more than one?"
+      },
+      "expected_output": {
+        "expected_relationship": "POTENTIAL_DUPLICATE"
+      },
+      "metadata": {
+        "benchmark_id": "S001",
+        "expert_score": 0.95,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Write an SQL query to list the names of students who are enrolled in more than three courses.",
+        "question_b": "Using SQL, retrieve the names of all students taking more than three courses."
+      },
+      "expected_output": {
+        "expected_relationship": "POTENTIAL_DUPLICATE"
+      },
+      "metadata": {
+        "benchmark_id": "S002",
+        "expert_score": 0.92,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Explain the difference between supervised and unsupervised learning, giving one example algorithm of each.",
+        "question_b": "Distinguish supervised from unsupervised learning and name an example algorithm for each."
+      },
+      "expected_output": {
+        "expected_relationship": "POTENTIAL_DUPLICATE"
+      },
+      "metadata": {
+        "benchmark_id": "S003",
+        "expert_score": 0.93,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "State the four necessary conditions for deadlock.",
+        "question_b": "List the four conditions that must all hold for a deadlock to occur."
+      },
+      "expected_output": {
+        "expected_relationship": "POTENTIAL_DUPLICATE"
+      },
+      "metadata": {
+        "benchmark_id": "S004",
+        "expert_score": 0.92,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "List the seven layers of the OSI model in order.",
+        "question_b": "Name the OSI model's seven layers from bottom to top."
+      },
+      "expected_output": {
+        "expected_relationship": "POTENTIAL_DUPLICATE"
+      },
+      "metadata": {
+        "benchmark_id": "S005",
+        "expert_score": 0.92,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Explain how TCP's three-way handshake establishes a connection.",
+        "question_b": "Describe the TCP three-way handshake used for connection establishment."
+      },
+      "expected_output": {
+        "expected_relationship": "POTENTIAL_DUPLICATE"
+      },
+      "metadata": {
+        "benchmark_id": "S006",
+        "expert_score": 0.95,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "What is regression testing?",
+        "question_b": "Define regression testing."
+      },
+      "expected_output": {
+        "expected_relationship": "POTENTIAL_DUPLICATE"
+      },
+      "metadata": {
+        "benchmark_id": "S007",
+        "expert_score": 0.95,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "State Newton's second law of motion.",
+        "question_b": "Write down Newton's second law."
+      },
+      "expected_output": {
+        "expected_relationship": "POTENTIAL_DUPLICATE"
+      },
+      "metadata": {
+        "benchmark_id": "S008",
+        "expert_score": 0.93,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Define price elasticity of demand.",
+        "question_b": "What is meant by the price elasticity of demand?"
+      },
+      "expected_output": {
+        "expected_relationship": "POTENTIAL_DUPLICATE"
+      },
+      "metadata": {
+        "benchmark_id": "S009",
+        "expert_score": 0.95,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Compare merge sort and quicksort in terms of worst-case time complexity, space usage and stability.",
+        "question_b": "Contrast quicksort with merge sort regarding worst-case running time, memory requirements and stability."
+      },
+      "expected_output": {
+        "expected_relationship": "POTENTIAL_DUPLICATE"
+      },
+      "metadata": {
+        "benchmark_id": "S010",
+        "expert_score": 0.93,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Explain the difference between internal and external fragmentation.",
+        "question_b": "Differentiate between external and internal fragmentation in memory management."
+      },
+      "expected_output": {
+        "expected_relationship": "POTENTIAL_DUPLICATE"
+      },
+      "metadata": {
+        "benchmark_id": "S011",
+        "expert_score": 0.93,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Describe how k-means clustering assigns points to clusters and how the centroids are updated.",
+        "question_b": "Explain the assignment and centroid-update steps of the k-means algorithm."
+      },
+      "expected_output": {
+        "expected_relationship": "POTENTIAL_DUPLICATE"
+      },
+      "metadata": {
+        "benchmark_id": "S012",
+        "expert_score": 0.92,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Briefly explain the purpose of the ARP protocol.",
+        "question_b": "What is ARP used for? Answer briefly."
+      },
+      "expected_output": {
+        "expected_relationship": "POTENTIAL_DUPLICATE"
+      },
+      "metadata": {
+        "benchmark_id": "S013",
+        "expert_score": 0.9,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Explain the Observer design pattern and give a situation where it should be used.",
+        "question_b": "Describe the Observer pattern and provide a scenario in which it is appropriate."
+      },
+      "expected_output": {
+        "expected_relationship": "POTENTIAL_DUPLICATE"
+      },
+      "metadata": {
+        "benchmark_id": "S014",
+        "expert_score": 0.93,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Why does a model with very low training error but high validation error indicate high variance rather than high bias?",
+        "question_b": "A model has near-zero training error and large validation error. Explain why this points to high variance, not high bias."
+      },
+      "expected_output": {
+        "expected_relationship": "POTENTIAL_DUPLICATE"
+      },
+      "metadata": {
+        "benchmark_id": "S015",
+        "expert_score": 0.9,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "What is a context switch?",
+        "question_b": "Define the term context switch."
+      },
+      "expected_output": {
+        "expected_relationship": "POTENTIAL_DUPLICATE"
+      },
+      "metadata": {
+        "benchmark_id": "S016",
+        "expert_score": 0.95,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Define a primary key and explain why a relation can have at most one primary key.",
+        "question_b": "Explain the difference between a primary key and a candidate key."
+      },
+      "expected_output": {
+        "expected_relationship": "HIGHLY_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S017",
+        "expert_score": 0.75,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Write an SQL query to list the names of students who are enrolled in more than three courses.",
+        "question_b": "Write an SQL query to find the courses that have more than fifty enrolled students."
+      },
+      "expected_output": {
+        "expected_relationship": "HIGHLY_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S018",
+        "expert_score": 0.75,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Describe the four ACID properties of a transaction with one example each.",
+        "question_b": "Explain the isolation property of transactions and how it is enforced."
+      },
+      "expected_output": {
+        "expected_relationship": "HIGHLY_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S019",
+        "expert_score": 0.72,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Compute the information gain of splitting on attribute A given that the parent node contains 8 positive and 8 negative examples and the split produces children with (6+, 2-) and (2+, 6-).",
+        "question_b": "Explain how a decision tree uses information gain to choose the splitting attribute."
+      },
+      "expected_output": {
+        "expected_relationship": "HIGHLY_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S020",
+        "expert_score": 0.75,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Trace Dijkstra's algorithm on the given weighted graph from source vertex A, showing the distance table after each iteration.",
+        "question_b": "Explain the working of Dijkstra's shortest path algorithm with an example."
+      },
+      "expected_output": {
+        "expected_relationship": "HIGHLY_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S021",
+        "expert_score": 0.78,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Given the reference string 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5 and three frames, compute the number of page faults for LRU replacement.",
+        "question_b": "For the reference string 7, 0, 1, 2, 0, 3, 0, 4 with three frames, find the number of page faults under FIFO replacement."
+      },
+      "expected_output": {
+        "expected_relationship": "HIGHLY_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S022",
+        "expert_score": 0.78,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Describe how TCP slow start and congestion avoidance adjust the congestion window.",
+        "question_b": "Explain TCP congestion control, including slow start, congestion avoidance and fast recovery."
+      },
+      "expected_output": {
+        "expected_relationship": "HIGHLY_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S023",
+        "expert_score": 0.8,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Compare the waterfall model with an iterative model, and recommend one for a start-up building a mobile app with rapidly changing requirements.",
+        "question_b": "Discuss the advantages and disadvantages of the waterfall model."
+      },
+      "expected_output": {
+        "expected_relationship": "HIGHLY_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S024",
+        "expert_score": 0.72,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "A 2 kg block is pushed across a frictionless surface by a horizontal force of 10 N. Calculate its acceleration.",
+        "question_b": "A 5 kg box is pulled along a frictionless floor with a force of 20 N. Find its acceleration."
+      },
+      "expected_output": {
+        "expected_relationship": "HIGHLY_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S025",
+        "expert_score": 0.82,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Explain what happens to equilibrium price and quantity when the supply of a good decreases while demand remains unchanged.",
+        "question_b": "Explain the effect on market equilibrium of an increase in demand with supply held constant."
+      },
+      "expected_output": {
+        "expected_relationship": "HIGHLY_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S026",
+        "expert_score": 0.78,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Briefly explain the difference between a clustered and a non-clustered index.",
+        "question_b": "Explain how a B+ tree index speeds up range queries."
+      },
+      "expected_output": {
+        "expected_relationship": "HIGHLY_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S027",
+        "expert_score": 0.7,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Implement a function that reverses a singly linked list in place and state its time complexity.",
+        "question_b": "Write a function to detect whether a singly linked list contains a cycle."
+      },
+      "expected_output": {
+        "expected_relationship": "HIGHLY_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S028",
+        "expert_score": 0.72,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Critique the statement 'Agile teams do not need documentation.'",
+        "question_b": "Discuss the role of documentation in agile software development."
+      },
+      "expected_output": {
+        "expected_relationship": "HIGHLY_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S029",
+        "expert_score": 0.8,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Evaluate the Banker's algorithm as a practical deadlock avoidance strategy for a general-purpose operating system.",
+        "question_b": "Explain the Banker's algorithm for deadlock avoidance with an example."
+      },
+      "expected_output": {
+        "expected_relationship": "HIGHLY_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S030",
+        "expert_score": 0.78,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Define a primary key and explain why a relation can have at most one primary key.",
+        "question_b": "Write an SQL query to list the names of students who are enrolled in more than three courses."
+      },
+      "expected_output": {
+        "expected_relationship": "SOMEWHAT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S031",
+        "expert_score": 0.55,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "State the four necessary conditions for deadlock.",
+        "question_b": "Calculate the average waiting time for the processes P1 (burst 8), P2 (burst 4) and P3 (burst 1), all arriving at time 0, under Shortest Job First scheduling."
+      },
+      "expected_output": {
+        "expected_relationship": "SOMEWHAT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S032",
+        "expert_score": 0.5,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Explain the difference between supervised and unsupervised learning, giving one example algorithm of each.",
+        "question_b": "Describe how k-means clustering assigns points to clusters and how the centroids are updated."
+      },
+      "expected_output": {
+        "expected_relationship": "SOMEWHAT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S033",
+        "expert_score": 0.6,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "List the seven layers of the OSI model in order.",
+        "question_b": "Which protocol resolves domain names to IP addresses? (a) DHCP (b) DNS (c) ARP (d) SMTP"
+      },
+      "expected_output": {
+        "expected_relationship": "SOMEWHAT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S034",
+        "expert_score": 0.5,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Compare merge sort and quicksort in terms of worst-case time complexity, space usage and stability.",
+        "question_b": "Given the recurrence T(n) = 2T(n/2) + n, solve for T(n) using the master theorem."
+      },
+      "expected_output": {
+        "expected_relationship": "SOMEWHAT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S035",
+        "expert_score": 0.55,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "What is regression testing?",
+        "question_b": "Which of the following is a black-box testing technique? (a) Statement coverage (b) Equivalence partitioning (c) Path coverage (d) Mutation testing"
+      },
+      "expected_output": {
+        "expected_relationship": "SOMEWHAT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S036",
+        "expert_score": 0.58,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "State Newton's second law of motion.",
+        "question_b": "A 0.5 kg ball is dropped from a height of 20 m. Using energy conservation, determine its speed just before it hits the ground, ignoring air resistance."
+      },
+      "expected_output": {
+        "expected_relationship": "SOMEWHAT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S037",
+        "expert_score": 0.5,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Define price elasticity of demand.",
+        "question_b": "Which of the following is a characteristic of perfect competition? (a) A single seller (b) Differentiated products (c) Many buyers and sellers (d) High barriers to entry"
+      },
+      "expected_output": {
+        "expected_relationship": "SOMEWHAT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S038",
+        "expert_score": 0.5,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Explain the Observer design pattern and give a situation where it should be used.",
+        "question_b": "Design a class structure using the Strategy pattern for a payment system that supports credit card, PayPal and bank transfer, and explain how a new payment method could be added without modifying existing classes."
+      },
+      "expected_output": {
+        "expected_relationship": "SOMEWHAT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S039",
+        "expert_score": 0.62,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Describe the role of the process control block.",
+        "question_b": "Distinguish between user-level threads and kernel-level threads, and state one situation where each is preferable."
+      },
+      "expected_output": {
+        "expected_relationship": "SOMEWHAT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S040",
+        "expert_score": 0.55,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Explain how TCP's three-way handshake establishes a connection.",
+        "question_b": "Analyze how a SYN flood attack exploits the TCP handshake and assess the effectiveness of SYN cookies as a countermeasure."
+      },
+      "expected_output": {
+        "expected_relationship": "SOMEWHAT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S041",
+        "expert_score": 0.65,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Describe the four ACID properties of a transaction with one example each.",
+        "question_b": "Write short notes on write-ahead logging."
+      },
+      "expected_output": {
+        "expected_relationship": "SOMEWHAT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S042",
+        "expert_score": 0.58,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Briefly explain what a confusion matrix shows.",
+        "question_b": "A classifier achieves 99% accuracy on a dataset where 99% of examples belong to one class. Critique the use of accuracy here and propose two alternative metrics."
+      },
+      "expected_output": {
+        "expected_relationship": "SOMEWHAT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S043",
+        "expert_score": 0.62,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Trace Dijkstra's algorithm on the given weighted graph from source vertex A, showing the distance table after each iteration.",
+        "question_b": "Explain why a queue is more appropriate than a stack for breadth-first search."
+      },
+      "expected_output": {
+        "expected_relationship": "SOMEWHAT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S044",
+        "expert_score": 0.52,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Define a primary key and explain why a relation can have at most one primary key.",
+        "question_b": "State Newton's second law of motion."
+      },
+      "expected_output": {
+        "expected_relationship": "NOT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S045",
+        "expert_score": 0.05,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Write an SQL query to list the names of students who are enrolled in more than three courses.",
+        "question_b": "Explain why a passenger feels pushed backwards when a car accelerates forward."
+      },
+      "expected_output": {
+        "expected_relationship": "NOT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S046",
+        "expert_score": 0.05,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Explain the difference between supervised and unsupervised learning, giving one example algorithm of each.",
+        "question_b": "List the seven layers of the OSI model in order."
+      },
+      "expected_output": {
+        "expected_relationship": "NOT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S047",
+        "expert_score": 0.1,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "State the four necessary conditions for deadlock.",
+        "question_b": "Define price elasticity of demand."
+      },
+      "expected_output": {
+        "expected_relationship": "NOT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S048",
+        "expert_score": 0.05,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Compare merge sort and quicksort in terms of worst-case time complexity, space usage and stability.",
+        "question_b": "Critique the statement 'Agile teams do not need documentation.'"
+      },
+      "expected_output": {
+        "expected_relationship": "NOT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S049",
+        "expert_score": 0.1,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "What is regression testing?",
+        "question_b": "Derive the gradient of the mean squared error loss with respect to the weights of a linear regression model."
+      },
+      "expected_output": {
+        "expected_relationship": "NOT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S050",
+        "expert_score": 0.15,
+        "hard_negative": "shared word 'regression'"
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Explain how TCP's three-way handshake establishes a connection.",
+        "question_b": "Compare the long-run outcomes of perfect competition and monopoly in terms of price, output and efficiency."
+      },
+      "expected_output": {
+        "expected_relationship": "NOT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S051",
+        "expert_score": 0.05,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Describe how k-means clustering assigns points to clusters and how the centroids are updated.",
+        "question_b": "Illustrate how journaling improves file system recovery after a crash."
+      },
+      "expected_output": {
+        "expected_relationship": "NOT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S052",
+        "expert_score": 0.08,
+        "hard_negative": null
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Define a process and list the states in a five-state process model.",
+        "question_b": "Describe the V-model and its relationship between development and testing phases."
+      },
+      "expected_output": {
+        "expected_relationship": "NOT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S053",
+        "expert_score": 0.15,
+        "hard_negative": "shared word 'process'"
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Which normal form removes partial dependencies? (a) 1NF (b) 2NF (c) 3NF (d) BCNF",
+        "question_b": "Which of the following quantities is a scalar? (a) Velocity (b) Force (c) Work (d) Acceleration"
+      },
+      "expected_output": {
+        "expected_relationship": "NOT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S054",
+        "expert_score": 0.1,
+        "hard_negative": "same MCQ format"
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "True or False: UDP guarantees in-order delivery of datagrams.",
+        "question_b": "True or False: A monopolist can charge any price it wants and still sell any quantity it wants."
+      },
+      "expected_output": {
+        "expected_relationship": "NOT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S055",
+        "expert_score": 0.08,
+        "hard_negative": "same True/False format"
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Calculate the maximum throughput of a TCP connection with a receiver window of 64 KB and a round-trip time of 100 ms, ignoring losses.",
+        "question_b": "The price of coffee rises from $4 to $5 and quantity demanded falls from 100 to 80 cups per day. Calculate the price elasticity of demand using the midpoint method and interpret the result."
+      },
+      "expected_output": {
+        "expected_relationship": "NOT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S056",
+        "expert_score": 0.1,
+        "hard_negative": "both numeric 'calculate' tasks"
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Explain the Observer design pattern and give a situation where it should be used.",
+        "question_b": "Explain the difference between internal and external fragmentation."
+      },
+      "expected_output": {
+        "expected_relationship": "NOT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S057",
+        "expert_score": 0.1,
+        "hard_negative": "shared verb 'explain'"
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Name two applications of a priority queue.",
+        "question_b": "Name the OSI model's seven layers from bottom to top."
+      },
+      "expected_output": {
+        "expected_relationship": "NOT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S058",
+        "expert_score": 0.1,
+        "hard_negative": "shared verb 'name'"
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Evaluate whether a heat engine operating between 500 K and 300 K can achieve 50% efficiency, and justify your answer using the Carnot limit.",
+        "question_b": "Evaluate the Banker's algorithm as a practical deadlock avoidance strategy for a general-purpose operating system."
+      },
+      "expected_output": {
+        "expected_relationship": "NOT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S059",
+        "expert_score": 0.08,
+        "hard_negative": "shared verb 'evaluate'"
+      }
+    },
+    {
+      "input_data": {
+        "question_a": "Describe Faraday's law of electromagnetic induction and give one everyday application.",
+        "question_b": "Briefly outline the roles in a Scrum team."
+      },
+      "expected_output": {
+        "expected_relationship": "NOT_SIMILAR"
+      },
+      "metadata": {
+        "benchmark_id": "S060",
+        "expert_score": 0.03,
+        "hard_negative": null
+      }
+    }
+  ]
+}

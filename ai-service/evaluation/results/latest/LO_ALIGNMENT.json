@@ -1,0 +1,1276 @@
+{
+  "component": "LO_ALIGNMENT",
+  "status": "NEEDS_IMPROVEMENT",
+  "split": "ALL(pairs)+TEST(ranking)",
+  "sample_size": 86,
+  "headline": {
+    "metric": "band_agreement",
+    "value": 0.314,
+    "ci95": [
+      0.2093,
+      0.407
+    ],
+    "higher_is_better": true,
+    "sample_size": 86
+  },
+  "metrics": {
+    "band_agreement": 0.314,
+    "band_agreement_ci95": [
+      0.2256,
+      0.4182
+    ],
+    "macro_f1": 0.2235,
+    "weighted_f1": 0.1955,
+    "kappa": 0.0459,
+    "aligned_vs_not_accuracy": 0.4884,
+    "aligned_vs_not_f1": 0.45,
+    "adjacent_band_errors": 37,
+    "two_band_errors": 22,
+    "agreement_high_confidence_labels": 0.4182,
+    "agreement_medium_low_confidence_labels": 0.129,
+    "top1_lo_accuracy": 0.7606,
+    "top2_lo_accuracy": 0.8732,
+    "top1_lo_accuracy_ci95": [
+      0.6496,
+      0.8448
+    ],
+    "lo_mrr": 0.8538,
+    "ranked_questions": 71,
+    "band_agreement_bare_text": 0.2791,
+    "macro_f1_bare_text": 0.1616,
+    "top1_lo_accuracy_bare_text": 0.7324,
+    "lo_mrr_bare_text": 0.835
+  },
+  "structured": {
+    "confusion_matrix": {
+      "STRONG": {
+        "STRONG": 1,
+        "WEAK": 15,
+        "NOT_ALIGNED": 22
+      },
+      "WEAK": {
+        "STRONG": 0,
+        "WEAK": 2,
+        "NOT_ALIGNED": 22
+      },
+      "NOT_ALIGNED": {
+        "STRONG": 0,
+        "WEAK": 0,
+        "NOT_ALIGNED": 24
+      }
+    },
+    "per_class": [
+      {
+        "label": "STRONG",
+        "precision": 1.0,
+        "recall": 0.0263,
+        "f1": 0.0513,
+        "support": 38,
+        "predicted": 1
+      },
+      {
+        "label": "WEAK",
+        "precision": 0.1176,
+        "recall": 0.0833,
+        "f1": 0.0976,
+        "support": 24,
+        "predicted": 17
+      },
+      {
+        "label": "NOT_ALIGNED",
+        "precision": 0.3529,
+        "recall": 1.0,
+        "f1": 0.5217,
+        "support": 24,
+        "predicted": 68
+      }
+    ],
+    "confusion_matrix_bare_text": {
+      "STRONG": {
+        "STRONG": 0,
+        "WEAK": 11,
+        "NOT_ALIGNED": 27
+      },
+      "WEAK": {
+        "STRONG": 0,
+        "WEAK": 0,
+        "NOT_ALIGNED": 24
+      },
+      "NOT_ALIGNED": {
+        "STRONG": 0,
+        "WEAK": 0,
+        "NOT_ALIGNED": 24
+      }
+    },
+    "similarity_distribution_by_expected_band": {
+      "STRONG": {
+        "n": 38,
+        "min": 0.1338,
+        "median": 0.484,
+        "mean": 0.473,
+        "max": 0.7167
+      },
+      "WEAK": {
+        "n": 24,
+        "min": 0.1728,
+        "median": 0.4241,
+        "mean": 0.3892,
+        "max": 0.52
+      },
+      "NOT_ALIGNED": {
+        "n": 24,
+        "min": -0.0771,
+        "median": 0.1218,
+        "mean": 0.1474,
+        "max": 0.4403
+      }
+    },
+    "similarity_distribution_by_expected_band_bare_text": {
+      "STRONG": {
+        "n": 38,
+        "min": 0.1184,
+        "median": 0.4375,
+        "mean": 0.4318,
+        "max": 0.6894
+      },
+      "WEAK": {
+        "n": 24,
+        "min": 0.1407,
+        "median": 0.3623,
+        "mean": 0.3403,
+        "max": 0.498
+      },
+      "NOT_ALIGNED": {
+        "n": 24,
+        "min": -0.0586,
+        "median": 0.0979,
+        "mean": 0.1296,
+        "max": 0.4154
+      }
+    },
+    "best_similarity_when_top1_correct": {
+      "n": 54,
+      "min": 0.2083,
+      "median": 0.4751,
+      "mean": 0.4627,
+      "max": 0.7167
+    },
+    "best_similarity_when_top1_wrong": {
+      "n": 17,
+      "min": 0.2144,
+      "median": 0.4119,
+      "mean": 0.3998,
+      "max": 0.6193
+    },
+    "threshold_sweep": [
+      {
+        "strong": 0.35,
+        "weak": 0.2,
+        "band_agreement": 0.593,
+        "macro_f1": 0.5409,
+        "production": false
+      },
+      {
+        "strong": 0.4,
+        "weak": 0.25,
+        "band_agreement": 0.6047,
+        "macro_f1": 0.5965,
+        "production": false
+      },
+      {
+        "strong": 0.45,
+        "weak": 0.3,
+        "band_agreement": 0.6628,
+        "macro_f1": 0.6465,
+        "production": false
+      },
+      {
+        "strong": 0.5,
+        "weak": 0.35,
+        "band_agreement": 0.6163,
+        "macro_f1": 0.6169,
+        "production": false
+      },
+      {
+        "strong": 0.55,
+        "weak": 0.4,
+        "band_agreement": 0.5116,
+        "macro_f1": 0.4966,
+        "production": false
+      },
+      {
+        "strong": 0.6,
+        "weak": 0.45,
+        "band_agreement": 0.4535,
+        "macro_f1": 0.4174,
+        "production": false
+      },
+      {
+        "strong": 0.7,
+        "weak": 0.5,
+        "band_agreement": 0.314,
+        "macro_f1": 0.2235,
+        "production": true
+      },
+      {
+        "strong": 0.8,
+        "weak": 0.6,
+        "band_agreement": 0.2791,
+        "macro_f1": 0.1538,
+        "production": false
+      }
+    ],
+    "production_thresholds": {
+      "strong": 0.7,
+      "weak": 0.5
+    },
+    "error_transitions": {
+      "STRONG->WEAK": 15,
+      "STRONG->NOT_ALIGNED": 22,
+      "WEAK->NOT_ALIGNED": 22
+    }
+  },
+  "latency_ms": {
+    "count": 157,
+    "mean_ms": 6.31,
+    "p50_ms": 6.96,
+    "p95_ms": 13.45,
+    "max_ms": 14.73
+  },
+  "failure_count": 0,
+  "failure_rate": 0.0,
+  "error_breakdown": {
+    "WRONG_LO_ALIGNMENT": 76
+  },
+  "errors": [
+    {
+      "id": "P001",
+      "question_id": "Q001",
+      "input": "Define a primary key and explain why a relation can have at most one primary key.",
+      "lo": "CS301:LO1",
+      "lo_text": "Explain relational database concepts including keys, integrity constraints and the relational model.",
+      "expected": "STRONG",
+      "actual": "WEAK",
+      "similarity": 0.5917,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P002",
+      "question_id": "Q004",
+      "input": "Write an SQL query to list the names of students who are enrolled in more than three courses.",
+      "lo": "CS301:LO2",
+      "lo_text": "Write SQL queries to retrieve, aggregate and manipulate data.",
+      "expected": "STRONG",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.2976,
+      "severity": "TWO_BANDS",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P003",
+      "question_id": "Q005",
+      "input": "Given the relation R(A, B, C, D) with functional dependencies A -> B, B -> C and C -> D, identify all candidate keys and determine the highest normal form of R…",
+      "lo": "CS301:LO3",
+      "lo_text": "Apply normalization techniques to design well-structured relational schemas.",
+      "expected": "STRONG",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.4706,
+      "severity": "TWO_BANDS",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P004",
+      "question_id": "Q006",
+      "input": "Compare optimistic and pessimistic concurrency control in terms of throughput and abort rate under high contention.",
+      "lo": "CS301:LO4",
+      "lo_text": "Analyze transaction management, concurrency control and recovery mechanisms.",
+      "expected": "STRONG",
+      "actual": "WEAK",
+      "similarity": 0.6746,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P005",
+      "question_id": "Q009",
+      "input": "A query filters a 50-million-row table on a column with only three distinct values. Evaluate whether adding a B+ tree index on that column is worthwhile and re…",
+      "lo": "CS301:LO5",
+      "lo_text": "Evaluate indexing and query optimization strategies for database performance.",
+      "expected": "STRONG",
+      "actual": "WEAK",
+      "similarity": 0.5688,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P006",
+      "question_id": "Q019",
+      "input": "Explain the difference between supervised and unsupervised learning, giving one example algorithm of each.",
+      "lo": "CS402:LO1",
+      "lo_text": "Describe the fundamental paradigms of machine learning and their typical applications.",
+      "expected": "STRONG",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.354,
+      "severity": "TWO_BANDS",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P007",
+      "question_id": "Q022",
+      "input": "Compute the information gain of splitting on attribute A given that the parent node contains 8 positive and 8 negative examples and the split produces children…",
+      "lo": "CS402:LO2",
+      "lo_text": "Apply regression and classification algorithms to real datasets.",
+      "expected": "STRONG",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.1338,
+      "severity": "TWO_BANDS",
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P008",
+      "question_id": "Q021",
+      "input": "A classifier achieves 99% accuracy on a dataset where 99% of examples belong to one class. Critique the use of accuracy here and propose two alternative metric…",
+      "lo": "CS402:LO3",
+      "lo_text": "Evaluate models using appropriate metrics, validation strategies and error analysis.",
+      "expected": "STRONG",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.3257,
+      "severity": "TWO_BANDS",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P009",
+      "question_id": "Q024",
+      "input": "Design a neural network architecture for classifying 28x28 grayscale handwritten digits. Specify the layers, activation functions, loss function and one regula…",
+      "lo": "CS402:LO4",
+      "lo_text": "Design neural network architectures and training procedures for a given task.",
+      "expected": "STRONG",
+      "actual": "WEAK",
+      "similarity": 0.5042,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P010",
+      "question_id": "Q027",
+      "input": "Why does a model with very low training error but high validation error indicate high variance rather than high bias?",
+      "lo": "CS402:LO5",
+      "lo_text": "Analyze the bias-variance trade-off, overfitting and regularization.",
+      "expected": "STRONG",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.4608,
+      "severity": "TWO_BANDS",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P011",
+      "question_id": "Q038",
+      "input": "Implement a function that reverses a singly linked list in place and state its time complexity.",
+      "lo": "CS201:LO1",
+      "lo_text": "Explain the properties and operations of fundamental data structures such as arrays, linked lists, …",
+      "expected": "STRONG",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.4504,
+      "severity": "TWO_BANDS",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P012",
+      "question_id": "Q046",
+      "input": "Given the recurrence T(n) = 2T(n/2) + n, solve for T(n) using the master theorem.",
+      "lo": "CS201:LO2",
+      "lo_text": "Analyze the time and space complexity of algorithms using asymptotic notation.",
+      "expected": "STRONG",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.3824,
+      "severity": "TWO_BANDS",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P013",
+      "question_id": "Q048",
+      "input": "List the steps involved in deleting a node with two children from a binary search tree.",
+      "lo": "CS201:LO3",
+      "lo_text": "Apply tree and heap data structures to solve computational problems.",
+      "expected": "STRONG",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.4751,
+      "severity": "TWO_BANDS",
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P014",
+      "question_id": "Q042",
+      "input": "Trace Dijkstra's algorithm on the given weighted graph from source vertex A, showing the distance table after each iteration.",
+      "lo": "CS201:LO4",
+      "lo_text": "Implement graph traversal and shortest-path algorithms.",
+      "expected": "STRONG",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.493,
+      "severity": "TWO_BANDS",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P015",
+      "question_id": "Q041",
+      "input": "Compare merge sort and quicksort in terms of worst-case time complexity, space usage and stability.",
+      "lo": "CS201:LO5",
+      "lo_text": "Select and justify appropriate sorting and searching algorithms for a given problem.",
+      "expected": "STRONG",
+      "actual": "WEAK",
+      "similarity": 0.5097,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P016",
+      "question_id": "Q055",
+      "input": "Define a process and list the states in a five-state process model.",
+      "lo": "CS305:LO1",
+      "lo_text": "Describe process states, process control blocks and CPU scheduling algorithms.",
+      "expected": "STRONG",
+      "actual": "WEAK",
+      "similarity": 0.5625,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P017",
+      "question_id": "Q067",
+      "input": "Given the reference string 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5 and three frames, compute the number of page faults for LRU replacement.",
+      "lo": "CS305:LO2",
+      "lo_text": "Apply memory management techniques such as paging, segmentation and page replacement.",
+      "expected": "STRONG",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.3983,
+      "severity": "TWO_BANDS",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P018",
+      "question_id": "Q069",
+      "input": "Evaluate the Banker's algorithm as a practical deadlock avoidance strategy for a general-purpose operating system.",
+      "lo": "CS305:LO3",
+      "lo_text": "Analyze synchronization problems and deadlock handling strategies.",
+      "expected": "STRONG",
+      "actual": "WEAK",
+      "similarity": 0.6975,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P019",
+      "question_id": "Q071",
+      "input": "Illustrate how journaling improves file system recovery after a crash.",
+      "lo": "CS305:LO4",
+      "lo_text": "Explain file system structures and storage allocation methods.",
+      "expected": "STRONG",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.4601,
+      "severity": "TWO_BANDS",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P020",
+      "question_id": "Q072",
+      "input": "Distinguish between user-level threads and kernel-level threads, and state one situation where each is preferable.",
+      "lo": "CS305:LO5",
+      "lo_text": "Design concurrent programs using threads and synchronization primitives.",
+      "expected": "STRONG",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.484,
+      "severity": "TWO_BANDS",
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P021",
+      "question_id": "Q073",
+      "input": "List the seven layers of the OSI model in order.",
+      "lo": "CS306:LO1",
+      "lo_text": "Describe the layered architecture of computer networks and the responsibilities of each layer.",
+      "expected": "STRONG",
+      "actual": "WEAK",
+      "similarity": 0.6017,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P022",
+      "question_id": "Q075",
+      "input": "Compare distance-vector and link-state routing with respect to convergence time and the count-to-infinity problem.",
+      "lo": "CS306:LO2",
+      "lo_text": "Analyze routing algorithms and their behavior in dynamic networks.",
+      "expected": "STRONG",
+      "actual": "WEAK",
+      "similarity": 0.5249,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P023",
+      "question_id": "Q080",
+      "input": "Describe how TCP slow start and congestion avoidance adjust the congestion window.",
+      "lo": "CS306:LO3",
+      "lo_text": "Explain transport layer mechanisms for reliability, flow control and congestion control.",
+      "expected": "STRONG",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.4885,
+      "severity": "TWO_BANDS",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P024",
+      "question_id": "Q079",
+      "input": "Evaluate the trade-offs of using symmetric versus asymmetric encryption for securing a high-volume video streaming service, and recommend a hybrid scheme.",
+      "lo": "CS306:LO4",
+      "lo_text": "Evaluate network security threats and cryptographic countermeasures.",
+      "expected": "STRONG",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.3683,
+      "severity": "TWO_BANDS",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P025",
+      "question_id": "Q083",
+      "input": "Why is HTTP considered a stateless protocol, and how do cookies compensate for this?",
+      "lo": "CS306:LO5",
+      "lo_text": "Apply application layer protocols such as HTTP, DNS and SMTP.",
+      "expected": "STRONG",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.3125,
+      "severity": "TWO_BANDS",
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P026",
+      "question_id": "Q092",
+      "input": "Compare the waterfall model with an iterative model, and recommend one for a start-up building a mobile app with rapidly changing requirements.",
+      "lo": "CS308:LO1",
+      "lo_text": "Compare software development process models and select one for a given project context.",
+      "expected": "STRONG",
+      "actual": "WEAK",
+      "similarity": 0.5102,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P027",
+      "question_id": "Q103",
+      "input": "List three techniques for requirements elicitation.",
+      "lo": "CS308:LO2",
+      "lo_text": "Elicit, specify and validate software requirements.",
+      "expected": "STRONG",
+      "actual": "WEAK",
+      "similarity": 0.5428,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P028",
+      "question_id": "Q094",
+      "input": "Write unit tests for a function that validates email addresses, covering at least four equivalence classes.",
+      "lo": "CS308:LO3",
+      "lo_text": "Design and execute software test strategies at unit, integration and system level.",
+      "expected": "STRONG",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.3193,
+      "severity": "TWO_BANDS",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P029",
+      "question_id": "Q099",
+      "input": "Design a class structure using the Strategy pattern for a payment system that supports credit card, PayPal and bank transfer, and explain how a new payment met…",
+      "lo": "CS308:LO4",
+      "lo_text": "Apply design patterns to improve software structure and maintainability.",
+      "expected": "STRONG",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.3828,
+      "severity": "TWO_BANDS",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P030",
+      "question_id": "Q097",
+      "input": "Critique the statement 'Agile teams do not need documentation.'",
+      "lo": "CS308:LO5",
+      "lo_text": "Explain agile principles and practices such as Scrum and continuous integration.",
+      "expected": "STRONG",
+      "actual": "WEAK",
+      "similarity": 0.5135,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P031",
+      "question_id": "Q110",
+      "input": "A 2 kg block is pushed across a frictionless surface by a horizontal force of 10 N. Calculate its acceleration.",
+      "lo": "PHY101:LO1",
+      "lo_text": "Apply Newton's laws to solve problems involving forces and motion.",
+      "expected": "STRONG",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.4813,
+      "severity": "TWO_BANDS",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P032",
+      "question_id": "Q112",
+      "input": "A 0.5 kg ball is dropped from a height of 20 m. Using energy conservation, determine its speed just before it hits the ground, ignoring air resistance.",
+      "lo": "PHY101:LO2",
+      "lo_text": "Use the work-energy theorem and conservation of energy in mechanical systems.",
+      "expected": "STRONG",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.3554,
+      "severity": "TWO_BANDS",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P033",
+      "question_id": "Q120",
+      "input": "Describe Faraday's law of electromagnetic induction and give one everyday application.",
+      "lo": "PHY101:LO3",
+      "lo_text": "Explain electric and magnetic phenomena using field concepts.",
+      "expected": "STRONG",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.4657,
+      "severity": "TWO_BANDS",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P034",
+      "question_id": "Q119",
+      "input": "Evaluate whether a heat engine operating between 500 K and 300 K can achieve 50% efficiency, and justify your answer using the Carnot limit.",
+      "lo": "PHY101:LO4",
+      "lo_text": "Analyze thermodynamic processes using the laws of thermodynamics.",
+      "expected": "STRONG",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.2622,
+      "severity": "TWO_BANDS",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P035",
+      "question_id": "Q122",
+      "input": "Explain what happens to equilibrium price and quantity when the supply of a good decreases while demand remains unchanged.",
+      "lo": "ECO101:LO1",
+      "lo_text": "Explain how supply and demand determine market equilibrium.",
+      "expected": "STRONG",
+      "actual": "WEAK",
+      "similarity": 0.6558,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P036",
+      "question_id": "Q123",
+      "input": "The price of coffee rises from $4 to $5 and quantity demanded falls from 100 to 80 cups per day. Calculate the price elasticity of demand using the midpoint me…",
+      "lo": "ECO101:LO2",
+      "lo_text": "Calculate and interpret price elasticity of demand and supply.",
+      "expected": "STRONG",
+      "actual": "WEAK",
+      "similarity": 0.6252,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P038",
+      "question_id": "Q127",
+      "input": "Evaluate the likely effects of a central bank raising interest rates during a period of high inflation and slowing growth, and recommend whether the policy sho…",
+      "lo": "ECO101:LO4",
+      "lo_text": "Evaluate the effects of monetary policy on inflation and output.",
+      "expected": "STRONG",
+      "actual": "WEAK",
+      "similarity": 0.554,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "HIGH",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P039",
+      "question_id": "Q004",
+      "input": "Write an SQL query to list the names of students who are enrolled in more than three courses.",
+      "lo": "CS301:LO1",
+      "lo_text": "Explain relational database concepts including keys, integrity constraints and the relational model.",
+      "expected": "WEAK",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.1758,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P040",
+      "question_id": "Q009",
+      "input": "A query filters a 50-million-row table on a column with only three distinct values. Evaluate whether adding a B+ tree index on that column is worthwhile and re…",
+      "lo": "CS301:LO2",
+      "lo_text": "Write SQL queries to retrieve, aggregate and manipulate data.",
+      "expected": "WEAK",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.2908,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P041",
+      "question_id": "Q005",
+      "input": "Given the relation R(A, B, C, D) with functional dependencies A -> B, B -> C and C -> D, identify all candidate keys and determine the highest normal form of R…",
+      "lo": "CS301:LO1",
+      "lo_text": "Explain relational database concepts including keys, integrity constraints and the relational model.",
+      "expected": "WEAK",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.3727,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "LOW",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P042",
+      "question_id": "Q030",
+      "input": "Compare bagging and boosting with respect to how they build ensemble members and how they reduce error.",
+      "lo": "CS402:LO2",
+      "lo_text": "Apply regression and classification algorithms to real datasets.",
+      "expected": "WEAK",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.3504,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P043",
+      "question_id": "Q033",
+      "input": "Evaluate the claim that deep neural networks always outperform gradient-boosted trees on tabular data.",
+      "lo": "CS402:LO4",
+      "lo_text": "Design neural network architectures and training procedures for a given task.",
+      "expected": "WEAK",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.3763,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P044",
+      "question_id": "Q037",
+      "input": "What is the time complexity of binary search on a sorted array of n elements?",
+      "lo": "CS201:LO5",
+      "lo_text": "Select and justify appropriate sorting and searching algorithms for a given problem.",
+      "expected": "WEAK",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.4645,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P045",
+      "question_id": "Q039",
+      "input": "Explain why a queue is more appropriate than a stack for breadth-first search.",
+      "lo": "CS201:LO1",
+      "lo_text": "Explain the properties and operations of fundamental data structures such as arrays, linked lists, …",
+      "expected": "WEAK",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.4651,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P047",
+      "question_id": "Q060",
+      "input": "Analyze the following code for the producer-consumer problem and identify the race condition. Propose a fix using semaphores.",
+      "lo": "CS305:LO5",
+      "lo_text": "Design concurrent programs using threads and synchronization primitives.",
+      "expected": "WEAK",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.4551,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "LOW",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P048",
+      "question_id": "Q066",
+      "input": "Why can a spinlock waste CPU cycles on a single-processor system?",
+      "lo": "CS305:LO5",
+      "lo_text": "Design concurrent programs using threads and synchronization primitives.",
+      "expected": "WEAK",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.4632,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P049",
+      "question_id": "Q077",
+      "input": "A host with IP address 192.168.10.77 and subnet mask 255.255.255.192 sends a packet to 192.168.10.130. Determine whether the destination is on the same subnet …",
+      "lo": "CS306:LO2",
+      "lo_text": "Analyze routing algorithms and their behavior in dynamic networks.",
+      "expected": "WEAK",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.3698,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P050",
+      "question_id": "Q086",
+      "input": "Analyze how a SYN flood attack exploits the TCP handshake and assess the effectiveness of SYN cookies as a countermeasure.",
+      "lo": "CS306:LO3",
+      "lo_text": "Explain transport layer mechanisms for reliability, flow control and congestion control.",
+      "expected": "WEAK",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.2352,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P051",
+      "question_id": "Q101",
+      "input": "Describe the V-model and its relationship between development and testing phases.",
+      "lo": "CS308:LO3",
+      "lo_text": "Design and execute software test strategies at unit, integration and system level.",
+      "expected": "WEAK",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.4887,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P052",
+      "question_id": "Q107",
+      "input": "Discuss how user stories differ from formal requirement specifications in terms of precision and adaptability.",
+      "lo": "CS308:LO5",
+      "lo_text": "Explain agile principles and practices such as Scrum and continuous integration.",
+      "expected": "WEAK",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.4747,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P053",
+      "question_id": "Q113",
+      "input": "Which of the following quantities is a scalar? (a) Velocity (b) Force (c) Work (d) Acceleration",
+      "lo": "PHY101:LO1",
+      "lo_text": "Apply Newton's laws to solve problems involving forces and motion.",
+      "expected": "WEAK",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.4769,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P054",
+      "question_id": "Q118",
+      "input": "A block slides down a rough inclined plane at constant velocity. Analyze the forces acting on it and determine the relationship between the coefficient of kine…",
+      "lo": "PHY101:LO2",
+      "lo_text": "Use the work-energy theorem and conservation of energy in mechanical systems.",
+      "expected": "WEAK",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.2976,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P056",
+      "question_id": "Q128",
+      "input": "Briefly explain the difference between demand-pull and cost-push inflation.",
+      "lo": "ECO101:LO1",
+      "lo_text": "Explain how supply and demand determine market equilibrium.",
+      "expected": "WEAK",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.3579,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "LOW",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P057",
+      "question_id": "Q025",
+      "input": "Which of the following techniques is used to reduce overfitting in neural networks? (a) Dropout (b) Increasing the learning rate (c) Removing the validation se…",
+      "lo": "CS402:LO4",
+      "lo_text": "Design neural network architectures and training procedures for a given task.",
+      "expected": "WEAK",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.3326,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P058",
+      "question_id": "Q053",
+      "input": "Name two applications of a priority queue.",
+      "lo": "CS201:LO1",
+      "lo_text": "Explain the properties and operations of fundamental data structures such as arrays, linked lists, …",
+      "expected": "WEAK",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.4452,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P059",
+      "question_id": "Q062",
+      "input": "True or False: A thread shares its stack with other threads of the same process.",
+      "lo": "CS305:LO1",
+      "lo_text": "Describe process states, process control blocks and CPU scheduling algorithms.",
+      "expected": "WEAK",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.4442,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P060",
+      "question_id": "Q085",
+      "input": "Define bandwidth and latency and state how each affects file download time.",
+      "lo": "CS306:LO3",
+      "lo_text": "Explain transport layer mechanisms for reliability, flow control and congestion control.",
+      "expected": "WEAK",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.3873,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P061",
+      "question_id": "Q105",
+      "input": "Calculate the cyclomatic complexity of the given control flow graph with 9 edges and 7 nodes, and interpret the result for test planning.",
+      "lo": "CS308:LO4",
+      "lo_text": "Apply design patterns to improve software structure and maintainability.",
+      "expected": "WEAK",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.1728,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "LOW",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "P062",
+      "question_id": "Q136",
+      "input": "Suppose two processes each hold one resource and request the other. Name the situation and describe one way the operating system could recover.",
+      "lo": "CS305:LO5",
+      "lo_text": "Design concurrent programs using threads and synchronization primitives.",
+      "expected": "WEAK",
+      "actual": "NOT_ALIGNED",
+      "similarity": 0.4241,
+      "severity": "ADJACENT_BAND",
+      "label_confidence": "MEDIUM",
+      "error_type": "WRONG_LO_ALIGNMENT"
+    },
+    {
+      "id": "Q014",
+      "course": "CS301",
+      "input": "List three advantages of using views in a relational database.",
+      "expected": "LO2",
+      "acceptable": [
+        "LO2"
+      ],
+      "actual": "LO1",
+      "actual_similarity": 0.4735,
+      "actual_band": "NOT_ALIGNED",
+      "error_type": "WRONG_LO_ALIGNMENT",
+      "severity": "TOP1_MISS",
+      "label_confidence": "HIGH"
+    },
+    {
+      "id": "Q022",
+      "course": "CS402",
+      "input": "Compute the information gain of splitting on attribute A given that the parent node contains 8 positive and 8 negative examples and the split produces children…",
+      "expected": "LO2",
+      "acceptable": [
+        "LO2"
+      ],
+      "actual": "LO1",
+      "actual_similarity": 0.216,
+      "actual_band": "NOT_ALIGNED",
+      "error_type": "WRONG_LO_ALIGNMENT",
+      "severity": "TOP1_MISS",
+      "label_confidence": "HIGH"
+    },
+    {
+      "id": "Q028",
+      "course": "CS402",
+      "input": "Derive the gradient of the mean squared error loss with respect to the weights of a linear regression model.",
+      "expected": "LO2",
+      "acceptable": [
+        "LO2"
+      ],
+      "actual": "LO5",
+      "actual_similarity": 0.2144,
+      "actual_band": "NOT_ALIGNED",
+      "error_type": "WRONG_LO_ALIGNMENT",
+      "severity": "TOP1_MISS",
+      "label_confidence": "MEDIUM"
+    },
+    {
+      "id": "Q032",
+      "course": "CS402",
+      "input": "A logistic regression model outputs a probability of 0.7 for the positive class with a decision threshold of 0.5. Determine the predicted label and explain wha…",
+      "expected": "LO3",
+      "acceptable": [
+        "LO3"
+      ],
+      "actual": "LO5",
+      "actual_similarity": 0.2461,
+      "actual_band": "NOT_ALIGNED",
+      "error_type": "WRONG_LO_ALIGNMENT",
+      "severity": "TOP1_MISS",
+      "label_confidence": "MEDIUM"
+    },
+    {
+      "id": "Q034",
+      "course": "CS402",
+      "input": "Write pseudocode for the k-nearest neighbours classification algorithm.",
+      "expected": "LO2",
+      "acceptable": [
+        "LO2"
+      ],
+      "actual": "LO1",
+      "actual_similarity": 0.4119,
+      "actual_band": "NOT_ALIGNED",
+      "error_type": "WRONG_LO_ALIGNMENT",
+      "severity": "TOP1_MISS",
+      "label_confidence": "HIGH"
+    },
+    {
+      "id": "Q036",
+      "course": "CS402",
+      "input": "Propose a complete experimental protocol to compare three clustering algorithms on an unlabelled customer dataset, including the choice of internal validation …",
+      "expected": "LO3",
+      "acceptable": [
+        "LO3"
+      ],
+      "actual": "LO1",
+      "actual_similarity": 0.3463,
+      "actual_band": "NOT_ALIGNED",
+      "error_type": "WRONG_LO_ALIGNMENT",
+      "severity": "TOP1_MISS",
+      "label_confidence": "MEDIUM"
+    },
+    {
+      "id": "Q038",
+      "course": "CS201",
+      "input": "Implement a function that reverses a singly linked list in place and state its time complexity.",
+      "expected": "LO1",
+      "acceptable": [
+        "LO1"
+      ],
+      "actual": "LO2",
+      "actual_similarity": 0.4647,
+      "actual_band": "NOT_ALIGNED",
+      "error_type": "WRONG_LO_ALIGNMENT",
+      "severity": "TOP1_MISS",
+      "label_confidence": "HIGH"
+    },
+    {
+      "id": "Q050",
+      "course": "CS201",
+      "input": "Detect whether a directed graph contains a cycle. Write an algorithm and analyze its complexity.",
+      "expected": "LO4",
+      "acceptable": [
+        "LO4"
+      ],
+      "actual": "LO2",
+      "actual_similarity": 0.4656,
+      "actual_band": "NOT_ALIGNED",
+      "error_type": "WRONG_LO_ALIGNMENT",
+      "severity": "TOP1_MISS",
+      "label_confidence": "HIGH"
+    },
+    {
+      "id": "Q060",
+      "course": "CS305",
+      "input": "Analyze the following code for the producer-consumer problem and identify the race condition. Propose a fix using semaphores.",
+      "expected": "LO3",
+      "acceptable": [
+        "LO3",
+        "LO5"
+      ],
+      "actual": "LO1",
+      "actual_similarity": 0.4681,
+      "actual_band": "NOT_ALIGNED",
+      "error_type": "WRONG_LO_ALIGNMENT",
+      "severity": "TOP1_MISS",
+      "label_confidence": "MEDIUM"
+    },
+    {
+      "id": "Q070",
+      "course": "CS305",
+      "input": "What is a context switch?",
+      "expected": "LO1",
+      "acceptable": [
+        "LO1"
+      ],
+      "actual": "LO5",
+      "actual_similarity": 0.4993,
+      "actual_band": "NOT_ALIGNED",
+      "error_type": "WRONG_LO_ALIGNMENT",
+      "severity": "TOP1_MISS",
+      "label_confidence": "HIGH"
+    },
+    {
+      "id": "Q100",
+      "course": "CS308",
+      "input": "Why are requirements defects more expensive to fix in later phases of a project?",
+      "expected": "LO2",
+      "acceptable": [
+        "LO2"
+      ],
+      "actual": "LO1",
+      "actual_similarity": 0.3304,
+      "actual_band": "NOT_ALIGNED",
+      "error_type": "WRONG_LO_ALIGNMENT",
+      "severity": "TOP1_MISS",
+      "label_confidence": "MEDIUM"
+    },
+    {
+      "id": "Q104",
+      "course": "CS308",
+      "input": "Evaluate the suitability of continuous integration for a safety-critical avionics project, considering certification requirements.",
+      "expected": "LO5",
+      "acceptable": [
+        "LO5"
+      ],
+      "actual": "LO2",
+      "actual_similarity": 0.4053,
+      "actual_band": "NOT_ALIGNED",
+      "error_type": "WRONG_LO_ALIGNMENT",
+      "severity": "TOP1_MISS",
+      "label_confidence": "HIGH"
+    },
+    {
+      "id": "Q108",
+      "course": "CS308",
+      "input": "Construct a decision table for a loan approval rule that depends on credit score, income and existing debt, and derive the minimum set of test cases.",
+      "expected": "LO3",
+      "acceptable": [
+        "LO3"
+      ],
+      "actual": "LO2",
+      "actual_similarity": 0.3082,
+      "actual_band": "NOT_ALIGNED",
+      "error_type": "WRONG_LO_ALIGNMENT",
+      "severity": "TOP1_MISS",
+      "label_confidence": "MEDIUM"
+    },
+    {
+      "id": "Q112",
+      "course": "PHY101",
+      "input": "A 0.5 kg ball is dropped from a height of 20 m. Using energy conservation, determine its speed just before it hits the ground, ignoring air resistance.",
+      "expected": "LO2",
+      "acceptable": [
+        "LO2"
+      ],
+      "actual": "LO1",
+      "actual_similarity": 0.4688,
+      "actual_band": "NOT_ALIGNED",
+      "error_type": "WRONG_LO_ALIGNMENT",
+      "severity": "TOP1_MISS",
+      "label_confidence": "MEDIUM"
+    },
+    {
+      "id": "Q128",
+      "course": "ECO101",
+      "input": "Briefly explain the difference between demand-pull and cost-push inflation.",
+      "expected": "LO4",
+      "acceptable": [
+        "LO4"
+      ],
+      "actual": "LO2",
+      "actual_similarity": 0.3581,
+      "actual_band": "NOT_ALIGNED",
+      "error_type": "WRONG_LO_ALIGNMENT",
+      "severity": "TOP1_MISS",
+      "label_confidence": "MEDIUM"
+    },
+    {
+      "id": "Q130",
+      "course": "ECO101",
+      "input": "Draw a supply and demand diagram showing the effect of a per-unit tax on sellers and identify the tax burden borne by consumers and producers.",
+      "expected": "LO1",
+      "acceptable": [
+        "LO1"
+      ],
+      "actual": "LO2",
+      "actual_similarity": 0.5003,
+      "actual_band": "WEAK",
+      "error_type": "WRONG_LO_ALIGNMENT",
+      "severity": "TOP1_MISS",
+      "label_confidence": "MEDIUM"
+    },
+    {
+      "id": "Q144",
+      "course": "CS305",
+      "input": "Short notes: thrashing.",
+      "expected": "LO2",
+      "acceptable": [
+        "LO2"
+      ],
+      "actual": "LO1",
+      "actual_similarity": 0.6193,
+      "actual_band": "WEAK",
+      "error_type": "WRONG_LO_ALIGNMENT",
+      "severity": "TOP1_MISS",
+      "label_confidence": "HIGH"
+    }
+  ],
+  "human_review": {},
+  "notes": [
+    "Headline numbers use the production path (question text enriched with AI-detected course topics, as in the unified pipeline); *_bare_text metrics use the raw question only.",
+    "Pairs: all 86 labelled (question, LO) pairs; ranking: questions of the selected split with a labelled LO, against every LO of their course.",
+    "Single annotator; WEAK is the least reliable label. The threshold sweep is informational — production thresholds were NOT changed by this evaluation."
+  ]
+}
