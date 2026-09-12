@@ -46,11 +46,20 @@ T_UP=$(date +%s)
 step "Wait for the database to accept connections and run migrations from an empty schema"
 for _ in $(seq 1 60); do dc exec -T mysql mysqladmin ping -h localhost -uroot -proot123 >/dev/null 2>&1 && break; sleep 2; done
 dc exec -T app php artisan migrate --force 2>&1 | tail -2
-MIGRATED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 TABLES=$(sqlq "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='facultylens'")
 echo "  tables created: $TABLES"
 [[ "$TABLES" -ge 60 ]] && echo "  ✓ schema created from zero" || { echo "  ✗ only $TABLES tables"; FAILS=$((FAILS+1)); }
 expect "migrations pending" "$(dc exec -T app php artisan migrate:status 2>/dev/null | grep -c Pending || true)" "0"
+
+# STEP 42 (BUG-012): every down() must run on MySQL — sqlite unit tests cannot catch FK/index ordering errors.
+step "Roll every migration back and forward again on MySQL"
+RESET_FAIL=$(dc exec -T app php artisan migrate:reset --force 2>&1 | grep -cE "FAIL|SQLSTATE" || true)
+expect "migrate:reset failures" "$RESET_FAIL" "0"
+expect "tables after reset" "$(sqlq "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='facultylens' AND table_name<>'migrations'")" "0"
+dc exec -T app php artisan migrate --force 2>&1 | tail -1
+expect "migrations pending after re-migrate" "$(dc exec -T app php artisan migrate:status 2>/dev/null | grep -c Pending || true)" "0"
+# The queue worker polls `jobs` while the reset drops it; only log lines after the schema is final are judged.
+MIGRATED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
 step "Seed the synthetic development dataset"
 dc exec -T app php artisan db:seed --force 2>&1 | tail -3

@@ -369,11 +369,22 @@ class AiIntegrationTest extends TestCase
         $response = $this->postJson("/api/ai/assessments/{$this->assessmentA->id}/analyze");
         $response->assertStatus(200);
 
-        // Verify status and faculty notes were preserved
+        // STEP 42 (BUG-001): a re-analysis is a NEW report version — the historical recommendation is untouched,
+        // and the faculty decision is carried onto the new version's recommendation together with the updated AI text.
         $rec->refresh();
         $this->assertEquals('accepted', $rec->status);
         $this->assertEquals('Faculty reviewed and decided to rephrase in exam paper.', $rec->faculty_notes);
-        $this->assertEquals('Updated recommendation text', $rec->recommendation);
+        $this->assertEquals('Original recommendation', $rec->recommendation, 'Historical recommendation text must not be rewritten');
+
+        $current = AnalysisReport::where('assessment_id', $this->assessmentA->id)->where('is_current', true)->firstOrFail();
+        $this->assertNotEquals($report->id, $current->id, 'Re-analysis must produce a new report version');
+        $this->assertEquals(80.0, (float) $current->overall_score);
+        $this->assertEquals(75.0, (float) $report->fresh()->overall_score, 'Previous version keeps its score');
+
+        $newRec = Recommendation::where('analysis_report_id', $current->id)->where('title', 'Potential Question Repetition')->firstOrFail();
+        $this->assertEquals('accepted', $newRec->status);
+        $this->assertEquals('Faculty reviewed and decided to rephrase in exam paper.', $newRec->faculty_notes);
+        $this->assertEquals('Updated recommendation text', $newRec->recommendation);
     }
 
     public function test_fastapi_timeout_returns_504_and_records_failed_lifecycle()

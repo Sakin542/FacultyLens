@@ -3,6 +3,7 @@ from typing import List, Dict, Any, Optional
 from app.config import get_settings
 from app.services.huggingface_service import HuggingFaceService, get_hf_service
 from app.services.similarity_service import SimilarityService
+from app.services.threshold_bands import classify_similarity, reported_score
 from app.schemas.similarity import (
     CurrentQuestionItem,
     PreviousQuestionItem,
@@ -133,22 +134,15 @@ class SemanticSimilarityAnalyzer:
             matches: List[Dict[str, Any]] = []
             for prev_idx in top_k_indices:
                 prev_idx_int = int(prev_idx)
-                sim_score = float(sims[prev_idx_int])
+                sim_score = reported_score(sims[prev_idx_int])
                 pq = previous_questions[prev_idx_int]
 
-                if sim_score >= th_dup:
-                    status = "POTENTIAL_DUPLICATE"
-                elif sim_score >= th_high:
-                    status = "HIGHLY_SIMILAR"
-                elif sim_score >= th_mod:
-                    status = "SOMEWHAT_SIMILAR"
-                else:
-                    status = "NOT_SIMILAR"
+                status = classify_similarity(sim_score, th_dup, th_high, th_mod)
 
                 matches.append({
                     "previous_question_id": pq.id,
                     "previous_question_text": pq.text,
-                    "similarity_score": round(sim_score, 4),
+                    "similarity_score": sim_score,
                     "similarity_status": status,
                     "source_year": pq.source_year,
                     "source_assessment": pq.source_assessment,
@@ -156,21 +150,16 @@ class SemanticSimilarityAnalyzer:
                     "cognitive_level": pq.cognitive_level,
                 })
 
-            best_sim = float(sims[int(sorted_indices[0])]) if len(sorted_indices) > 0 else 0.0
-            best_sim = round(best_sim, 4)
+            best_sim = reported_score(sims[int(sorted_indices[0])]) if len(sorted_indices) > 0 else 0.0
             max_sim_sum += best_sim
 
-            if best_sim >= th_dup:
-                max_status = "POTENTIAL_DUPLICATE"
+            max_status = classify_similarity(best_sim, th_dup, th_high, th_mod)
+            if max_status == "POTENTIAL_DUPLICATE":
                 potential_dup_count += 1
-            elif best_sim >= th_high:
-                max_status = "HIGHLY_SIMILAR"
+            elif max_status == "HIGHLY_SIMILAR":
                 highly_similar_count += 1
-            elif best_sim >= th_mod:
-                max_status = "SOMEWHAT_SIMILAR"
+            elif max_status == "SOMEWHAT_SIMILAR":
                 somewhat_similar_count += 1
-            else:
-                max_status = "NOT_SIMILAR"
 
             # Formulate explainable reasoning
             best_pq = previous_questions[int(sorted_indices[0])] if len(sorted_indices) > 0 else None

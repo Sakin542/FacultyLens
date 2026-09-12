@@ -6,13 +6,14 @@
 #   ai-service: ruff + pytest               (FastAPI)
 #   e2e       : Playwright journeys 1-8     (needs `docker compose up -d`; opt-in with --e2e or E2E=1)
 #   golden    : bash Golden Path + integrity (needs Docker stack; opt-in with --golden)
+#   outage    : AI outage regression (stops/starts the ai-service container; opt-in with --outage) — STEP 42
 #
-# Usage: bash scripts/test-all.sh [--e2e] [--golden] [--skip-ai] [--skip-frontend] [--skip-backend]
+# Usage: bash scripts/test-all.sh [--e2e] [--golden] [--outage] [--skip-ai] [--skip-frontend] [--skip-backend]
 set -uo pipefail
 cd "$(dirname "$0")/.."
-RUN_E2E="${E2E:-0}"; RUN_GOLDEN=0; SKIP_AI=0; SKIP_FE=0; SKIP_BE=0
+RUN_E2E="${E2E:-0}"; RUN_GOLDEN=0; RUN_OUTAGE=0; SKIP_AI=0; SKIP_FE=0; SKIP_BE=0
 for a in "$@"; do case "$a" in
-  --e2e) RUN_E2E=1;; --golden) RUN_GOLDEN=1;; --skip-ai) SKIP_AI=1;; --skip-frontend) SKIP_FE=1;; --skip-backend) SKIP_BE=1;;
+  --e2e) RUN_E2E=1;; --golden) RUN_GOLDEN=1;; --outage) RUN_OUTAGE=1;; --skip-ai) SKIP_AI=1;; --skip-frontend) SKIP_FE=1;; --skip-backend) SKIP_BE=1;;
   *) echo "unknown option $a"; exit 2;; esac; done
 
 declare -a NAMES=() RESULTS=() TIMES=()
@@ -54,6 +55,14 @@ if [[ $RUN_GOLDEN -eq 1 ]]; then
     run "golden path (Docker, live AI)" bash backend/tests/e2e_golden_path.sh
   else
     echo; echo "▶ golden path — SKIPPED (backend not reachable on :8080)"; NAMES+=("golden path"); RESULTS+=("SKIPPED"); TIMES+=("-")
+  fi
+fi
+
+if [[ $RUN_OUTAGE -eq 1 ]]; then
+  if curl -sf http://127.0.0.1:8080/api/health >/dev/null 2>&1; then
+    run "AI outage regression (Docker stop/start ai-service)" bash backend/tests/e2e_ai_outage.sh
+  else
+    echo; echo "▶ AI outage regression — SKIPPED (backend not reachable on :8080)"; NAMES+=("AI outage regression"); RESULTS+=("SKIPPED"); TIMES+=("-")
   fi
 fi
 

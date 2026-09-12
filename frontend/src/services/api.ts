@@ -109,18 +109,32 @@ export async function getCsrfCookie(): Promise<void> {
 }
 
 /**
+ * Fired when an authenticated request is rejected with 401 (server-side session expired or revoked).
+ * AuthContext listens and clears the client session so ProtectedRoute redirects to /login.
+ */
+export const SESSION_EXPIRED_EVENT = 'facultylens:session-expired';
+
+const AUTH_ENDPOINTS = ['/auth/login', '/auth/register', '/auth/user', '/auth/logout'];
+
+function isAuthEndpoint(url: string): boolean {
+  return AUTH_ENDPOINTS.some((p) => url.includes(p));
+}
+
+/**
  * Unified API Client for Sanctum-authenticated requests
  */
 export async function apiClient<T>(
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
+  retriedAfterCsrfMismatch = false
 ): Promise<T> {
   const endpoints = resolveEndpoints();
   const url = endpoint.startsWith('http') ? endpoint : `${endpoints.apiBaseUrl}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
   const method = (options.method || 'GET').toUpperCase();
+  const mutating = ['POST', 'PUT', 'DELETE', 'PATCH'].includes(method);
 
   // For stateful mutating requests, initialize CSRF cookie if not present
-  if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(method)) {
+  if (mutating) {
     let xsrfToken = getCookie('XSRF-TOKEN');
     if (!xsrfToken) {
       await getCsrfCookie();
@@ -153,6 +167,13 @@ export async function apiClient<T>(
     });
   }
 
+  // A stale XSRF cookie (session rotated in another tab, server restart) yields 419 before the
+  // request is processed, so refreshing the token and replaying once is safe — even for POST.
+  if (response.status === 419 && mutating && !retriedAfterCsrfMismatch) {
+    await getCsrfCookie();
+    return apiClient<T>(endpoint, options, true);
+  }
+
   if (!response.ok) {
     let errorData: Record<string, unknown> = {};
     try {
@@ -164,7 +185,14 @@ export async function apiClient<T>(
     let message = (errorData.message as string) || friendlyStatusMessage(response.status);
 
     if (response.status === 401) {
-      message = (errorData.message as string) || 'Invalid email or password';
+      if (isAuthEndpoint(url)) {
+        message = (errorData.message as string) || 'Invalid email or password';
+      } else {
+        message = 'Your session has expired. Please sign in again.';
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent(SESSION_EXPIRED_EVENT));
+        }
+      }
     } else if (response.status === 419) {
       message = 'Your session has expired. Please sign in again.';
     } else if (response.status === 422 && errorData.errors) {

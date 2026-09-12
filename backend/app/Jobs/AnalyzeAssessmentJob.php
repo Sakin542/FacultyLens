@@ -51,23 +51,18 @@ class AnalyzeAssessmentJob implements ShouldQueue
             return;
         }
 
-        $report = AnalysisReport::where('assessment_id', $assessment->id)->first();
-        if ($report && $report->analysis_status === 'completed') {
-            Log::info("AnalyzeAssessmentJob: assessment {$assessment->id} already completed - skipping.");
+        // Idempotency: the row opened by the controller is the run handle; a completed latest row means nothing is pending.
+        $run = AnalysisReport::where('assessment_id', $assessment->id)->orderByDesc('id')->first();
+        if ($run && $run->analysis_status === 'completed') {
+            Log::info("AnalyzeAssessmentJob: assessment {$assessment->id} has no pending run - skipping.");
             return;
         }
 
-        AnalysisReport::updateOrCreate(
-            ['assessment_id' => $assessment->id],
-            ['analysis_status' => 'processing', 'processing_error' => null]
-        );
+        $run = AnalysisReport::beginRun($assessment->id);
 
         $questions = $assessment->questions()->orderBy('question_number')->get();
         if ($questions->isEmpty()) {
-            AnalysisReport::updateOrCreate(
-                ['assessment_id' => $assessment->id],
-                ['analysis_status' => 'failed', 'processing_error' => 'Assessment has no questions to analyze.']
-            );
+            $run->failRun('Assessment has no questions to analyze.');
             return;
         }
 
@@ -166,7 +161,7 @@ class AnalyzeAssessmentJob implements ShouldQueue
             DB::transaction(function () use (
                 $assessment, $questions, $prevQuestions,
                 $aiResult, $qualityAnalysis, $recommendationsData,
-                $alignmentAnalysis, $similarityAnalysis, $components
+                $alignmentAnalysis, $similarityAnalysis, $components, $run
             ) {
                 $similarCount = ($similarityAnalysis['potential_duplicates_count'] ?? 0)
                     + ($similarityAnalysis['highly_similar_count'] ?? 0);
@@ -179,52 +174,17 @@ class AnalyzeAssessmentJob implements ShouldQueue
                     'similarity'     => $similarityAnalysis,
                 ];
 
-                $existingCompleted = AnalysisReport::where('assessment_id', $assessment->id)
-                    ->where('analysis_status', 'completed')
-                    ->orderByDesc('analysis_version')
-                    ->first();
-
-                if ($existingCompleted) {
-                    $nextVersion = $existingCompleted->analysis_version + 1;
-                    AnalysisReport::where('assessment_id', $assessment->id)->update(['is_current' => false]);
-                    $report = AnalysisReport::create([
-                        'assessment_id'                    => $assessment->id,
-                        'analysis_version'                 => $nextVersion,
-                        'is_current'                       => true,
-                        'overall_score'                    => (float) ($qualityAnalysis['overall_quality_score'] ?? 0.0),
-                        'topic_coverage_score'             => (float) ($components['topic_coverage'] ?? 0.0),
-                        'learning_outcome_alignment_score' => (float) ($components['learning_outcome_coverage'] ?? ($alignmentAnalysis['overall_alignment_score'] ?? 0.0)),
-                        'difficulty_balance_score'         => (float) ($components['difficulty_balance'] ?? 0.0),
-                        'cognitive_level_balance_score'    => (float) ($components['cognitive_diversity'] ?? 0.0),
-                        'similarity_score'                 => (float) ($similarityAnalysis['average_similarity_score'] ?? 0.0),
-                        'similar_questions_count'          => $similarCount,
-                        'total_questions'                  => count($questions),
-                        'analysis_status'                  => 'completed',
-                        'processing_error'                 => null,
-                        'findings'                         => $findingsPayload,
-                        'analyzed_at'                      => now(),
-                    ]);
-                } else {
-                    $report = AnalysisReport::updateOrCreate(
-                        ['assessment_id' => $assessment->id, 'analysis_version' => 1],
-                        [
-                            'analysis_version'                 => 1,
-                            'is_current'                       => true,
-                            'overall_score'                    => (float) ($qualityAnalysis['overall_quality_score'] ?? 0.0),
-                            'topic_coverage_score'             => (float) ($components['topic_coverage'] ?? 0.0),
-                            'learning_outcome_alignment_score' => (float) ($components['learning_outcome_coverage'] ?? ($alignmentAnalysis['overall_alignment_score'] ?? 0.0)),
-                            'difficulty_balance_score'         => (float) ($components['difficulty_balance'] ?? 0.0),
-                            'cognitive_level_balance_score'    => (float) ($components['cognitive_diversity'] ?? 0.0),
-                            'similarity_score'                 => (float) ($similarityAnalysis['average_similarity_score'] ?? 0.0),
-                            'similar_questions_count'          => $similarCount,
-                            'total_questions'                  => count($questions),
-                            'analysis_status'                  => 'completed',
-                            'processing_error'                 => null,
-                            'findings'                         => $findingsPayload,
-                            'analyzed_at'                      => now(),
-                        ]
-                    );
-                }
+                $report = $run->completeRun([
+                    'overall_score'                    => (float) ($qualityAnalysis['overall_quality_score'] ?? 0.0),
+                    'topic_coverage_score'             => (float) ($components['topic_coverage'] ?? 0.0),
+                    'learning_outcome_alignment_score' => (float) ($components['learning_outcome_coverage'] ?? ($alignmentAnalysis['overall_alignment_score'] ?? 0.0)),
+                    'difficulty_balance_score'         => (float) ($components['difficulty_balance'] ?? 0.0),
+                    'cognitive_level_balance_score'    => (float) ($components['cognitive_diversity'] ?? 0.0),
+                    'similarity_score'                 => (float) ($similarityAnalysis['average_similarity_score'] ?? 0.0),
+                    'similar_questions_count'          => $similarCount,
+                    'total_questions'                  => count($questions),
+                    'findings'                         => $findingsPayload,
+                ]);
 
                 // Update question AI fields
                 $qAnalysisList = $aiResult['questions_analysis']['questions'] ?? [];
@@ -347,28 +307,22 @@ class AnalyzeAssessmentJob implements ShouldQueue
             ]);
 
             Log::info("AnalyzeAssessmentJob: completed for assessment {$assessment->id}.");
-        } catch (Exception $e) {
+        } catch (\Throwable $e) {
             Log::error("AnalyzeAssessmentJob: failed for assessment {$assessment->id}: {$e->getMessage()}");
 
-            AnalysisReport::updateOrCreate(
-                ['assessment_id' => $assessment->id],
-                ['analysis_status' => 'failed', 'processing_error' => $e->getMessage()]
-            );
+            $run->failRun($e->getMessage());
 
             throw $e;
         }
     }
 
-    public function failed(Exception $exception): void
+    public function failed(\Throwable $exception): void
     {
         Log::error("AnalyzeAssessmentJob: permanently failed for assessment {$this->assessment->id}: {$exception->getMessage()}");
 
-        AnalysisReport::updateOrCreate(
-            ['assessment_id' => $this->assessment->id],
-            [
-                'analysis_status'  => 'failed',
-                'processing_error' => 'Analysis failed after maximum retry attempts: ' . $exception->getMessage(),
-            ]
+        AnalysisReport::recordFailure(
+            $this->assessment->id,
+            'Analysis failed after maximum retry attempts: ' . $exception->getMessage()
         );
     }
 }

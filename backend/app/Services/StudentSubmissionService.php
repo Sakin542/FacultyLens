@@ -150,6 +150,17 @@ class StudentSubmissionService
 
     public function deleteSubmission(StudentSubmission $submission, User $user): void
     {
+        // STEP 42 (BUG-009): finalized grades are permanent records. A GRADED submission must be moved
+        // back to UNDER_REVIEW explicitly before it can be removed; RETURNED is terminal.
+        if (in_array($submission->status, [StudentSubmission::STATUS_GRADED, StudentSubmission::STATUS_RETURNED], true)) {
+            throw new SubmissionException(
+                $submission->status === StudentSubmission::STATUS_RETURNED
+                    ? 'Returned submissions are permanent academic records and cannot be deleted.'
+                    : 'Graded submissions cannot be deleted. Move the submission back to Under Review first.',
+                422
+            );
+        }
+
         $submission->load('answers');
         $paths = $submission->answers->pluck('answer_file_path')->filter()->all();
 
@@ -172,6 +183,8 @@ class StudentSubmissionService
 
     public function addAnswer(StudentSubmission $submission, User $user, array $data, ?UploadedFile $file = null): StudentAnswer
     {
+        $this->assertSubmissionWritable($submission);
+
         $question = Question::find($data['question_id']);
         if (!$question) {
             throw new SubmissionException('The selected question does not exist.', 422);
@@ -241,6 +254,7 @@ class StudentSubmissionService
     public function updateAnswer(StudentAnswer $answer, User $user, array $data, ?UploadedFile $file = null): StudentAnswer
     {
         $answer->loadMissing(['question', 'submission']);
+        $this->assertSubmissionWritable($answer->submission);
         $question = $answer->question;
 
         $attributes = [];
@@ -346,6 +360,7 @@ class StudentSubmissionService
     {
         $path = $answer->answer_file_path;
         $submission = $answer->submission;
+        $this->assertSubmissionWritable($submission);
 
         DB::transaction(function () use ($answer, $submission, $user) {
             $this->auditLogService->log('ANSWER_DELETED', $answer, $answer->id, [
@@ -358,6 +373,17 @@ class StudentSubmissionService
         });
 
         $this->deleteFileQuietly($path);
+    }
+
+    /**
+     * STEP 42 (BUG-004): RETURNED is terminal — finalized grades are authoritative and every
+     * answer write path (not only finalize-grade) must refuse to touch them.
+     */
+    protected function assertSubmissionWritable(?StudentSubmission $submission): void
+    {
+        if ($submission && $submission->status === StudentSubmission::STATUS_RETURNED) {
+            throw new SubmissionException('Returned submissions are read-only. Finalized grades cannot be changed.', 422);
+        }
     }
 
     // ------------------------------------------------------------ CSV import

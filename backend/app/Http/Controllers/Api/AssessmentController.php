@@ -182,6 +182,10 @@ class AssessmentController extends Controller
             ], 403);
         }
 
+        if ($blocker = $assessment->deletionBlocker()) {
+            return response()->json(['message' => $blocker], 409);
+        }
+
         // Delete associated question paper file from disk if present
         if ($assessment->questionPaper && $assessment->questionPaper->file_path) {
             if (Storage::disk('local')->exists($assessment->questionPaper->file_path)) {

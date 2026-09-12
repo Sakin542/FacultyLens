@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { apiClient, ApiError, friendlyStatusMessage } from '@/services/api';
+import { apiClient, ApiError, friendlyStatusMessage, SESSION_EXPIRED_EVENT } from '@/services/api';
 
 /**
  * STEP 41 — every failure the backend or the network can produce must reach the UI as a safe,
@@ -45,9 +45,68 @@ describe('apiClient error mapping', () => {
     expect(e.errors?.title).toEqual(['Required']);
   });
 
-  it('maps 401 and 419 to sign-in guidance', async () => {
-    expect((await expectError(401, {})).message).toBe('Invalid email or password');
-    expect((await expectError(419, { message: 'CSRF token mismatch.' })).message).toBe('Your session has expired. Please sign in again.');
+  it('maps 401 on the login endpoint to a credentials message', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(jsonResponse(401, {}) as unknown as Response);
+    await expect(apiClient('/auth/login', { method: 'POST', body: '{}' })).rejects.toMatchObject({ status: 401, message: 'Invalid email or password' });
+  });
+
+  it('maps a repeated 419 to sign-in guidance', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(jsonResponse(419, { message: 'CSRF token mismatch.' }) as unknown as Response);
+    await expect(apiClient('/courses', { method: 'POST', body: '{}' })).rejects.toMatchObject({ status: 419, message: 'Your session has expired. Please sign in again.' });
+  });
+
+  // BUG-007: an expired server session must log the client out, not leave a dead logged-in shell.
+  it('treats 401 on a protected endpoint as an expired session and notifies the auth context', async () => {
+    const listener = vi.fn();
+    window.addEventListener(SESSION_EXPIRED_EVENT, listener);
+    try {
+      const e = await expectError(401, { message: 'Unauthenticated.' });
+      expect(e.message).toBe('Your session has expired. Please sign in again.');
+      expect(listener).toHaveBeenCalledTimes(1);
+    } finally {
+      window.removeEventListener(SESSION_EXPIRED_EVENT, listener);
+    }
+  });
+
+  it('does not treat a failed login as an expired session', async () => {
+    const listener = vi.fn();
+    window.addEventListener(SESSION_EXPIRED_EVENT, listener);
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(jsonResponse(401, { message: 'Invalid credentials' }) as unknown as Response);
+    await expect(apiClient('/auth/login', { method: 'POST', body: '{}' })).rejects.toBeInstanceOf(ApiError);
+    window.removeEventListener(SESSION_EXPIRED_EVENT, listener);
+    expect(listener).not.toHaveBeenCalled();
+  });
+
+  // BUG-008: a stale XSRF cookie is refreshed and the mutation replayed exactly once.
+  it('refreshes the CSRF cookie and retries a mutating request once after 419', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce(jsonResponse(419, { message: 'CSRF token mismatch.' }) as unknown as Response) // original POST
+      .mockResolvedValueOnce({ ok: true, status: 204 } as unknown as Response)                             // sanctum/csrf-cookie
+      .mockResolvedValueOnce(jsonResponse(201, { data: { id: 7 } }, true) as unknown as Response);         // replayed POST
+
+    await expect(apiClient('/courses', { method: 'POST', body: '{"a":1}' })).resolves.toEqual({ data: { id: 7 } });
+
+    const urls = fetchMock.mock.calls.map((c) => String(c[0]));
+    expect(urls[0]).toMatch(/\/courses$/);
+    expect(urls[1]).toMatch(/sanctum\/csrf-cookie$/);
+    expect(urls[2]).toMatch(/\/courses$/);
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+  });
+
+  it('gives up after the second 419 instead of looping', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce(jsonResponse(419, {}) as unknown as Response)
+      .mockResolvedValueOnce({ ok: true, status: 204 } as unknown as Response)
+      .mockResolvedValueOnce(jsonResponse(419, {}) as unknown as Response);
+
+    await expect(apiClient('/courses', { method: 'PUT', body: '{}' })).rejects.toMatchObject({ status: 419 });
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+  });
+
+  it('does not retry GET requests on 419', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(jsonResponse(419, {}) as unknown as Response);
+    await expect(apiClient('/courses')).rejects.toMatchObject({ status: 419 });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
   it('produces friendly text for AI-service / gateway outages without a JSON body', async () => {

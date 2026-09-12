@@ -94,11 +94,17 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('audit_logs', function (Blueprint $table) {
-            $table->dropIndex('audit_logs_course_created_idx');
+            // MySQL needs the FK gone before the composite index that backs it can be dropped (BUG-012).
             $table->dropConstrainedForeignId('course_id');
+        });
+        Schema::table('audit_logs', function (Blueprint $table) {
+            if (Schema::hasIndex('audit_logs', 'audit_logs_course_created_idx')) {
+                $table->dropIndex('audit_logs_course_created_idx');
+            }
         });
         Schema::dropIfExists('collaboration_comments');
         Schema::dropIfExists('course_collaboration_invitations');
         Schema::dropIfExists('course_collaborators');
+        Schema::dropIfExists('notifications');
     }
 };
