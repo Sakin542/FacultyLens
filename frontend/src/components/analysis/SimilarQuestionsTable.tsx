@@ -3,6 +3,7 @@ import { Card } from '@/components/common/Card';
 import { Badge } from '@/components/common/Badge';
 import { CopyCheck } from 'lucide-react';
 import { SimilarityAnalysisResult } from '@/types';
+import { WhyButton } from '@/components/explainability/WhyButton';
 
 interface SimilarQuestionsTableProps {
   similarityAnalysis?: SimilarityAnalysisResult | null;
@@ -17,11 +18,14 @@ interface SimilarQuestionsTableProps {
     similarity_status: string;
     reasoning?: string;
   }>;
+  /** STEP 45: open the explanation for one similarity match. */
+  onExplain?: (matchId: number | string) => void;
 }
 
 export const SimilarQuestionsTable: React.FC<SimilarQuestionsTableProps> = ({
   similarityAnalysis,
   similarityMatches = [],
+  onExplain,
 }) => {
   const potentialCount = similarityAnalysis?.potential_duplicates_count ??
     similarityMatches.filter((m) => m.similarity_status === 'POTENTIAL_DUPLICATE').length;
@@ -80,8 +84,11 @@ export const SimilarQuestionsTable: React.FC<SimilarQuestionsTableProps> = ({
                 <th className="py-2.5 px-3 font-semibold">Current Question</th>
                 <th className="py-2.5 px-3 font-semibold">Matched Past Question</th>
                 <th className="py-2.5 px-3 font-semibold">Past Assessment</th>
-                <th className="py-2.5 px-3 font-semibold">Similarity</th>
+                <th className="py-2.5 px-3 font-semibold">
+                  <abbr title="Semantic similarity calculated by the configured embedding-based comparison (0–1). It is not a probability that the questions are duplicates." className="no-underline cursor-help">Similarity</abbr>
+                </th>
                 <th className="py-2.5 px-3 font-semibold">Status</th>
+                {onExplain && <th className="py-2.5 px-3 font-semibold"><span className="sr-only">Explain</span></th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-sage-200 dark:divide-[#3A3A3C]">
@@ -97,12 +104,17 @@ export const SimilarQuestionsTable: React.FC<SimilarQuestionsTableProps> = ({
                     {match.previous_assessment_title || 'Past Exam'}
                     {match.previous_year ? ` (${match.previous_year})` : ''}
                   </td>
-                  <td className="py-2.5 px-3 font-mono font-bold text-sage-800 dark:text-white">
-                    {Math.round(match.similarity_score * 100)}%
+                  <td className="py-2.5 px-3 font-mono font-bold text-sage-800 dark:text-white" title="Semantic similarity (cosine), not a probability of duplication">
+                    {match.similarity_score.toFixed(2)} / 1.00
                   </td>
                   <td className="py-2.5 px-3">
                     {getStatusBadge(match.similarity_status)}
                   </td>
+                  {onExplain && (
+                    <td className="py-2.5 px-3">
+                      <WhyButton describes={`similarity between question #${match.current_question_id} and a previous question`} onClick={() => onExplain(match.id)} />
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>

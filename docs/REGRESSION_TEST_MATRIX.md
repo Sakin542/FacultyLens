@@ -36,6 +36,7 @@ Legend for columns: **Unit** = pure logic (PHPUnit `tests/Unit`, pytest service 
 | Docker / clean install | — | — | ✓ `scripts/clean-start-test.sh` (isolated project, fresh volumes, 129 s) | — | ✓ | PASS |
 | Frontend routing, states, forms, accessibility | ✓ vitest (21 files / 267 tests) | — | ✓ `09-ui-states-accessibility.spec.ts` (axe WCAG 2.1 A/AA on 12 pages, keyboard) | ✓ 401/419 handling tests | ✓ BUG-007/008 | PASS |
 | API contract (frontend ↔ Laravel) | ✓ `apiErrorMapping.test.ts`, `apiServices.test.ts` | — | ✓ all Playwright journeys run against the real API | — | ✓ | PASS (BUG-010 decimal strings documented, WONT_FIX) |
+| AI explainability & transparency (STEP 45: explanation schema, evidence, method/model, confidence, limitations, review/override, audit) | ✓ `ExplanationValidatorTest` (5), pytest `test_explainability.py` (19), vitest `explainability.test.tsx` (12) | ✓ `AiExplainabilityTest` (23) | ✓ `10-ai-explainability.spec.ts` (2), `backend/tests/e2e_ai_explainability.sh` (live AI, 12 sections) | ✓ outsider/reviewer 403, whitelisted audit events, prompt-injection & secret-wording rejection, student-data privacy | ✓ BUG-013 `AnalysisPersistenceFieldMappingRegressionTest` | PASS |
 
 ## Suites executed in the final regression
 

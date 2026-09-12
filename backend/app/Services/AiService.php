@@ -1101,6 +1101,25 @@ class AiService
     }
 
     /**
+     * STEP 45: deterministic cue evidence for a question's AI labels (rule tables re-run on the question text).
+     * Not a generative call. Returns null when the AI service is unreachable so callers can degrade gracefully.
+     */
+    public function explainQuestion(array $payload): ?array
+    {
+        try {
+            $response = $this->client()->timeout(15)->post("{$this->baseUrl}/api/v1/explain-question", $payload);
+            if ($response->successful() && is_array($response->json()) && isset($response->json()['cognitive_level'])) {
+                return $response->json();
+            }
+            Log::warning('AI Service explain-question returned an unexpected response: ' . $response->status());
+        } catch (ConnectionException | RequestException $e) {
+            Log::warning('AI Service explain-question unavailable: ' . $e->getMessage());
+        }
+
+        return null;
+    }
+
+    /**
      * Translate HTTP / Connection / Request exceptions into descriptive domain exceptions with timeout detection.
      *
      * @param Exception $e

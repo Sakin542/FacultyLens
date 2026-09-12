@@ -3,6 +3,8 @@ import { Check, Sparkles, X } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { QuestionCoMappingReview } from '@/types/coPo';
 import { MappingStatusBadge } from './MappingStatusBadge';
+import { WhyButton } from '@/components/explainability/WhyButton';
+import { useExplanationModal } from '@/hooks/useExplanationModal';
 
 interface QuestionCoMappingReviewProps {
   questions: QuestionCoMappingReview[];
@@ -19,6 +21,7 @@ export const QuestionCoMappingReviewList: React.FC<QuestionCoMappingReviewProps>
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'unmapped' | 'pending'>('all');
+  const { explain, modal: explanationModal } = useExplanationModal();
 
   const run = async (key: string, fn: () => Promise<void>) => {
     try { setBusy(key); setError(null); await fn(); }
@@ -70,8 +73,14 @@ export const QuestionCoMappingReviewList: React.FC<QuestionCoMappingReviewProps>
                         <Sparkles className="w-3 h-3 text-amber-500" />
                         <span className="text-sage-500">AI suggested</span>
                         <span className="font-mono font-semibold text-sage-800 dark:text-white">{s.code}</span>
-                        <span className="text-[10px] text-sage-500">similarity {Number(s.similarity_score).toFixed(2)} · {s.alignment.replace(/_/g, ' ').toLowerCase()}</span>
+                        <span className="text-[10px] text-sage-500" title="Cosine similarity between the question and the CO description (0–1); not a probability.">similarity {Number(s.similarity_score).toFixed(2)} / 1.00 · {s.alignment.replace(/_/g, ' ').toLowerCase()}</span>
                         <MappingStatusBadge kind="question" status={s.status} />
+                        {(s.mapping_id || s.alignment_id) && (
+                          <WhyButton
+                            describes={`the ${s.code} mapping suggestion for question ${q.question_number ?? q.question_id}`}
+                            onClick={() => (s.mapping_id ? explain('co_po_mapping', s.mapping_id, `CO mapping ${s.code}`) : explain('lo_alignment', s.alignment_id as number, `CO alignment ${s.code}`))}
+                          />
+                        )}
                       </span>
                       {canEdit && s.status !== 'CONFIRMED' && (
                         <span className="flex items-center gap-1">
@@ -90,6 +99,7 @@ export const QuestionCoMappingReviewList: React.FC<QuestionCoMappingReviewProps>
         </ul>
       )}
       <p className="text-[11px] text-sage-500">AI similarity is a suggestion only. Faculty confirmation makes a mapping official; the question's own learning outcome (set in Assessment Details) is treated as faculty-confirmed.</p>
+      {explanationModal}
     </div>
   );
 };

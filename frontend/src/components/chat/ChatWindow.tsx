@@ -6,6 +6,8 @@ import { ChatMessage as ChatMessageType } from '@/types/chat';
 import { ChatSourceList } from './ChatSources';
 import { ChatEmptyState, ChatLoading, GroundingDisclaimer } from './ChatStates';
 import { cn } from '@/utils/cn';
+import { WhyButton } from '@/components/explainability/WhyButton';
+import { useExplanationModal } from '@/hooks/useExplanationModal';
 
 /**
  * STEP 32: Message rendering + input. Answers are rendered as plain text (no HTML) — document content
@@ -14,6 +16,7 @@ import { cn } from '@/utils/cn';
 
 export const ChatMessage: React.FC<{ message: ChatMessageType }> = ({ message }) => {
   const isUser = message.role === 'USER';
+  const { explain, modal } = useExplanationModal();
   return (
     <div data-testid={`chat-message-${message.role.toLowerCase()}`} className={cn('flex gap-3', isUser ? 'flex-row-reverse' : 'flex-row')}>
       <div
@@ -43,9 +46,11 @@ export const ChatMessage: React.FC<{ message: ChatMessageType }> = ({ message })
               <Badge variant="Attention" data-testid="ungrounded-badge">No supporting evidence found</Badge>
             )}
             {message.generation_method && <span className="font-mono">{message.generation_method}</span>}
+            {message.id > 0 && <WhyButton describes="how this answer was produced and its sources" onClick={() => explain('rag_answer', message.id, 'Answer sources & grounding')} />}
           </div>
         )}
         {!isUser && message.sources.length > 0 && <ChatSourceList sources={message.sources} />}
+        {!isUser && modal}
       </div>
     </div>
   );

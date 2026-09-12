@@ -327,6 +327,9 @@ class CoPoMappingValidatorService
                     'status' => $status,
                     'mapping_source' => $d?->mapping_source ?? 'AI_SUGGESTED',
                     'reviewed_at' => $d?->reviewed_at?->toISOString(),
+                    // STEP 45: explainability targets (mapping row once faculty decided; otherwise the STEP 11 alignment row)
+                    'mapping_id' => $d?->id,
+                    'alignment_id' => $s['alignment_id'] ?? null,
                 ];
             })->values()->all();
 
@@ -717,7 +720,7 @@ class CoPoMappingValidatorService
                 ->get()
                 ->each(function ($a) use (&$out, $ctx) {
                     if ($ctx['cos']->has($a->learning_outcome_id)) {
-                        $out[$a->question_id][] = ['learning_outcome_id' => (int) $a->learning_outcome_id, 'similarity_score' => (float) $a->similarity_score, 'alignment' => $a->alignment];
+                        $out[$a->question_id][] = ['learning_outcome_id' => (int) $a->learning_outcome_id, 'similarity_score' => (float) $a->similarity_score, 'alignment' => $a->alignment, 'alignment_id' => $a->id];
                     }
                 });
         }

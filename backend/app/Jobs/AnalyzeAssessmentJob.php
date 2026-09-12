@@ -210,14 +210,15 @@ class AnalyzeAssessmentJob implements ShouldQueue
                     }
                 }
 
-                // Persist similarity matches
+                // Persist similarity matches (AI service returns `results`; legacy payloads used `matches`)
                 QuestionSimilarityMatch::where('analysis_report_id', $report->id)->delete();
-                if (!empty($similarityAnalysis['matches'])) {
+                $simGroups = $similarityAnalysis['results'] ?? $similarityAnalysis['matches'] ?? [];
+                if (!empty($simGroups)) {
                     $qByNumber = $questions->keyBy('question_number');
                     $pqById    = $prevQuestions->keyBy('id');
-                    foreach ($similarityAnalysis['matches'] as $matchGroup) {
+                    foreach ($simGroups as $matchGroup) {
                         $cNum      = $matchGroup['current_question_number'] ?? null;
-                        $cQuestion = $qByNumber->get($cNum);
+                        $cQuestion = $qByNumber->get($cNum) ?? $questions->firstWhere('id', $matchGroup['current_question_id'] ?? null);
                         if ($cQuestion && !empty($matchGroup['matches'])) {
                             foreach ($matchGroup['matches'] as $m) {
                                 $pId = $m['previous_question_id'] ?? null;
@@ -251,7 +252,7 @@ class AnalyzeAssessmentJob implements ShouldQueue
                                 'analysis_report_id'  => $report->id,
                                 'question_id'         => $qId,
                                 'learning_outcome_id' => $loId,
-                                'similarity_score'    => $qaItem['alignment_score'] ?? ($matchedLo['similarity_score'] ?? 0.0),
+                                'similarity_score'    => $qaItem['similarity_score'] ?? $qaItem['alignment_score'] ?? $matchedLo['similarity'] ?? $matchedLo['similarity_score'] ?? 0.0,
                                 'alignment'           => $qaItem['alignment_status'] ?? 'NOT_ALIGNED',
                                 'reasoning'           => $qaItem['reasoning'] ?? null,
                             ]);

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AcademicChatController;
 use App\Http\Controllers\Api\AiEvaluationController;
+use App\Http\Controllers\Api\AiExplainabilityController;
 use App\Http\Controllers\Api\AcademicAnalyticsController;
 use App\Http\Controllers\Api\AssessmentBlueprintController;
 use App\Http\Controllers\Api\AssessmentVersionController;
@@ -326,6 +327,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/export', [AcademicAnalyticsController::class, 'export']);
         Route::get('/courses/{course}', [AcademicAnalyticsController::class, 'course']);
         Route::get('/courses/{course}/{section}', [AcademicAnalyticsController::class, 'courseSection'])->whereIn('section', ['assessments', 'performance', 'outcomes', 'ai', 'similarity', 'history']);
+    });
+
+    // STEP 45: AI Explainability & Transparency (explain / review / override any AI result by type + id)
+    Route::prefix('ai-results/{type}/{id}')->whereNumber('id')->group(function () {
+        Route::get('/explanation', [AiExplainabilityController::class, 'explanation']);
+        Route::get('/reviews', [AiExplainabilityController::class, 'reviews']);
+        Route::post('/review', [AiExplainabilityController::class, 'review']);
+        Route::post('/override', [AiExplainabilityController::class, 'override']);
+        Route::post('/events', [AiExplainabilityController::class, 'event']);
     });
 
     // STEP 35: AI Evaluation & Model Performance (evaluation is separate from production AI)

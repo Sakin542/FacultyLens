@@ -13,17 +13,21 @@ import {
 import { EvidenceBasedRecommendation, RecommendationStatus } from '@/types';
 import { DecisionType } from '@/types/feedback';
 import { FeedbackModal } from '@/components/feedback/FeedbackModal';
+import { WhyButton } from '@/components/explainability/WhyButton';
 
 interface RecommendationsSectionProps {
   recommendations: EvidenceBasedRecommendation[];
   onStatusUpdate: (id: number | string, status: RecommendationStatus, notes?: string) => void;
   isUpdatingStatus?: boolean;
+  /** STEP 45: open the explanation for a recommendation (source, metric, evidence, threshold). */
+  onExplain?: (recommendationId: number | string) => void;
 }
 
 export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
   recommendations,
   onStatusUpdate,
   isUpdatingStatus = false,
+  onExplain,
 }) => {
   const [priorityFilter, setPriorityFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -191,6 +195,7 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
                         • {rec.source_metric}
                       </span>
                     )}
+                    {onExplain && <WhyButton describes={`recommendation "${rec.problem || rec.title}"`} onClick={() => onExplain(rec.id)} />}
                   </div>
                   {getStatusBadge(rec.status)}
                 </div>

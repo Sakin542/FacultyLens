@@ -21,6 +21,8 @@ import { SubmissionCard } from '@/components/submissions/SubmissionCard';
 import { ImportAnswersModal } from '@/components/submissions/ImportAnswersModal';
 import { studentSubmissionService } from '@/services/studentSubmissionService';
 import { SubmissionSummaryStats } from '@/types/submission';
+import { ExplainabilityBadge } from '@/components/explainability/ExplainabilityBadge';
+import { useExplanationModal } from '@/hooks/useExplanationModal';
 import {
   ArrowLeft,
   Edit,
@@ -139,6 +141,9 @@ export const AssessmentDetails: React.FC = () => {
   useEffect(() => {
     loadAssessment();
   }, [loadAssessment]);
+
+  // STEP 45: lazy AI explanations — an override refreshes the faculty-controlled question fields
+  const { explain, modal: explanationModal } = useExplanationModal({ onChanged: () => loadAssessment() });
 
   const handleUpdateAssessment = async (_courseId: number | string, data: AssessmentPayload) => {
     if (!id) return;
@@ -617,28 +622,35 @@ export const AssessmentDetails: React.FC = () => {
                         </Badge>
                       )}
                       {q.ai_question_type && (
-                        <Badge variant="neutral" className="text-[10px] uppercase font-mono">
-                          AI: {q.ai_question_type}
-                        </Badge>
+                        <ExplainabilityBadge
+                          tone="neutral"
+                          className="font-mono"
+                          label={`AI: ${q.ai_question_type}`}
+                          explainLabel={`Why? Explain AI question type ${q.ai_question_type} for question ${q.question_number || idx + 1}`}
+                          onExplain={() => explain('question_type', q.id, 'Question type')}
+                        />
                       )}
                       {q.ai_cognitive_level && (
-                        <Badge variant="outline" className="text-[10px]">
-                          Bloom: {q.ai_cognitive_level}
-                        </Badge>
+                        <ExplainabilityBadge
+                          tone="outline"
+                          label={`Bloom: ${q.ai_cognitive_level}`}
+                          explainLabel={`Why? Explain Bloom level ${q.ai_cognitive_level} for question ${q.question_number || idx + 1}`}
+                          onExplain={() => explain('bloom', q.id, 'Bloom level')}
+                        />
                       )}
                       {q.ai_difficulty_level && (
-                        <Badge
-                          variant={
+                        <ExplainabilityBadge
+                          tone={
                             q.ai_difficulty_level.toUpperCase() === 'EASY'
-                              ? 'Good'
+                              ? 'good'
                               : q.ai_difficulty_level.toUpperCase() === 'HARD'
-                              ? 'Critical'
-                              : 'Attention'
+                              ? 'critical'
+                              : 'attention'
                           }
-                          className="text-[10px]"
-                        >
-                          AI: {q.ai_difficulty_level}
-                        </Badge>
+                          label={`AI: ${q.ai_difficulty_level}`}
+                          explainLabel={`Why? Explain AI difficulty ${q.ai_difficulty_level} for question ${q.question_number || idx + 1}`}
+                          onExplain={() => explain('difficulty', q.id, 'Difficulty')}
+                        />
                       )}
                     </div>
 
@@ -664,7 +676,7 @@ export const AssessmentDetails: React.FC = () => {
                   </div>
 
                   {q.ai_topics && q.ai_topics.length > 0 && (
-                    <div className="flex items-center gap-1.5 pt-1 text-[11px] text-sage-500">
+                    <div className="flex items-center gap-1.5 pt-1 text-[11px] text-sage-500 flex-wrap">
                       <span className="font-semibold text-sage-800 dark:text-white">AI Topics:</span>
                       {Array.isArray(q.ai_topics) &&
                         q.ai_topics.map((t, tIdx) => {
@@ -675,6 +687,7 @@ export const AssessmentDetails: React.FC = () => {
                             </span>
                           );
                         })}
+                      <ExplainabilityBadge tone="outline" label="Why?" explainLabel={`Why? Explain AI topics for question ${q.question_number || idx + 1}`} onExplain={() => explain('topic', q.id, 'Topic')} />
                     </div>
                   )}
                 </Card>
@@ -773,6 +786,9 @@ export const AssessmentDetails: React.FC = () => {
           loadSubmissionStats();
         }}
       />
+
+      {/* STEP 45: AI explanation (why / evidence / method / limitations / faculty override) */}
+      {explanationModal}
     </div>
   );
 };

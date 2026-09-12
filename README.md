@@ -672,6 +672,31 @@ component on the STEP 44 benchmark (with confidence intervals, error analysis an
 
 ---
 
+## AI Explainability & Transparency
+
+> **AI assists. Faculty decides.**
+
+Every important AI result — question type, difficulty, Bloom level, topic, LO alignment, CO/PO mapping, semantic similarity,
+assessment quality, recommendations, rubrics, generated questions, document-chat answers and AI grading suggestions — carries a
+**“Why?”** affordance. Opening it shows, with progressive disclosure:
+
+1. **What** FacultyLens produced and **why** (one evidence-based sentence — never hidden reasoning or chain-of-thought)
+2. **Evidence** — literal question wording that fired a rule, the actual similarity score (`0.82 / 1.00`, never a probability),
+   threshold bands, LO text, rubric criteria, retrieved passages with page/section or “Source location unavailable”
+3. **Method & model** — `RULE_BASED`, `EMBEDDING_BASED`, `HYBRID`, `GENERATIVE` or `HUMAN_CONFIRMED`, engine/prompt/embedding
+   versions, the analysis version, and the STEP 35/44 evaluation status
+4. **Confidence** — shown only when the method produces one, otherwise “Not available” (never fabricated)
+5. **Limitations** — per component
+6. **Faculty decision** — Accept, Reject, Mark as reviewed, or **Override** (with a reason). Overrides change only faculty-controlled
+   fields; the AI value is kept for reference. Every decision is audited (`AI_RESULT_*`, `AI_EXPLANATION_VIEWED`, …).
+
+Deterministic calculations are explained deterministically from stored results; any free text is validated against the structured
+facts and replaced by a deterministic fallback if it contradicts them. See [docs/AI_EXPLAINABILITY.md](docs/AI_EXPLAINABILITY.md) and
+[docs/AI_EXPLAINABILITY_VALIDATION_REPORT.md](docs/AI_EXPLAINABILITY_VALIDATION_REPORT.md); live E2E:
+`bash backend/tests/e2e_ai_explainability.sh`.
+
+---
+
 ## Academic Analytics Dashboard
 
 FacultyLens provides unified academic analytics covering:

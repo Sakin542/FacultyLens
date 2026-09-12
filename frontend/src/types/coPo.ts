@@ -197,6 +197,9 @@ export interface QuestionCoSuggestion {
   status: QuestionCoStatus;
   mapping_source: string;
   reviewed_at?: string | null;
+  /** STEP 45: explainability targets */
+  mapping_id?: number | null;
+  alignment_id?: number | null;
 }
 
 export interface QuestionCoMappingReview {

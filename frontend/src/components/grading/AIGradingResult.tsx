@@ -9,6 +9,8 @@ import { SuggestedMarksCard } from './SuggestedMarksCard';
 import { CriterionGradingBreakdown } from './CriterionGradingBreakdown';
 import { FacultyGradeEditor } from './FacultyGradeEditor';
 import { GradingDisclaimer } from './GradingDisclaimer';
+import { WhyButton } from '@/components/explainability/WhyButton';
+import { useExplanationModal } from '@/hooks/useExplanationModal';
 
 interface AIGradingResultProps {
   result: AIGradingResultType;
@@ -42,7 +44,9 @@ export const AIGradingResult: React.FC<AIGradingResultProps> = ({
   onFinalize,
   onReject,
   alignment,
-}) => (
+}) => {
+  const { explain, modal: explanationModal } = useExplanationModal();
+  return (
   <section
     className="rounded-xl border border-sage-200 dark:border-[#2C2C2E] bg-white dark:bg-[#1C1C1E] p-4 space-y-4"
     data-testid="ai-grading-result"
@@ -51,6 +55,7 @@ export const AIGradingResult: React.FC<AIGradingResultProps> = ({
     <header className="flex flex-wrap items-center justify-between gap-2">
       <h4 className="text-xs font-bold uppercase tracking-wider text-sage-800 dark:text-white flex items-center gap-2">
         <Sparkles className="w-3.5 h-3.5 text-amber-500" /> AI Grading Assistance
+        <WhyButton describes="the AI suggested mark" onClick={() => explain('ai_grading', result.id, 'AI suggested mark')} />
       </h4>
       <div className="flex items-center gap-2 flex-wrap">
         {result.faculty_decision && (
@@ -143,5 +148,7 @@ export const AIGradingResult: React.FC<AIGradingResultProps> = ({
         Engine: {result.model_name}{result.model_version ? ` v${result.model_version}` : ''}{result.generation_method ? ` · ${result.generation_method.replace(/_/g, ' ')}` : ''}
       </p>
     )}
+    {explanationModal}
   </section>
-);
+  );
+};

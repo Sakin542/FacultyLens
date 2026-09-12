@@ -21,6 +21,7 @@ import { assessmentService } from '@/services/assessmentService';
 import { useAuth } from '@/context/AuthContext';
 import { CollaborationComments } from '@/components/collaboration/CollaborationComments';
 import { Assessment, RecommendationStatus } from '@/types';
+import { useExplanationModal } from '@/hooks/useExplanationModal';
 import {
   FileCheck2,
   CheckCircle2,
@@ -101,6 +102,13 @@ export const Analysis: React.FC = () => {
       setIsLoading(false);
     }
   }, [selectedAssessmentId, loadAnalysis]);
+
+  // STEP 45: lazy "Why?" explanations; a faculty decision refreshes the dashboard
+  const { explain, modal: explanationModal } = useExplanationModal({
+    onChanged: () => {
+      if (selectedAssessmentId) loadAnalysis(selectedAssessmentId);
+    },
+  });
 
   // Handle running AI Analysis
   const handleRunAnalysis = async () => {
@@ -300,6 +308,7 @@ export const Analysis: React.FC = () => {
             score={report?.overall_score ?? null}
             rating={report?.rating}
             totalQuestions={assessment.total_questions}
+            onExplain={report?.id ? () => explain('assessment_quality', report.id, 'Overall quality score') : undefined}
           />
 
           {/* 2. Six Quality Component Cards */}
@@ -321,6 +330,7 @@ export const Analysis: React.FC = () => {
               alignmentAnalysis={analysisData.alignment_analysis}
               overallScore={report?.learning_outcome_alignment_score}
               alignmentsList={analysisData.learning_outcome_alignments}
+              onExplain={(alignmentId) => explain('lo_alignment', alignmentId, 'Learning outcome alignment')}
             />
           </div>
 
@@ -328,6 +338,7 @@ export const Analysis: React.FC = () => {
           <SimilarQuestionsTable
             similarityAnalysis={analysisData.similarity_analysis}
             similarityMatches={analysisData.similarity_matches}
+            onExplain={(matchId) => explain('similarity', matchId, 'Semantic similarity')}
           />
 
           {/* 6. AI Findings */}
@@ -338,6 +349,7 @@ export const Analysis: React.FC = () => {
             recommendations={analysisData.recommendations || []}
             onStatusUpdate={handleRecommendationStatusChange}
             isUpdatingStatus={isUpdatingStatus}
+            onExplain={(recId) => explain('recommendation', recId, 'Recommendation')}
           />
 
           {/* STEP 34: Discuss Analysis — faculty discussion never modifies the AI result */}
@@ -350,6 +362,9 @@ export const Analysis: React.FC = () => {
 
       {/* STEP 30: Student Performance / Gap Analysis — a separate analytic from assessment quality */}
       <PerformanceOverview assessmentId={selectedAssessmentId} />
+
+      {/* STEP 45: AI explanation modal (lazy) */}
+      {explanationModal}
     </div>
   );
 };

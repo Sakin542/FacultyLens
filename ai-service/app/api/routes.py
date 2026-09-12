@@ -20,6 +20,13 @@ from app.services.rubric_alignment_validator import RubricAlignmentValidationErr
 from app.services.academic_chat import AcademicChatService
 from app.services.question_generator import QuestionGenerator
 from app.services.evaluation_inventory import model_inventory
+from app.services.explainability import deterministic_fallback, explain_question, validate_explanation
+from app.schemas.explainability import (
+    ExplainQuestionRequest,
+    ExplainQuestionResponse,
+    ValidateExplanationRequest,
+    ValidateExplanationResponse,
+)
 from app.schemas.question_generation import GenerateQuestionsRequest, GenerateQuestionsResponse
 from app.services.generation_service import GenerationService, get_generation_service
 from app.services.text_generation_service import TextGenerationService, get_text_generation_service
@@ -649,6 +656,45 @@ def evaluation_models(
 ) -> Dict[str, Any]:
     """STEP 35: inventory of configured models, engines, prompt versions and thresholds for the Laravel registry."""
     return model_inventory(hf_service, generation_service)
+
+
+@router.post(
+    "/api/v1/explain-question",
+    response_model=ExplainQuestionResponse,
+    dependencies=[Depends(verify_api_key)],
+)
+def explain_question_route(payload: ExplainQuestionRequest) -> ExplainQuestionResponse:
+    """
+    STEP 45: evidence for a question's AI labels. Re-runs the STEP 10 rule tables and returns the cue words that
+    fired (literal excerpts of the question), the factors considered, method type and whether the stored label
+    is still consistent with the current text. Deterministic — no generative model, no hidden reasoning.
+    """
+    result = explain_question(
+        payload.question_text,
+        question_type=payload.question_type,
+        difficulty_level=payload.difficulty_level,
+        cognitive_level=payload.cognitive_level,
+        topics=payload.topics,
+        course_topics=payload.course_topics,
+    )
+    return ExplainQuestionResponse(**result)
+
+
+@router.post(
+    "/api/v1/validate-explanation",
+    response_model=ValidateExplanationResponse,
+    dependencies=[Depends(verify_api_key)],
+)
+def validate_explanation_route(payload: ValidateExplanationRequest) -> ValidateExplanationResponse:
+    """
+    STEP 45: contradiction check for a free-text explanation against the structured facts it describes.
+    Invalid explanations are replaced by a deterministic fallback so faculty never see a contradictory rationale.
+    """
+    verdict = validate_explanation(payload.explanation, payload.facts)
+    if verdict["valid"]:
+        return ValidateExplanationResponse(valid=True, violations=[], explanation=payload.explanation)
+    fallback = deterministic_fallback(payload.kind or "generic", payload.facts)
+    return ValidateExplanationResponse(valid=False, violations=verdict["violations"], explanation=fallback, fallback_used=True)
 
 
 # API aliases for consistent naming convention across STEP 15 specification

@@ -9,6 +9,8 @@ import {
 } from '@/types/questionGeneration';
 import { cn } from '@/utils/cn';
 import { selectClass } from './GenerationForm';
+import { WhyButton } from '@/components/explainability/WhyButton';
+import { useExplanationModal } from '@/hooks/useExplanationModal';
 
 /** STEP 33: draft card + validation display + inline editor. Text is always rendered as text, never HTML. */
 
@@ -161,6 +163,7 @@ export const GeneratedQuestionCard: React.FC<GeneratedQuestionCardProps> = ({
   const co = outcomes.find((o) => String(o.id) === String(q.learning_outcome_id));
   const reviewVariant = q.review_status === 'APPROVED' ? 'Good' : q.review_status === 'REJECTED' ? 'Critical' : q.review_status === 'REVIEWED' ? 'Attention' : 'neutral';
   const isFinal = !!q.official_question_id;
+  const { explain, modal: explanationModal } = useExplanationModal();
 
   return (
     <article data-testid={`generated-question-${q.id}`} className={cn('rounded-xl border bg-white dark:bg-[#161616] p-4 space-y-3', q.review_status === 'REJECTED' ? 'border-sage-200 dark:border-[#2A2A2A] opacity-70' : 'border-sage-200 dark:border-[#2A2A2A]')}>
@@ -170,6 +173,7 @@ export const GeneratedQuestionCard: React.FC<GeneratedQuestionCardProps> = ({
           <Badge variant={reviewVariant} data-testid="review-status">{fmt(q.review_status)}</Badge>
           {q.is_edited && <Badge variant="outline">Edited v{q.version}</Badge>}
           {isFinal && <Badge variant="Good" data-testid="added-badge">Added to assessment</Badge>}
+          <WhyButton describes={`how question ${q.sequence} was generated and validated`} onClick={() => explain('generated_question', q.id, `Generated question ${q.sequence}`)} />
         </div>
         <div className="flex flex-wrap gap-1.5 text-xs text-sage-500">
           <span className="font-mono">{q.marks} marks</span><span>·</span><span>{QUESTION_TYPE_LABELS[q.question_type] ?? q.question_type}</span>
@@ -217,6 +221,7 @@ export const GeneratedQuestionCard: React.FC<GeneratedQuestionCardProps> = ({
       )}
       {!canReview && <p className="text-[11px] text-sage-400" data-testid="review-readonly">You can review and discuss this draft; approval and edits require an Editor or Owner role.</p>}
       {discussion}
+      {explanationModal}
     </article>
   );
 };
