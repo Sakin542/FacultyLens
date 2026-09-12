@@ -1,0 +1,409 @@
+{
+  "name": "STEP44 benchmark – Question generation (v1.0)",
+  "task": "QUESTION_GENERATION",
+  "version": "v1.0",
+  "source": "CURATED_DATASET",
+  "split": "TEST",
+  "description": "Plain constraint sets from the STEP 44 generation requests.",
+  "examples": [
+    {
+      "input_data": {
+        "topic": "Normalization",
+        "question_type": "DESCRIPTIVE",
+        "difficulty_level": "MEDIUM",
+        "cognitive_level": "UNDERSTAND",
+        "marks": 5,
+        "number_of_questions": 2,
+        "learning_outcome": {
+          "code": "LO3",
+          "description": "Apply normalization techniques to design well-structured relational schemas."
+        }
+      },
+      "expected_output": {
+        "min_constraint_satisfaction": 0.9
+      },
+      "metadata": {
+        "benchmark_id": "QG01",
+        "course": "CS301"
+      }
+    },
+    {
+      "input_data": {
+        "topic": "SQL Queries",
+        "question_type": "PROBLEM_SOLVING",
+        "difficulty_level": "MEDIUM",
+        "cognitive_level": "APPLY",
+        "marks": 4,
+        "number_of_questions": 2,
+        "learning_outcome": {
+          "code": "LO2",
+          "description": "Write SQL queries to retrieve, aggregate and manipulate data."
+        }
+      },
+      "expected_output": {
+        "min_constraint_satisfaction": 0.9
+      },
+      "metadata": {
+        "benchmark_id": "QG02",
+        "course": "CS301"
+      }
+    },
+    {
+      "input_data": {
+        "topic": "Transactions and Concurrency Control",
+        "question_type": "ANALYTICAL",
+        "difficulty_level": "HARD",
+        "cognitive_level": "ANALYZE",
+        "marks": 6,
+        "number_of_questions": 2,
+        "learning_outcome": {
+          "code": "LO4",
+          "description": "Analyze transaction management, concurrency control and recovery mechanisms."
+        }
+      },
+      "expected_output": {
+        "min_constraint_satisfaction": 0.9
+      },
+      "metadata": {
+        "benchmark_id": "QG03",
+        "course": "CS301"
+      }
+    },
+    {
+      "input_data": {
+        "topic": "Relational Model and Keys",
+        "question_type": "MCQ",
+        "difficulty_level": "EASY",
+        "cognitive_level": "REMEMBER",
+        "marks": 1,
+        "number_of_questions": 3,
+        "learning_outcome": {
+          "code": "LO1",
+          "description": "Explain relational database concepts including keys, integrity constraints and the relational model."
+        }
+      },
+      "expected_output": {
+        "min_constraint_satisfaction": 0.9
+      },
+      "metadata": {
+        "benchmark_id": "QG04",
+        "course": "CS301"
+      }
+    },
+    {
+      "input_data": {
+        "topic": "Indexing and Query Processing",
+        "question_type": "TRUE_FALSE",
+        "difficulty_level": "EASY",
+        "cognitive_level": "REMEMBER",
+        "marks": 1,
+        "number_of_questions": 2,
+        "learning_outcome": {
+          "code": "LO5",
+          "description": "Evaluate indexing and query optimization strategies for database performance."
+        }
+      },
+      "expected_output": {
+        "min_constraint_satisfaction": 0.9
+      },
+      "metadata": {
+        "benchmark_id": "QG05",
+        "course": "CS301"
+      }
+    },
+    {
+      "input_data": {
+        "topic": "Model Evaluation and Overfitting",
+        "question_type": "ANALYTICAL",
+        "difficulty_level": "HARD",
+        "cognitive_level": "EVALUATE",
+        "marks": 8,
+        "number_of_questions": 2,
+        "learning_outcome": {
+          "code": "LO3",
+          "description": "Evaluate models using appropriate metrics, validation strategies and error analysis."
+        }
+      },
+      "expected_output": {
+        "min_constraint_satisfaction": 0.9
+      },
+      "metadata": {
+        "benchmark_id": "QG06",
+        "course": "CS402"
+      }
+    },
+    {
+      "input_data": {
+        "topic": "Neural Networks",
+        "question_type": "DESCRIPTIVE",
+        "difficulty_level": "HARD",
+        "cognitive_level": "CREATE",
+        "marks": 10,
+        "number_of_questions": 1,
+        "learning_outcome": {
+          "code": "LO4",
+          "description": "Design neural network architectures and training procedures for a given task."
+        }
+      },
+      "expected_output": {
+        "min_constraint_satisfaction": 0.9
+      },
+      "metadata": {
+        "benchmark_id": "QG07",
+        "course": "CS402"
+      }
+    },
+    {
+      "input_data": {
+        "topic": "Clustering",
+        "question_type": "SHORT_ANSWER",
+        "difficulty_level": "EASY",
+        "cognitive_level": "UNDERSTAND",
+        "marks": 2,
+        "number_of_questions": 3,
+        "learning_outcome": {
+          "code": "LO1",
+          "description": "Describe the fundamental paradigms of machine learning and their typical applications."
+        }
+      },
+      "expected_output": {
+        "min_constraint_satisfaction": 0.9
+      },
+      "metadata": {
+        "benchmark_id": "QG08",
+        "course": "CS402"
+      }
+    },
+    {
+      "input_data": {
+        "topic": "Graph Algorithms",
+        "question_type": "PROBLEM_SOLVING",
+        "difficulty_level": "MEDIUM",
+        "cognitive_level": "APPLY",
+        "marks": 6,
+        "number_of_questions": 2,
+        "learning_outcome": {
+          "code": "LO4",
+          "description": "Implement graph traversal and shortest-path algorithms."
+        }
+      },
+      "expected_output": {
+        "min_constraint_satisfaction": 0.9
+      },
+      "metadata": {
+        "benchmark_id": "QG09",
+        "course": "CS201"
+      }
+    },
+    {
+      "input_data": {
+        "topic": "Sorting and Searching",
+        "question_type": "CONCEPTUAL",
+        "difficulty_level": "EASY",
+        "cognitive_level": "REMEMBER",
+        "marks": 2,
+        "number_of_questions": 3,
+        "learning_outcome": {
+          "code": "LO5",
+          "description": "Select and justify appropriate sorting and searching algorithms for a given problem."
+        }
+      },
+      "expected_output": {
+        "min_constraint_satisfaction": 0.9
+      },
+      "metadata": {
+        "benchmark_id": "QG10",
+        "course": "CS201"
+      }
+    },
+    {
+      "input_data": {
+        "topic": "Deadlocks and Synchronization",
+        "question_type": "ANALYTICAL",
+        "difficulty_level": "MEDIUM",
+        "cognitive_level": "ANALYZE",
+        "marks": 5,
+        "number_of_questions": 2,
+        "learning_outcome": {
+          "code": "LO3",
+          "description": "Analyze synchronization problems and deadlock handling strategies."
+        }
+      },
+      "expected_output": {
+        "min_constraint_satisfaction": 0.9
+      },
+      "metadata": {
+        "benchmark_id": "QG11",
+        "course": "CS305"
+      }
+    },
+    {
+      "input_data": {
+        "topic": "Memory Management and Virtual Memory",
+        "question_type": "PROBLEM_SOLVING",
+        "difficulty_level": "MEDIUM",
+        "cognitive_level": "APPLY",
+        "marks": 4,
+        "number_of_questions": 2,
+        "learning_outcome": {
+          "code": "LO2",
+          "description": "Apply memory management techniques such as paging, segmentation and page replacement."
+        }
+      },
+      "expected_output": {
+        "min_constraint_satisfaction": 0.9
+      },
+      "metadata": {
+        "benchmark_id": "QG12",
+        "course": "CS305"
+      }
+    },
+    {
+      "input_data": {
+        "topic": "Network Security",
+        "question_type": "DESCRIPTIVE",
+        "difficulty_level": "HARD",
+        "cognitive_level": "EVALUATE",
+        "marks": 8,
+        "number_of_questions": 1,
+        "learning_outcome": {
+          "code": "LO4",
+          "description": "Evaluate network security threats and cryptographic countermeasures."
+        }
+      },
+      "expected_output": {
+        "min_constraint_satisfaction": 0.9
+      },
+      "metadata": {
+        "benchmark_id": "QG13",
+        "course": "CS306"
+      }
+    },
+    {
+      "input_data": {
+        "topic": "Routing Algorithms",
+        "question_type": "SHORT_ANSWER",
+        "difficulty_level": "MEDIUM",
+        "cognitive_level": "UNDERSTAND",
+        "marks": 3,
+        "number_of_questions": 2,
+        "learning_outcome": {
+          "code": "LO2",
+          "description": "Analyze routing algorithms and their behavior in dynamic networks."
+        }
+      },
+      "expected_output": {
+        "min_constraint_satisfaction": 0.9
+      },
+      "metadata": {
+        "benchmark_id": "QG14",
+        "course": "CS306"
+      }
+    },
+    {
+      "input_data": {
+        "topic": "Software Testing",
+        "question_type": "PROBLEM_SOLVING",
+        "difficulty_level": "MEDIUM",
+        "cognitive_level": "APPLY",
+        "marks": 5,
+        "number_of_questions": 2,
+        "learning_outcome": {
+          "code": "LO3",
+          "description": "Design and execute software test strategies at unit, integration and system level."
+        }
+      },
+      "expected_output": {
+        "min_constraint_satisfaction": 0.9
+      },
+      "metadata": {
+        "benchmark_id": "QG15",
+        "course": "CS308"
+      }
+    },
+    {
+      "input_data": {
+        "topic": "Design Patterns",
+        "question_type": "DESCRIPTIVE",
+        "difficulty_level": "HARD",
+        "cognitive_level": "CREATE",
+        "marks": 8,
+        "number_of_questions": 1,
+        "learning_outcome": {
+          "code": "LO4",
+          "description": "Apply design patterns to improve software structure and maintainability."
+        }
+      },
+      "expected_output": {
+        "min_constraint_satisfaction": 0.9
+      },
+      "metadata": {
+        "benchmark_id": "QG16",
+        "course": "CS308"
+      }
+    },
+    {
+      "input_data": {
+        "topic": "Newton's Laws of Motion",
+        "question_type": "PROBLEM_SOLVING",
+        "difficulty_level": "EASY",
+        "cognitive_level": "APPLY",
+        "marks": 3,
+        "number_of_questions": 2,
+        "learning_outcome": {
+          "code": "LO1",
+          "description": "Apply Newton's laws to solve problems involving forces and motion."
+        }
+      },
+      "expected_output": {
+        "min_constraint_satisfaction": 0.9
+      },
+      "metadata": {
+        "benchmark_id": "QG17",
+        "course": "PHY101"
+      }
+    },
+    {
+      "input_data": {
+        "topic": "Elasticity",
+        "question_type": "PROBLEM_SOLVING",
+        "difficulty_level": "MEDIUM",
+        "cognitive_level": "APPLY",
+        "marks": 4,
+        "number_of_questions": 2,
+        "learning_outcome": {
+          "code": "LO2",
+          "description": "Calculate and interpret price elasticity of demand and supply."
+        }
+      },
+      "expected_output": {
+        "min_constraint_satisfaction": 0.9
+      },
+      "metadata": {
+        "benchmark_id": "QG18",
+        "course": "ECO101"
+      }
+    },
+    {
+      "input_data": {
+        "topic": "Market Structures",
+        "question_type": "ANALYTICAL",
+        "difficulty_level": "MEDIUM",
+        "cognitive_level": "ANALYZE",
+        "marks": 5,
+        "number_of_questions": 2,
+        "learning_outcome": {
+          "code": "LO3",
+          "description": "Compare market structures such as perfect competition, monopoly and oligopoly."
+        }
+      },
+      "expected_output": {
+        "min_constraint_satisfaction": 0.9
+      },
+      "metadata": {
+        "benchmark_id": "QG19",
+        "course": "ECO101"
+      }
+    }
+  ]
+}

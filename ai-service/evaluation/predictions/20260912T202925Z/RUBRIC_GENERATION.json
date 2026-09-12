@@ -1,0 +1,1616 @@
+[
+  {
+    "id": "Q001",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 3,
+    "method": "template_based",
+    "alignment_proxy": 0.8,
+    "criteria": [
+      {
+        "criterion": "Definition of primary key",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Explanation of relation can have at most one primary key",
+        "max_marks": 0.5
+      },
+      {
+        "criterion": "Key properties or characteristics",
+        "max_marks": 0.5
+      }
+    ]
+  },
+  {
+    "id": "Q004",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 5,
+    "method": "template_based",
+    "alignment_proxy": 1.0,
+    "criteria": [
+      {
+        "criterion": "Correct interpretation of the problem",
+        "max_marks": 0.5
+      },
+      {
+        "criterion": "Writing of SQL query to",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Listing of names of students who are enrolled in more than three courses",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Accuracy of working and steps",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Final answer",
+        "max_marks": 0.5
+      }
+    ]
+  },
+  {
+    "id": "Q005",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 6,
+    "method": "template_based",
+    "alignment_proxy": 0.75,
+    "criteria": [
+      {
+        "criterion": "Correct interpretation of the problem",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Identification of candidate keys",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Determination of highest normal form of R",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Justification of your answer",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Accuracy of working and steps",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Final answer",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q006",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 4,
+    "method": "template_based",
+    "alignment_proxy": 0.75,
+    "criteria": [
+      {
+        "criterion": "Identification of key aspects",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Comparison of optimistic and pessimistic concurrency control in terms of throughput and abort rate…",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Depth and quality of analysis",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Justified conclusion",
+        "max_marks": 1.5
+      }
+    ]
+  },
+  {
+    "id": "Q007",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 3,
+    "method": "template_based",
+    "alignment_proxy": 1.0,
+    "criteria": [
+      {
+        "criterion": "Description of four ACID properties of a transaction with one example each",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Appropriate examples",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Clarity, organization and terminology",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q009",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 5,
+    "method": "template_based",
+    "alignment_proxy": 0.5294,
+    "criteria": [
+      {
+        "criterion": "Identification of key aspects",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Evaluation of whether adding a B+ tree index on that column is worthwhile",
+        "max_marks": 2.0
+      },
+      {
+        "criterion": "Recommendation of alternative if it is not",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Depth and quality of analysis",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Justified conclusion",
+        "max_marks": 1.5
+      }
+    ]
+  },
+  {
+    "id": "Q012",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 3,
+    "method": "template_based",
+    "alignment_proxy": 0.7,
+    "criteria": [
+      {
+        "criterion": "Explanation of with an example, how a lost update anomaly can occur when two transactions run…",
+        "max_marks": 2.5
+      },
+      {
+        "criterion": "Appropriate examples",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Clarity, organization and terminology",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q013",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 5,
+    "method": "template_based",
+    "alignment_proxy": 0.6364,
+    "criteria": [
+      {
+        "criterion": "Correct interpretation of the problem",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Determination of whether this schedule is conflict-serializable",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Demonstration of precedence graph",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Accuracy of working and steps",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Final answer",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q017",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 3,
+    "method": "template_based",
+    "alignment_proxy": 0.8,
+    "criteria": [
+      {
+        "criterion": "Writing of short notes on",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Writing of ahead logging",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Use of correct terminology",
+        "max_marks": 0.5
+      }
+    ]
+  },
+  {
+    "id": "Q019",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 3,
+    "method": "template_based",
+    "alignment_proxy": 1.0,
+    "criteria": [
+      {
+        "criterion": "Explanation of difference between supervised and unsupervised learning, giving one example algorithm of…",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Appropriate examples",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Clarity, organization and terminology",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q021",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 5,
+    "method": "template_based",
+    "alignment_proxy": 0.4615,
+    "criteria": [
+      {
+        "criterion": "Identification of key aspects",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Critique of use of accuracy here",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Proposal of two alternative metrics",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Depth and quality of analysis",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Justified conclusion",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q022",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 4,
+    "method": "template_based",
+    "alignment_proxy": 0.6429,
+    "criteria": [
+      {
+        "criterion": "Correct interpretation of the problem",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Computation of information gain of splitting on attribute A given that the parent node contains 8…",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Accuracy of working and steps",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Final answer",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q024",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 5,
+    "method": "template_based",
+    "alignment_proxy": 0.5556,
+    "criteria": [
+      {
+        "criterion": "Correct interpretation of the problem",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Design of neural network architecture for classifying 28x28 grayscale handwritten digits",
+        "max_marks": 2.5
+      },
+      {
+        "criterion": "Justification of each choice",
+        "max_marks": 2.5
+      },
+      {
+        "criterion": "Accuracy of working and steps",
+        "max_marks": 2.0
+      },
+      {
+        "criterion": "Final answer",
+        "max_marks": 1.5
+      }
+    ]
+  },
+  {
+    "id": "Q028",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 4,
+    "method": "template_based",
+    "alignment_proxy": 0.8182,
+    "criteria": [
+      {
+        "criterion": "Correct interpretation of the problem",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Derivation of gradient of the mean squared error loss with respect to the weights of a linear…",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Accuracy of working and steps",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Final answer",
+        "max_marks": 1.5
+      }
+    ]
+  },
+  {
+    "id": "Q030",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 4,
+    "method": "template_based",
+    "alignment_proxy": 0.9,
+    "criteria": [
+      {
+        "criterion": "Identification of key aspects",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Comparison of bagging and boosting with respect to how they build ensemble members and how they reduce…",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Depth and quality of analysis",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Justified conclusion",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q036",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 3,
+    "method": "template_based",
+    "alignment_proxy": 0.7222,
+    "criteria": [
+      {
+        "criterion": "Proposal of complete experimental protocol to",
+        "max_marks": 3.5
+      },
+      {
+        "criterion": "Comparison of three clustering algorithms on an unlabelled customer dataset, including the choice of…",
+        "max_marks": 3.0
+      },
+      {
+        "criterion": "Clarity, organization and terminology",
+        "max_marks": 1.5
+      }
+    ]
+  },
+  {
+    "id": "Q041",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 4,
+    "method": "template_based",
+    "alignment_proxy": 1.0,
+    "criteria": [
+      {
+        "criterion": "Identification of key aspects",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Comparison of merge sort and quicksort in terms of worst-case time complexity, space usage and stability",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Depth and quality of analysis",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Justified conclusion",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q042",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 4,
+    "method": "template_based",
+    "alignment_proxy": 0.3333,
+    "criteria": [
+      {
+        "criterion": "Correct interpretation of the problem",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Appropriate method or formula",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Accuracy of working and steps",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Final answer",
+        "max_marks": 1.5
+      }
+    ]
+  },
+  {
+    "id": "Q044",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 4,
+    "method": "template_based",
+    "alignment_proxy": 0.7778,
+    "criteria": [
+      {
+        "criterion": "Correct interpretation of the problem",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Proof of that any comparison-based sorting algorithm requires Omega(n log n) comparisons in the…",
+        "max_marks": 2.5
+      },
+      {
+        "criterion": "Accuracy of working and steps",
+        "max_marks": 2.5
+      },
+      {
+        "criterion": "Final answer",
+        "max_marks": 1.5
+      }
+    ]
+  },
+  {
+    "id": "Q047",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 5,
+    "method": "template_based",
+    "alignment_proxy": 0.8889,
+    "criteria": [
+      {
+        "criterion": "Correct interpretation of the problem",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Design of data structure that supports push, pop and retrieving the minimum element, all in O(1)…",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Explanation of your",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Accuracy of working and steps",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Final answer",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q054",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 5,
+    "method": "template_based",
+    "alignment_proxy": 0.5238,
+    "criteria": [
+      {
+        "criterion": "Identification of key aspects",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Listing of with 10 million users",
+        "max_marks": 2.0
+      },
+      {
+        "criterion": "Evaluation of whether BFS or bidirectional BFS is preferable for finding the shortest friendship chain…",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Depth and quality of analysis",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Justified conclusion",
+        "max_marks": 1.5
+      }
+    ]
+  },
+  {
+    "id": "Q058",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 5,
+    "method": "template_based",
+    "alignment_proxy": 0.5625,
+    "criteria": [
+      {
+        "criterion": "Correct interpretation of the problem",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Determination of size of a single-level page table",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Explanation of two-level page table reduces memory overhead",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Accuracy of working and steps",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Final answer",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q060",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 6,
+    "method": "template_based",
+    "alignment_proxy": 0.9,
+    "criteria": [
+      {
+        "criterion": "Identification of key aspects",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Analysis of code for the producer-consumer problem",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Identification of race condition",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Proposal of fix using semaphores",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Depth and quality of analysis",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Justified conclusion",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q065",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 5,
+    "method": "template_based",
+    "alignment_proxy": 0.9333,
+    "criteria": [
+      {
+        "criterion": "Correct interpretation of the problem",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Design of multithreaded program structure for a web server that handles thousands of simultaneous…",
+        "max_marks": 2.5
+      },
+      {
+        "criterion": "Explanation of you would avoid both deadlock and thread starvation",
+        "max_marks": 2.5
+      },
+      {
+        "criterion": "Accuracy of working and steps",
+        "max_marks": 2.0
+      },
+      {
+        "criterion": "Final answer",
+        "max_marks": 1.5
+      }
+    ]
+  },
+  {
+    "id": "Q074",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 2,
+    "method": "template_based",
+    "alignment_proxy": 1.0,
+    "criteria": [
+      {
+        "criterion": "Explanation of TCP's three-way handshake establishes a connection",
+        "max_marks": 2.0
+      },
+      {
+        "criterion": "Clarity, organization and terminology",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q079",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 5,
+    "method": "template_based",
+    "alignment_proxy": 0.7857,
+    "criteria": [
+      {
+        "criterion": "Identification of key aspects",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Evaluation of trade-offs of using symmetric versus asymmetric encryption for securing a high-volume…",
+        "max_marks": 2.0
+      },
+      {
+        "criterion": "Recommendation of hybrid scheme",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Depth and quality of analysis",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Justified conclusion",
+        "max_marks": 1.5
+      }
+    ]
+  },
+  {
+    "id": "Q084",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 4,
+    "method": "template_based",
+    "alignment_proxy": 0.625,
+    "criteria": [
+      {
+        "criterion": "Correct interpretation of the problem",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Design of secure authentication scheme for a campus Wi-Fi network that resists replay attacks…",
+        "max_marks": 2.5
+      },
+      {
+        "criterion": "Accuracy of working and steps",
+        "max_marks": 2.5
+      },
+      {
+        "criterion": "Final answer",
+        "max_marks": 1.5
+      }
+    ]
+  },
+  {
+    "id": "Q092",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 5,
+    "method": "template_based",
+    "alignment_proxy": 1.0,
+    "criteria": [
+      {
+        "criterion": "Identification of key aspects",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Comparison of waterfall model with an iterative model",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Recommendation of one for a start-up building a mobile app with rapidly changing requirements",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Depth and quality of analysis",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Justified conclusion",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q094",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 4,
+    "method": "template_based",
+    "alignment_proxy": 0.8333,
+    "criteria": [
+      {
+        "criterion": "Correct interpretation of the problem",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Writing of unit tests for a function that validates email addresses, covering at least four…",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Accuracy of working and steps",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Final answer",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q099",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 5,
+    "method": "template_based",
+    "alignment_proxy": 0.8,
+    "criteria": [
+      {
+        "criterion": "Correct interpretation of the problem",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Design of class structure using the Strategy pattern for a payment system that supports credit…",
+        "max_marks": 2.0
+      },
+      {
+        "criterion": "Explanation of new payment method could be added without modifying existing classes",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Accuracy of working and steps",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Final answer",
+        "max_marks": 1.5
+      }
+    ]
+  },
+  {
+    "id": "Q102",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 7,
+    "method": "template_based",
+    "alignment_proxy": 1.0,
+    "criteria": [
+      {
+        "criterion": "Identification of key aspects",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Identification of code smells in the following class",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Proposal of refactorings",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Proposal of naming the",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Design of pattern applied where relevant",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Depth and quality of analysis",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Justified conclusion",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q108",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 5,
+    "method": "template_based",
+    "alignment_proxy": 0.9375,
+    "criteria": [
+      {
+        "criterion": "Correct interpretation of the problem",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Construction of decision table for a loan approval rule that depends on credit score, income and existing…",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Derivation of minimum set of test cases",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Accuracy of working and steps",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Final answer",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q115",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 4,
+    "method": "template_based",
+    "alignment_proxy": 0.7,
+    "criteria": [
+      {
+        "criterion": "Identification of key aspects",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Comparison of behaviour of an ideal gas during an isothermal expansion and an adiabatic expansion, with…",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Depth and quality of analysis",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Justified conclusion",
+        "max_marks": 1.5
+      }
+    ]
+  },
+  {
+    "id": "Q116",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 4,
+    "method": "template_based",
+    "alignment_proxy": 0.9,
+    "criteria": [
+      {
+        "criterion": "Correct interpretation of the problem",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Derivation of expression for the magnetic field at the centre of a circular current loop of radius R…",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Accuracy of working and steps",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Final answer",
+        "max_marks": 1.5
+      }
+    ]
+  },
+  {
+    "id": "Q118",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 5,
+    "method": "template_based",
+    "alignment_proxy": 0.5556,
+    "criteria": [
+      {
+        "criterion": "Correct interpretation of the problem",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Analysis of forces acting on it",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Determination of relationship between the coefficient of kinetic friction and the angle of the incline",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Accuracy of working and steps",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Final answer",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q123",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 5,
+    "method": "template_based",
+    "alignment_proxy": 0.5714,
+    "criteria": [
+      {
+        "criterion": "Correct interpretation of the problem",
+        "max_marks": 0.5
+      },
+      {
+        "criterion": "Calculation of price elasticity of demand using the midpoint method",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Interpretation of result",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Accuracy of working and steps",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Final answer",
+        "max_marks": 0.5
+      }
+    ]
+  },
+  {
+    "id": "Q126",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 4,
+    "method": "template_based",
+    "alignment_proxy": 0.9,
+    "criteria": [
+      {
+        "criterion": "Identification of key aspects",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Comparison of long-run outcomes of perfect competition and monopoly in terms of price, output and…",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Depth and quality of analysis",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Justified conclusion",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q127",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 5,
+    "method": "template_based",
+    "alignment_proxy": 0.8947,
+    "criteria": [
+      {
+        "criterion": "Identification of key aspects",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Evaluation of likely effects of a central bank raising interest rates during a period of high inflation…",
+        "max_marks": 2.0
+      },
+      {
+        "criterion": "Recommendation of whether the policy should be pursued",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Depth and quality of analysis",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Justified conclusion",
+        "max_marks": 1.5
+      }
+    ]
+  },
+  {
+    "id": "Q130",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 5,
+    "method": "template_based",
+    "alignment_proxy": 1.0,
+    "criteria": [
+      {
+        "criterion": "Correct interpretation of the problem",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Diagram of supply and demand diagram showing the effect of a per-unit tax on sellers",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Identification of tax burden borne by consumers and producers",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Accuracy of working and steps",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Final answer",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q132",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 3,
+    "method": "template_based",
+    "alignment_proxy": 1.0,
+    "criteria": [
+      {
+        "criterion": "Proposal of monetary policy package for an economy facing stagflation",
+        "max_marks": 3.5
+      },
+      {
+        "criterion": "Justification of trade-offs involved",
+        "max_marks": 3.0
+      },
+      {
+        "criterion": "Clarity, organization and terminology",
+        "max_marks": 1.5
+      }
+    ]
+  },
+  {
+    "id": "Q002",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 1,
+    "method": "template_based",
+    "alignment_proxy": 0.3333,
+    "criteria": [
+      {
+        "criterion": "Correct option selected",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q040",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 1,
+    "method": "template_based",
+    "alignment_proxy": 0.4,
+    "criteria": [
+      {
+        "criterion": "Correct true/false judgement",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q062",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 1,
+    "method": "template_based",
+    "alignment_proxy": 0.5556,
+    "criteria": [
+      {
+        "criterion": "Correct true/false judgement",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q096",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 1,
+    "method": "template_based",
+    "alignment_proxy": 0.5,
+    "criteria": [
+      {
+        "criterion": "Correct true/false judgement",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q125",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 1,
+    "method": "template_based",
+    "alignment_proxy": 0.4444,
+    "criteria": [
+      {
+        "criterion": "Correct true/false judgement",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q008",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 3,
+    "method": "template_based",
+    "alignment_proxy": 0.8,
+    "criteria": [
+      {
+        "criterion": "Explanation of difference between a clustered",
+        "max_marks": 1.0
+      },
+      {
+        "criterion": "Explanation of a non-clustered index",
+        "max_marks": 0.5
+      },
+      {
+        "criterion": "Use of correct terminology",
+        "max_marks": 0.5
+      }
+    ]
+  },
+  {
+    "id": "Q029",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 2,
+    "method": "template_based",
+    "alignment_proxy": 0.75,
+    "criteria": [
+      {
+        "criterion": "Explanation of confusion matrix shows",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Use of correct terminology",
+        "max_marks": 0.5
+      }
+    ]
+  },
+  {
+    "id": "Q064",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 2,
+    "method": "template_based",
+    "alignment_proxy": 1.0,
+    "criteria": [
+      {
+        "criterion": "Writing of short notes on the round-robin scheduling algorithm and the effect of the time quantum",
+        "max_marks": 2.0
+      },
+      {
+        "criterion": "Use of correct terminology",
+        "max_marks": 1.0
+      }
+    ]
+  },
+  {
+    "id": "Q098",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 2,
+    "method": "template_based",
+    "alignment_proxy": 0.8,
+    "criteria": [
+      {
+        "criterion": "Outline of roles in a Scrum team",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Use of correct terminology",
+        "max_marks": 0.5
+      }
+    ]
+  },
+  {
+    "id": "Q144",
+    "checks": {
+      "marks_sum_equals_total": true,
+      "criteria_count_in_range": true,
+      "all_marks_positive": true,
+      "criteria_named": true,
+      "criteria_unique": true,
+      "descriptions_present": true,
+      "sort_order_sequential": true
+    },
+    "criteria_count": 2,
+    "method": "template_based",
+    "alignment_proxy": 1.0,
+    "criteria": [
+      {
+        "criterion": "Explanation of Short notes thrashing",
+        "max_marks": 1.5
+      },
+      {
+        "criterion": "Use of correct terminology",
+        "max_marks": 0.5
+      }
+    ]
+  }
+]

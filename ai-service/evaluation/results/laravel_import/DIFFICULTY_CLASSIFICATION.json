@@ -1,0 +1,2314 @@
+{
+  "name": "STEP44 benchmark – Difficulty Classification (v1.0)",
+  "task": "DIFFICULTY_CLASSIFICATION",
+  "version": "v1.0",
+  "source": "CURATED_DATASET",
+  "split": "TEST",
+  "description": "STEP 44 ground-truth question set (labels/LABELING_PROTOCOL.md). Single-annotator labels; 144 questions across 8 courses.",
+  "examples": [
+    {
+      "input_data": {
+        "question": "Define a primary key and explain why a relation can have at most one primary key."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q001",
+        "course": "CS301",
+        "marks": 2,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": "REMEMBER"
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Which of the following is NOT a valid SQL aggregate function? (a) SUM (b) AVG (c) CONCAT (d) COUNT"
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q002",
+        "course": "CS301",
+        "marks": 1,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "True or False: A relation in third normal form is always in Boyce-Codd normal form."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q003",
+        "course": "CS301",
+        "marks": 1,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Write an SQL query to list the names of students who are enrolled in more than three courses."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q004",
+        "course": "CS301",
+        "marks": 4,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Given the relation R(A, B, C, D) with functional dependencies A -> B, B -> C and C -> D, identify all candidate keys and determine the highest normal form of R. Justify your answer."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q005",
+        "course": "CS301",
+        "marks": 6,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "APPLY"
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Compare optimistic and pessimistic concurrency control in terms of throughput and abort rate under high contention."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q006",
+        "course": "CS301",
+        "marks": 6,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": "EVALUATE"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Describe the four ACID properties of a transaction with one example each."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q007",
+        "course": "CS301",
+        "marks": 4,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Briefly explain the difference between a clustered and a non-clustered index."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q008",
+        "course": "CS301",
+        "marks": 2,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "A query filters a 50-million-row table on a column with only three distinct values. Evaluate whether adding a B+ tree index on that column is worthwhile and recommend an alternative if it is not."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q009",
+        "course": "CS301",
+        "marks": 8,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Draw an ER diagram for a library system in which members borrow books, each book has one or more authors, and every loan records a due date."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q010",
+        "course": "CS301",
+        "marks": 6,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "What is a foreign key?"
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q011",
+        "course": "CS301",
+        "marks": 1,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Explain, with an example, how a lost update anomaly can occur when two transactions run concurrently without locking."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q012",
+        "course": "CS301",
+        "marks": 5,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": "APPLY"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Consider the schedule: T1 reads X, T2 writes X, T1 writes X, T2 commits, T1 commits. Determine whether this schedule is conflict-serializable and show the precedence graph."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q013",
+        "course": "CS301",
+        "marks": 6,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "APPLY"
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "List three advantages of using views in a relational database."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q014",
+        "course": "CS301",
+        "marks": 3,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Why does decomposing a relation into BCNF sometimes fail to preserve functional dependencies? Illustrate with a small example."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q015",
+        "course": "CS301",
+        "marks": 5,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "UNDERSTAND"
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Which normal form removes partial dependencies? (a) 1NF (b) 2NF (c) 3NF (d) BCNF"
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q016",
+        "course": "CS301",
+        "marks": 1,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Write short notes on write-ahead logging."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q017",
+        "course": "CS301",
+        "marks": 3,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Estimate the number of disk I/Os required to find a record using a B+ tree of order 100 over 10 million records, and explain how this compares with a full table scan."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q018",
+        "course": "CS301",
+        "marks": 4,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "ANALYZE"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Explain the difference between supervised and unsupervised learning, giving one example algorithm of each."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q019",
+        "course": "CS402",
+        "marks": 4,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "State the equation of a simple linear regression model and name each term."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q020",
+        "course": "CS402",
+        "marks": 2,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "A classifier achieves 99% accuracy on a dataset where 99% of examples belong to one class. Critique the use of accuracy here and propose two alternative metrics."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q021",
+        "course": "CS402",
+        "marks": 5,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Compute the information gain of splitting on attribute A given that the parent node contains 8 positive and 8 negative examples and the split produces children with (6+, 2-) and (2+, 6-)."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q022",
+        "course": "CS402",
+        "marks": 5,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "True or False: Increasing the number of trees in a random forest generally increases the risk of overfitting."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q023",
+        "course": "CS402",
+        "marks": 1,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Design a neural network architecture for classifying 28x28 grayscale handwritten digits. Specify the layers, activation functions, loss function and one regularization technique, and justify each choice."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q024",
+        "course": "CS402",
+        "marks": 10,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Which of the following techniques is used to reduce overfitting in neural networks? (a) Dropout (b) Increasing the learning rate (c) Removing the validation set (d) Using more output neurons"
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q025",
+        "course": "CS402",
+        "marks": 1,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": "UNDERSTAND"
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Describe how k-means clustering assigns points to clusters and how the centroids are updated."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q026",
+        "course": "CS402",
+        "marks": 4,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Why does a model with very low training error but high validation error indicate high variance rather than high bias?"
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q027",
+        "course": "CS402",
+        "marks": 3,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "UNDERSTAND"
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Derive the gradient of the mean squared error loss with respect to the weights of a linear regression model."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q028",
+        "course": "CS402",
+        "marks": 6,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "ANALYZE"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Briefly explain what a confusion matrix shows."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q029",
+        "course": "CS402",
+        "marks": 2,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Compare bagging and boosting with respect to how they build ensemble members and how they reduce error."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q030",
+        "course": "CS402",
+        "marks": 5,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Define the term 'feature scaling' and name two common methods."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q031",
+        "course": "CS402",
+        "marks": 2,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "A logistic regression model outputs a probability of 0.7 for the positive class with a decision threshold of 0.5. Determine the predicted label and explain what happens to precision and recall if the threshold is raised to 0.9."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q032",
+        "course": "CS402",
+        "marks": 4,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "ANALYZE"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Evaluate the claim that deep neural networks always outperform gradient-boosted trees on tabular data."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q033",
+        "course": "CS402",
+        "marks": 6,
+        "label_confidence": "LOW",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Write pseudocode for the k-nearest neighbours classification algorithm."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q034",
+        "course": "CS402",
+        "marks": 4,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "What is the purpose of a validation set?"
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q035",
+        "course": "CS402",
+        "marks": 2,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": "REMEMBER"
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Propose a complete experimental protocol to compare three clustering algorithms on an unlabelled customer dataset, including the choice of internal validation indices and how you would handle the choice of k."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q036",
+        "course": "CS402",
+        "marks": 8,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "EVALUATE"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "What is the time complexity of binary search on a sorted array of n elements?"
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q037",
+        "course": "CS201",
+        "marks": 1,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Implement a function that reverses a singly linked list in place and state its time complexity."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q038",
+        "course": "CS201",
+        "marks": 5,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Explain why a queue is more appropriate than a stack for breadth-first search."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q039",
+        "course": "CS201",
+        "marks": 3,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "ANALYZE"
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "True or False: Inserting an element into a binary min-heap takes O(log n) time in the worst case."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q040",
+        "course": "CS201",
+        "marks": 1,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Compare merge sort and quicksort in terms of worst-case time complexity, space usage and stability."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q041",
+        "course": "CS201",
+        "marks": 5,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Trace Dijkstra's algorithm on the given weighted graph from source vertex A, showing the distance table after each iteration."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q042",
+        "course": "CS201",
+        "marks": 6,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Which data structure follows the Last-In-First-Out principle? (a) Queue (b) Stack (c) Heap (d) Graph"
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q043",
+        "course": "CS201",
+        "marks": 1,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Prove that any comparison-based sorting algorithm requires Omega(n log n) comparisons in the worst case."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q044",
+        "course": "CS201",
+        "marks": 8,
+        "label_confidence": "LOW",
+        "secondary_cognitive_level": "EVALUATE"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Briefly describe the difference between a complete binary tree and a full binary tree."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q045",
+        "course": "CS201",
+        "marks": 2,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Given the recurrence T(n) = 2T(n/2) + n, solve for T(n) using the master theorem."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q046",
+        "course": "CS201",
+        "marks": 4,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Design a data structure that supports push, pop and retrieving the minimum element, all in O(1) time. Explain your design."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q047",
+        "course": "CS201",
+        "marks": 6,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "List the steps involved in deleting a node with two children from a binary search tree."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q048",
+        "course": "CS201",
+        "marks": 3,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "REMEMBER"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "How does the choice of pivot affect the running time of quicksort?"
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q049",
+        "course": "CS201",
+        "marks": 3,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "UNDERSTAND"
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Detect whether a directed graph contains a cycle. Write an algorithm and analyze its complexity."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q050",
+        "course": "CS201",
+        "marks": 6,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": "ANALYZE"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Define amortized analysis and illustrate it with dynamic array resizing."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q051",
+        "course": "CS201",
+        "marks": 4,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Justify why a doubly linked list is preferred over a singly linked list for implementing an LRU cache."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q052",
+        "course": "CS201",
+        "marks": 4,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "ANALYZE"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Name two applications of a priority queue."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q053",
+        "course": "CS201",
+        "marks": 2,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "A social network stores friendships as an adjacency list with 10 million users. Evaluate whether BFS or bidirectional BFS is preferable for finding the shortest friendship chain between two users, considering memory and expected search space."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q054",
+        "course": "CS201",
+        "marks": 8,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Define a process and list the states in a five-state process model."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q055",
+        "course": "CS305",
+        "marks": 3,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Calculate the average waiting time for the processes P1 (burst 8), P2 (burst 4) and P3 (burst 1), all arriving at time 0, under Shortest Job First scheduling."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q056",
+        "course": "CS305",
+        "marks": 3,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Explain the difference between internal and external fragmentation."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q057",
+        "course": "CS305",
+        "marks": 3,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "A system uses 32-bit virtual addresses, 4 KB pages and 4-byte page table entries. Determine the size of a single-level page table and explain why a two-level page table reduces memory overhead."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q058",
+        "course": "CS305",
+        "marks": 5,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": "ANALYZE"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "State the four necessary conditions for deadlock."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q059",
+        "course": "CS305",
+        "marks": 2,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Analyze the following code for the producer-consumer problem and identify the race condition. Propose a fix using semaphores."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q060",
+        "course": "CS305",
+        "marks": 8,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "CREATE"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Which page replacement algorithm suffers from Belady's anomaly? (a) LRU (b) Optimal (c) FIFO (d) LFU"
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q061",
+        "course": "CS305",
+        "marks": 1,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "True or False: A thread shares its stack with other threads of the same process."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q062",
+        "course": "CS305",
+        "marks": 1,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "REMEMBER"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Compare the inode-based file allocation used in Unix with the FAT approach in terms of random access performance and metadata overhead."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q063",
+        "course": "CS305",
+        "marks": 6,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Write short notes on the round-robin scheduling algorithm and the effect of the time quantum."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q064",
+        "course": "CS305",
+        "marks": 3,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Design a multithreaded program structure for a web server that handles thousands of simultaneous connections, and explain how you would avoid both deadlock and thread starvation."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q065",
+        "course": "CS305",
+        "marks": 10,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Why can a spinlock waste CPU cycles on a single-processor system?"
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q066",
+        "course": "CS305",
+        "marks": 3,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "ANALYZE"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Given the reference string 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5 and three frames, compute the number of page faults for LRU replacement."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q067",
+        "course": "CS305",
+        "marks": 4,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Describe the role of the process control block."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q068",
+        "course": "CS305",
+        "marks": 2,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Evaluate the Banker's algorithm as a practical deadlock avoidance strategy for a general-purpose operating system."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q069",
+        "course": "CS305",
+        "marks": 6,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "What is a context switch?"
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q070",
+        "course": "CS305",
+        "marks": 1,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Illustrate how journaling improves file system recovery after a crash."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q071",
+        "course": "CS305",
+        "marks": 4,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Distinguish between user-level threads and kernel-level threads, and state one situation where each is preferable."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q072",
+        "course": "CS305",
+        "marks": 4,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "List the seven layers of the OSI model in order."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q073",
+        "course": "CS306",
+        "marks": 2,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Explain how TCP's three-way handshake establishes a connection."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q074",
+        "course": "CS306",
+        "marks": 3,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Compare distance-vector and link-state routing with respect to convergence time and the count-to-infinity problem."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q075",
+        "course": "CS306",
+        "marks": 5,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Which protocol resolves domain names to IP addresses? (a) DHCP (b) DNS (c) ARP (d) SMTP"
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q076",
+        "course": "CS306",
+        "marks": 1,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "A host with IP address 192.168.10.77 and subnet mask 255.255.255.192 sends a packet to 192.168.10.130. Determine whether the destination is on the same subnet and show your working."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q077",
+        "course": "CS306",
+        "marks": 4,
+        "label_confidence": "LOW",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "True or False: UDP guarantees in-order delivery of datagrams."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q078",
+        "course": "CS306",
+        "marks": 1,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Evaluate the trade-offs of using symmetric versus asymmetric encryption for securing a high-volume video streaming service, and recommend a hybrid scheme."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q079",
+        "course": "CS306",
+        "marks": 8,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Describe how TCP slow start and congestion avoidance adjust the congestion window."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q080",
+        "course": "CS306",
+        "marks": 4,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Briefly explain the purpose of the ARP protocol."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q081",
+        "course": "CS306",
+        "marks": 2,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Run the Bellman-Ford algorithm on the given graph for three iterations and give the distance vector at node D after each iteration."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q082",
+        "course": "CS306",
+        "marks": 6,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Why is HTTP considered a stateless protocol, and how do cookies compensate for this?"
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q083",
+        "course": "CS306",
+        "marks": 3,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Design a secure authentication scheme for a campus Wi-Fi network that resists replay attacks; specify the messages exchanged and the cryptographic primitives used."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q084",
+        "course": "CS306",
+        "marks": 8,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Define bandwidth and latency and state how each affects file download time."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q085",
+        "course": "CS306",
+        "marks": 2,
+        "label_confidence": "LOW",
+        "secondary_cognitive_level": "REMEMBER"
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Analyze how a SYN flood attack exploits the TCP handshake and assess the effectiveness of SYN cookies as a countermeasure."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q086",
+        "course": "CS306",
+        "marks": 6,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": "EVALUATE"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "What does the acronym SMTP stand for and which layer does it belong to?"
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q087",
+        "course": "CS306",
+        "marks": 1,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Calculate the maximum throughput of a TCP connection with a receiver window of 64 KB and a round-trip time of 100 ms, ignoring losses."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q088",
+        "course": "CS306",
+        "marks": 3,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Discuss the advantages of a layered network architecture."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q089",
+        "course": "CS306",
+        "marks": 4,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Justify the use of hierarchical routing in the Internet instead of a single flat routing table."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q090",
+        "course": "CS306",
+        "marks": 4,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "ANALYZE"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Define the term 'software requirement' and distinguish between functional and non-functional requirements."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q091",
+        "course": "CS308",
+        "marks": 3,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "REMEMBER"
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Compare the waterfall model with an iterative model, and recommend one for a start-up building a mobile app with rapidly changing requirements."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q092",
+        "course": "CS308",
+        "marks": 5,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": "ANALYZE"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Which of the following is a black-box testing technique? (a) Statement coverage (b) Equivalence partitioning (c) Path coverage (d) Mutation testing"
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q093",
+        "course": "CS308",
+        "marks": 1,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Write unit tests for a function that validates email addresses, covering at least four equivalence classes."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q094",
+        "course": "CS308",
+        "marks": 5,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Explain the Observer design pattern and give a situation where it should be used."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q095",
+        "course": "CS308",
+        "marks": 4,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "True or False: In Scrum, the sprint length may be changed in the middle of a sprint if the team is behind schedule."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q096",
+        "course": "CS308",
+        "marks": 1,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": "UNDERSTAND"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Critique the statement 'Agile teams do not need documentation.'"
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q097",
+        "course": "CS308",
+        "marks": 4,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Briefly outline the roles in a Scrum team."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q098",
+        "course": "CS308",
+        "marks": 2,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Design a class structure using the Strategy pattern for a payment system that supports credit card, PayPal and bank transfer, and explain how a new payment method could be added without modifying existing classes."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q099",
+        "course": "CS308",
+        "marks": 8,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Why are requirements defects more expensive to fix in later phases of a project?"
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q100",
+        "course": "CS308",
+        "marks": 3,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "ANALYZE"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Describe the V-model and its relationship between development and testing phases."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q101",
+        "course": "CS308",
+        "marks": 4,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Identify the code smells in the following class and propose refactorings, naming the design pattern applied where relevant."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q102",
+        "course": "CS308",
+        "marks": 8,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "CREATE"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "List three techniques for requirements elicitation."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q103",
+        "course": "CS308",
+        "marks": 3,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Evaluate the suitability of continuous integration for a safety-critical avionics project, considering certification requirements."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q104",
+        "course": "CS308",
+        "marks": 6,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Calculate the cyclomatic complexity of the given control flow graph with 9 edges and 7 nodes, and interpret the result for test planning."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q105",
+        "course": "CS308",
+        "marks": 3,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "What is regression testing?"
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q106",
+        "course": "CS308",
+        "marks": 1,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Discuss how user stories differ from formal requirement specifications in terms of precision and adaptability."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q107",
+        "course": "CS308",
+        "marks": 4,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "UNDERSTAND"
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Construct a decision table for a loan approval rule that depends on credit score, income and existing debt, and derive the minimum set of test cases."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q108",
+        "course": "CS308",
+        "marks": 6,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "APPLY"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "State Newton's second law of motion."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q109",
+        "course": "PHY101",
+        "marks": 1,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "A 2 kg block is pushed across a frictionless surface by a horizontal force of 10 N. Calculate its acceleration."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q110",
+        "course": "PHY101",
+        "marks": 2,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Explain why a passenger feels pushed backwards when a car accelerates forward."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q111",
+        "course": "PHY101",
+        "marks": 3,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "A 0.5 kg ball is dropped from a height of 20 m. Using energy conservation, determine its speed just before it hits the ground, ignoring air resistance."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q112",
+        "course": "PHY101",
+        "marks": 3,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Which of the following quantities is a scalar? (a) Velocity (b) Force (c) Work (d) Acceleration"
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q113",
+        "course": "PHY101",
+        "marks": 1,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "True or False: The electric field inside a charged conductor in electrostatic equilibrium is zero."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q114",
+        "course": "PHY101",
+        "marks": 1,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "UNDERSTAND"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Compare the behaviour of an ideal gas during an isothermal expansion and an adiabatic expansion, with reference to the first law of thermodynamics."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q115",
+        "course": "PHY101",
+        "marks": 6,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Derive an expression for the magnetic field at the centre of a circular current loop of radius R carrying current I."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q116",
+        "course": "PHY101",
+        "marks": 6,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "ANALYZE"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Briefly explain the concept of power in mechanics."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q117",
+        "course": "PHY101",
+        "marks": 2,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "A block slides down a rough inclined plane at constant velocity. Analyze the forces acting on it and determine the relationship between the coefficient of kinetic friction and the angle of the incline."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q118",
+        "course": "PHY101",
+        "marks": 5,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "APPLY"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Evaluate whether a heat engine operating between 500 K and 300 K can achieve 50% efficiency, and justify your answer using the Carnot limit."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q119",
+        "course": "PHY101",
+        "marks": 4,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Describe Faraday's law of electromagnetic induction and give one everyday application."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q120",
+        "course": "PHY101",
+        "marks": 3,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Define price elasticity of demand."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q121",
+        "course": "ECO101",
+        "marks": 1,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Explain what happens to equilibrium price and quantity when the supply of a good decreases while demand remains unchanged."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q122",
+        "course": "ECO101",
+        "marks": 3,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "The price of coffee rises from $4 to $5 and quantity demanded falls from 100 to 80 cups per day. Calculate the price elasticity of demand using the midpoint method and interpret the result."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q123",
+        "course": "ECO101",
+        "marks": 4,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Which of the following is a characteristic of perfect competition? (a) A single seller (b) Differentiated products (c) Many buyers and sellers (d) High barriers to entry"
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q124",
+        "course": "ECO101",
+        "marks": 1,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "True or False: A monopolist can charge any price it wants and still sell any quantity it wants."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q125",
+        "course": "ECO101",
+        "marks": 1,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Compare the long-run outcomes of perfect competition and monopoly in terms of price, output and efficiency."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q126",
+        "course": "ECO101",
+        "marks": 5,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Evaluate the likely effects of a central bank raising interest rates during a period of high inflation and slowing growth, and recommend whether the policy should be pursued."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q127",
+        "course": "ECO101",
+        "marks": 8,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Briefly explain the difference between demand-pull and cost-push inflation."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q128",
+        "course": "ECO101",
+        "marks": 2,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": null
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Why might a government impose a price ceiling, and what unintended consequences can result?"
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q129",
+        "course": "ECO101",
+        "marks": 4,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "UNDERSTAND"
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Draw a supply and demand diagram showing the effect of a per-unit tax on sellers and identify the tax burden borne by consumers and producers."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q130",
+        "course": "ECO101",
+        "marks": 5,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "ANALYZE"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "List two determinants of the price elasticity of supply."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q131",
+        "course": "ECO101",
+        "marks": 2,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Propose a monetary policy package for an economy facing stagflation and justify the trade-offs involved."
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q132",
+        "course": "ECO101",
+        "marks": 8,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "EVALUATE"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Q3. In your own words, what does it mean for a schedule to be recoverable?"
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q133",
+        "course": "CS301",
+        "marks": 2,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "2(b) Your colleague trains a model for 500 epochs and reports 100% training accuracy. What would you check before trusting the model, and why?"
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q134",
+        "course": "CS402",
+        "marks": 4,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "ANALYZE"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Is it possible for a graph with negative edge weights to be handled correctly by Dijkstra's algorithm? Give reasons."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q135",
+        "course": "CS201",
+        "marks": 3,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "UNDERSTAND"
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Suppose two processes each hold one resource and request the other. Name the situation and describe one way the operating system could recover."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q136",
+        "course": "CS305",
+        "marks": 3,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "APPLY"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Assume a router receives a packet whose TTL is 1. What action does it take and which ICMP message, if any, is sent?"
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q137",
+        "course": "CS306",
+        "marks": 2,
+        "label_confidence": "LOW",
+        "secondary_cognitive_level": "REMEMBER"
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "A customer keeps changing their mind about features every week. Which process model would you adopt and how would you manage scope?"
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q138",
+        "course": "CS308",
+        "marks": 4,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "EVALUATE"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Two identical charges repel each other with a force F. If the distance between them is doubled, what is the new force?"
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q139",
+        "course": "PHY101",
+        "marks": 2,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Sketch the demand curve for a good with perfectly inelastic demand and give one real-world example."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q140",
+        "course": "ECO101",
+        "marks": 2,
+        "label_confidence": "LOW",
+        "secondary_cognitive_level": "APPLY"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Select the correct option: Which SQL clause is used to filter groups? a) WHERE b) HAVING c) GROUP BY d) ORDER BY"
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q141",
+        "course": "CS301",
+        "marks": 1,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": null
+      },
+      "split": "DEV"
+    },
+    {
+      "input_data": {
+        "question": "Fill in the blank and justify: Increasing the regularization parameter lambda in ridge regression generally ______ the variance of the model."
+      },
+      "expected_output": {
+        "expected_difficulty": "MEDIUM"
+      },
+      "metadata": {
+        "benchmark_id": "Q142",
+        "course": "CS402",
+        "marks": 2,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": "ANALYZE"
+      },
+      "split": "TEST"
+    },
+    {
+      "input_data": {
+        "question": "Argue for or against the claim: 'Hash tables make balanced binary search trees obsolete.'"
+      },
+      "expected_output": {
+        "expected_difficulty": "HARD"
+      },
+      "metadata": {
+        "benchmark_id": "Q143",
+        "course": "CS201",
+        "marks": 6,
+        "label_confidence": "MEDIUM",
+        "secondary_cognitive_level": null
+      },
+      "split": "VALIDATION"
+    },
+    {
+      "input_data": {
+        "question": "Short notes: thrashing."
+      },
+      "expected_output": {
+        "expected_difficulty": "EASY"
+      },
+      "metadata": {
+        "benchmark_id": "Q144",
+        "course": "CS305",
+        "marks": 2,
+        "label_confidence": "HIGH",
+        "secondary_cognitive_level": "REMEMBER"
+      },
+      "split": "TEST"
+    }
+  ]
+}

@@ -1,0 +1,940 @@
+[
+  {
+    "id": "Q002",
+    "expected": "SQL Queries",
+    "acceptable": [
+      "SQL Queries"
+    ],
+    "predicted": [
+      "SQL Queries"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q004",
+    "expected": "SQL Queries",
+    "acceptable": [
+      "SQL Queries"
+    ],
+    "predicted": [
+      "SQL Queries"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q006",
+    "expected": "Transactions and Concurrency Control",
+    "acceptable": [
+      "Transactions and Concurrency Control"
+    ],
+    "predicted": [
+      "Transactions and Concurrency Control"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q008",
+    "expected": "Indexing and Query Processing",
+    "acceptable": [
+      "Indexing and Query Processing"
+    ],
+    "predicted": [
+      "Indexing and Query Processing"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q010",
+    "expected": "Entity-Relationship Modeling",
+    "acceptable": [
+      "Entity-Relationship Modeling"
+    ],
+    "predicted": [
+      "Entity-Relationship Modeling"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q012",
+    "expected": "Transactions and Concurrency Control",
+    "acceptable": [
+      "Transactions and Concurrency Control"
+    ],
+    "predicted": [
+      "Transactions and Concurrency Control"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q014",
+    "expected": "SQL Queries",
+    "acceptable": [
+      "SQL Queries"
+    ],
+    "predicted": [
+      "Relational Model and Keys",
+      "SQL Queries",
+      "Entity-Relationship Modeling"
+    ],
+    "top1_correct": false,
+    "top3_correct": true
+  },
+  {
+    "id": "Q016",
+    "expected": "Normalization",
+    "acceptable": [
+      "Normalization"
+    ],
+    "predicted": [
+      "Normalization"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q018",
+    "expected": "Indexing and Query Processing",
+    "acceptable": [
+      "Indexing and Query Processing"
+    ],
+    "predicted": [
+      "Indexing and Query Processing"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q020",
+    "expected": "Regression Models",
+    "acceptable": [
+      "Regression Models"
+    ],
+    "predicted": [
+      "Regression Models"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q022",
+    "expected": "Decision Trees and Ensembles",
+    "acceptable": [
+      "Decision Trees and Ensembles"
+    ],
+    "predicted": [
+      "Clustering"
+    ],
+    "top1_correct": false,
+    "top3_correct": false
+  },
+  {
+    "id": "Q024",
+    "expected": "Neural Networks",
+    "acceptable": [
+      "Neural Networks"
+    ],
+    "predicted": [
+      "Neural Networks"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q026",
+    "expected": "Clustering",
+    "acceptable": [
+      "Clustering"
+    ],
+    "predicted": [
+      "Clustering",
+      "Supervised and Unsupervised Learning",
+      "Decision Trees and Ensembles"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q028",
+    "expected": "Regression Models",
+    "acceptable": [
+      "Regression Models"
+    ],
+    "predicted": [
+      "Regression Models"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q030",
+    "expected": "Decision Trees and Ensembles",
+    "acceptable": [
+      "Decision Trees and Ensembles"
+    ],
+    "predicted": [
+      "Decision Trees and Ensembles",
+      "Model Evaluation and Overfitting",
+      "Clustering"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q032",
+    "expected": "Model Evaluation and Overfitting",
+    "acceptable": [
+      "Model Evaluation and Overfitting",
+      "Regression Models"
+    ],
+    "predicted": [
+      "Model Evaluation and Overfitting"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q034",
+    "expected": "Supervised and Unsupervised Learning",
+    "acceptable": [
+      "Supervised and Unsupervised Learning"
+    ],
+    "predicted": [
+      "Clustering",
+      "Supervised and Unsupervised Learning",
+      "Decision Trees and Ensembles"
+    ],
+    "top1_correct": false,
+    "top3_correct": true
+  },
+  {
+    "id": "Q036",
+    "expected": "Clustering",
+    "acceptable": [
+      "Clustering",
+      "Model Evaluation and Overfitting"
+    ],
+    "predicted": [
+      "Clustering",
+      "Supervised and Unsupervised Learning",
+      "Decision Trees and Ensembles"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q038",
+    "expected": "Arrays and Linked Lists",
+    "acceptable": [
+      "Arrays and Linked Lists"
+    ],
+    "predicted": [
+      "Arrays and Linked Lists",
+      "Algorithm Complexity",
+      "Graph Algorithms"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q040",
+    "expected": "Trees and Heaps",
+    "acceptable": [
+      "Trees and Heaps"
+    ],
+    "predicted": [
+      "Trees and Heaps",
+      "Algorithm Complexity"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q042",
+    "expected": "Graph Algorithms",
+    "acceptable": [
+      "Graph Algorithms"
+    ],
+    "predicted": [
+      "Graph Algorithms",
+      "Algorithm Complexity"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q044",
+    "expected": "Sorting and Searching",
+    "acceptable": [
+      "Algorithm Complexity",
+      "Sorting and Searching"
+    ],
+    "predicted": [
+      "Sorting and Searching",
+      "Algorithm Complexity",
+      "Trees and Heaps"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q046",
+    "expected": "Algorithm Complexity",
+    "acceptable": [
+      "Algorithm Complexity"
+    ],
+    "predicted": [
+      "Algorithm Complexity"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q048",
+    "expected": "Trees and Heaps",
+    "acceptable": [
+      "Trees and Heaps"
+    ],
+    "predicted": [
+      "Trees and Heaps"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q050",
+    "expected": "Graph Algorithms",
+    "acceptable": [
+      "Graph Algorithms"
+    ],
+    "predicted": [
+      "Graph Algorithms",
+      "Algorithm Complexity"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q052",
+    "expected": "Arrays and Linked Lists",
+    "acceptable": [
+      "Arrays and Linked Lists"
+    ],
+    "predicted": [
+      "Arrays and Linked Lists",
+      "Trees and Heaps"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q054",
+    "expected": "Graph Algorithms",
+    "acceptable": [
+      "Graph Algorithms"
+    ],
+    "predicted": [
+      "Graph Algorithms",
+      "Sorting and Searching"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q056",
+    "expected": "Process Management and Scheduling",
+    "acceptable": [
+      "Process Management and Scheduling"
+    ],
+    "predicted": [
+      "Process Management and Scheduling"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q058",
+    "expected": "Memory Management and Virtual Memory",
+    "acceptable": [
+      "Memory Management and Virtual Memory"
+    ],
+    "predicted": [
+      "Memory Management and Virtual Memory"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q060",
+    "expected": "Deadlocks and Synchronization",
+    "acceptable": [
+      "Deadlocks and Synchronization",
+      "Threads and Concurrency"
+    ],
+    "predicted": [
+      "Threads and Concurrency",
+      "Process Management and Scheduling"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q062",
+    "expected": "Threads and Concurrency",
+    "acceptable": [
+      "Threads and Concurrency"
+    ],
+    "predicted": [
+      "Threads and Concurrency",
+      "Deadlocks and Synchronization",
+      "Process Management and Scheduling"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q064",
+    "expected": "Process Management and Scheduling",
+    "acceptable": [
+      "Process Management and Scheduling"
+    ],
+    "predicted": [
+      "Process Management and Scheduling",
+      "Deadlocks and Synchronization",
+      "Threads and Concurrency"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q066",
+    "expected": "Deadlocks and Synchronization",
+    "acceptable": [
+      "Deadlocks and Synchronization",
+      "Threads and Concurrency"
+    ],
+    "predicted": [
+      "Threads and Concurrency",
+      "Deadlocks and Synchronization"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q068",
+    "expected": "Process Management and Scheduling",
+    "acceptable": [
+      "Process Management and Scheduling"
+    ],
+    "predicted": [
+      "Process Management and Scheduling",
+      "Memory Management and Virtual Memory",
+      "Threads and Concurrency"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q070",
+    "expected": "Process Management and Scheduling",
+    "acceptable": [
+      "Process Management and Scheduling"
+    ],
+    "predicted": [
+      "Threads and Concurrency"
+    ],
+    "top1_correct": false,
+    "top3_correct": false
+  },
+  {
+    "id": "Q072",
+    "expected": "Threads and Concurrency",
+    "acceptable": [
+      "Threads and Concurrency"
+    ],
+    "predicted": [
+      "Threads and Concurrency",
+      "Deadlocks and Synchronization",
+      "Process Management and Scheduling"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q074",
+    "expected": "Transport Layer and Congestion Control",
+    "acceptable": [
+      "Transport Layer and Congestion Control"
+    ],
+    "predicted": [
+      "OSI and TCP/IP Models",
+      "Application Layer Protocols",
+      "Transport Layer and Congestion Control"
+    ],
+    "top1_correct": false,
+    "top3_correct": true
+  },
+  {
+    "id": "Q076",
+    "expected": "Application Layer Protocols",
+    "acceptable": [
+      "Application Layer Protocols"
+    ],
+    "predicted": [
+      "Application Layer Protocols",
+      "Routing Algorithms"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q078",
+    "expected": "Transport Layer and Congestion Control",
+    "acceptable": [
+      "Transport Layer and Congestion Control"
+    ],
+    "predicted": [
+      "OSI and TCP/IP Models",
+      "Application Layer Protocols",
+      "Transport Layer and Congestion Control"
+    ],
+    "top1_correct": false,
+    "top3_correct": true
+  },
+  {
+    "id": "Q080",
+    "expected": "Transport Layer and Congestion Control",
+    "acceptable": [
+      "Transport Layer and Congestion Control"
+    ],
+    "predicted": [
+      "Transport Layer and Congestion Control",
+      "OSI and TCP/IP Models",
+      "Application Layer Protocols"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q082",
+    "expected": "Routing Algorithms",
+    "acceptable": [
+      "Routing Algorithms"
+    ],
+    "predicted": [
+      "Routing Algorithms"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q084",
+    "expected": "Network Security",
+    "acceptable": [
+      "Network Security"
+    ],
+    "predicted": [
+      "Network Security",
+      "OSI and TCP/IP Models",
+      "Application Layer Protocols"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q086",
+    "expected": "Network Security",
+    "acceptable": [
+      "Network Security",
+      "Transport Layer and Congestion Control"
+    ],
+    "predicted": [
+      "OSI and TCP/IP Models",
+      "Network Security",
+      "Application Layer Protocols"
+    ],
+    "top1_correct": false,
+    "top3_correct": true
+  },
+  {
+    "id": "Q088",
+    "expected": "Transport Layer and Congestion Control",
+    "acceptable": [
+      "Transport Layer and Congestion Control"
+    ],
+    "predicted": [
+      "Transport Layer and Congestion Control",
+      "OSI and TCP/IP Models"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q090",
+    "expected": "Routing Algorithms",
+    "acceptable": [
+      "Routing Algorithms"
+    ],
+    "predicted": [
+      "Routing Algorithms"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q092",
+    "expected": "Software Process Models",
+    "acceptable": [
+      "Software Process Models"
+    ],
+    "predicted": [
+      "Agile Methods",
+      "Software Process Models",
+      "Requirements Engineering"
+    ],
+    "top1_correct": false,
+    "top3_correct": true
+  },
+  {
+    "id": "Q094",
+    "expected": "Software Testing",
+    "acceptable": [
+      "Software Testing"
+    ],
+    "predicted": [
+      "Software Testing"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q096",
+    "expected": "Agile Methods",
+    "acceptable": [
+      "Agile Methods"
+    ],
+    "predicted": [
+      "Agile Methods"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q098",
+    "expected": "Agile Methods",
+    "acceptable": [
+      "Agile Methods"
+    ],
+    "predicted": [
+      "Agile Methods"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q100",
+    "expected": "Requirements Engineering",
+    "acceptable": [
+      "Requirements Engineering"
+    ],
+    "predicted": [
+      "Requirements Engineering"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q102",
+    "expected": "Design Patterns",
+    "acceptable": [
+      "Design Patterns"
+    ],
+    "predicted": [
+      "Design Patterns"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q104",
+    "expected": "Agile Methods",
+    "acceptable": [
+      "Agile Methods"
+    ],
+    "predicted": [
+      "Requirements Engineering",
+      "Software Testing"
+    ],
+    "top1_correct": false,
+    "top3_correct": false
+  },
+  {
+    "id": "Q106",
+    "expected": "Software Testing",
+    "acceptable": [
+      "Software Testing"
+    ],
+    "predicted": [
+      "Software Testing"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q108",
+    "expected": "Software Testing",
+    "acceptable": [
+      "Software Testing"
+    ],
+    "predicted": [
+      "Software Testing",
+      "Requirements Engineering"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q110",
+    "expected": "Newton's Laws of Motion",
+    "acceptable": [
+      "Newton's Laws of Motion"
+    ],
+    "predicted": [
+      "Newton's Laws of Motion"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q112",
+    "expected": "Work, Energy and Power",
+    "acceptable": [
+      "Work, Energy and Power"
+    ],
+    "predicted": [
+      "Newton's Laws of Motion",
+      "Work, Energy and Power"
+    ],
+    "top1_correct": false,
+    "top3_correct": true
+  },
+  {
+    "id": "Q114",
+    "expected": "Electromagnetism",
+    "acceptable": [
+      "Electromagnetism"
+    ],
+    "predicted": [
+      "Electromagnetism"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q116",
+    "expected": "Electromagnetism",
+    "acceptable": [
+      "Electromagnetism"
+    ],
+    "predicted": [
+      "Electromagnetism"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q118",
+    "expected": "Newton's Laws of Motion",
+    "acceptable": [
+      "Newton's Laws of Motion"
+    ],
+    "predicted": [
+      "Newton's Laws of Motion"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q120",
+    "expected": "Electromagnetism",
+    "acceptable": [
+      "Electromagnetism"
+    ],
+    "predicted": [
+      "Electromagnetism",
+      "Work, Energy and Power"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q122",
+    "expected": "Supply and Demand",
+    "acceptable": [
+      "Supply and Demand"
+    ],
+    "predicted": [
+      "Supply and Demand",
+      "Market Structures",
+      "Inflation and Monetary Policy"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q124",
+    "expected": "Market Structures",
+    "acceptable": [
+      "Market Structures"
+    ],
+    "predicted": [
+      "Market Structures",
+      "Supply and Demand"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q126",
+    "expected": "Market Structures",
+    "acceptable": [
+      "Market Structures"
+    ],
+    "predicted": [
+      "Supply and Demand",
+      "Market Structures"
+    ],
+    "top1_correct": false,
+    "top3_correct": true
+  },
+  {
+    "id": "Q128",
+    "expected": "Inflation and Monetary Policy",
+    "acceptable": [
+      "Inflation and Monetary Policy"
+    ],
+    "predicted": [
+      "Inflation and Monetary Policy",
+      "Supply and Demand"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q130",
+    "expected": "Supply and Demand",
+    "acceptable": [
+      "Elasticity",
+      "Supply and Demand"
+    ],
+    "predicted": [
+      "Supply and Demand",
+      "Market Structures"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q132",
+    "expected": "Inflation and Monetary Policy",
+    "acceptable": [
+      "Inflation and Monetary Policy"
+    ],
+    "predicted": [
+      "Inflation and Monetary Policy",
+      "Supply and Demand"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q134",
+    "expected": "Model Evaluation and Overfitting",
+    "acceptable": [
+      "Model Evaluation and Overfitting"
+    ],
+    "predicted": [
+      "Model Evaluation and Overfitting",
+      "Neural Networks"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q136",
+    "expected": "Deadlocks and Synchronization",
+    "acceptable": [
+      "Deadlocks and Synchronization"
+    ],
+    "predicted": [
+      "Process Management and Scheduling",
+      "File Systems",
+      "Deadlocks and Synchronization"
+    ],
+    "top1_correct": false,
+    "top3_correct": true
+  },
+  {
+    "id": "Q138",
+    "expected": "Software Process Models",
+    "acceptable": [
+      "Agile Methods",
+      "Software Process Models"
+    ],
+    "predicted": [
+      "Software Process Models",
+      "Agile Methods",
+      "Requirements Engineering"
+    ],
+    "top1_correct": true,
+    "top3_correct": true
+  },
+  {
+    "id": "Q140",
+    "expected": "Elasticity",
+    "acceptable": [
+      "Elasticity"
+    ],
+    "predicted": [
+      "Supply and Demand",
+      "Elasticity",
+      "Market Structures"
+    ],
+    "top1_correct": false,
+    "top3_correct": true
+  },
+  {
+    "id": "Q142",
+    "expected": "Model Evaluation and Overfitting",
+    "acceptable": [
+      "Model Evaluation and Overfitting",
+      "Regression Models"
+    ],
+    "predicted": [
+      "Fill",
+      "Blank",
+      "Justify"
+    ],
+    "top1_correct": false,
+    "top3_correct": false
+  },
+  {
+    "id": "Q144",
+    "expected": "Memory Management and Virtual Memory",
+    "acceptable": [
+      "Memory Management and Virtual Memory"
+    ],
+    "predicted": [
+      "Threads and Concurrency",
+      "Memory Management and Virtual Memory",
+      "Process Management and Scheduling"
+    ],
+    "top1_correct": false,
+    "top3_correct": true
+  }
+]

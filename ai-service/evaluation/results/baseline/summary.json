@@ -1,0 +1,478 @@
+{
+  "run_id": "20260912T201206Z",
+  "evaluated_at": "2026-09-12T20:12:15Z",
+  "split": "TEST",
+  "seconds_per_component": {
+    "question_analysis": 0.77,
+    "lo_alignment": 1.25,
+    "similarity": 0.53,
+    "rag": 0.23,
+    "grading": 0.5,
+    "rubric": 0.31,
+    "question_generation": 0.27,
+    "assessment_quality": 0.03,
+    "consistency": 5.72
+  },
+  "components": [
+    {
+      "component": "QUESTION_CLASSIFICATION",
+      "status": "ACCEPTABLE",
+      "sample_size": 72,
+      "headline": {
+        "metric": "macro_f1",
+        "value": 0.7525,
+        "ci95": [
+          0.6579,
+          0.8295
+        ],
+        "higher_is_better": true,
+        "sample_size": 72
+      },
+      "failure_rate": 0.0,
+      "latency_ms": {
+        "count": 72,
+        "mean_ms": 8.27,
+        "p50_ms": 7.51,
+        "p95_ms": 16.08,
+        "max_ms": 20.71
+      },
+      "error_breakdown": {
+        "WRONG_CLASSIFICATION": 24
+      },
+      "human_review_status": null
+    },
+    {
+      "component": "DIFFICULTY_CLASSIFICATION",
+      "status": "NEEDS_IMPROVEMENT",
+      "sample_size": 72,
+      "headline": {
+        "metric": "macro_f1",
+        "value": 0.5594,
+        "ci95": [
+          0.4271,
+          0.6686
+        ],
+        "higher_is_better": true,
+        "sample_size": 72
+      },
+      "failure_rate": 0.0,
+      "latency_ms": {
+        "count": 72,
+        "mean_ms": 8.27,
+        "p50_ms": 7.51,
+        "p95_ms": 16.08,
+        "max_ms": 20.71
+      },
+      "error_breakdown": {
+        "WRONG_DIFFICULTY": 31
+      },
+      "human_review_status": null
+    },
+    {
+      "component": "BLOOM_CLASSIFICATION",
+      "status": "ACCEPTABLE",
+      "sample_size": 72,
+      "headline": {
+        "metric": "macro_f1",
+        "value": 0.6364,
+        "ci95": [
+          0.504,
+          0.7361
+        ],
+        "higher_is_better": true,
+        "sample_size": 72
+      },
+      "failure_rate": 0.0,
+      "latency_ms": {
+        "count": 72,
+        "mean_ms": 8.27,
+        "p50_ms": 7.51,
+        "p95_ms": 16.08,
+        "max_ms": 20.71
+      },
+      "error_breakdown": {
+        "WRONG_BLOOM_LEVEL": 30
+      },
+      "human_review_status": null
+    },
+    {
+      "component": "TOPIC_DETECTION",
+      "status": "ACCEPTABLE",
+      "sample_size": 72,
+      "headline": {
+        "metric": "top1_accuracy",
+        "value": 0.7916666666666666,
+        "ci95": [
+          0.6843,
+          0.8695
+        ],
+        "higher_is_better": true,
+        "sample_size": 72
+      },
+      "failure_rate": 0.0,
+      "latency_ms": {
+        "count": 72,
+        "mean_ms": 8.27,
+        "p50_ms": 7.51,
+        "p95_ms": 16.08,
+        "max_ms": 20.71
+      },
+      "error_breakdown": {
+        "WRONG_TOPIC": 15
+      },
+      "human_review_status": null
+    },
+    {
+      "component": "LO_ALIGNMENT",
+      "status": "NEEDS_IMPROVEMENT",
+      "sample_size": 86,
+      "headline": {
+        "metric": "band_agreement",
+        "value": 0.314,
+        "ci95": [
+          0.2093,
+          0.407
+        ],
+        "higher_is_better": true,
+        "sample_size": 86
+      },
+      "failure_rate": 0.0,
+      "latency_ms": {
+        "count": 157,
+        "mean_ms": 6.1,
+        "p50_ms": 6.7,
+        "p95_ms": 13.04,
+        "max_ms": 14.03
+      },
+      "error_breakdown": {
+        "WRONG_LO_ALIGNMENT": 76
+      },
+      "human_review_status": null
+    },
+    {
+      "component": "SEMANTIC_SIMILARITY",
+      "status": "EXCELLENT",
+      "sample_size": 60,
+      "headline": {
+        "metric": "spearman",
+        "value": 0.9252,
+        "ci95": [
+          0.8708,
+          0.9516
+        ],
+        "higher_is_better": true,
+        "sample_size": 60
+      },
+      "failure_rate": 0.0,
+      "latency_ms": {
+        "count": 60,
+        "mean_ms": 3.83,
+        "p50_ms": 4.89,
+        "p95_ms": 10.7,
+        "max_ms": 12.43
+      },
+      "error_breakdown": {
+        "MISSED_SIMILARITY": 28,
+        "FALSE_SIMILARITY": 1
+      },
+      "human_review_status": null
+    },
+    {
+      "component": "QUESTION_BANK_RETRIEVAL",
+      "status": "GOOD",
+      "sample_size": 24,
+      "headline": {
+        "metric": "recall_at_5",
+        "value": 0.9444,
+        "ci95": [
+          0.69,
+          0.9566
+        ],
+        "higher_is_better": true,
+        "sample_size": 24
+      },
+      "failure_rate": 0.0,
+      "latency_ms": {
+        "count": 24,
+        "mean_ms": 9.81,
+        "p50_ms": 8.37,
+        "p95_ms": 9.35,
+        "max_ms": 50.57
+      },
+      "error_breakdown": {
+        "FALSE_SIMILARITY": 3
+      },
+      "human_review_status": null
+    },
+    {
+      "component": "RAG_RETRIEVAL",
+      "status": "EXCELLENT",
+      "sample_size": 20,
+      "headline": {
+        "metric": "recall_at_5",
+        "value": 1.0,
+        "ci95": [
+          0.8389,
+          1.0
+        ],
+        "higher_is_better": true,
+        "sample_size": 20
+      },
+      "failure_rate": 0.0,
+      "latency_ms": {
+        "count": 24,
+        "mean_ms": 6.12,
+        "p50_ms": 5.98,
+        "p95_ms": 6.79,
+        "max_ms": 8.2
+      },
+      "error_breakdown": {
+        "MISSED_SIMILARITY": 2
+      },
+      "human_review_status": null
+    },
+    {
+      "component": "RAG_GROUNDING",
+      "status": "GOOD",
+      "sample_size": 24,
+      "headline": {
+        "metric": "grounded_answer_rate",
+        "value": 0.9,
+        "ci95": [
+          0.699,
+          0.9721
+        ],
+        "higher_is_better": true,
+        "sample_size": 24
+      },
+      "failure_rate": 0.0,
+      "latency_ms": {
+        "count": 24,
+        "mean_ms": 0.12,
+        "p50_ms": 0.11,
+        "p95_ms": 0.23,
+        "max_ms": 0.27
+      },
+      "error_breakdown": {
+        "UNSUPPORTED_CLAIM": 4
+      },
+      "human_review_status": null
+    },
+    {
+      "component": "AI_GRADING",
+      "status": "NEEDS_IMPROVEMENT",
+      "sample_size": 24,
+      "headline": {
+        "metric": "mae_normalized",
+        "value": 0.1655,
+        "ci95": [
+          0.1094,
+          0.2316
+        ],
+        "higher_is_better": false,
+        "sample_size": 24
+      },
+      "failure_rate": 0.0,
+      "latency_ms": {
+        "count": 24,
+        "mean_ms": 18.88,
+        "p50_ms": 10.92,
+        "p95_ms": 47.22,
+        "max_ms": 49.31
+      },
+      "error_breakdown": {
+        "GRADING_ERROR": 7
+      },
+      "human_review_status": null
+    },
+    {
+      "component": "RUBRIC_GENERATION",
+      "status": "EXCELLENT",
+      "sample_size": 50,
+      "headline": {
+        "metric": "constraint_satisfaction_rate",
+        "value": 1.0,
+        "ci95": [
+          0.9286,
+          1.0
+        ],
+        "higher_is_better": true,
+        "sample_size": 50
+      },
+      "failure_rate": 0.0,
+      "latency_ms": {
+        "count": 50,
+        "mean_ms": 6.17,
+        "p50_ms": 6.67,
+        "p95_ms": 9.51,
+        "max_ms": 10.74
+      },
+      "error_breakdown": {},
+      "human_review_status": "NOT_EVALUATED"
+    },
+    {
+      "component": "QUESTION_GENERATION",
+      "status": "EXCELLENT",
+      "sample_size": 55,
+      "headline": {
+        "metric": "constraint_satisfaction_rate",
+        "value": 0.9819,
+        "ci95": [
+          0.9671,
+          0.9902
+        ],
+        "higher_is_better": true,
+        "sample_size": 55
+      },
+      "failure_rate": 0.0,
+      "latency_ms": {
+        "count": 26,
+        "mean_ms": 10.13,
+        "p50_ms": 9.6,
+        "p95_ms": 14.5,
+        "max_ms": 19.12
+      },
+      "error_breakdown": {
+        "CONSTRAINT_VIOLATION": 10
+      },
+      "human_review_status": "NOT_EVALUATED"
+    },
+    {
+      "component": "ASSESSMENT_QUALITY",
+      "status": "ACCEPTABLE",
+      "sample_size": 8,
+      "headline": {
+        "metric": "flag_agreement",
+        "value": 0.75,
+        "ci95": [
+          0.6122,
+          0.8508
+        ],
+        "higher_is_better": true,
+        "sample_size": 8
+      },
+      "failure_rate": 0.0,
+      "latency_ms": {
+        "count": 8,
+        "mean_ms": 2.57,
+        "p50_ms": 2.53,
+        "p95_ms": 4.34,
+        "max_ms": 4.34
+      },
+      "error_breakdown": {
+        "WRONG_CLASSIFICATION": 12
+      },
+      "human_review_status": null
+    },
+    {
+      "component": "RECOMMENDATIONS",
+      "status": "ACCEPTABLE",
+      "sample_size": 8,
+      "headline": {
+        "metric": "category_f1",
+        "value": 0.72,
+        "ci95": [
+          0.5366,
+          0.8276
+        ],
+        "higher_is_better": true,
+        "sample_size": 8
+      },
+      "failure_rate": 0.0,
+      "latency_ms": {
+        "count": 8,
+        "mean_ms": 2.57,
+        "p50_ms": 2.53,
+        "p95_ms": 4.34,
+        "max_ms": 4.34
+      },
+      "error_breakdown": {
+        "WRONG_CLASSIFICATION": 14
+      },
+      "human_review_status": "NOT_EVALUATED"
+    },
+    {
+      "component": "CONSISTENCY",
+      "status": "EXCELLENT",
+      "sample_size": 174,
+      "headline": {
+        "metric": "label_consistency",
+        "value": 1.0,
+        "ci95": [
+          0.9784,
+          1.0
+        ],
+        "higher_is_better": true,
+        "sample_size": 174
+      },
+      "failure_rate": 0.0,
+      "latency_ms": {},
+      "error_breakdown": {},
+      "human_review_status": null
+    }
+  ],
+  "error_taxonomy": {
+    "WRONG_CLASSIFICATION": "Question type differs from the expert label.",
+    "WRONG_DIFFICULTY": "Difficulty band differs from the expert label.",
+    "WRONG_BLOOM_LEVEL": "Bloom level differs from the expert label (and from any secondary label).",
+    "WRONG_TOPIC": "Top detected topic is not in the expert's acceptable topic set.",
+    "WRONG_LO_ALIGNMENT": "Alignment band (STRONG/WEAK/NOT_ALIGNED) or top-ranked LO differs from the expert label.",
+    "FALSE_SIMILARITY": "Pair rated more similar than the expert label (e.g. NOT_SIMILAR predicted as HIGHLY_SIMILAR).",
+    "MISSED_SIMILARITY": "Pair rated less similar than the expert label (e.g. a duplicate not flagged).",
+    "UNSUPPORTED_CLAIM": "Answer content is not supported by the cited/retrieved evidence, or an answer was given where none exists.",
+    "HALLUCINATION": "Generated content introduces terms or facts absent from the grounding documents.",
+    "WRONG_CITATION": "Citation is missing, points to the wrong chunk/document, or does not support the claim.",
+    "WRONG_RUBRIC": "Rubric fails structural validity (marks sum, empty/duplicate criteria, criterion count).",
+    "CONSTRAINT_VIOLATION": "Generated question violates a requested constraint (type, difficulty, Bloom, marks, topic, LO, language, similarity).",
+    "GRADING_ERROR": "Absolute difference between AI and faculty marks exceeds the large-error threshold.",
+    "INCONSISTENT_OUTPUT": "Repeated identical inputs produced different labels/scores beyond tolerance.",
+    "TIMEOUT": "Inference exceeded the per-example time budget.",
+    "MODEL_FAILURE": "Inference raised an exception or returned an invalid payload."
+  },
+  "predictions": {
+    "dir": "predictions\\20260912T201206Z",
+    "counts": {
+      "QUESTION_CLASSIFICATION": 72,
+      "DIFFICULTY_CLASSIFICATION": 72,
+      "BLOOM_CLASSIFICATION": 72,
+      "TOPIC_DETECTION": 72,
+      "LO_ALIGNMENT_PAIRS": 86,
+      "LO_ALIGNMENT_RANKING": 71,
+      "SEMANTIC_SIMILARITY": 60,
+      "QUESTION_BANK_RETRIEVAL": 24,
+      "RAG": 24,
+      "AI_GRADING": 24,
+      "RUBRIC_GENERATION": 50,
+      "QUESTION_GENERATION": 55,
+      "ASSESSMENT_QUALITY": 8
+    }
+  },
+  "human_reviews": {
+    "RECOMMENDATIONS": {
+      "status": "NOT_EVALUATED",
+      "reviews": 0,
+      "note": "No completed faculty review forms found (labels/HUMAN_REVIEW_FORM.md). Human quality is not inferred from automated checks."
+    },
+    "RUBRIC_GENERATION": {
+      "status": "NOT_EVALUATED",
+      "reviews": 0,
+      "note": "No completed faculty review forms found (labels/HUMAN_REVIEW_FORM.md). Human quality is not inferred from automated checks."
+    },
+    "QUESTION_GENERATION": {
+      "status": "NOT_EVALUATED",
+      "reviews": 0,
+      "note": "No completed faculty review forms found (labels/HUMAN_REVIEW_FORM.md). Human quality is not inferred from automated checks."
+    },
+    "RAG_GROUNDING": {
+      "status": "NOT_EVALUATED",
+      "reviews": 0,
+      "note": "No completed faculty review forms found (labels/HUMAN_REVIEW_FORM.md). Human quality is not inferred from automated checks."
+    },
+    "AI_GRADING": {
+      "status": "NOT_EVALUATED",
+      "reviews": 0,
+      "note": "No completed faculty review forms found (labels/HUMAN_REVIEW_FORM.md). Human quality is not inferred from automated checks."
+    }
+  },
+  "faculty_acceptance_note": "Faculty acceptance / override signals live in the Laravel STEP 35 dashboard (production data) and are deliberately not mixed into these accuracy metrics."
+}

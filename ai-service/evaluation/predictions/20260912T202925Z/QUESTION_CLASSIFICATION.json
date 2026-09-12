@@ -1,0 +1,650 @@
+[
+  {
+    "id": "Q002",
+    "expected": "MCQ",
+    "predicted": "MCQ",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.92,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q004",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "CONCEPTUAL",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.85,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q006",
+    "expected": "ANALYTICAL",
+    "predicted": "ANALYTICAL",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.87,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q008",
+    "expected": "SHORT_ANSWER",
+    "predicted": "SHORT_ANSWER",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.84,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q010",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "DESCRIPTIVE",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.7,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q012",
+    "expected": "DESCRIPTIVE",
+    "predicted": "DESCRIPTIVE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.86,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q014",
+    "expected": "CONCEPTUAL",
+    "predicted": "CONCEPTUAL",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.85,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q016",
+    "expected": "MCQ",
+    "predicted": "MCQ",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.92,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q018",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "DESCRIPTIVE",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.86,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q020",
+    "expected": "CONCEPTUAL",
+    "predicted": "CONCEPTUAL",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.85,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q022",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "PROBLEM_SOLVING",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.88,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q024",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "ANALYTICAL",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.87,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q026",
+    "expected": "DESCRIPTIVE",
+    "predicted": "DESCRIPTIVE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.86,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q028",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "PROBLEM_SOLVING",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.88,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q030",
+    "expected": "ANALYTICAL",
+    "predicted": "ANALYTICAL",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.87,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q032",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "DESCRIPTIVE",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.86,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q034",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "PROBLEM_SOLVING",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.88,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q036",
+    "expected": "DESCRIPTIVE",
+    "predicted": "ANALYTICAL",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.87,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q038",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "CONCEPTUAL",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.85,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q040",
+    "expected": "TRUE_FALSE",
+    "predicted": "TRUE_FALSE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.95,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q042",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "DESCRIPTIVE",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.7,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q044",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "DESCRIPTIVE",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.7,
+    "label_confidence": "LOW"
+  },
+  {
+    "id": "Q046",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "PROBLEM_SOLVING",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.88,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q048",
+    "expected": "CONCEPTUAL",
+    "predicted": "CONCEPTUAL",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.85,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q050",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "ANALYTICAL",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.87,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q052",
+    "expected": "ANALYTICAL",
+    "predicted": "ANALYTICAL",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.87,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q054",
+    "expected": "ANALYTICAL",
+    "predicted": "CONCEPTUAL",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.85,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q056",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "PROBLEM_SOLVING",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.88,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q058",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "DESCRIPTIVE",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.86,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q060",
+    "expected": "ANALYTICAL",
+    "predicted": "ANALYTICAL",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.87,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q062",
+    "expected": "TRUE_FALSE",
+    "predicted": "TRUE_FALSE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.95,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q064",
+    "expected": "SHORT_ANSWER",
+    "predicted": "SHORT_ANSWER",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.84,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q066",
+    "expected": "DESCRIPTIVE",
+    "predicted": "SHORT_ANSWER",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.65,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q068",
+    "expected": "DESCRIPTIVE",
+    "predicted": "DESCRIPTIVE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.86,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q070",
+    "expected": "CONCEPTUAL",
+    "predicted": "CONCEPTUAL",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.85,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q072",
+    "expected": "ANALYTICAL",
+    "predicted": "ANALYTICAL",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.87,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q074",
+    "expected": "DESCRIPTIVE",
+    "predicted": "DESCRIPTIVE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.86,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q076",
+    "expected": "MCQ",
+    "predicted": "MCQ",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.92,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q078",
+    "expected": "TRUE_FALSE",
+    "predicted": "TRUE_FALSE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.95,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q080",
+    "expected": "DESCRIPTIVE",
+    "predicted": "DESCRIPTIVE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.86,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q082",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "DESCRIPTIVE",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.7,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q084",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "DESCRIPTIVE",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.7,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q086",
+    "expected": "ANALYTICAL",
+    "predicted": "ANALYTICAL",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.87,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q088",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "PROBLEM_SOLVING",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.88,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q090",
+    "expected": "ANALYTICAL",
+    "predicted": "ANALYTICAL",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.87,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q092",
+    "expected": "ANALYTICAL",
+    "predicted": "ANALYTICAL",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.87,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q094",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "DESCRIPTIVE",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.7,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q096",
+    "expected": "TRUE_FALSE",
+    "predicted": "TRUE_FALSE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.95,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q098",
+    "expected": "SHORT_ANSWER",
+    "predicted": "SHORT_ANSWER",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.84,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q100",
+    "expected": "DESCRIPTIVE",
+    "predicted": "DESCRIPTIVE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.7,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q102",
+    "expected": "ANALYTICAL",
+    "predicted": "CONCEPTUAL",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.85,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q104",
+    "expected": "ANALYTICAL",
+    "predicted": "DESCRIPTIVE",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.7,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q106",
+    "expected": "CONCEPTUAL",
+    "predicted": "CONCEPTUAL",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.85,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q108",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "PROBLEM_SOLVING",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.88,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q110",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "PROBLEM_SOLVING",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.88,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q112",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "DESCRIPTIVE",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.7,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q114",
+    "expected": "TRUE_FALSE",
+    "predicted": "TRUE_FALSE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.95,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q116",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "PROBLEM_SOLVING",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.88,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q118",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "ANALYTICAL",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.87,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q120",
+    "expected": "DESCRIPTIVE",
+    "predicted": "DESCRIPTIVE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.86,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q122",
+    "expected": "DESCRIPTIVE",
+    "predicted": "DESCRIPTIVE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.86,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q124",
+    "expected": "MCQ",
+    "predicted": "MCQ",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.92,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q126",
+    "expected": "ANALYTICAL",
+    "predicted": "ANALYTICAL",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.87,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q128",
+    "expected": "SHORT_ANSWER",
+    "predicted": "SHORT_ANSWER",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.84,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q130",
+    "expected": "PROBLEM_SOLVING",
+    "predicted": "CONCEPTUAL",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.85,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q132",
+    "expected": "DESCRIPTIVE",
+    "predicted": "ANALYTICAL",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.87,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q134",
+    "expected": "DESCRIPTIVE",
+    "predicted": "DESCRIPTIVE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.7,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q136",
+    "expected": "CONCEPTUAL",
+    "predicted": "CONCEPTUAL",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.85,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q138",
+    "expected": "DESCRIPTIVE",
+    "predicted": "DESCRIPTIVE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.7,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q140",
+    "expected": "CONCEPTUAL",
+    "predicted": "DESCRIPTIVE",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.7,
+    "label_confidence": "LOW"
+  },
+  {
+    "id": "Q142",
+    "expected": "SHORT_ANSWER",
+    "predicted": "ANALYTICAL",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": 0.87,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q144",
+    "expected": "SHORT_ANSWER",
+    "predicted": "SHORT_ANSWER",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": 0.84,
+    "label_confidence": "HIGH"
+  }
+]

@@ -1,0 +1,478 @@
+{
+  "component": "AI_GRADING",
+  "status": "NEEDS_IMPROVEMENT",
+  "split": "ALL(benchmark)",
+  "sample_size": 24,
+  "headline": {
+    "metric": "mae_normalized",
+    "value": 0.1655,
+    "ci95": [
+      0.1094,
+      0.2316
+    ],
+    "higher_is_better": false,
+    "sample_size": 24
+  },
+  "metrics": {
+    "mae": 0.625,
+    "rmse": 0.8292,
+    "mean_error": -0.125,
+    "median_error": 0.0,
+    "pearson": 0.8147,
+    "spearman": 0.8222,
+    "mae_normalized": 0.1655,
+    "mae_normalized_ci95": [
+      0.1094,
+      0.2316
+    ],
+    "mae_ci95": [
+      0.4167,
+      0.8542
+    ],
+    "exact_agreement_rate": 0.2083,
+    "within_0_5_marks": 0.5833,
+    "within_1_0_marks": 0.875,
+    "within_2_0_marks": 1.0,
+    "within_10pct_of_total": 0.375,
+    "within_20pct_of_total": 0.7083,
+    "large_error_rate": 0.2917,
+    "ai_mean_marks_fraction": 0.5759,
+    "faculty_mean_marks_fraction": 0.6104
+  },
+  "structured": {
+    "bias_by_group": [
+      {
+        "dimension": "question_type",
+        "group": "ANALYTICAL",
+        "count": 3,
+        "mae": 1.1667,
+        "mean_signed_error": 0.6667
+      },
+      {
+        "dimension": "question_type",
+        "group": "DESCRIPTIVE",
+        "count": 12,
+        "mae": 0.5417,
+        "mean_signed_error": -0.375
+      },
+      {
+        "dimension": "question_type",
+        "group": "PROBLEM_SOLVING",
+        "count": 9,
+        "mae": 0.5556,
+        "mean_signed_error": -0.0556
+      },
+      {
+        "dimension": "difficulty",
+        "group": "EASY",
+        "count": 15,
+        "mae": 0.5,
+        "mean_signed_error": -0.1667
+      },
+      {
+        "dimension": "difficulty",
+        "group": "MEDIUM",
+        "count": 9,
+        "mae": 0.8333,
+        "mean_signed_error": -0.0556
+      },
+      {
+        "dimension": "cognitive_level",
+        "group": "ANALYZE",
+        "count": 3,
+        "mae": 1.1667,
+        "mean_signed_error": 0.6667
+      },
+      {
+        "dimension": "cognitive_level",
+        "group": "APPLY",
+        "count": 9,
+        "mae": 0.5556,
+        "mean_signed_error": -0.0556
+      },
+      {
+        "dimension": "cognitive_level",
+        "group": "UNDERSTAND",
+        "count": 12,
+        "mae": 0.5417,
+        "mean_signed_error": -0.375
+      },
+      {
+        "dimension": "course",
+        "group": "CS201",
+        "count": 3,
+        "mae": 1.1667,
+        "mean_signed_error": 0.6667
+      },
+      {
+        "dimension": "course",
+        "group": "CS301",
+        "count": 3,
+        "mae": 0.4167,
+        "mean_signed_error": -0.4167
+      },
+      {
+        "dimension": "course",
+        "group": "CS305",
+        "count": 3,
+        "mae": 1.0833,
+        "mean_signed_error": -0.25
+      },
+      {
+        "dimension": "course",
+        "group": "CS306",
+        "count": 3,
+        "mae": 0.25,
+        "mean_signed_error": 0.0833
+      },
+      {
+        "dimension": "course",
+        "group": "CS308",
+        "count": 3,
+        "mae": 1.0,
+        "mean_signed_error": -0.6667
+      },
+      {
+        "dimension": "course",
+        "group": "CS402",
+        "count": 3,
+        "mae": 0.5,
+        "mean_signed_error": -0.5
+      },
+      {
+        "dimension": "course",
+        "group": "ECO101",
+        "count": 3,
+        "mae": 0.3333,
+        "mean_signed_error": -0.1667
+      },
+      {
+        "dimension": "course",
+        "group": "PHY101",
+        "count": 3,
+        "mae": 0.25,
+        "mean_signed_error": 0.25
+      },
+      {
+        "dimension": "marks_band",
+        "group": "4-5",
+        "count": 15,
+        "mae": 0.6833,
+        "mean_signed_error": -0.2167
+      },
+      {
+        "dimension": "marks_band",
+        "group": "<=3",
+        "count": 9,
+        "mae": 0.5278,
+        "mean_signed_error": 0.0278
+      },
+      {
+        "dimension": "answer_length",
+        "group": "long(>80w)",
+        "count": 1,
+        "mae": 0.25,
+        "mean_signed_error": -0.25
+      },
+      {
+        "dimension": "answer_length",
+        "group": "medium(40-80w)",
+        "count": 8,
+        "mae": 0.625,
+        "mean_signed_error": -0.625
+      },
+      {
+        "dimension": "answer_length",
+        "group": "short(<40w)",
+        "count": 15,
+        "mae": 0.65,
+        "mean_signed_error": 0.15
+      },
+      {
+        "dimension": "faculty_quality_tier",
+        "group": "PARTIAL",
+        "count": 6,
+        "mae": 0.625,
+        "mean_signed_error": -0.2083
+      },
+      {
+        "dimension": "faculty_quality_tier",
+        "group": "STRONG",
+        "count": 9,
+        "mae": 0.6667,
+        "mean_signed_error": -0.6667
+      },
+      {
+        "dimension": "faculty_quality_tier",
+        "group": "WEAK",
+        "count": 9,
+        "mae": 0.5833,
+        "mean_signed_error": 0.4722
+      }
+    ],
+    "generation_methods": {
+      "embedding_rubric_alignment": 24
+    },
+    "large_error_threshold": ">= 25% of question total",
+    "systematic_patterns": [
+      "AI over-scores question_type = ANALYTICAL answers by 0.67 marks on average (n=3).",
+      "AI over-scores cognitive_level = ANALYZE answers by 0.67 marks on average (n=3).",
+      "AI over-scores course = CS201 answers by 0.67 marks on average (n=3).",
+      "AI under-scores course = CS308 answers by 0.67 marks on average (n=3).",
+      "AI under-scores course = CS402 answers by 0.50 marks on average (n=3).",
+      "AI under-scores answer_length = medium(40-80w) answers by 0.62 marks on average (n=8).",
+      "AI under-scores faculty_quality_tier = STRONG answers by 0.67 marks on average (n=9)."
+    ]
+  },
+  "latency_ms": {
+    "count": 24,
+    "mean_ms": 18.88,
+    "p50_ms": 10.92,
+    "p95_ms": 47.22,
+    "max_ms": 49.31
+  },
+  "failure_count": 0,
+  "failure_rate": 0.0,
+  "error_breakdown": {
+    "GRADING_ERROR": 7
+  },
+  "errors": [
+    {
+      "id": "GB02-A2",
+      "question_id": "Q019",
+      "question": "Explain the difference between supervised and unsupervised learning, giving one example algorithm o…",
+      "answer": "In supervised learning the training data has labels, so the algorithm learns to predict the label from the features, for example logistic regression. Unsupervi…",
+      "faculty_marks": 3.0,
+      "ai_marks": 2.0,
+      "total_marks": 4.0,
+      "signed_error": -1.0,
+      "faculty_rationale": "Supervised definition full; unsupervised definition partially correct (1.0); only the supervised example given (0.5).",
+      "criterion_results": [
+        {
+          "criterion": "Supervised learning",
+          "ai": 1.0,
+          "max": 1.5,
+          "coverage": "PARTIAL"
+        },
+        {
+          "criterion": "Unsupervised learning",
+          "ai": 0.75,
+          "max": 1.5,
+          "coverage": "PARTIAL"
+        },
+        {
+          "criterion": "Examples",
+          "ai": 0.25,
+          "max": 1.0,
+          "coverage": "LIMITED"
+        }
+      ],
+      "error_type": "GRADING_ERROR",
+      "direction": "UNDER"
+    },
+    {
+      "id": "GB03-A1",
+      "question_id": "Q056",
+      "question": "Calculate the average waiting time for the processes P1 (burst 8), P2 (burst 4) and P3 (burst 1), a…",
+      "answer": "Order: P3 (1), P2 (4), P1 (8). Waiting times: P3 = 0, P2 = 1, P1 = 5. Average waiting time = (0 + 1 + 5) / 3 = 2 ms.",
+      "faculty_marks": 3.0,
+      "ai_marks": 1.0,
+      "total_marks": 3.0,
+      "signed_error": -2.0,
+      "faculty_rationale": "Correct order, waiting times and average.",
+      "criterion_results": [
+        {
+          "criterion": "Execution order",
+          "ai": 0.5,
+          "max": 1.0,
+          "coverage": "PARTIAL"
+        },
+        {
+          "criterion": "Waiting times",
+          "ai": 0.25,
+          "max": 1.0,
+          "coverage": "LIMITED"
+        },
+        {
+          "criterion": "Average",
+          "ai": 0.25,
+          "max": 1.0,
+          "coverage": "LIMITED"
+        }
+      ],
+      "error_type": "GRADING_ERROR",
+      "direction": "UNDER"
+    },
+    {
+      "id": "GB03-A3",
+      "question_id": "Q056",
+      "question": "Calculate the average waiting time for the processes P1 (burst 8), P2 (burst 4) and P3 (burst 1), a…",
+      "answer": "P1 runs first because it arrived first, then P2, then P3. Waiting times 0, 8, 12; average = 20 / 3 = 6.67.",
+      "faculty_marks": 0.5,
+      "ai_marks": 1.5,
+      "total_marks": 3.0,
+      "signed_error": 1.0,
+      "faculty_rationale": "Applied FCFS instead of SJF; wrong order and values; 0.5 for showing the averaging method.",
+      "criterion_results": [
+        {
+          "criterion": "Execution order",
+          "ai": 0.75,
+          "max": 1.0,
+          "coverage": "PARTIAL"
+        },
+        {
+          "criterion": "Waiting times",
+          "ai": 0.25,
+          "max": 1.0,
+          "coverage": "LIMITED"
+        },
+        {
+          "criterion": "Average",
+          "ai": 0.5,
+          "max": 1.0,
+          "coverage": "LIMITED"
+        }
+      ],
+      "error_type": "GRADING_ERROR",
+      "direction": "OVER"
+    },
+    {
+      "id": "GB05-A3",
+      "question_id": "Q041",
+      "question": "Compare merge sort and quicksort in terms of worst-case time complexity, space usage and stability.",
+      "answer": "Both are divide and conquer algorithms and both run in O(n log n). Merge sort is faster in practice.",
+      "faculty_marks": 1.0,
+      "ai_marks": 2.75,
+      "total_marks": 5.0,
+      "signed_error": 1.75,
+      "faculty_rationale": "Quicksort worst case wrong, no space or stability discussion; 1 mark for merge sort complexity.",
+      "criterion_results": [
+        {
+          "criterion": "Worst-case time",
+          "ai": 1.5,
+          "max": 2.0,
+          "coverage": "PARTIAL"
+        },
+        {
+          "criterion": "Space usage",
+          "ai": 0.75,
+          "max": 1.5,
+          "coverage": "PARTIAL"
+        },
+        {
+          "criterion": "Stability",
+          "ai": 0.5,
+          "max": 1.5,
+          "coverage": "LIMITED"
+        }
+      ],
+      "error_type": "GRADING_ERROR",
+      "direction": "OVER"
+    },
+    {
+      "id": "GB07-A1",
+      "question_id": "Q095",
+      "question": "Explain the Observer design pattern and give a situation where it should be used.",
+      "answer": "In the Observer pattern a subject maintains a list of observers and notifies each of them automatically whenever its state changes, usually by calling an updat…",
+      "faculty_marks": 4.0,
+      "ai_marks": 2.5,
+      "total_marks": 4.0,
+      "signed_error": -1.5,
+      "faculty_rationale": "Mechanism, coupling and scenario all present.",
+      "criterion_results": [
+        {
+          "criterion": "Roles and mechanism",
+          "ai": 1.5,
+          "max": 2.0,
+          "coverage": "STRONG"
+        },
+        {
+          "criterion": "Coupling",
+          "ai": 0.75,
+          "max": 1.0,
+          "coverage": "PARTIAL"
+        },
+        {
+          "criterion": "Usage scenario",
+          "ai": 0.25,
+          "max": 1.0,
+          "coverage": "LIMITED"
+        }
+      ],
+      "error_type": "GRADING_ERROR",
+      "direction": "UNDER"
+    },
+    {
+      "id": "GB07-A2",
+      "question_id": "Q095",
+      "question": "Explain the Observer design pattern and give a situation where it should be used.",
+      "answer": "The Observer pattern has a subject that keeps a list of observers. When the subject's state changes it notifies all observers so they can update themselves. A …",
+      "faculty_marks": 3.0,
+      "ai_marks": 2.0,
+      "total_marks": 4.0,
+      "signed_error": -1.0,
+      "faculty_rationale": "Roles and scenario correct; no discussion of coupling.",
+      "criterion_results": [
+        {
+          "criterion": "Roles and mechanism",
+          "ai": 1.5,
+          "max": 2.0,
+          "coverage": "STRONG"
+        },
+        {
+          "criterion": "Coupling",
+          "ai": 0.25,
+          "max": 1.0,
+          "coverage": "LIMITED"
+        },
+        {
+          "criterion": "Usage scenario",
+          "ai": 0.25,
+          "max": 1.0,
+          "coverage": "LIMITED"
+        }
+      ],
+      "error_type": "GRADING_ERROR",
+      "direction": "UNDER"
+    },
+    {
+      "id": "GB08-A3",
+      "question_id": "Q112",
+      "question": "A 0.5 kg ball is dropped from a height of 20 m. Using energy conservation, determine its speed just…",
+      "answer": "The speed is 20 m/s because it falls 20 metres.",
+      "faculty_marks": 0.0,
+      "ai_marks": 0.75,
+      "total_marks": 3.0,
+      "signed_error": 0.75,
+      "faculty_rationale": "No energy method; value asserted without physics.",
+      "criterion_results": [
+        {
+          "criterion": "Energy equation",
+          "ai": 0.25,
+          "max": 1.0,
+          "coverage": "LIMITED"
+        },
+        {
+          "criterion": "Rearrangement",
+          "ai": 0.0,
+          "max": 1.0,
+          "coverage": "NOT_ADDRESSED"
+        },
+        {
+          "criterion": "Numerical answer",
+          "ai": 0.5,
+          "max": 1.0,
+          "coverage": "PARTIAL"
+        }
+      ],
+      "error_type": "GRADING_ERROR",
+      "direction": "OVER"
+    }
+  ],
+  "human_review": {},
+  "notes": [
+    "Engine: facultylens-grading-engine 1.0.0 (MiniLM sentence/criterion alignment + lexical indicators). Suggested marks are advisory; the faculty mark is never changed by this evaluation.",
+    "Benchmark: 8 questions x 3 answers (strong/partial/weak) written and marked by one annotator with rationale; no real student data. Bias analysis by demographic attributes is out of scope by design.",
+    "mae_normalized = MAE divided by the question total (0.10 == one mark on a ten-mark question)."
+  ]
+}

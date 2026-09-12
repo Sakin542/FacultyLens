@@ -88,7 +88,7 @@ class ProblemDetector:
                         severity=RecommendationPriority.HIGH if (data.total_topics or 0) <= 4 else RecommendationPriority.MEDIUM,
                     )
                 )
-            elif status == "LOW" or (0 < cov_pct < self.thresholds["topic_low_coverage_percent"]):
+            elif status == "LOW" or (not status and 0 < cov_pct < self.thresholds["topic_low_coverage_percent"]):
                 problems.append(
                     DetectedProblem(
                         code=RuleCodes.TOPIC_LOW_COVERAGE,

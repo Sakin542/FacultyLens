@@ -133,3 +133,12 @@ audited (`AI_EVALUATION_EXPORTED`) and never include raw student answers.
 * FastAPI: `tests/test_evaluation_inventory.py`.
 * Frontend: `src/tests/components/aiEvaluation.test.tsx`.
 * E2E: `backend/tests/e2e_ai_evaluation.sh` (login → dataset → validate → run → metrics/confusion/errors → compare → export).
+
+## STEP 44 — benchmark datasets and measured accuracy
+
+STEP 44 adds curated ground-truth datasets, a Python harness (`ai-service/evaluation/`, `python -m evaluation.run`) that
+evaluates every component in-process — including topic detection, top-K retrieval, RAG grounding/citations,
+assessment quality, recommendations and consistency, which have no STEP 35 evaluator — and an artisan command
+(`php artisan ai-evaluation:import <dir> --run --sync`) that persists the same benchmarks through this pipeline so
+they appear on `/ai-evaluation`. Measured results, error analysis, limitations and regression gates are in
+[AI_ACCURACY_EVALUATION_REPORT.md](AI_ACCURACY_EVALUATION_REPORT.md).

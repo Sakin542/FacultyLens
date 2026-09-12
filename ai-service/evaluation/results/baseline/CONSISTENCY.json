@@ -1,0 +1,81 @@
+{
+  "component": "CONSISTENCY",
+  "status": "EXCELLENT",
+  "split": "TEST",
+  "sample_size": 174,
+  "headline": {
+    "metric": "label_consistency",
+    "value": 1.0,
+    "ci95": [
+      0.9784,
+      1.0
+    ],
+    "higher_is_better": true,
+    "sample_size": 174
+  },
+  "metrics": {
+    "label_consistency": 1.0,
+    "label_consistency_ci95": [
+      0.9784,
+      1.0
+    ],
+    "repeats": 3,
+    "per_component": {
+      "question_analysis": 1.0,
+      "lo_alignment": 1.0,
+      "similarity": 1.0,
+      "grading": 1.0,
+      "rubric_generation": 1.0,
+      "question_generation": 1.0
+    },
+    "max_score_range": 0.0
+  },
+  "structured": {
+    "checks": {
+      "question_analysis": {
+        "items": 40,
+        "consistent_items": 40,
+        "consistency": 1.0
+      },
+      "lo_alignment": {
+        "items": 40,
+        "consistent_items": 40,
+        "consistency": 1.0,
+        "max_score_range": 0.0
+      },
+      "similarity": {
+        "items": 40,
+        "consistent_items": 40,
+        "consistency": 1.0,
+        "max_score_range": 0.0
+      },
+      "grading": {
+        "items": 24,
+        "consistent_items": 24,
+        "consistency": 1.0,
+        "max_marks_range": 0.0
+      },
+      "rubric_generation": {
+        "items": 20,
+        "consistent_items": 20,
+        "consistency": 1.0
+      },
+      "question_generation": {
+        "items": 10,
+        "consistent_items": 10,
+        "consistency": 1.0,
+        "variation_policy": "identical text (template engine)"
+      }
+    }
+  },
+  "latency_ms": {},
+  "failure_count": 0,
+  "failure_rate": 0.0,
+  "error_breakdown": {},
+  "errors": [],
+  "human_review": {},
+  "notes": [
+    "Each input was evaluated 3 times with the embedding LRU cache cleared between repeats, so vectors were recomputed by the model each time.",
+    "All engines run greedy/deterministic code paths in this configuration; for generative models only type/marks/count are required to match."
+  ]
+}

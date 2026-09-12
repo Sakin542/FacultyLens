@@ -1,0 +1,112 @@
+{
+  "component": "QUESTION_BANK_RETRIEVAL",
+  "status": "GOOD",
+  "split": "ALL(bank)",
+  "sample_size": 24,
+  "headline": {
+    "metric": "recall_at_5",
+    "value": 0.9444,
+    "ci95": [
+      0.69,
+      0.9566
+    ],
+    "higher_is_better": true,
+    "sample_size": 24
+  },
+  "metrics": {
+    "mrr": 0.9792,
+    "ndcg_at_5": 0.9346,
+    "precision_at_1": 0.9583,
+    "recall_at_1": 0.6389,
+    "hit_rate_at_1": 0.9583,
+    "precision_at_3": 0.5139,
+    "recall_at_3": 0.9097,
+    "hit_rate_at_3": 1.0,
+    "precision_at_5": 0.325,
+    "recall_at_5": 0.9444,
+    "hit_rate_at_5": 1.0,
+    "recall_at_5_ci95": [
+      0.69,
+      0.9566
+    ],
+    "full_recall_at_5_rate": 0.875,
+    "bank_size": 144
+  },
+  "structured": {},
+  "latency_ms": {
+    "count": 24,
+    "mean_ms": 9.81,
+    "p50_ms": 8.37,
+    "p95_ms": 9.35,
+    "max_ms": 50.57
+  },
+  "failure_count": 0,
+  "failure_rate": 0.0,
+  "error_breakdown": {
+    "FALSE_SIMILARITY": 3
+  },
+  "errors": [
+    {
+      "id": "R016",
+      "query": "How does price elasticity of demand get calculated?",
+      "expected_top": [
+        "Q123"
+      ],
+      "actual_top3": [
+        "Q121",
+        "Q131",
+        "Q123"
+      ],
+      "scores_top3": [
+        0.8738,
+        0.6999,
+        0.6141
+      ],
+      "error_type": "FALSE_SIMILARITY",
+      "note": "paraphrase not ranked first"
+    },
+    {
+      "id": "R018",
+      "query": "What is a B+ tree index and how does it help queries?",
+      "expected_top": [
+        "Q018"
+      ],
+      "actual_top3": [
+        "Q009",
+        "Q018",
+        "Q039"
+      ],
+      "scores_top3": [
+        0.6105,
+        0.5809,
+        0.3909
+      ],
+      "error_type": "FALSE_SIMILARITY",
+      "note": "paraphrase not ranked first"
+    },
+    {
+      "id": "R023",
+      "query": "What is Belady's anomaly?",
+      "expected_top": [
+        "Q061"
+      ],
+      "actual_top3": [
+        "Q012",
+        "Q061",
+        "Q144"
+      ],
+      "scores_top3": [
+        0.361,
+        0.3452,
+        0.2005
+      ],
+      "error_type": "FALSE_SIMILARITY",
+      "note": "paraphrase not ranked first"
+    }
+  ],
+  "human_review": {},
+  "notes": [
+    "Bank = all 144 labelled questions; 24 hand-written queries with graded relevance (2 = paraphrase, 1 = same concept).",
+    "Precision@K is bounded by the number of relevant items (most queries have 1-3), so recall@K, hit-rate@K and MRR are the informative numbers. recall_at_5_ci95 is the Wilson interval of the share of queries with full recall@5."
+  ]
+}

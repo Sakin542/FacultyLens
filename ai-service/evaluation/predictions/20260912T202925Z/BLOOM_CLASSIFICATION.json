@@ -1,0 +1,650 @@
+[
+  {
+    "id": "Q002",
+    "expected": "REMEMBER",
+    "predicted": "UNDERSTAND",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q004",
+    "expected": "APPLY",
+    "predicted": "REMEMBER",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q006",
+    "expected": "ANALYZE",
+    "predicted": "ANALYZE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q008",
+    "expected": "UNDERSTAND",
+    "predicted": "UNDERSTAND",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q010",
+    "expected": "CREATE",
+    "predicted": "UNDERSTAND",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q012",
+    "expected": "UNDERSTAND",
+    "predicted": "UNDERSTAND",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q014",
+    "expected": "REMEMBER",
+    "predicted": "REMEMBER",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q016",
+    "expected": "REMEMBER",
+    "predicted": "UNDERSTAND",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q018",
+    "expected": "APPLY",
+    "predicted": "UNDERSTAND",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q020",
+    "expected": "REMEMBER",
+    "predicted": "REMEMBER",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q022",
+    "expected": "APPLY",
+    "predicted": "APPLY",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q024",
+    "expected": "CREATE",
+    "predicted": "CREATE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q026",
+    "expected": "UNDERSTAND",
+    "predicted": "UNDERSTAND",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q028",
+    "expected": "APPLY",
+    "predicted": "UNDERSTAND",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q030",
+    "expected": "ANALYZE",
+    "predicted": "ANALYZE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q032",
+    "expected": "APPLY",
+    "predicted": "UNDERSTAND",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q034",
+    "expected": "APPLY",
+    "predicted": "UNDERSTAND",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q036",
+    "expected": "CREATE",
+    "predicted": "CREATE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q038",
+    "expected": "APPLY",
+    "predicted": "APPLY",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q040",
+    "expected": "REMEMBER",
+    "predicted": "UNDERSTAND",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q042",
+    "expected": "APPLY",
+    "predicted": "UNDERSTAND",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q044",
+    "expected": "ANALYZE",
+    "predicted": "UNDERSTAND",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "LOW"
+  },
+  {
+    "id": "Q046",
+    "expected": "APPLY",
+    "predicted": "APPLY",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q048",
+    "expected": "UNDERSTAND",
+    "predicted": "REMEMBER",
+    "correct": false,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q050",
+    "expected": "APPLY",
+    "predicted": "ANALYZE",
+    "correct": false,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q052",
+    "expected": "EVALUATE",
+    "predicted": "EVALUATE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q054",
+    "expected": "EVALUATE",
+    "predicted": "EVALUATE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q056",
+    "expected": "APPLY",
+    "predicted": "APPLY",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q058",
+    "expected": "APPLY",
+    "predicted": "UNDERSTAND",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q060",
+    "expected": "ANALYZE",
+    "predicted": "ANALYZE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q062",
+    "expected": "UNDERSTAND",
+    "predicted": "UNDERSTAND",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q064",
+    "expected": "UNDERSTAND",
+    "predicted": "UNDERSTAND",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q066",
+    "expected": "UNDERSTAND",
+    "predicted": "UNDERSTAND",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q068",
+    "expected": "UNDERSTAND",
+    "predicted": "UNDERSTAND",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q070",
+    "expected": "REMEMBER",
+    "predicted": "REMEMBER",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q072",
+    "expected": "ANALYZE",
+    "predicted": "ANALYZE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q074",
+    "expected": "UNDERSTAND",
+    "predicted": "UNDERSTAND",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q076",
+    "expected": "REMEMBER",
+    "predicted": "UNDERSTAND",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q078",
+    "expected": "REMEMBER",
+    "predicted": "UNDERSTAND",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q080",
+    "expected": "UNDERSTAND",
+    "predicted": "UNDERSTAND",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q082",
+    "expected": "APPLY",
+    "predicted": "UNDERSTAND",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q084",
+    "expected": "CREATE",
+    "predicted": "CREATE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q086",
+    "expected": "ANALYZE",
+    "predicted": "ANALYZE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q088",
+    "expected": "APPLY",
+    "predicted": "APPLY",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q090",
+    "expected": "EVALUATE",
+    "predicted": "EVALUATE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q092",
+    "expected": "EVALUATE",
+    "predicted": "ANALYZE",
+    "correct": false,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q094",
+    "expected": "APPLY",
+    "predicted": "UNDERSTAND",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q096",
+    "expected": "REMEMBER",
+    "predicted": "UNDERSTAND",
+    "correct": false,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q098",
+    "expected": "REMEMBER",
+    "predicted": "UNDERSTAND",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q100",
+    "expected": "UNDERSTAND",
+    "predicted": "UNDERSTAND",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q102",
+    "expected": "ANALYZE",
+    "predicted": "REMEMBER",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q104",
+    "expected": "EVALUATE",
+    "predicted": "EVALUATE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q106",
+    "expected": "REMEMBER",
+    "predicted": "REMEMBER",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q108",
+    "expected": "CREATE",
+    "predicted": "CREATE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q110",
+    "expected": "APPLY",
+    "predicted": "APPLY",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q112",
+    "expected": "APPLY",
+    "predicted": "UNDERSTAND",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q114",
+    "expected": "REMEMBER",
+    "predicted": "UNDERSTAND",
+    "correct": false,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q116",
+    "expected": "APPLY",
+    "predicted": "UNDERSTAND",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q118",
+    "expected": "ANALYZE",
+    "predicted": "ANALYZE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q120",
+    "expected": "UNDERSTAND",
+    "predicted": "UNDERSTAND",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q122",
+    "expected": "UNDERSTAND",
+    "predicted": "UNDERSTAND",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q124",
+    "expected": "REMEMBER",
+    "predicted": "UNDERSTAND",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q126",
+    "expected": "ANALYZE",
+    "predicted": "ANALYZE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  },
+  {
+    "id": "Q128",
+    "expected": "UNDERSTAND",
+    "predicted": "UNDERSTAND",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q130",
+    "expected": "APPLY",
+    "predicted": "REMEMBER",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q132",
+    "expected": "CREATE",
+    "predicted": "CREATE",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q134",
+    "expected": "EVALUATE",
+    "predicted": "UNDERSTAND",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q136",
+    "expected": "UNDERSTAND",
+    "predicted": "UNDERSTAND",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q138",
+    "expected": "APPLY",
+    "predicted": "UNDERSTAND",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q140",
+    "expected": "UNDERSTAND",
+    "predicted": "UNDERSTAND",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "LOW"
+  },
+  {
+    "id": "Q142",
+    "expected": "UNDERSTAND",
+    "predicted": "EVALUATE",
+    "correct": false,
+    "lenient_correct": false,
+    "confidence": null,
+    "label_confidence": "MEDIUM"
+  },
+  {
+    "id": "Q144",
+    "expected": "UNDERSTAND",
+    "predicted": "UNDERSTAND",
+    "correct": true,
+    "lenient_correct": true,
+    "confidence": null,
+    "label_confidence": "HIGH"
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "_comment": "STEP 44 result classification bands and regression gates. Bands turn a headline metric into EXCELLENT/GOOD/ACCEPTABLE/NEEDS_IMPROVEMENT; min_n is the smallest sample that earns a classification at all (below it: INSUFFICIENT_DATA). regression_tolerance is the maximum allowed relative drop of the headline metric versus the baseline run (5% unless a component justifies otherwise). Bands are evaluation goals from the STEP 44 brief, not guaranteed achievements.",
+  "components": {
+    "QUESTION_CLASSIFICATION": {"headline": "macro_f1", "higher_is_better": true, "bands": {"EXCELLENT": 0.90, "GOOD": 0.80, "ACCEPTABLE": 0.70}, "min_n": 30, "regression_tolerance": 0.05},
+    "DIFFICULTY_CLASSIFICATION": {"headline": "macro_f1", "higher_is_better": true, "bands": {"EXCELLENT": 0.85, "GOOD": 0.70, "ACCEPTABLE": 0.60}, "min_n": 30, "regression_tolerance": 0.05},
+    "BLOOM_CLASSIFICATION": {"headline": "macro_f1", "higher_is_better": true, "bands": {"EXCELLENT": 0.85, "GOOD": 0.70, "ACCEPTABLE": 0.60}, "min_n": 30, "regression_tolerance": 0.05},
+    "TOPIC_DETECTION": {"headline": "top1_accuracy", "higher_is_better": true, "bands": {"EXCELLENT": 0.90, "GOOD": 0.80, "ACCEPTABLE": 0.70}, "min_n": 30, "regression_tolerance": 0.05},
+    "LO_ALIGNMENT": {"headline": "band_agreement", "higher_is_better": true, "bands": {"EXCELLENT": 0.90, "GOOD": 0.75, "ACCEPTABLE": 0.65}, "min_n": 30, "regression_tolerance": 0.05},
+    "SEMANTIC_SIMILARITY": {"headline": "spearman", "higher_is_better": true, "bands": {"EXCELLENT": 0.90, "GOOD": 0.80, "ACCEPTABLE": 0.70}, "min_n": 30, "regression_tolerance": 0.05},
+    "QUESTION_BANK_RETRIEVAL": {"headline": "recall_at_5", "higher_is_better": true, "bands": {"EXCELLENT": 0.95, "GOOD": 0.80, "ACCEPTABLE": 0.70}, "min_n": 15, "regression_tolerance": 0.05},
+    "ASSESSMENT_QUALITY": {"headline": "flag_agreement", "higher_is_better": true, "bands": {"EXCELLENT": 0.90, "GOOD": 0.80, "ACCEPTABLE": 0.70}, "min_n": 5, "regression_tolerance": 0.05},
+    "RECOMMENDATIONS": {"headline": "category_f1", "higher_is_better": true, "bands": {"EXCELLENT": 0.90, "GOOD": 0.80, "ACCEPTABLE": 0.70}, "min_n": 5, "regression_tolerance": 0.05},
+    "RUBRIC_GENERATION": {"headline": "constraint_satisfaction_rate", "higher_is_better": true, "bands": {"EXCELLENT": 0.99, "GOOD": 0.95, "ACCEPTABLE": 0.90}, "min_n": 20, "regression_tolerance": 0.02},
+    "QUESTION_GENERATION": {"headline": "constraint_satisfaction_rate", "higher_is_better": true, "bands": {"EXCELLENT": 0.95, "GOOD": 0.90, "ACCEPTABLE": 0.80}, "min_n": 15, "regression_tolerance": 0.05},
+    "RAG_RETRIEVAL": {"headline": "recall_at_5", "higher_is_better": true, "bands": {"EXCELLENT": 0.95, "GOOD": 0.80, "ACCEPTABLE": 0.70}, "min_n": 15, "regression_tolerance": 0.05},
+    "RAG_GROUNDING": {"headline": "grounded_answer_rate", "higher_is_better": true, "bands": {"EXCELLENT": 0.95, "GOOD": 0.85, "ACCEPTABLE": 0.75}, "min_n": 15, "regression_tolerance": 0.05},
+    "AI_GRADING": {"headline": "mae_normalized", "higher_is_better": false, "bands": {"EXCELLENT": 0.05, "GOOD": 0.10, "ACCEPTABLE": 0.15}, "min_n": 20, "regression_tolerance": 0.10, "_note": "mae_normalized = MAE / question total marks, averaged over answers; 0.10 means 1 mark on a 10-mark question."},
+    "CONSISTENCY": {"headline": "label_consistency", "higher_is_better": true, "bands": {"EXCELLENT": 1.0, "GOOD": 0.98, "ACCEPTABLE": 0.95}, "min_n": 20, "regression_tolerance": 0.01}
+  },
+  "human_review_components": ["RECOMMENDATIONS", "RUBRIC_GENERATION", "QUESTION_GENERATION", "RAG_GROUNDING", "AI_GRADING"]
+}

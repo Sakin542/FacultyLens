@@ -1,0 +1,70 @@
+{
+  "component": "RUBRIC_GENERATION",
+  "status": "EXCELLENT",
+  "split": "ALL(rubric_question_ids)",
+  "sample_size": 50,
+  "headline": {
+    "metric": "constraint_satisfaction_rate",
+    "value": 1.0,
+    "ci95": [
+      0.9286,
+      1.0
+    ],
+    "higher_is_better": true,
+    "sample_size": 50
+  },
+  "metrics": {
+    "constraint_satisfaction_rate": 1.0,
+    "constraint_satisfaction_ci95": [
+      0.9286,
+      1.0
+    ],
+    "marks_validity_rate": 1.0,
+    "per_check": {
+      "marks_sum_equals_total": 1.0,
+      "criteria_count_in_range": 1.0,
+      "all_marks_positive": 1.0,
+      "criteria_named": 1.0,
+      "criteria_unique": 1.0,
+      "descriptions_present": 1.0,
+      "sort_order_sequential": 1.0
+    },
+    "mean_criteria_count": 3.82,
+    "question_alignment_lexical_proxy": 0.7614
+  },
+  "structured": {
+    "generation_methods": {
+      "template_based": 50
+    },
+    "criteria_count_distribution": {
+      "1": 5,
+      "2": 5,
+      "3": 8,
+      "4": 12,
+      "5": 17,
+      "6": 2,
+      "7": 1
+    }
+  },
+  "latency_ms": {
+    "count": 50,
+    "mean_ms": 6.92,
+    "p50_ms": 7.47,
+    "p95_ms": 9.94,
+    "max_ms": 10.91
+  },
+  "failure_count": 0,
+  "failure_rate": 0.0,
+  "error_breakdown": {},
+  "errors": [],
+  "human_review": {
+    "status": "NOT_EVALUATED",
+    "reviews": 0,
+    "note": "No completed faculty review forms found (labels/HUMAN_REVIEW_FORM.md). Human quality is not inferred from automated checks."
+  },
+  "notes": [
+    "Structural constraints are verified independently of the generator's own validator. Rubric *quality* (relevance, clarity, specificity, academic appropriateness) requires faculty review — see human_review.",
+    "Generator actually used: facultylens-rubric-template-engine 1.0.0 (RUBRIC_GENERATION_ENABLED=false).",
+    "question_alignment_lexical_proxy is a weak lexical indicator, not a quality judgement."
+  ]
+}

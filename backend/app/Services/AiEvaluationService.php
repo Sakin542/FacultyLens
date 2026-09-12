@@ -218,7 +218,9 @@ class AiEvaluationService
         $dataset->update(['status' => AiEvaluationDataset::STATUS_RUNNING]);
         $this->audit->log('AI_EVALUATION_STARTED', $run, $run->id, ['task' => $run->task, 'dataset_id' => $dataset->id, 'example_count' => $run->example_count, 'model' => $model?->model_name], $user);
 
-        RunAiEvaluationJob::dispatch($run->id);
+        if ($options['dispatch'] ?? true) {
+            RunAiEvaluationJob::dispatch($run->id);
+        }
 
         return $run->fresh();
     }

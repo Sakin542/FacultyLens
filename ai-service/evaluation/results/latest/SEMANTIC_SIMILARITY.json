@@ -1,0 +1,571 @@
+{
+  "component": "SEMANTIC_SIMILARITY",
+  "status": "EXCELLENT",
+  "split": "ALL(pairs)",
+  "sample_size": 60,
+  "headline": {
+    "metric": "spearman",
+    "value": 0.9252,
+    "ci95": [
+      0.8708,
+      0.9516
+    ],
+    "higher_is_better": true,
+    "sample_size": 60
+  },
+  "metrics": {
+    "spearman": 0.9252,
+    "pearson": 0.8872,
+    "band_accuracy": 0.5167,
+    "band_accuracy_ci95": [
+      0.3931,
+      0.6383
+    ],
+    "band_macro_f1": 0.45,
+    "band_weighted_f1": 0.4685,
+    "adjacent_band_accuracy": 0.9667,
+    "duplicate_precision": 0.9167,
+    "duplicate_recall": 0.6875,
+    "duplicate_f1": 0.7857,
+    "flag_precision": 1.0,
+    "flag_recall": 0.7,
+    "flag_f1": 0.8235,
+    "hard_negatives_max_score": 0.2374,
+    "hard_negatives_false_flags": 0
+  },
+  "structured": {
+    "confusion_matrix": {
+      "POTENTIAL_DUPLICATE": {
+        "POTENTIAL_DUPLICATE": 11,
+        "HIGHLY_SIMILAR": 5,
+        "SOMEWHAT_SIMILAR": 0,
+        "NOT_SIMILAR": 0
+      },
+      "HIGHLY_SIMILAR": {
+        "POTENTIAL_DUPLICATE": 1,
+        "HIGHLY_SIMILAR": 4,
+        "SOMEWHAT_SIMILAR": 7,
+        "NOT_SIMILAR": 2
+      },
+      "SOMEWHAT_SIMILAR": {
+        "POTENTIAL_DUPLICATE": 0,
+        "HIGHLY_SIMILAR": 0,
+        "SOMEWHAT_SIMILAR": 0,
+        "NOT_SIMILAR": 14
+      },
+      "NOT_SIMILAR": {
+        "POTENTIAL_DUPLICATE": 0,
+        "HIGHLY_SIMILAR": 0,
+        "SOMEWHAT_SIMILAR": 0,
+        "NOT_SIMILAR": 16
+      }
+    },
+    "per_class": [
+      {
+        "label": "POTENTIAL_DUPLICATE",
+        "precision": 0.9167,
+        "recall": 0.6875,
+        "f1": 0.7857,
+        "support": 16,
+        "predicted": 12
+      },
+      {
+        "label": "HIGHLY_SIMILAR",
+        "precision": 0.4444,
+        "recall": 0.2857,
+        "f1": 0.3478,
+        "support": 14,
+        "predicted": 9
+      },
+      {
+        "label": "SOMEWHAT_SIMILAR",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 14,
+        "predicted": 7
+      },
+      {
+        "label": "NOT_SIMILAR",
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6667,
+        "support": 16,
+        "predicted": 32
+      }
+    ],
+    "score_distribution_by_expected_band": {
+      "POTENTIAL_DUPLICATE": {
+        "n": 16,
+        "min": 0.7702,
+        "median": 0.8854,
+        "mean": 0.8785,
+        "max": 0.9623
+      },
+      "HIGHLY_SIMILAR": {
+        "n": 14,
+        "min": 0.293,
+        "median": 0.6777,
+        "mean": 0.6647,
+        "max": 0.894
+      },
+      "SOMEWHAT_SIMILAR": {
+        "n": 14,
+        "min": 0.1036,
+        "median": 0.2501,
+        "mean": 0.2609,
+        "max": 0.4649
+      },
+      "NOT_SIMILAR": {
+        "n": 16,
+        "min": 0.0091,
+        "median": 0.1287,
+        "mean": 0.128,
+        "max": 0.2374
+      }
+    },
+    "threshold_sweep": [
+      {
+        "duplicate_threshold": 0.7,
+        "band_accuracy": 0.5833,
+        "duplicate_f1": 0.8649,
+        "duplicate_precision": 0.7619,
+        "duplicate_recall": 1.0,
+        "production": false
+      },
+      {
+        "duplicate_threshold": 0.75,
+        "band_accuracy": 0.5333,
+        "duplicate_f1": 0.8649,
+        "duplicate_precision": 0.7619,
+        "duplicate_recall": 1.0,
+        "production": false
+      },
+      {
+        "duplicate_threshold": 0.8,
+        "band_accuracy": 0.5,
+        "duplicate_f1": 0.8,
+        "duplicate_precision": 0.7368,
+        "duplicate_recall": 0.875,
+        "production": false
+      },
+      {
+        "duplicate_threshold": 0.85,
+        "band_accuracy": 0.5167,
+        "duplicate_f1": 0.7857,
+        "duplicate_precision": 0.9167,
+        "duplicate_recall": 0.6875,
+        "production": true
+      },
+      {
+        "duplicate_threshold": 0.9,
+        "band_accuracy": 0.4667,
+        "duplicate_f1": 0.6087,
+        "duplicate_precision": 1.0,
+        "duplicate_recall": 0.4375,
+        "production": false
+      }
+    ],
+    "production_thresholds": {
+      "duplicate": 0.85,
+      "high": 0.7,
+      "moderate": 0.5
+    },
+    "hard_negatives": [
+      {
+        "id": "S050",
+        "reason": "shared word 'regression'",
+        "score": 0.2049,
+        "predicted": "NOT_SIMILAR"
+      },
+      {
+        "id": "S053",
+        "reason": "shared word 'process'",
+        "score": 0.2374,
+        "predicted": "NOT_SIMILAR"
+      },
+      {
+        "id": "S054",
+        "reason": "same MCQ format",
+        "score": 0.1734,
+        "predicted": "NOT_SIMILAR"
+      },
+      {
+        "id": "S055",
+        "reason": "same True/False format",
+        "score": 0.2348,
+        "predicted": "NOT_SIMILAR"
+      },
+      {
+        "id": "S056",
+        "reason": "both numeric 'calculate' tasks",
+        "score": 0.0989,
+        "predicted": "NOT_SIMILAR"
+      },
+      {
+        "id": "S057",
+        "reason": "shared verb 'explain'",
+        "score": 0.0946,
+        "predicted": "NOT_SIMILAR"
+      },
+      {
+        "id": "S058",
+        "reason": "shared verb 'name'",
+        "score": 0.23,
+        "predicted": "NOT_SIMILAR"
+      },
+      {
+        "id": "S059",
+        "reason": "shared verb 'evaluate'",
+        "score": 0.0768,
+        "predicted": "NOT_SIMILAR"
+      }
+    ],
+    "error_transitions": {
+      "POTENTIAL_DUPLICATE->HIGHLY_SIMILAR": 5,
+      "HIGHLY_SIMILAR->SOMEWHAT_SIMILAR": 7,
+      "HIGHLY_SIMILAR->NOT_SIMILAR": 2,
+      "HIGHLY_SIMILAR->POTENTIAL_DUPLICATE": 1,
+      "SOMEWHAT_SIMILAR->NOT_SIMILAR": 14
+    }
+  },
+  "latency_ms": {
+    "count": 60,
+    "mean_ms": 4.04,
+    "p50_ms": 5.0,
+    "p95_ms": 11.0,
+    "max_ms": 12.69
+  },
+  "failure_count": 0,
+  "failure_rate": 0.0,
+  "error_breakdown": {
+    "MISSED_SIMILARITY": 28,
+    "FALSE_SIMILARITY": 1
+  },
+  "errors": [
+    {
+      "id": "S003",
+      "question_a": "Explain the difference between supervised and unsupervised learning, giving one example algorithm o…",
+      "question_b": "Distinguish supervised from unsupervised learning and name an example algorithm for each.",
+      "expected": "POTENTIAL_DUPLICATE",
+      "actual": "HIGHLY_SIMILAR",
+      "score": 0.7702,
+      "expert_score": 0.93,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S005",
+      "question_a": "List the seven layers of the OSI model in order.",
+      "question_b": "Name the OSI model's seven layers from bottom to top.",
+      "expected": "POTENTIAL_DUPLICATE",
+      "actual": "HIGHLY_SIMILAR",
+      "score": 0.8384,
+      "expert_score": 0.92,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S008",
+      "question_a": "State Newton's second law of motion.",
+      "question_b": "Write down Newton's second law.",
+      "expected": "POTENTIAL_DUPLICATE",
+      "actual": "HIGHLY_SIMILAR",
+      "score": 0.8317,
+      "expert_score": 0.93,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S011",
+      "question_a": "Explain the difference between internal and external fragmentation.",
+      "question_b": "Differentiate between external and internal fragmentation in memory management.",
+      "expected": "POTENTIAL_DUPLICATE",
+      "actual": "HIGHLY_SIMILAR",
+      "score": 0.7894,
+      "expert_score": 0.93,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S012",
+      "question_a": "Describe how k-means clustering assigns points to clusters and how the centroids are updated.",
+      "question_b": "Explain the assignment and centroid-update steps of the k-means algorithm.",
+      "expected": "POTENTIAL_DUPLICATE",
+      "actual": "HIGHLY_SIMILAR",
+      "score": 0.8109,
+      "expert_score": 0.92,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S017",
+      "question_a": "Define a primary key and explain why a relation can have at most one primary key.",
+      "question_b": "Explain the difference between a primary key and a candidate key.",
+      "expected": "HIGHLY_SIMILAR",
+      "actual": "SOMEWHAT_SIMILAR",
+      "score": 0.6809,
+      "expert_score": 0.75,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S019",
+      "question_a": "Describe the four ACID properties of a transaction with one example each.",
+      "question_b": "Explain the isolation property of transactions and how it is enforced.",
+      "expected": "HIGHLY_SIMILAR",
+      "actual": "NOT_SIMILAR",
+      "score": 0.4508,
+      "expert_score": 0.72,
+      "adjacent_band": false,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S020",
+      "question_a": "Compute the information gain of splitting on attribute A given that the parent node contains 8 posi…",
+      "question_b": "Explain how a decision tree uses information gain to choose the splitting attribute.",
+      "expected": "HIGHLY_SIMILAR",
+      "actual": "SOMEWHAT_SIMILAR",
+      "score": 0.5998,
+      "expert_score": 0.75,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S021",
+      "question_a": "Trace Dijkstra's algorithm on the given weighted graph from source vertex A, showing the distance t…",
+      "question_b": "Explain the working of Dijkstra's shortest path algorithm with an example.",
+      "expected": "HIGHLY_SIMILAR",
+      "actual": "SOMEWHAT_SIMILAR",
+      "score": 0.5953,
+      "expert_score": 0.78,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S023",
+      "question_a": "Describe how TCP slow start and congestion avoidance adjust the congestion window.",
+      "question_b": "Explain TCP congestion control, including slow start, congestion avoidance and fast recovery.",
+      "expected": "HIGHLY_SIMILAR",
+      "actual": "POTENTIAL_DUPLICATE",
+      "score": 0.894,
+      "expert_score": 0.8,
+      "adjacent_band": true,
+      "error_type": "FALSE_SIMILARITY"
+    },
+    {
+      "id": "S024",
+      "question_a": "Compare the waterfall model with an iterative model, and recommend one for a start-up building a mo…",
+      "question_b": "Discuss the advantages and disadvantages of the waterfall model.",
+      "expected": "HIGHLY_SIMILAR",
+      "actual": "SOMEWHAT_SIMILAR",
+      "score": 0.6208,
+      "expert_score": 0.72,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S025",
+      "question_a": "A 2 kg block is pushed across a frictionless surface by a horizontal force of 10 N. Calculate its a…",
+      "question_b": "A 5 kg box is pulled along a frictionless floor with a force of 20 N. Find its acceleration.",
+      "expected": "HIGHLY_SIMILAR",
+      "actual": "SOMEWHAT_SIMILAR",
+      "score": 0.6777,
+      "expert_score": 0.82,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S027",
+      "question_a": "Briefly explain the difference between a clustered and a non-clustered index.",
+      "question_b": "Explain how a B+ tree index speeds up range queries.",
+      "expected": "HIGHLY_SIMILAR",
+      "actual": "NOT_SIMILAR",
+      "score": 0.293,
+      "expert_score": 0.7,
+      "adjacent_band": false,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S028",
+      "question_a": "Implement a function that reverses a singly linked list in place and state its time complexity.",
+      "question_b": "Write a function to detect whether a singly linked list contains a cycle.",
+      "expected": "HIGHLY_SIMILAR",
+      "actual": "SOMEWHAT_SIMILAR",
+      "score": 0.5751,
+      "expert_score": 0.72,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S029",
+      "question_a": "Critique the statement 'Agile teams do not need documentation.'",
+      "question_b": "Discuss the role of documentation in agile software development.",
+      "expected": "HIGHLY_SIMILAR",
+      "actual": "SOMEWHAT_SIMILAR",
+      "score": 0.6596,
+      "expert_score": 0.8,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S031",
+      "question_a": "Define a primary key and explain why a relation can have at most one primary key.",
+      "question_b": "Write an SQL query to list the names of students who are enrolled in more than three courses.",
+      "expected": "SOMEWHAT_SIMILAR",
+      "actual": "NOT_SIMILAR",
+      "score": 0.1036,
+      "expert_score": 0.55,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S032",
+      "question_a": "State the four necessary conditions for deadlock.",
+      "question_b": "Calculate the average waiting time for the processes P1 (burst 8), P2 (burst 4) and P3 (burst 1), a…",
+      "expected": "SOMEWHAT_SIMILAR",
+      "actual": "NOT_SIMILAR",
+      "score": 0.2075,
+      "expert_score": 0.5,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S033",
+      "question_a": "Explain the difference between supervised and unsupervised learning, giving one example algorithm o…",
+      "question_b": "Describe how k-means clustering assigns points to clusters and how the centroids are updated.",
+      "expected": "SOMEWHAT_SIMILAR",
+      "actual": "NOT_SIMILAR",
+      "score": 0.3871,
+      "expert_score": 0.6,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S034",
+      "question_a": "List the seven layers of the OSI model in order.",
+      "question_b": "Which protocol resolves domain names to IP addresses? (a) DHCP (b) DNS (c) ARP (d) SMTP",
+      "expected": "SOMEWHAT_SIMILAR",
+      "actual": "NOT_SIMILAR",
+      "score": 0.1878,
+      "expert_score": 0.5,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S035",
+      "question_a": "Compare merge sort and quicksort in terms of worst-case time complexity, space usage and stability.",
+      "question_b": "Given the recurrence T(n) = 2T(n/2) + n, solve for T(n) using the master theorem.",
+      "expected": "SOMEWHAT_SIMILAR",
+      "actual": "NOT_SIMILAR",
+      "score": 0.1188,
+      "expert_score": 0.55,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S036",
+      "question_a": "What is regression testing?",
+      "question_b": "Which of the following is a black-box testing technique? (a) Statement coverage (b) Equivalence par…",
+      "expected": "SOMEWHAT_SIMILAR",
+      "actual": "NOT_SIMILAR",
+      "score": 0.4649,
+      "expert_score": 0.58,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S037",
+      "question_a": "State Newton's second law of motion.",
+      "question_b": "A 0.5 kg ball is dropped from a height of 20 m. Using energy conservation, determine its speed just…",
+      "expected": "SOMEWHAT_SIMILAR",
+      "actual": "NOT_SIMILAR",
+      "score": 0.364,
+      "expert_score": 0.5,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S038",
+      "question_a": "Define price elasticity of demand.",
+      "question_b": "Which of the following is a characteristic of perfect competition? (a) A single seller (b) Differen…",
+      "expected": "SOMEWHAT_SIMILAR",
+      "actual": "NOT_SIMILAR",
+      "score": 0.3312,
+      "expert_score": 0.5,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S039",
+      "question_a": "Explain the Observer design pattern and give a situation where it should be used.",
+      "question_b": "Design a class structure using the Strategy pattern for a payment system that supports credit card,…",
+      "expected": "SOMEWHAT_SIMILAR",
+      "actual": "NOT_SIMILAR",
+      "score": 0.2501,
+      "expert_score": 0.62,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S040",
+      "question_a": "Describe the role of the process control block.",
+      "question_b": "Distinguish between user-level threads and kernel-level threads, and state one situation where each…",
+      "expected": "SOMEWHAT_SIMILAR",
+      "actual": "NOT_SIMILAR",
+      "score": 0.2592,
+      "expert_score": 0.55,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S041",
+      "question_a": "Explain how TCP's three-way handshake establishes a connection.",
+      "question_b": "Analyze how a SYN flood attack exploits the TCP handshake and assess the effectiveness of SYN cooki…",
+      "expected": "SOMEWHAT_SIMILAR",
+      "actual": "NOT_SIMILAR",
+      "score": 0.4403,
+      "expert_score": 0.65,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S042",
+      "question_a": "Describe the four ACID properties of a transaction with one example each.",
+      "question_b": "Write short notes on write-ahead logging.",
+      "expected": "SOMEWHAT_SIMILAR",
+      "actual": "NOT_SIMILAR",
+      "score": 0.1793,
+      "expert_score": 0.58,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S043",
+      "question_a": "Briefly explain what a confusion matrix shows.",
+      "question_b": "A classifier achieves 99% accuracy on a dataset where 99% of examples belong to one class. Critique…",
+      "expected": "SOMEWHAT_SIMILAR",
+      "actual": "NOT_SIMILAR",
+      "score": 0.1728,
+      "expert_score": 0.62,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    },
+    {
+      "id": "S044",
+      "question_a": "Trace Dijkstra's algorithm on the given weighted graph from source vertex A, showing the distance t…",
+      "question_b": "Explain why a queue is more appropriate than a stack for breadth-first search.",
+      "expected": "SOMEWHAT_SIMILAR",
+      "actual": "NOT_SIMILAR",
+      "score": 0.1865,
+      "expert_score": 0.52,
+      "adjacent_band": true,
+      "error_type": "MISSED_SIMILARITY"
+    }
+  ],
+  "human_review": {},
+  "notes": [
+    "Model: MiniLM cosine (sentence-transformers/all-MiniLM-L6-v2). 'flag' = POTENTIAL_DUPLICATE or HIGHLY_SIMILAR (what faculty are shown as a reuse warning). This is similarity ranking, not exact-duplicate detection.",
+    "Spearman/Pearson correlate the model's cosine with the annotator's 0-1 closeness judgement; band metrics apply the production thresholds to the model score. The sweep is informational only."
+  ]
+}

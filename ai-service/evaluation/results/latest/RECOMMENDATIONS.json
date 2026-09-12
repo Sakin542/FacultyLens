@@ -1,0 +1,153 @@
+{
+  "component": "RECOMMENDATIONS",
+  "status": "GOOD",
+  "split": "ALL(cases)",
+  "sample_size": 8,
+  "headline": {
+    "metric": "category_f1",
+    "value": 0.8235,
+    "ci95": [
+      0.6809,
+      0.92
+    ],
+    "higher_is_better": true,
+    "sample_size": 8
+  },
+  "metrics": {
+    "category_precision": 0.8077,
+    "category_recall": 0.84,
+    "category_f1": 0.8235,
+    "expected_categories": 25,
+    "raised_categories": 26,
+    "recommendations_generated": 36,
+    "evidence_rate": 1.0,
+    "problem_linked_rate": 1.0,
+    "actionable_rate": 1.0,
+    "readable_length_rate": 1.0,
+    "contradiction_count": 0,
+    "non_contradictory_rate": 1.0
+  },
+  "structured": {},
+  "latency_ms": {
+    "count": 8,
+    "mean_ms": 2.6,
+    "p50_ms": 2.63,
+    "p95_ms": 4.29,
+    "max_ms": 4.29
+  },
+  "failure_count": 0,
+  "failure_rate": 0.0,
+  "error_breakdown": {
+    "WRONG_CLASSIFICATION": 9
+  },
+  "errors": [
+    {
+      "id": "AQ1",
+      "case": "Balanced CS301 midterm",
+      "unexpected_category": "cognitive_level",
+      "examples": [
+        "With 60.0% of evaluation concentrated in 'Understand', consider incorporating questions from higher cognitive tiers (e.g., Analyze, Evaluate, Create) to stimul…",
+        "Lower-order cognitive levels (Remember/Understand) constitute 80.0% of total evaluation. Consider upgrading selected questions to Apply, Analyze, or Design tas…"
+      ],
+      "error_type": "WRONG_CLASSIFICATION",
+      "note": "recommendation raised where the reviewer saw no problem"
+    },
+    {
+      "id": "AQ1",
+      "case": "Balanced CS301 midterm",
+      "unexpected_category": "difficulty",
+      "examples": [
+        "Consider incorporating at least one advanced, multi-step problem-solving or synthesis question to appropriately challenge and distinguish top-tier mastery."
+      ],
+      "error_type": "WRONG_CLASSIFICATION",
+      "note": "recommendation raised where the reviewer saw no problem"
+    },
+    {
+      "id": "AQ2",
+      "case": "Recall-only CS301 quiz",
+      "expected_category": "question_diversity",
+      "actual_categories": [
+        "cognitive_level",
+        "difficulty",
+        "learning_outcome",
+        "topic_coverage"
+      ],
+      "error_type": "WRONG_CLASSIFICATION",
+      "note": "reviewer expected a recommendation in this category"
+    },
+    {
+      "id": "AQ3",
+      "case": "CS402 test with marks mismatch",
+      "unexpected_category": "difficulty",
+      "examples": [
+        "Consider introducing foundational, easy-difficulty questions (e.g. definitions, direct concept verification) to provide a fair baseline for all students."
+      ],
+      "error_type": "WRONG_CLASSIFICATION",
+      "note": "recommendation raised where the reviewer saw no problem"
+    },
+    {
+      "id": "AQ3",
+      "case": "CS402 test with marks mismatch",
+      "unexpected_category": "learning_outcome",
+      "examples": [
+        "Consider designing or updating an assessment question to specifically target LO3. Align the question phrasing and tasks with the competency verbs defined in th…",
+        "Consider designing or updating an assessment question to specifically target LO5. Align the question phrasing and tasks with the competency verbs defined in th…"
+      ],
+      "error_type": "WRONG_CLASSIFICATION",
+      "note": "recommendation raised where the reviewer saw no problem"
+    },
+    {
+      "id": "AQ4",
+      "case": "All-hard CS305 exam",
+      "expected_category": "question_diversity",
+      "actual_categories": [
+        "difficulty",
+        "learning_outcome"
+      ],
+      "error_type": "WRONG_CLASSIFICATION",
+      "note": "reviewer expected a recommendation in this category"
+    },
+    {
+      "id": "AQ4",
+      "case": "All-hard CS305 exam",
+      "expected_category": "topic_coverage",
+      "actual_categories": [
+        "difficulty",
+        "learning_outcome"
+      ],
+      "error_type": "WRONG_CLASSIFICATION",
+      "note": "reviewer expected a recommendation in this category"
+    },
+    {
+      "id": "AQ5",
+      "case": "All-descriptive CS306 test",
+      "unexpected_category": "assessment_quality",
+      "examples": [
+        "The overall assessment score is 46.5/100. Review the prioritized high and medium recommendations above to improve curriculum balance, LO alignment, and questio…"
+      ],
+      "error_type": "WRONG_CLASSIFICATION",
+      "note": "recommendation raised where the reviewer saw no problem"
+    },
+    {
+      "id": "AQ7",
+      "case": "CS201 test reusing past questions",
+      "expected_category": "learning_outcome",
+      "actual_categories": [
+        "difficulty",
+        "semantic_similarity",
+        "topic_coverage"
+      ],
+      "error_type": "WRONG_CLASSIFICATION",
+      "note": "reviewer expected a recommendation in this category"
+    }
+  ],
+  "human_review": {
+    "status": "NOT_EVALUATED",
+    "reviews": 0,
+    "note": "No completed faculty review forms found (labels/HUMAN_REVIEW_FORM.md). Human quality is not inferred from automated checks."
+  },
+  "notes": [
+    "Category precision/recall compare raised recommendation categories with the reviewer's expected problem categories per assessment (micro-averaged over 8 cases).",
+    "evidence/actionable/readable/contradiction are automated structural checks. Relevance, clarity and academic appropriateness on the 1-5 scale need faculty review forms — see human_review."
+  ]
+}

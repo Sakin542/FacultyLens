@@ -1,0 +1,46 @@
+{
+  "dataset": "facultylens-generation-requests",
+  "version": "v1.0",
+  "created": "2026-09-13",
+  "labeling_protocol": "labels/LABELING_PROTOCOL.md#generation",
+  "note": "Rubric requests reference questions in datasets/questions_v1.json (the harness supplies text, marks, type, difficulty, Bloom and LO). Question-generation requests are explicit constraint sets; document-grounded requests reference chunks in datasets/rag_corpus_v1.json and are used for the hallucination / evidence check. Existing-question contexts reference questions_v1 ids for the similarity-restriction check.",
+  "rubric_question_ids": [
+    "Q001", "Q004", "Q005", "Q006", "Q007", "Q009", "Q012", "Q013", "Q017", "Q019",
+    "Q021", "Q022", "Q024", "Q028", "Q030", "Q036", "Q041", "Q042", "Q044", "Q047",
+    "Q054", "Q058", "Q060", "Q065", "Q074", "Q079", "Q084", "Q092", "Q094", "Q099",
+    "Q102", "Q108", "Q115", "Q116", "Q118", "Q123", "Q126", "Q127", "Q130", "Q132",
+    "Q002", "Q040", "Q062", "Q096", "Q125", "Q008", "Q029", "Q064", "Q098", "Q144"
+  ],
+  "question_generation_requests": [
+    {"id": "QG01", "course": "CS301", "topic": "Normalization", "question_type": "DESCRIPTIVE", "difficulty_level": "MEDIUM", "cognitive_level": "UNDERSTAND", "marks": 5, "number_of_questions": 2, "learning_outcome": "LO3"},
+    {"id": "QG02", "course": "CS301", "topic": "SQL Queries", "question_type": "PROBLEM_SOLVING", "difficulty_level": "MEDIUM", "cognitive_level": "APPLY", "marks": 4, "number_of_questions": 2, "learning_outcome": "LO2"},
+    {"id": "QG03", "course": "CS301", "topic": "Transactions and Concurrency Control", "question_type": "ANALYTICAL", "difficulty_level": "HARD", "cognitive_level": "ANALYZE", "marks": 6, "number_of_questions": 2, "learning_outcome": "LO4"},
+    {"id": "QG04", "course": "CS301", "topic": "Relational Model and Keys", "question_type": "MCQ", "difficulty_level": "EASY", "cognitive_level": "REMEMBER", "marks": 1, "number_of_questions": 3, "learning_outcome": "LO1"},
+    {"id": "QG05", "course": "CS301", "topic": "Indexing and Query Processing", "question_type": "TRUE_FALSE", "difficulty_level": "EASY", "cognitive_level": "REMEMBER", "marks": 1, "number_of_questions": 2, "learning_outcome": "LO5"},
+    {"id": "QG06", "course": "CS402", "topic": "Model Evaluation and Overfitting", "question_type": "ANALYTICAL", "difficulty_level": "HARD", "cognitive_level": "EVALUATE", "marks": 8, "number_of_questions": 2, "learning_outcome": "LO3"},
+    {"id": "QG07", "course": "CS402", "topic": "Neural Networks", "question_type": "DESCRIPTIVE", "difficulty_level": "HARD", "cognitive_level": "CREATE", "marks": 10, "number_of_questions": 1, "learning_outcome": "LO4"},
+    {"id": "QG08", "course": "CS402", "topic": "Clustering", "question_type": "SHORT_ANSWER", "difficulty_level": "EASY", "cognitive_level": "UNDERSTAND", "marks": 2, "number_of_questions": 3, "learning_outcome": "LO1"},
+    {"id": "QG09", "course": "CS201", "topic": "Graph Algorithms", "question_type": "PROBLEM_SOLVING", "difficulty_level": "MEDIUM", "cognitive_level": "APPLY", "marks": 6, "number_of_questions": 2, "learning_outcome": "LO4"},
+    {"id": "QG10", "course": "CS201", "topic": "Sorting and Searching", "question_type": "CONCEPTUAL", "difficulty_level": "EASY", "cognitive_level": "REMEMBER", "marks": 2, "number_of_questions": 3, "learning_outcome": "LO5"},
+    {"id": "QG11", "course": "CS305", "topic": "Deadlocks and Synchronization", "question_type": "ANALYTICAL", "difficulty_level": "MEDIUM", "cognitive_level": "ANALYZE", "marks": 5, "number_of_questions": 2, "learning_outcome": "LO3"},
+    {"id": "QG12", "course": "CS305", "topic": "Memory Management and Virtual Memory", "question_type": "PROBLEM_SOLVING", "difficulty_level": "MEDIUM", "cognitive_level": "APPLY", "marks": 4, "number_of_questions": 2, "learning_outcome": "LO2"},
+    {"id": "QG13", "course": "CS306", "topic": "Network Security", "question_type": "DESCRIPTIVE", "difficulty_level": "HARD", "cognitive_level": "EVALUATE", "marks": 8, "number_of_questions": 1, "learning_outcome": "LO4"},
+    {"id": "QG14", "course": "CS306", "topic": "Routing Algorithms", "question_type": "SHORT_ANSWER", "difficulty_level": "MEDIUM", "cognitive_level": "UNDERSTAND", "marks": 3, "number_of_questions": 2, "learning_outcome": "LO2"},
+    {"id": "QG15", "course": "CS308", "topic": "Software Testing", "question_type": "PROBLEM_SOLVING", "difficulty_level": "MEDIUM", "cognitive_level": "APPLY", "marks": 5, "number_of_questions": 2, "learning_outcome": "LO3"},
+    {"id": "QG16", "course": "CS308", "topic": "Design Patterns", "question_type": "DESCRIPTIVE", "difficulty_level": "HARD", "cognitive_level": "CREATE", "marks": 8, "number_of_questions": 1, "learning_outcome": "LO4"},
+    {"id": "QG17", "course": "PHY101", "topic": "Newton's Laws of Motion", "question_type": "PROBLEM_SOLVING", "difficulty_level": "EASY", "cognitive_level": "APPLY", "marks": 3, "number_of_questions": 2, "learning_outcome": "LO1"},
+    {"id": "QG18", "course": "ECO101", "topic": "Elasticity", "question_type": "PROBLEM_SOLVING", "difficulty_level": "MEDIUM", "cognitive_level": "APPLY", "marks": 4, "number_of_questions": 2, "learning_outcome": "LO2"},
+    {"id": "QG19", "course": "ECO101", "topic": "Market Structures", "question_type": "ANALYTICAL", "difficulty_level": "MEDIUM", "cognitive_level": "ANALYZE", "marks": 5, "number_of_questions": 2, "learning_outcome": "LO3"},
+    {"id": "QG20", "course": "CS301", "topic": "Normalization", "question_type": "DESCRIPTIVE", "difficulty_level": "MEDIUM", "cognitive_level": "UNDERSTAND", "marks": 5, "number_of_questions": 2, "learning_outcome": "LO3", "document_chunk_ids": [201, 202, 203, 204], "grounded": true},
+    {"id": "QG21", "course": "CS305", "topic": "Process Management and Scheduling", "question_type": "SHORT_ANSWER", "difficulty_level": "EASY", "cognitive_level": "UNDERSTAND", "marks": 2, "number_of_questions": 3, "learning_outcome": "LO1", "document_chunk_ids": [301, 302, 303, 304], "grounded": true},
+    {"id": "QG22", "course": "CS305", "topic": "Process Management and Scheduling", "question_type": "PROBLEM_SOLVING", "difficulty_level": "MEDIUM", "cognitive_level": "APPLY", "marks": 4, "number_of_questions": 2, "learning_outcome": "LO1", "document_chunk_ids": [302, 303], "grounded": true},
+    {"id": "QG23", "course": "CS301", "topic": "Normalization", "question_type": "ANALYTICAL", "difficulty_level": "HARD", "cognitive_level": "ANALYZE", "marks": 6, "number_of_questions": 2, "learning_outcome": "LO3", "document_chunk_ids": [203, 204, 404], "grounded": true, "note": "Includes the injection chunk 404 as document context."},
+    {"id": "QG24", "course": "CS201", "topic": "Sorting and Searching", "question_type": "ANALYTICAL", "difficulty_level": "MEDIUM", "cognitive_level": "ANALYZE", "marks": 5, "number_of_questions": 2, "learning_outcome": "LO5", "existing_question_ids": ["Q041", "Q049", "Q037", "Q044"], "note": "Similarity restriction: drafts must not be POTENTIAL_DUPLICATE of the existing questions."},
+    {"id": "QG25", "course": "CS306", "topic": "Transport Layer and Congestion Control", "question_type": "DESCRIPTIVE", "difficulty_level": "MEDIUM", "cognitive_level": "UNDERSTAND", "marks": 4, "number_of_questions": 2, "learning_outcome": "LO3", "existing_question_ids": ["Q074", "Q080", "Q088", "Q078"]},
+    {"id": "QG26", "course": "CS402", "topic": "Decision Trees and Ensembles", "question_type": "DESCRIPTIVE", "marks": 5, "number_of_questions": 4, "learning_outcome": "LO2", "blueprint": [
+      {"difficulty_level": "EASY", "cognitive_level": "REMEMBER", "question_type": "CONCEPTUAL", "marks": 2, "count": 1},
+      {"difficulty_level": "MEDIUM", "cognitive_level": "APPLY", "question_type": "PROBLEM_SOLVING", "marks": 5, "count": 2},
+      {"difficulty_level": "HARD", "cognitive_level": "EVALUATE", "question_type": "ANALYTICAL", "marks": 8, "count": 1}
+    ]}
+  ]
+}

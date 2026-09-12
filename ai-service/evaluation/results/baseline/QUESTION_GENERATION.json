@@ -1,0 +1,301 @@
+{
+  "component": "QUESTION_GENERATION",
+  "status": "EXCELLENT",
+  "split": "ALL(requests)",
+  "sample_size": 55,
+  "headline": {
+    "metric": "constraint_satisfaction_rate",
+    "value": 0.9819,
+    "ci95": [
+      0.9671,
+      0.9902
+    ],
+    "higher_is_better": true,
+    "sample_size": 55
+  },
+  "metrics": {
+    "constraint_satisfaction_rate": 0.9819,
+    "constraint_satisfaction_ci95": [
+      0.9671,
+      0.9902
+    ],
+    "fully_satisfied_question_rate": 0.8182,
+    "generation_completeness": 1.0,
+    "per_constraint": {
+      "bloom": 1.0,
+      "difficulty": 1.0,
+      "format": 1.0,
+      "language": 1.0,
+      "lo": 0.8182,
+      "marks": 1.0,
+      "no_leak": 1.0,
+      "non_empty": 1.0,
+      "similarity": 1.0,
+      "topic": 1.0,
+      "type": 1.0
+    },
+    "grounded_drafts": 9,
+    "hallucination_flag_rate": 0.0,
+    "mean_unsupported_term_rate": 0.0,
+    "self_validator_agreement": {
+      "difficulty": 0.5636,
+      "bloom": 0.9636,
+      "type": 0.9636
+    },
+    "requests": 26
+  },
+  "structured": {
+    "generation_methods": {
+      "template": 26
+    },
+    "self_validation_status": {
+      "PASSED_WITH_WARNINGS": 35,
+      "FAILED": 10,
+      "PASSED": 10
+    }
+  },
+  "latency_ms": {
+    "count": 26,
+    "mean_ms": 10.13,
+    "p50_ms": 9.6,
+    "p95_ms": 14.5,
+    "max_ms": 19.12
+  },
+  "failure_count": 0,
+  "failure_rate": 0.0,
+  "error_breakdown": {
+    "CONSTRAINT_VIOLATION": 10
+  },
+  "errors": [
+    {
+      "id": "QG01#2",
+      "question": "Describe how Normalization works. Give a suitable example.",
+      "requested": {
+        "question_type": "DESCRIPTIVE",
+        "difficulty_level": "MEDIUM",
+        "cognitive_level": "UNDERSTAND",
+        "marks": 5
+      },
+      "actual": {
+        "type": "DESCRIPTIVE",
+        "marks": 5.0,
+        "difficulty": "MEDIUM",
+        "bloom": "UNDERSTAND"
+      },
+      "failed_constraints": [
+        "lo"
+      ],
+      "max_similarity": null,
+      "self_validation": "FAILED",
+      "error_type": "CONSTRAINT_VIOLATION"
+    },
+    {
+      "id": "QG08#2",
+      "question": "In brief words, describe how Clustering works.",
+      "requested": {
+        "question_type": "SHORT_ANSWER",
+        "difficulty_level": "EASY",
+        "cognitive_level": "UNDERSTAND",
+        "marks": 2
+      },
+      "actual": {
+        "type": "SHORT_ANSWER",
+        "marks": 2.0,
+        "difficulty": "EASY",
+        "bloom": "UNDERSTAND"
+      },
+      "failed_constraints": [
+        "lo"
+      ],
+      "max_similarity": null,
+      "self_validation": "FAILED",
+      "error_type": "CONSTRAINT_VIOLATION"
+    },
+    {
+      "id": "QG08#3",
+      "question": "In brief words, discuss the significance of Clustering for their typical.",
+      "requested": {
+        "question_type": "SHORT_ANSWER",
+        "difficulty_level": "EASY",
+        "cognitive_level": "UNDERSTAND",
+        "marks": 2
+      },
+      "actual": {
+        "type": "SHORT_ANSWER",
+        "marks": 2.0,
+        "difficulty": "EASY",
+        "bloom": "UNDERSTAND"
+      },
+      "failed_constraints": [
+        "lo"
+      ],
+      "max_similarity": null,
+      "self_validation": "FAILED",
+      "error_type": "CONSTRAINT_VIOLATION"
+    },
+    {
+      "id": "QG12#1",
+      "question": "Apply Memory Management and Virtual Memory to the following situation and show each step, then solve a concrete example step by step. Give a suitable example.",
+      "requested": {
+        "question_type": "PROBLEM_SOLVING",
+        "difficulty_level": "MEDIUM",
+        "cognitive_level": "APPLY",
+        "marks": 4
+      },
+      "actual": {
+        "type": "PROBLEM_SOLVING",
+        "marks": 4.0,
+        "difficulty": "MEDIUM",
+        "bloom": "APPLY"
+      },
+      "failed_constraints": [
+        "lo"
+      ],
+      "max_similarity": null,
+      "self_validation": "FAILED",
+      "error_type": "CONSTRAINT_VIOLATION"
+    },
+    {
+      "id": "QG18#1",
+      "question": "Apply Elasticity to the following situation and show each step, then solve a concrete example step by step. Give a suitable example.",
+      "requested": {
+        "question_type": "PROBLEM_SOLVING",
+        "difficulty_level": "MEDIUM",
+        "cognitive_level": "APPLY",
+        "marks": 4
+      },
+      "actual": {
+        "type": "PROBLEM_SOLVING",
+        "marks": 4.0,
+        "difficulty": "MEDIUM",
+        "bloom": "APPLY"
+      },
+      "failed_constraints": [
+        "lo"
+      ],
+      "max_similarity": null,
+      "self_validation": "FAILED",
+      "error_type": "CONSTRAINT_VIOLATION"
+    },
+    {
+      "id": "QG20#2",
+      "question": "Describe how Normalization works: \"Functional dependencies are the formal basis for normalization\". Give a suitable example.",
+      "requested": {
+        "question_type": "DESCRIPTIVE",
+        "difficulty_level": "MEDIUM",
+        "cognitive_level": "UNDERSTAND",
+        "marks": 5
+      },
+      "actual": {
+        "type": "DESCRIPTIVE",
+        "marks": 5.0,
+        "difficulty": "MEDIUM",
+        "bloom": "UNDERSTAND"
+      },
+      "failed_constraints": [
+        "lo"
+      ],
+      "max_similarity": null,
+      "self_validation": "FAILED",
+      "error_type": "CONSTRAINT_VIOLATION"
+    },
+    {
+      "id": "QG23#2",
+      "question": "Compare Normalization with an alternative approach for form 3nf. Consider a complex, realistic scenario; give detailed reasoning and note the limitations of your answer.",
+      "requested": {
+        "question_type": "ANALYTICAL",
+        "difficulty_level": "HARD",
+        "cognitive_level": "ANALYZE",
+        "marks": 6
+      },
+      "actual": {
+        "type": "ANALYTICAL",
+        "marks": 6.0,
+        "difficulty": "HARD",
+        "bloom": "ANALYZE"
+      },
+      "failed_constraints": [
+        "lo"
+      ],
+      "max_similarity": null,
+      "self_validation": "FAILED",
+      "error_type": "CONSTRAINT_VIOLATION"
+    },
+    {
+      "id": "QG26#1",
+      "question": "Define Decision Trees and Ensembles as introduced in CS402 — Machine Learning.",
+      "requested": {
+        "question_type": "CONCEPTUAL",
+        "difficulty_level": "EASY",
+        "cognitive_level": "REMEMBER",
+        "marks": 2
+      },
+      "actual": {
+        "type": "CONCEPTUAL",
+        "marks": 2.0,
+        "difficulty": "EASY",
+        "bloom": "REMEMBER"
+      },
+      "failed_constraints": [
+        "lo"
+      ],
+      "max_similarity": null,
+      "self_validation": "FAILED",
+      "error_type": "CONSTRAINT_VIOLATION"
+    },
+    {
+      "id": "QG26#3",
+      "question": "Solve the following problem using Decision Trees and Ensembles. Give a suitable example.",
+      "requested": {
+        "question_type": "PROBLEM_SOLVING",
+        "difficulty_level": "MEDIUM",
+        "cognitive_level": "APPLY",
+        "marks": 5
+      },
+      "actual": {
+        "type": "PROBLEM_SOLVING",
+        "marks": 5.0,
+        "difficulty": "MEDIUM",
+        "bloom": "APPLY"
+      },
+      "failed_constraints": [
+        "lo"
+      ],
+      "max_similarity": null,
+      "self_validation": "FAILED",
+      "error_type": "CONSTRAINT_VIOLATION"
+    },
+    {
+      "id": "QG26#4",
+      "question": "Evaluate the effectiveness of Decision Trees and Ensembles for classification algorithms. Consider a complex, realistic scenario; give detailed reasoning and note the limitations of your answer.",
+      "requested": {
+        "question_type": "ANALYTICAL",
+        "difficulty_level": "HARD",
+        "cognitive_level": "EVALUATE",
+        "marks": 8
+      },
+      "actual": {
+        "type": "ANALYTICAL",
+        "marks": 8.0,
+        "difficulty": "HARD",
+        "bloom": "EVALUATE"
+      },
+      "failed_constraints": [
+        "lo"
+      ],
+      "max_similarity": null,
+      "self_validation": "FAILED",
+      "error_type": "CONSTRAINT_VIOLATION"
+    }
+  ],
+  "human_review": {
+    "status": "NOT_EVALUATED",
+    "reviews": 0,
+    "note": "No completed faculty review forms found (labels/HUMAN_REVIEW_FORM.md). Human quality is not inferred from automated checks."
+  },
+  "notes": [
+    "Generator actually used: facultylens-constrained-question-template-engine 1.0.0 (no HF_GENERATION_MODEL configured); prompt version 1.0.0.",
+    "Constraint checks are computed independently of the generator's own validation; self_validator_agreement shows how often the service's internal classifier agrees with the requested slot (a self-consistency signal, not accuracy).",
+    "Hallucination check is a lexical proxy applied to the question text: domain-vocabulary terms (course/corpus words, capitalised tokens, acronyms) that appear neither in the grounding chunks nor in the request context (topic, LO, course). Generic scaffolding is ignored. Drafts stay DRAFT until faculty approval; quality needs the human review form."
+  ]
+}
