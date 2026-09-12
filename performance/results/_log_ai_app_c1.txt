@@ -1,0 +1,55 @@
+time="2026-09-12T17:44:40+06:00" level=info msg="[ai] VU1 10q assessment 113: completed in 4.3s (2 polls)" source=console
+
+{
+  "app_analysis_status_poll": {
+    "avg": 57.5,
+    "min": 49,
+    "med": 57.5,
+    "p90": 64.3,
+    "p95": 65.2,
+    "p99": 65.8,
+    "max": 66,
+    "count": 2
+  },
+  "app_analysis_total": {
+    "avg": 4258,
+    "min": 4258,
+    "med": 4258,
+    "p90": 4258,
+    "p95": 4258,
+    "p99": 4258,
+    "max": 4258,
+    "count": 1
+  },
+  "app_analysis_accept": {
+    "avg": 142,
+    "min": 142,
+    "med": 142,
+    "p90": 142,
+    "p95": 142,
+    "p99": 142,
+    "max": 142,
+    "count": 1
+  },
+  "app_analysis_queue_wait": {
+    "avg": 2208,
+    "min": 2208,
+    "med": 2208,
+    "p90": 2208,
+    "p95": 2208,
+    "p99": 2208,
+    "max": 2208,
+    "count": 1
+  }
+}
+── resources during ai-analysis-baseline-after (5s) ──
+  facultylens-perf-ai-service      cpu avg    0.1%  max    0.1%   mem max   6.1% (454MiB)  samples 1
+  facultylens-perf-app             cpu avg    0.0%  max    0.0%   mem max   1.4% (102.1MiB)  samples 1
+  facultylens-perf-mysql           cpu avg    1.7%  max    1.7%   mem max   9.6% (719.8MiB)  samples 1
+  facultylens-perf-nginx           cpu avg    0.0%  max    0.0%   mem max   0.2% (15.49MiB)  samples 1
+  facultylens-perf-redis           cpu avg    0.5%  max    0.5%   mem max   0.1% (11.12MiB)  samples 1
+  facultylens-perf-scheduler       cpu avg    0.1%  max    0.1%   mem max   0.5% (40.41MiB)  samples 1
+  facultylens-perf-worker          cpu avg    0.0%  max    0.0%   mem max   0.5% (33.35MiB)  samples 1
+  mysql: Threads_connected	2 Max_used_connections	33 max_connections	200  (max_used before run: 33)
+  redis: used_memory_human:1.64M
+  redis queue depth: 0

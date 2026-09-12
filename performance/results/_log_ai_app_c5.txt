@@ -1,0 +1,59 @@
+time="2026-09-12T17:44:50+06:00" level=info msg="[ai] VU5 10q assessment 153: completed in 2.1s (1 polls)" source=console
+time="2026-09-12T17:44:50+06:00" level=info msg="[ai] VU2 50q assessment 126: completed in 2.1s (1 polls)" source=console
+time="2026-09-12T17:44:54+06:00" level=info msg="[ai] VU4 200q assessment 152: completed in 6.1s (3 polls)" source=console
+time="2026-09-12T17:44:56+06:00" level=info msg="[ai] VU1 10q assessment 113: completed in 8.2s (4 polls)" source=console
+time="2026-09-12T17:44:56+06:00" level=info msg="[ai] VU3 100q assessment 138: completed in 8.2s (4 polls)" source=console
+
+{
+  "app_analysis_total": {
+    "avg": 5312.8,
+    "min": 2051,
+    "med": 6142,
+    "p90": 8156.2,
+    "p95": 8156.6,
+    "p99": 8156.9,
+    "max": 8157,
+    "count": 5
+  },
+  "app_analysis_accept": {
+    "avg": 35.2,
+    "min": 28,
+    "med": 34,
+    "p90": 40.8,
+    "p95": 41.4,
+    "p99": 41.9,
+    "max": 42,
+    "count": 5
+  },
+  "app_analysis_queue_wait": {
+    "avg": 2050.7,
+    "min": 2049,
+    "med": 2050,
+    "p90": 2052.4,
+    "p95": 2052.7,
+    "p99": 2052.9,
+    "max": 2053,
+    "count": 3
+  },
+  "app_analysis_status_poll": {
+    "avg": 28.2,
+    "min": 14,
+    "med": 22,
+    "p90": 57.6,
+    "p95": 59.6,
+    "p99": 61.5,
+    "max": 62,
+    "count": 13
+  }
+}
+── resources during ai-analysis-baseline-after (8s) ──
+  facultylens-perf-ai-service      cpu avg  771.4%  max  771.4%   mem max   5.9% (443.4MiB)  samples 1
+  facultylens-perf-app             cpu avg    0.0%  max    0.0%   mem max   1.4% (100.8MiB)  samples 1
+  facultylens-perf-mysql           cpu avg   17.6%  max   17.6%   mem max   9.7% (725MiB)  samples 1
+  facultylens-perf-nginx           cpu avg    0.0%  max    0.0%   mem max   0.2% (15.5MiB)  samples 1
+  facultylens-perf-redis           cpu avg    1.0%  max    1.0%   mem max   0.1% (11.47MiB)  samples 1
+  facultylens-perf-scheduler       cpu avg    0.1%  max    0.1%   mem max   0.5% (40.41MiB)  samples 1
+  facultylens-perf-worker          cpu avg    6.3%  max    6.3%   mem max   0.7% (48.79MiB)  samples 1
+  mysql: Threads_connected	2 Max_used_connections	33 max_connections	200  (max_used before run: 33)
+  redis: used_memory_human:1.65M
+  redis queue depth: 0

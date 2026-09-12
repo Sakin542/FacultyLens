@@ -1227,6 +1227,9 @@ class AiAnalysisController extends Controller
             $recommendation->faculty_notes = $validated['faculty_notes'];
         }
         $recommendation->save();
+        if ($assessmentId = $recommendation->analysisReport?->assessment_id) {
+            \App\Services\AnalysisPayloadCache::forget((int) $assessmentId);
+        }
 
         return response()->json([
             'status' => 'success',
@@ -1571,7 +1574,7 @@ class AiAnalysisController extends Controller
             }
 
             if ($assessment) {
-                Cache::forget("user:{$user->id}:assessment:{$assessment->id}:analysis");
+                \App\Services\AnalysisPayloadCache::forget($assessment->id);
 
                 $this->auditLogService->log(
                     'AI_ANALYSIS_COMPLETED',
@@ -1699,9 +1702,8 @@ class AiAnalysisController extends Controller
             ], 403);
         }
 
-        // Serve from cache for completed analyses (5-minute TTL, user-scoped key)
-        $cacheKey = "user:{$user->id}:assessment:{$assessment->id}:analysis";
-        $cached   = Cache::get($cacheKey);
+        // Serve from cache for completed analyses (5-minute TTL; authorization was checked above)
+        $cached = \App\Services\AnalysisPayloadCache::get($assessment->id);
         if ($cached !== null && ($cached['data']['analysis_status'] ?? '') === 'completed') {
             return response()->json($cached);
         }
@@ -1881,9 +1883,9 @@ class AiAnalysisController extends Controller
             ],
         ];
 
-        // Cache completed results for 5 minutes (user-scoped, never shared between users)
+        // Cache completed results for 5 minutes (shared by every authorized viewer of this assessment)
         if ($report->analysis_status === 'completed') {
-            Cache::put($cacheKey, $responseData, 300);
+            \App\Services\AnalysisPayloadCache::put($assessment->id, $responseData);
         }
 
         return response()->json($responseData);

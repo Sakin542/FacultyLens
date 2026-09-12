@@ -66,6 +66,13 @@ class AnalysisReport extends Model
     // ------------------------------------------------------------------
 
     /**
+     * Columns needed by the run-lifecycle lookups. `findings` can exceed 100 KB per row; selecting it in an
+     * ORDER BY … LIMIT 1 lookup made MySQL 8 fail with error 1038 "Out of sort memory" under concurrent load
+     * (STEP 43 load test, 10+ parallel analysis requests).
+     */
+    protected const LIFECYCLE_COLUMNS = ['id', 'assessment_id', 'analysis_version', 'analysis_status', 'is_current', 'processing_error', 'updated_at'];
+
+    /**
      * The report that represents the assessment's current analysis state:
      * the current completed report, else the most recent attempt.
      */
@@ -81,7 +88,7 @@ class AnalysisReport extends Model
     public static function beginRun(int $assessmentId): self
     {
         return \Illuminate\Support\Facades\DB::transaction(function () use ($assessmentId) {
-            $latest = static::where('assessment_id', $assessmentId)->orderByDesc('id')->lockForUpdate()->first();
+            $latest = static::where('assessment_id', $assessmentId)->orderByDesc('id')->lockForUpdate()->first(self::LIFECYCLE_COLUMNS);
 
             if ($latest && $latest->analysis_status !== 'completed') {
                 $latest->forceFill(['analysis_status' => 'processing', 'processing_error' => null])->save();
@@ -131,7 +138,7 @@ class AnalysisReport extends Model
      */
     public static function recordFailure(int $assessmentId, string $error): self
     {
-        $latest = static::where('assessment_id', $assessmentId)->orderByDesc('id')->first();
+        $latest = static::where('assessment_id', $assessmentId)->orderByDesc('id')->first(self::LIFECYCLE_COLUMNS);
 
         if ($latest && $latest->analysis_status !== 'completed') {
             return $latest->failRun($error);

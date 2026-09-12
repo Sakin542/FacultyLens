@@ -1,0 +1,45 @@
+{
+  "scenario": "auth",
+  "profile": "baseline",
+  "generated_at": "2026-09-12T10:39:55.479Z",
+  "base_url": "http://127.0.0.1:8090",
+  "vus_max": 1,
+  "iterations": 30,
+  "http_reqs": 120,
+  "http_req_failed_rate": 0,
+  "app_errors": 0,
+  "rate_limited_429": 0,
+  "endpoints": {
+    "auth_user": {
+      "avg": 11.4,
+      "min": 10,
+      "med": 11,
+      "p90": 12,
+      "p95": 13.6,
+      "p99": 17.8,
+      "max": 19,
+      "count": 30
+    },
+    "login": {
+      "avg": 161.7,
+      "min": 156,
+      "med": 161.5,
+      "p90": 166.1,
+      "p95": 167,
+      "p99": 169.1,
+      "max": 170,
+      "count": 30
+    },
+    "logout": {
+      "avg": 14.3,
+      "min": 13,
+      "med": 14,
+      "p90": 16,
+      "p95": 16.5,
+      "p99": 17.7,
+      "max": 18,
+      "count": 30
+    }
+  },
+  "extra": {}
+}

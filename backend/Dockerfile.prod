@@ -25,6 +25,7 @@ COPY deploy/docker/entrypoint.sh /usr/local/bin/facultylens-entrypoint
 RUN chmod +x /usr/local/bin/facultylens-entrypoint \
     && mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs storage/app/private bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache \
+    && chown -R www-data:www-data /usr/local/etc/php-fpm.d \
     && composer --version >/dev/null 2>&1 || true
 
 USER www-data

@@ -1,0 +1,135 @@
+{
+  "scenario": "full-workflow",
+  "profile": "fixed",
+  "generated_at": "2026-09-12T11:29:37.494Z",
+  "base_url": "http://127.0.0.1:8090",
+  "vus_max": 50,
+  "iterations": 407,
+  "http_reqs": 3456,
+  "http_req_failed_rate": 0,
+  "app_errors": 0,
+  "rate_limited_429": 0,
+  "endpoints": {
+    "course_show": {
+      "avg": 49,
+      "min": 14,
+      "med": 26,
+      "p90": 140.4,
+      "p95": 206.2,
+      "p99": 221.9,
+      "max": 225,
+      "count": 407
+    },
+    "report_create_small": {
+      "avg": 62.4,
+      "min": 37,
+      "med": 58,
+      "p90": 82.1,
+      "p95": 89,
+      "p99": 107.2,
+      "max": 117,
+      "count": 50
+    },
+    "report_download_csv": {
+      "avg": 21.3,
+      "min": 13,
+      "med": 21.5,
+      "p90": 28.1,
+      "p95": 31.1,
+      "p99": 33.5,
+      "max": 34,
+      "count": 50
+    },
+    "analytics_overview": {
+      "avg": 225.4,
+      "min": 36,
+      "med": 64,
+      "p90": 621.8,
+      "p95": 1532.5,
+      "p99": 2323,
+      "max": 2354,
+      "count": 407
+    },
+    "notifications": {
+      "avg": 84.6,
+      "min": 10,
+      "med": 19,
+      "p90": 155.2,
+      "p95": 354.8,
+      "p99": 1190.8,
+      "max": 1244,
+      "count": 407
+    },
+    "journey_total": {
+      "avg": 765,
+      "min": 149,
+      "med": 379,
+      "p90": 3231.8,
+      "p95": 3465.1,
+      "p99": 3721.9,
+      "max": 3770,
+      "count": 407
+    },
+    "analysis_read": {
+      "avg": 64.2,
+      "min": 16,
+      "med": 42,
+      "p90": 147,
+      "p95": 182.4,
+      "p99": 246.9,
+      "max": 285,
+      "count": 407
+    },
+    "analytics_course": {
+      "avg": 115.8,
+      "min": 20,
+      "med": 120,
+      "p90": 211.4,
+      "p95": 251.4,
+      "p99": 292.9,
+      "max": 317,
+      "count": 407
+    },
+    "login": {
+      "avg": 456.2,
+      "min": 206,
+      "med": 410,
+      "p90": 743.5,
+      "p95": 750,
+      "p99": 754,
+      "max": 756,
+      "count": 50
+    },
+    "assessments_list": {
+      "avg": 42.8,
+      "min": 12,
+      "med": 23,
+      "p90": 115.6,
+      "p95": 165.4,
+      "p99": 189.9,
+      "max": 235,
+      "count": 407
+    },
+    "courses_list": {
+      "avg": 44,
+      "min": 10,
+      "med": 20,
+      "p90": 140.4,
+      "p95": 187.1,
+      "p99": 218.6,
+      "max": 289,
+      "count": 407
+    },
+    "assessment_show": {
+      "avg": 68,
+      "min": 17,
+      "med": 43,
+      "p90": 152.4,
+      "p95": 237.4,
+      "p99": 285.7,
+      "max": 320,
+      "count": 407
+    }
+  },
+  "extra": {}
+}

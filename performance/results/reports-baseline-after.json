@@ -1,0 +1,105 @@
+{
+  "scenario": "reports",
+  "profile": "baseline",
+  "generated_at": "2026-09-12T11:58:36.419Z",
+  "base_url": "http://127.0.0.1:8090",
+  "vus_max": 1,
+  "iterations": 24,
+  "http_reqs": 114,
+  "http_req_failed_rate": 0.09649122807017543,
+  "app_errors": 0,
+  "rate_limited_429": 6,
+  "endpoints": {
+    "reports_list": {
+      "avg": 46.2,
+      "min": 42,
+      "med": 45,
+      "p90": 52.7,
+      "p95": 53,
+      "p99": 56.1,
+      "max": 57,
+      "count": 24
+    },
+    "report_download_xlsx": {
+      "avg": 14.7,
+      "min": 14,
+      "med": 15,
+      "p90": 15,
+      "p95": 15,
+      "p99": 15,
+      "max": 15,
+      "count": 3
+    },
+    "report_preview": {
+      "avg": 25.1,
+      "min": 9,
+      "med": 24.5,
+      "p90": 36.4,
+      "p95": 43.8,
+      "p99": 47.3,
+      "max": 48,
+      "count": 24
+    },
+    "report_create_course": {
+      "avg": 12.2,
+      "min": 8,
+      "med": 13,
+      "p90": 14,
+      "p95": 14.5,
+      "p99": 14.9,
+      "max": 15,
+      "count": 6
+    },
+    "report_create_small": {
+      "avg": 114.2,
+      "min": 37,
+      "med": 48,
+      "p90": 253.5,
+      "p95": 258.3,
+      "p99": 262.1,
+      "max": 263,
+      "count": 6
+    },
+    "report_download_csv": {
+      "avg": 15,
+      "min": 14,
+      "med": 15,
+      "p90": 15.4,
+      "p95": 15.7,
+      "p99": 15.9,
+      "max": 16,
+      "count": 7
+    },
+    "report_create_medium": {
+      "avg": 142.7,
+      "min": 9,
+      "med": 51,
+      "p90": 349.5,
+      "p95": 436.8,
+      "p99": 506.6,
+      "max": 524,
+      "count": 6
+    },
+    "report_download_pdf": {
+      "avg": 21.7,
+      "min": 19,
+      "med": 20.5,
+      "p90": 25.5,
+      "p95": 26.8,
+      "p99": 27.8,
+      "max": 28,
+      "count": 6
+    },
+    "report_create_large": {
+      "avg": 224.5,
+      "min": 9,
+      "med": 56,
+      "p90": 590,
+      "p95": 796.5,
+      "p99": 961.7,
+      "max": 1003,
+      "count": 6
+    }
+  },
+  "extra": {}
+}

@@ -1,0 +1,74 @@
+
+{
+  "notifications": {
+    "avg": 11.7,
+    "min": 10,
+    "med": 11.5,
+    "p90": 13,
+    "p95": 13,
+    "p99": 14.4,
+    "max": 15,
+    "count": 30
+  },
+  "courses_list": {
+    "avg": 12.4,
+    "min": 10,
+    "med": 12,
+    "p90": 14.1,
+    "p95": 17.7,
+    "p99": 22.8,
+    "max": 24,
+    "count": 30
+  },
+  "analytics_overview": {
+    "avg": 39.2,
+    "min": 36,
+    "med": 38,
+    "p90": 43.4,
+    "p95": 44.7,
+    "p99": 50.2,
+    "max": 52,
+    "count": 27
+  },
+  "analytics_course_sections": {
+    "avg": 21.7,
+    "min": 15,
+    "med": 22,
+    "p90": 24,
+    "p95": 24.5,
+    "p99": 25.1,
+    "max": 26,
+    "count": 90
+  },
+  "analytics_overview_fresh": {
+    "avg": 534.7,
+    "min": 527,
+    "med": 537,
+    "p90": 539.4,
+    "p95": 539.7,
+    "p99": 539.9,
+    "max": 540,
+    "count": 3
+  },
+  "analytics_course": {
+    "avg": 49.3,
+    "min": 20,
+    "med": 22,
+    "p90": 106,
+    "p95": 106.6,
+    "p99": 110.6,
+    "max": 112,
+    "count": 30
+  }
+}
+── resources during dashboard-baseline-after (128s) ──
+  facultylens-perf-ai-service      cpu avg    0.3%  max    3.2%   mem max   6.2% (464.9MiB)  samples 18
+  facultylens-perf-app             cpu avg    2.0%  max   11.0%   mem max   1.1% (82.31MiB)  samples 18
+  facultylens-perf-mysql           cpu avg    2.2%  max   11.1%   mem max   8.2% (615.6MiB)  samples 18
+  facultylens-perf-nginx           cpu avg    0.1%  max    0.3%   mem max   0.2% (15.47MiB)  samples 18
+  facultylens-perf-redis           cpu avg    0.6%  max    2.6%   mem max   0.2% (11.88MiB)  samples 18
+  facultylens-perf-scheduler       cpu avg    0.2%  max    2.3%   mem max   0.4% (32.28MiB)  samples 18
+  facultylens-perf-worker          cpu avg    0.9%  max   16.3%   mem max   0.5% (40.46MiB)  samples 18
+  mysql: Threads_connected	1 Max_used_connections	7 max_connections	200  (max_used before run: 7)
+  redis: used_memory_human:1.95M
+  redis queue depth: 0

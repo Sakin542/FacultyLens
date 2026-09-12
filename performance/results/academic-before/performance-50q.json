@@ -1,0 +1,10 @@
+{
+ "data": null,
+ "message": "No performance analysis has been generated for this assessment yet.",
+ "meta": {
+  "expected_performance_percent": 70,
+  "finalized_answer_count": 1000,
+  "minimum_responses": 5
+ },
+ "status": "success"
+}

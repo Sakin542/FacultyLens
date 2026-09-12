@@ -1,0 +1,63 @@
+{
+ "data": {
+  "learning_gaps": {
+   "analyzed_assessments": 0,
+   "benchmark_percent": 70,
+   "counts": {
+    "HIGH_GAP": 0,
+    "INSUFFICIENT_DATA": 0,
+    "MINOR_GAP": 0,
+    "MODERATE_GAP": 0,
+    "ON_TARGET": 0,
+    "STRONG": 0
+   },
+   "explanation": "Learning outcomes whose current performance analysis is MINOR_GAP, MODERATE_GAP or HIGH_GAP.",
+   "open_gaps": 0,
+   "top_gaps": []
+  },
+  "meta": {
+   "benchmark_percent": 70,
+   "disclaimer": "Analytics are evidence, trends and signals for faculty review. FacultyLens never changes assessments, grades, mappings, rubrics or AI models automatically."
+  },
+  "performance": {
+   "assessments_without_analysis": 10,
+   "available": true,
+   "average_percentage": 65.67,
+   "benchmark_percent": 70,
+   "explanation": "Average finalized-grade percentage across submissions with FACULTY_REVIEWED/FINALIZED grading status (STEP 30 rules).",
+   "gap": 4.33,
+   "maximum_percentage": 76,
+   "median_percentage": 66,
+   "minimum_percentage": 56,
+   "responses": 10000,
+   "status": "ON_TARGET",
+   "submissions": 2000,
+   "trend": []
+  },
+  "question_performance": [],
+  "scope": {
+   "assessment_ids": [
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112
+   ],
+   "course_ids": [
+    1013
+   ],
+   "student_data_course_ids": [
+    1013
+   ],
+   "student_data_restricted": false
+  },
+  "topic_performance": []
+ },
+ "message": "Course analytics section retrieved.",
+ "status": "success"
+}

@@ -1,0 +1,61 @@
+{
+ "data": {
+  "assessment_id": 112,
+  "assessment_title": "Assessment 9 (200 questions)",
+  "course_code": "PERF-001",
+  "current_analysis_version": 3,
+  "history": [
+   {
+    "analysis_status": "completed",
+    "assessment_version": null,
+    "cognitive_level_balance_score": 73.72,
+    "difficulty_balance_score": 20,
+    "has_report": false,
+    "is_current": true,
+    "learning_outcome_alignment_score": 100,
+    "overall_score": 78.8,
+    "rating": "FAIR",
+    "report_uuid": null,
+    "similarity_score": 75,
+    "topic_coverage_score": 100,
+    "total_questions": 200,
+    "version": 3
+   },
+   {
+    "analysis_status": "completed",
+    "assessment_version": null,
+    "cognitive_level_balance_score": 73.72,
+    "difficulty_balance_score": 20,
+    "has_report": false,
+    "is_current": false,
+    "learning_outcome_alignment_score": 100,
+    "overall_score": 84.06,
+    "rating": "GOOD",
+    "report_uuid": null,
+    "similarity_score": 75,
+    "topic_coverage_score": 100,
+    "total_questions": 200,
+    "version": 2
+   },
+   {
+    "analysis_status": "completed",
+    "assessment_version": null,
+    "cognitive_level_balance_score": 68,
+    "difficulty_balance_score": 75,
+    "has_report": false,
+    "is_current": false,
+    "learning_outcome_alignment_score": 65,
+    "overall_score": 87,
+    "rating": "GOOD",
+    "report_uuid": null,
+    "similarity_score": 0.3,
+    "topic_coverage_score": 70,
+    "total_questions": 200,
+    "version": 1
+   }
+  ],
+  "total_versions": 3
+ },
+ "status": "success",
+ "success": true
+}

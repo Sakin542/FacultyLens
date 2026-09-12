@@ -1,0 +1,74 @@
+time="2026-09-12T17:49:37+06:00" level=info msg="[ai] VU7 100q assessment 178: completed in 2.2s (1 polls)" source=console
+time="2026-09-12T17:49:39+06:00" level=info msg="[ai] VU6 50q assessment 166: completed in 4.2s (2 polls)" source=console
+time="2026-09-12T17:49:39+06:00" level=info msg="[ai] VU5 10q assessment 153: completed in 4.2s (2 polls)" source=console
+time="2026-09-12T17:49:39+06:00" level=info msg="[ai] VU11 100q assessment 118: completed in 4.2s (2 polls)" source=console
+time="2026-09-12T17:49:39+06:00" level=info msg="[ai] VU13 10q assessment 133: completed in 4.2s (2 polls)" source=console
+time="2026-09-12T17:49:39+06:00" level=info msg="[ai] VU2 50q assessment 126: completed in 4.2s (2 polls)" source=console
+time="2026-09-12T17:49:39+06:00" level=info msg="[ai] VU18 50q assessment 186: completed in 4.2s (2 polls)" source=console
+time="2026-09-12T17:49:41+06:00" level=info msg="[ai] VU1 10q assessment 113: completed in 6.2s (3 polls)" source=console
+time="2026-09-12T17:49:41+06:00" level=info msg="[ai] VU10 50q assessment 106: completed in 6.2s (3 polls)" source=console
+time="2026-09-12T17:49:41+06:00" level=info msg="[ai] VU12 200q assessment 132: completed in 6.2s (3 polls)" source=console
+time="2026-09-12T17:49:41+06:00" level=info msg="[ai] VU19 100q assessment 198: completed in 6.2s (3 polls)" source=console
+time="2026-09-12T17:49:41+06:00" level=info msg="[ai] VU3 100q assessment 138: completed in 6.2s (3 polls)" source=console
+time="2026-09-12T17:49:41+06:00" level=info msg="[ai] VU15 100q assessment 158: completed in 6.2s (3 polls)" source=console
+time="2026-09-12T17:49:43+06:00" level=info msg="[ai] VU9 10q assessment 193: completed in 8.2s (4 polls)" source=console
+time="2026-09-12T17:49:43+06:00" level=info msg="[ai] VU4 200q assessment 152: completed in 8.2s (4 polls)" source=console
+time="2026-09-12T17:49:43+06:00" level=info msg="[ai] VU16 200q assessment 172: completed in 8.2s (4 polls)" source=console
+time="2026-09-12T17:49:45+06:00" level=info msg="[ai] VU17 10q assessment 173: completed in 10.2s (5 polls)" source=console
+time="2026-09-12T17:49:45+06:00" level=info msg="[ai] VU20 200q assessment 112: completed in 10.2s (5 polls)" source=console
+time="2026-09-12T17:49:45+06:00" level=info msg="[ai] VU8 200q assessment 192: completed in 10.2s (5 polls)" source=console
+time="2026-09-12T17:49:47+06:00" level=info msg="[ai] VU14 50q assessment 146: completed in 12.2s (6 polls)" source=console
+
+{
+  "app_analysis_total": {
+    "avg": 6587.4,
+    "min": 2152,
+    "med": 6188,
+    "p90": 10218.6,
+    "p95": 10320.9,
+    "p99": 11793,
+    "max": 12161,
+    "count": 20
+  },
+  "app_analysis_queue_wait": {
+    "avg": 2126.2,
+    "min": 2042,
+    "med": 2126,
+    "p90": 2154.2,
+    "p95": 2159.3,
+    "p99": 2161.5,
+    "max": 2162,
+    "count": 19
+  },
+  "app_analysis_accept": {
+    "avg": 70.2,
+    "min": 23,
+    "med": 70.5,
+    "p90": 83.8,
+    "p95": 91.6,
+    "p99": 100.7,
+    "max": 103,
+    "count": 20
+  },
+  "app_analysis_status_poll": {
+    "avg": 35.8,
+    "min": 14,
+    "med": 27.5,
+    "p90": 66.1,
+    "p95": 68,
+    "p99": 69,
+    "max": 69,
+    "count": 64
+  }
+}
+── resources during ai-analysis-baseline-after2 (13s) ──
+  facultylens-perf-ai-service      cpu avg   39.3%  max  117.8%   mem max   6.3% (472.1MiB)  samples 3
+  facultylens-perf-app             cpu avg  144.1%  max  432.3%   mem max   0.9% (70.88MiB)  samples 3
+  facultylens-perf-mysql           cpu avg   30.6%  max   54.3%   mem max  10.3% (769.4MiB)  samples 3
+  facultylens-perf-nginx           cpu avg    2.3%  max    6.5%   mem max   0.2% (15.57MiB)  samples 3
+  facultylens-perf-redis           cpu avg    5.7%  max   13.7%   mem max   0.1% (11.13MiB)  samples 3
+  facultylens-perf-scheduler       cpu avg    0.1%  max    0.3%   mem max   0.4% (31.89MiB)  samples 3
+  facultylens-perf-worker          cpu avg   17.3%  max   51.9%   mem max   0.8% (56.37MiB)  samples 3
+  mysql: Threads_connected	2 Max_used_connections	33 max_connections	200  (max_used before run: 33)
+  redis: used_memory_human:1.66M
+  redis queue depth: 0

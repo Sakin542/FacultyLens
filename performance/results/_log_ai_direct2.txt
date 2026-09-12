@@ -1,0 +1,144 @@
+
+{
+  "ai_embed_10": {
+    "avg": 18.7,
+    "min": 2,
+    "med": 3,
+    "p90": 41.4,
+    "p95": 46.2,
+    "p99": 50,
+    "max": 51,
+    "count": 3
+  },
+  "ai_embed_50": {
+    "avg": 41.7,
+    "min": 5,
+    "med": 6,
+    "p90": 92.4,
+    "p95": 103.2,
+    "p99": 111.8,
+    "max": 114,
+    "count": 3
+  },
+  "ai_similarity_prev100": {
+    "avg": 7,
+    "min": 5,
+    "med": 7,
+    "p90": 8.6,
+    "p95": 8.8,
+    "p99": 9,
+    "max": 9,
+    "count": 2
+  },
+  "ai_full_analysis_50q": {
+    "avg": 64,
+    "min": 52,
+    "med": 64,
+    "p90": 73.6,
+    "p95": 74.8,
+    "p99": 75.8,
+    "max": 76,
+    "count": 2
+  },
+  "ai_full_analysis_10q": {
+    "avg": 45.5,
+    "min": 23,
+    "med": 45.5,
+    "p90": 63.5,
+    "p95": 65.8,
+    "p99": 67.6,
+    "max": 68,
+    "count": 2
+  },
+  "ai_embed_100": {
+    "avg": 53,
+    "min": 12,
+    "med": 19,
+    "p90": 106.2,
+    "p95": 117.1,
+    "p99": 125.8,
+    "max": 128,
+    "count": 3
+  },
+  "ai_full_analysis_100q": {
+    "avg": 63.5,
+    "min": 58,
+    "med": 63.5,
+    "p90": 67.9,
+    "p95": 68.5,
+    "p99": 68.9,
+    "max": 69,
+    "count": 2
+  },
+  "ai_similarity_prev1000": {
+    "avg": 609,
+    "min": 62,
+    "med": 609,
+    "p90": 1046.6,
+    "p95": 1101.3,
+    "p99": 1145.1,
+    "max": 1156,
+    "count": 2
+  },
+  "ai_full_analysis_200q": {
+    "avg": 97,
+    "min": 87,
+    "med": 97,
+    "p90": 105,
+    "p95": 106,
+    "p99": 106.8,
+    "max": 107,
+    "count": 2
+  },
+  "ai_embed_1": {
+    "avg": 12.3,
+    "min": 1,
+    "med": 2,
+    "p90": 27.6,
+    "p95": 30.8,
+    "p99": 33.4,
+    "max": 34,
+    "count": 3
+  },
+  "ai_similarity_prev5000": {
+    "avg": 4148.5,
+    "min": 175,
+    "med": 4148.5,
+    "p90": 7327.3,
+    "p95": 7724.7,
+    "p99": 8042.5,
+    "max": 8122,
+    "count": 2
+  },
+  "ai_embed_200": {
+    "avg": 111.3,
+    "min": 14,
+    "med": 15,
+    "p90": 247,
+    "p95": 276,
+    "p99": 299.2,
+    "max": 305,
+    "count": 3
+  },
+  "ai_similarity_prev500": {
+    "avg": 395.5,
+    "min": 25,
+    "med": 395.5,
+    "p90": 691.9,
+    "p95": 728.9,
+    "p99": 758.6,
+    "max": 766,
+    "count": 2
+  }
+}
+── resources during ai-analysis-baseline-after-cache (12s) ──
+  facultylens-perf-ai-service      cpu avg  822.4%  max  847.4%   mem max   6.2% (468.2MiB)  samples 2
+  facultylens-perf-app             cpu avg    0.0%  max    0.0%   mem max   1.4% (101.5MiB)  samples 2
+  facultylens-perf-mysql           cpu avg    2.0%  max    3.3%   mem max   9.6% (717MiB)  samples 2
+  facultylens-perf-nginx           cpu avg    0.0%  max    0.0%   mem max   0.2% (15.5MiB)  samples 2
+  facultylens-perf-redis           cpu avg    0.6%  max    0.6%   mem max   0.1% (10.83MiB)  samples 2
+  facultylens-perf-scheduler       cpu avg    0.1%  max    0.1%   mem max   0.5% (40.41MiB)  samples 2
+  facultylens-perf-worker          cpu avg    0.1%  max    0.1%   mem max   0.4% (33.34MiB)  samples 2
+  mysql: Threads_connected	1 Max_used_connections	33 max_connections	200  (max_used before run: 33)
+  redis: used_memory_human:1.56M
+  redis queue depth: 0

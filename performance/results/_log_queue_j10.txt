@@ -1,0 +1,58 @@
+time="2026-09-12T17:51:52+06:00" level=info msg="[queue] dispatching 10 analyses" source=console
+time="2026-09-12T17:51:53+06:00" level=info msg="[queue] duplicate POST → 202 status=processing same_id=true" source=console
+time="2026-09-12T17:51:55+06:00" level=info msg="[queue] 10 jobs finished in 2.5s → 239.62 jobs/min, failed=0" source=console
+time="2026-09-12T17:51:55+06:00" level=info msg="[queue] duplicate/missing report versions across 10 assessments: 0" source=console
+
+{
+  "queue_all_jobs_wall": {
+    "avg": 2504,
+    "min": 2504,
+    "med": 2504,
+    "p90": 2504,
+    "p95": 2504,
+    "p99": 2504,
+    "max": 2504,
+    "count": 1
+  },
+  "queue_accept": {
+    "avg": 31.9,
+    "min": 24,
+    "med": 27.5,
+    "p90": 34,
+    "p95": 56.5,
+    "p99": 74.5,
+    "max": 79,
+    "count": 10
+  },
+  "idempotency_duplicate_reports": {
+    "avg": 0,
+    "min": 0,
+    "med": 0,
+    "p90": 0,
+    "p95": 0,
+    "p99": 0,
+    "max": 0,
+    "count": 1
+  },
+  "queue_job_total": {
+    "avg": 2226.3,
+    "min": 2185,
+    "med": 2224.5,
+    "p90": 2263.3,
+    "p95": 2269.2,
+    "p99": 2273.8,
+    "max": 2275,
+    "count": 10
+  }
+}
+── resources during queue-baseline-after (4s) ──
+  facultylens-perf-ai-service      cpu avg  153.1%  max  153.1%   mem max   6.3% (472.1MiB)  samples 1
+  facultylens-perf-app             cpu avg   18.2%  max   18.2%   mem max   0.8% (60.12MiB)  samples 1
+  facultylens-perf-mysql           cpu avg   29.3%  max   29.3%   mem max  10.3% (773MiB)  samples 1
+  facultylens-perf-nginx           cpu avg    0.6%  max    0.6%   mem max   0.2% (15.5MiB)  samples 1
+  facultylens-perf-redis           cpu avg    3.9%  max    3.9%   mem max   0.1% (10.98MiB)  samples 1
+  facultylens-perf-scheduler       cpu avg    0.1%  max    0.1%   mem max   0.4% (31.89MiB)  samples 1
+  facultylens-perf-worker          cpu avg    0.0%  max    0.0%   mem max   0.4% (32.63MiB)  samples 1
+  mysql: Threads_connected	2 Max_used_connections	33 max_connections	200  (max_used before run: 33)
+  redis: used_memory_human:1.66M
+  redis queue depth: 0

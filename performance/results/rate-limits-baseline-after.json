@@ -1,0 +1,60 @@
+{
+  "scenario": "rate-limits",
+  "profile": "baseline",
+  "generated_at": "2026-09-12T17:27:21.951Z",
+  "base_url": "http://127.0.0.1:8090",
+  "vus_max": 1,
+  "iterations": 1,
+  "http_reqs": 232,
+  "http_req_failed_rate": 0.3232758620689655,
+  "app_errors": 0,
+  "rate_limited_429": 25,
+  "endpoints": {
+    "other_user_status": {
+      "avg": 200,
+      "min": 200,
+      "med": 200,
+      "p90": 200,
+      "p95": 200,
+      "p99": null,
+      "max": 200
+    },
+    "first429_uploads": {
+      "avg": 26,
+      "min": 26,
+      "med": 26,
+      "p90": 26,
+      "p95": 26,
+      "p99": null,
+      "max": 26
+    },
+    "first429_ai": {
+      "avg": 31,
+      "min": 31,
+      "med": 31,
+      "p90": 31,
+      "p95": 31,
+      "p99": null,
+      "max": 31
+    },
+    "first429_api": {
+      "avg": 121,
+      "min": 121,
+      "med": 121,
+      "p90": 121,
+      "p95": 121,
+      "p99": null,
+      "max": 121
+    },
+    "first429_login": {
+      "avg": 21,
+      "min": 21,
+      "med": 21,
+      "p90": 21,
+      "p95": 21,
+      "p99": null,
+      "max": 21
+    }
+  },
+  "extra": {}
+}

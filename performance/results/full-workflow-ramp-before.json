@@ -1,0 +1,135 @@
+{
+  "scenario": "full-workflow",
+  "profile": "ramp",
+  "generated_at": "2026-09-12T10:56:29.467Z",
+  "base_url": "http://127.0.0.1:8090",
+  "vus_max": 100,
+  "iterations": 1543,
+  "http_reqs": 13080,
+  "http_req_failed_rate": 0,
+  "app_errors": 0,
+  "rate_limited_429": 0,
+  "endpoints": {
+    "analytics_course": {
+      "avg": 185.5,
+      "min": 27,
+      "med": 125,
+      "p90": 447.8,
+      "p95": 497,
+      "p99": 592.6,
+      "max": 707,
+      "count": 1543
+    },
+    "assessment_show": {
+      "avg": 127.8,
+      "min": 12,
+      "med": 42,
+      "p90": 362.8,
+      "p95": 427,
+      "p99": 511.3,
+      "max": 660,
+      "count": 1543
+    },
+    "login": {
+      "avg": 271.2,
+      "min": 154,
+      "med": 180.5,
+      "p90": 503.3,
+      "p95": 605.3,
+      "p99": 705.4,
+      "max": 746,
+      "count": 100
+    },
+    "analysis_read": {
+      "avg": 133.6,
+      "min": 11,
+      "med": 48,
+      "p90": 372.8,
+      "p95": 442.9,
+      "p99": 559,
+      "max": 689,
+      "count": 1543
+    },
+    "courses_list": {
+      "avg": 115.7,
+      "min": 10,
+      "med": 23,
+      "p90": 352.8,
+      "p95": 422,
+      "p99": 537.2,
+      "max": 631,
+      "count": 1543
+    },
+    "report_download_csv": {
+      "avg": 113.8,
+      "min": 10,
+      "med": 24,
+      "p90": 355.3,
+      "p95": 438.9,
+      "p99": 600.5,
+      "max": 668,
+      "count": 268
+    },
+    "journey_total": {
+      "avg": 1266.9,
+      "min": 224,
+      "med": 514,
+      "p90": 3286.8,
+      "p95": 3636.3,
+      "p99": 4550.1,
+      "max": 5603,
+      "count": 1543
+    },
+    "assessments_list": {
+      "avg": 115,
+      "min": 11,
+      "med": 21,
+      "p90": 347,
+      "p95": 416.7,
+      "p99": 509,
+      "max": 658,
+      "count": 1543
+    },
+    "analytics_overview": {
+      "avg": 286.6,
+      "min": 104,
+      "med": 167,
+      "p90": 600,
+      "p95": 686.9,
+      "p99": 1071.7,
+      "max": 1295,
+      "count": 1543
+    },
+    "course_show": {
+      "avg": 114.4,
+      "min": 10,
+      "med": 24,
+      "p90": 342,
+      "p95": 404.6,
+      "p99": 517.4,
+      "max": 623,
+      "count": 1543
+    },
+    "report_create_small": {
+      "avg": 140.5,
+      "min": 35,
+      "med": 52.5,
+      "p90": 406.2,
+      "p95": 464,
+      "p99": 519.3,
+      "max": 542,
+      "count": 268
+    },
+    "notifications": {
+      "avg": 118.6,
+      "min": 9,
+      "med": 20,
+      "p90": 366,
+      "p95": 438.8,
+      "p99": 556,
+      "max": 651,
+      "count": 1543
+    }
+  },
+  "extra": {}
+}

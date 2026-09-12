@@ -1,0 +1,22 @@
+ts,container,cpu_pct,mem_used,mem_pct,net_io,block_io
+17:49:33,facultylens-perf-worker,0.07%,51.91MiB / 7.317GiB,0.69%,8.69MB / 8.94MB,0B / 709kB
+17:49:33,facultylens-perf-scheduler,0.26%,31.89MiB / 7.317GiB,0.43%,1.83kB / 911B,0B / 709kB
+17:49:33,facultylens-perf-app,432.30%,70.88MiB / 7.317GiB,0.95%,12.8MB / 3.08MB,1.59MB / 713kB
+17:49:33,facultylens-perf-ai-service,0.16%,472.1MiB / 7.317GiB,6.30%,9.34MB / 21.7MB,0B / 0B
+17:49:33,facultylens-perf-nginx,6.53%,15.57MiB / 7.317GiB,0.21%,1.38GB / 1.41GB,14.1MB / 4.1kB
+17:49:33,facultylens-perf-redis,3.00%,11.13MiB / 7.317GiB,0.15%,655MB / 2.02GB,44MB / 839MB
+17:49:33,facultylens-perf-mysql,54.29%,761.7MiB / 7.317GiB,10.17%,410MB / 1.4GB,54.4MB / 3.61GB
+17:49:34,facultylens-perf-worker,0.00%,51.91MiB / 7.317GiB,0.69%,8.69MB / 8.94MB,0B / 709kB
+17:49:34,facultylens-perf-scheduler,0.07%,31.89MiB / 7.317GiB,0.43%,1.83kB / 911B,0B / 709kB
+17:49:34,facultylens-perf-app,0.00%,70.84MiB / 7.317GiB,0.95%,12.8MB / 3.08MB,1.59MB / 713kB
+17:49:34,facultylens-perf-ai-service,0.11%,472.1MiB / 7.317GiB,6.30%,9.34MB / 21.7MB,0B / 0B
+17:49:34,facultylens-perf-nginx,0.00%,15.57MiB / 7.317GiB,0.21%,1.38GB / 1.41GB,14.1MB / 4.1kB
+17:49:34,facultylens-perf-redis,0.32%,11.36MiB / 7.317GiB,0.15%,655MB / 2.02GB,44MB / 839MB
+17:49:34,facultylens-perf-mysql,0.79%,761.7MiB / 7.317GiB,10.17%,410MB / 1.4GB,54.4MB / 3.61GB
+17:49:41,facultylens-perf-worker,51.86%,56.37MiB / 7.317GiB,0.75%,24.9MB / 25.7MB,0B / 709kB
+17:49:41,facultylens-perf-scheduler,0.05%,31.89MiB / 7.317GiB,0.43%,1.83kB / 911B,0B / 709kB
+17:49:41,facultylens-perf-app,0.00%,70.88MiB / 7.317GiB,0.95%,16.6MB / 3.51MB,1.59MB / 713kB
+17:49:41,facultylens-perf-ai-service,117.76%,472.1MiB / 7.317GiB,6.30%,11.8MB / 27.1MB,0B / 0B
+17:49:41,facultylens-perf-nginx,0.32%,15.55MiB / 7.317GiB,0.21%,1.38GB / 1.41GB,14.1MB / 4.1kB
+17:49:41,facultylens-perf-redis,13.72%,11.13MiB / 7.317GiB,0.15%,657MB / 2.02GB,44MB / 839MB
+17:49:41,facultylens-perf-mysql,36.75%,769.4MiB / 7.317GiB,10.27%,422MB / 1.42GB,54.4MB / 3.67GB

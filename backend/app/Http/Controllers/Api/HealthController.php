@@ -62,8 +62,10 @@ class HealthController extends Controller
             'database' => $this->probe(fn () => DB::select('select 1')),
             'cache' => $this->probe(function () {
                 $key = 'health:ready:'.bin2hex(random_bytes(4));
-                Cache::put($key, 1, 10);
-                if (Cache::get($key) !== 1) {
+                // String token: Redis/predis returns numerics as strings, so a strict int compare would always fail (STEP 43).
+                $token = bin2hex(random_bytes(8));
+                Cache::put($key, $token, 10);
+                if (Cache::get($key) !== $token) {
                     throw new \RuntimeException('cache read-back failed');
                 }
                 Cache::forget($key);

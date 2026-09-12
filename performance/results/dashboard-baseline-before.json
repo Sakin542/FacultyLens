@@ -1,0 +1,75 @@
+{
+  "scenario": "dashboard",
+  "profile": "baseline",
+  "generated_at": "2026-09-12T10:40:22.615Z",
+  "base_url": "http://127.0.0.1:8090",
+  "vus_max": 1,
+  "iterations": 30,
+  "http_reqs": 212,
+  "http_req_failed_rate": 0,
+  "app_errors": 0,
+  "rate_limited_429": 0,
+  "endpoints": {
+    "analytics_overview": {
+      "avg": 114.9,
+      "min": 106,
+      "med": 113,
+      "p90": 121.8,
+      "p95": 124.4,
+      "p99": 137.6,
+      "max": 142,
+      "count": 27
+    },
+    "analytics_course_sections": {
+      "avg": 31.6,
+      "min": 30,
+      "med": 31,
+      "p90": 33,
+      "p95": 34,
+      "p99": 35.7,
+      "max": 41,
+      "count": 90
+    },
+    "notifications": {
+      "avg": 12.8,
+      "min": 11,
+      "med": 12,
+      "p90": 13.2,
+      "p95": 15.5,
+      "p99": 18.8,
+      "max": 20,
+      "count": 30
+    },
+    "analytics_course": {
+      "avg": 58.8,
+      "min": 29,
+      "med": 32,
+      "p90": 124,
+      "p95": 124.6,
+      "p99": 127.1,
+      "max": 128,
+      "count": 30
+    },
+    "analytics_overview_fresh": {
+      "avg": 628,
+      "min": 612,
+      "med": 625,
+      "p90": 642.6,
+      "p95": 644.8,
+      "p99": 646.6,
+      "max": 647,
+      "count": 3
+    },
+    "courses_list": {
+      "avg": 13.4,
+      "min": 12,
+      "med": 13,
+      "p90": 14,
+      "p95": 15.1,
+      "p99": 20.3,
+      "max": 22,
+      "count": 30
+    }
+  },
+  "extra": {}
+}

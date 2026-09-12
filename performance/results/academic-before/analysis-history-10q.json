@@ -1,0 +1,29 @@
+{
+ "data": {
+  "assessment_id": 103,
+  "assessment_title": "Assessment 0 (10 questions)",
+  "course_code": "PERF-001",
+  "current_analysis_version": 1,
+  "history": [
+   {
+    "analysis_status": "completed",
+    "assessment_version": null,
+    "cognitive_level_balance_score": 68,
+    "difficulty_balance_score": 75,
+    "has_report": false,
+    "is_current": true,
+    "learning_outcome_alignment_score": 65,
+    "overall_score": 60,
+    "rating": "NEEDS_REVIEW",
+    "report_uuid": null,
+    "similarity_score": 0.3,
+    "topic_coverage_score": 70,
+    "total_questions": 10,
+    "version": 1
+   }
+  ],
+  "total_versions": 1
+ },
+ "status": "success",
+ "success": true
+}

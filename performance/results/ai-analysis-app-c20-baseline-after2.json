@@ -1,0 +1,57 @@
+{
+  "scenario": "ai-analysis-app",
+  "profile": "baseline",
+  "generated_at": "2026-09-12T11:49:47.320Z",
+  "base_url": "http://127.0.0.1:8090",
+  "vus_max": 20,
+  "iterations": 20,
+  "http_reqs": 144,
+  "http_req_failed_rate": 0,
+  "app_errors": 0,
+  "rate_limited_429": 0,
+  "endpoints": {
+    "app_analysis_total": {
+      "avg": 6587.4,
+      "min": 2152,
+      "med": 6188,
+      "p90": 10218.6,
+      "p95": 10320.9,
+      "p99": 11793,
+      "max": 12161,
+      "count": 20
+    },
+    "app_analysis_queue_wait": {
+      "avg": 2126.2,
+      "min": 2042,
+      "med": 2126,
+      "p90": 2154.2,
+      "p95": 2159.3,
+      "p99": 2161.5,
+      "max": 2162,
+      "count": 19
+    },
+    "app_analysis_accept": {
+      "avg": 70.2,
+      "min": 23,
+      "med": 70.5,
+      "p90": 83.8,
+      "p95": 91.6,
+      "p99": 100.7,
+      "max": 103,
+      "count": 20
+    },
+    "app_analysis_status_poll": {
+      "avg": 35.8,
+      "min": 14,
+      "med": 27.5,
+      "p90": 66.1,
+      "p95": 68,
+      "p99": 69,
+      "max": 69,
+      "count": 64
+    }
+  },
+  "extra": {
+    "concurrency": 20
+  }
+}

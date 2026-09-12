@@ -1,0 +1,22 @@
+ts,container,cpu_pct,mem_used,mem_pct,net_io,block_io
+16:39:34,facultylens-perf-worker,0.00%,42.78MiB / 7.317GiB,0.57%,137kB / 1.14MB,31.4MB / 709kB
+16:39:34,facultylens-perf-scheduler,0.07%,31.85MiB / 7.317GiB,0.43%,1.97kB / 911B,30.7MB / 709kB
+16:39:34,facultylens-perf-app,33.68%,47.62MiB / 7.317GiB,0.64%,7.42MB / 6.79MB,1.5MB / 713kB
+16:39:34,facultylens-perf-nginx,2.39%,14.92MiB / 7.317GiB,0.20%,2.79MB / 3.18MB,11.1MB / 4.1kB
+16:39:34,facultylens-perf-redis,0.39%,7.262MiB / 7.317GiB,0.10%,5.69MB / 1.07MB,28.1MB / 3.01MB
+16:39:34,facultylens-perf-mysql,2.20%,587.8MiB / 7.317GiB,7.85%,52.2MB / 74.7MB,41.6MB / 1.22GB
+16:39:34,facultylens-perf-ai-service,0.12%,382.4MiB / 7.317GiB,5.10%,144MB / 7MB,377MB / 0B
+16:39:41,facultylens-perf-worker,0.06%,42.83MiB / 7.317GiB,0.57%,138kB / 1.15MB,31.4MB / 709kB
+16:39:41,facultylens-perf-scheduler,0.07%,31.85MiB / 7.317GiB,0.43%,1.97kB / 911B,30.7MB / 709kB
+16:39:41,facultylens-perf-app,31.40%,47.66MiB / 7.317GiB,0.64%,7.74MB / 7.02MB,1.5MB / 713kB
+16:39:41,facultylens-perf-nginx,0.25%,14.29MiB / 7.317GiB,0.19%,2.92MB / 3.34MB,11.1MB / 4.1kB
+16:39:41,facultylens-perf-redis,0.46%,7.266MiB / 7.317GiB,0.10%,5.72MB / 1.08MB,28.1MB / 3.05MB
+16:39:41,facultylens-perf-mysql,3.07%,587.8MiB / 7.317GiB,7.85%,52.4MB / 74.9MB,41.6MB / 1.22GB
+16:39:41,facultylens-perf-ai-service,0.10%,382.5MiB / 7.317GiB,5.10%,144MB / 7MB,377MB / 0B
+16:39:48,facultylens-perf-worker,0.00%,42.83MiB / 7.317GiB,0.57%,139kB / 1.16MB,31.4MB / 709kB
+16:39:48,facultylens-perf-scheduler,0.06%,31.85MiB / 7.317GiB,0.43%,1.97kB / 911B,30.7MB / 709kB
+16:39:48,facultylens-perf-app,24.34%,46.9MiB / 7.317GiB,0.63%,8.03MB / 7.23MB,1.5MB / 713kB
+16:39:48,facultylens-perf-nginx,0.32%,14.29MiB / 7.317GiB,0.19%,3.06MB / 3.51MB,11.1MB / 4.1kB
+16:39:48,facultylens-perf-redis,0.40%,7.238MiB / 7.317GiB,0.10%,5.75MB / 1.09MB,28.1MB / 3.08MB
+16:39:48,facultylens-perf-mysql,3.20%,587.9MiB / 7.317GiB,7.85%,52.5MB / 75.1MB,41.6MB / 1.23GB
+16:39:48,facultylens-perf-ai-service,0.10%,382.5MiB / 7.317GiB,5.10%,144MB / 7MB,377MB / 0B

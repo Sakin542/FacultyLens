@@ -637,6 +637,10 @@ class StudentSubmissionService
         }
 
         $submission->update($attributes);
+        // Always bump updated_at: analytics fingerprints change-detect answers through their submission (STEP 43)
+        if (!$submission->wasChanged()) {
+            $submission->touch();
+        }
         StudentPerformanceService::invalidateCache((int) $submission->assessment_id);
         CoPoMappingValidatorService::invalidateCacheForAssessment((int) $submission->assessment_id);
     }

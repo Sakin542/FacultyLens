@@ -1,0 +1,22 @@
+ts,container,cpu_pct,mem_used,mem_pct,net_io,block_io
+16:40:23,facultylens-perf-worker,0.00%,42.88MiB / 7.317GiB,0.57%,147kB / 1.22MB,31.4MB / 709kB
+16:40:23,facultylens-perf-scheduler,0.07%,32.43MiB / 7.317GiB,0.43%,1.97kB / 911B,30.7MB / 709kB
+16:40:23,facultylens-perf-app,21.31%,47.5MiB / 7.317GiB,0.63%,29.3MB / 22.5MB,1.5MB / 713kB
+16:40:23,facultylens-perf-nginx,0.73%,14.33MiB / 7.317GiB,0.19%,9.01MB / 9.65MB,11.1MB / 4.1kB
+16:40:23,facultylens-perf-redis,1.03%,13.68MiB / 7.317GiB,0.18%,12.9MB / 14.3MB,28.2MB / 7.93MB
+16:40:23,facultylens-perf-mysql,6.09%,589.5MiB / 7.317GiB,7.87%,55MB / 82.8MB,41.6MB / 1.25GB
+16:40:23,facultylens-perf-ai-service,3.21%,382.6MiB / 7.317GiB,5.11%,144MB / 7MB,377MB / 0B
+16:40:31,facultylens-perf-worker,0.00%,42.88MiB / 7.317GiB,0.57%,148kB / 1.23MB,31.4MB / 709kB
+16:40:31,facultylens-perf-scheduler,0.07%,32.43MiB / 7.317GiB,0.43%,1.97kB / 911B,30.7MB / 709kB
+16:40:31,facultylens-perf-app,24.64%,48.01MiB / 7.317GiB,0.64%,31.6MB / 49.8MB,1.5MB / 713kB
+16:40:31,facultylens-perf-nginx,0.72%,14.34MiB / 7.317GiB,0.19%,13.4MB / 14MB,11.1MB / 4.1kB
+16:40:31,facultylens-perf-redis,1.36%,13.54MiB / 7.317GiB,0.18%,35.7MB / 14.3MB,28.3MB / 32.7MB
+16:40:31,facultylens-perf-mysql,6.24%,589.5MiB / 7.317GiB,7.87%,55.3MB / 84.8MB,41.6MB / 1.25GB
+16:40:31,facultylens-perf-ai-service,0.09%,382.5MiB / 7.317GiB,5.11%,144MB / 7MB,377MB / 0B
+16:40:38,facultylens-perf-worker,0.07%,42.88MiB / 7.317GiB,0.57%,150kB / 1.25MB,31.4MB / 709kB
+16:40:38,facultylens-perf-scheduler,0.06%,32.43MiB / 7.317GiB,0.43%,1.97kB / 911B,30.7MB / 709kB
+16:40:38,facultylens-perf-app,15.86%,53.43MiB / 7.317GiB,0.71%,33.7MB / 76.7MB,1.5MB / 713kB
+16:40:38,facultylens-perf-nginx,0.76%,14.36MiB / 7.317GiB,0.19%,16.9MB / 17.7MB,11.1MB / 4.1kB
+16:40:38,facultylens-perf-redis,1.10%,13.52MiB / 7.317GiB,0.18%,58.5MB / 14.4MB,28.3MB / 53.4MB
+16:40:38,facultylens-perf-mysql,4.11%,589.5MiB / 7.317GiB,7.87%,55.6MB / 86.7MB,41.6MB / 1.26GB
+16:40:38,facultylens-perf-ai-service,0.10%,382.5MiB / 7.317GiB,5.11%,144MB / 7MB,377MB / 0B

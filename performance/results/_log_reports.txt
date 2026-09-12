@@ -1,0 +1,129 @@
+time="2026-09-12T17:57:27+06:00" level=info msg="[reports] small ASSESSMENT_QUALITY/PDF: create=201 records=12 bytes=853256 dl=200" source=console
+time="2026-09-12T17:57:31+06:00" level=info msg="[reports] medium ASSESSMENT_QUALITY/PDF: create=201 records=12 bytes=853275 dl=200" source=console
+time="2026-09-12T17:57:35+06:00" level=info msg="[reports] large ASSESSMENT_QUALITY/PDF: create=201 records=12 bytes=853274 dl=200" source=console
+time="2026-09-12T17:57:39+06:00" level=info msg="[reports] create course PO_COVERAGE/CSV → 422 {\"status\":\"error\",\"message\":\"No data available for the selected filters.\",\"errors\":{\"filters\":[\"No data available for the selected filters.\"]}}" source=console
+time="2026-09-12T17:57:40+06:00" level=info msg="[reports] small QUESTION_ANALYSIS/CSV: create=201 records=10 bytes=3488 dl=200" source=console
+time="2026-09-12T17:57:44+06:00" level=info msg="[reports] medium QUESTION_ANALYSIS/CSV: create=201 records=100 bytes=25020 dl=200" source=console
+time="2026-09-12T17:57:48+06:00" level=info msg="[reports] large QUESTION_ANALYSIS/CSV: create=201 records=200 bytes=55868 dl=200" source=console
+time="2026-09-12T17:57:52+06:00" level=info msg="[reports] create course PO_COVERAGE/CSV → 422 {\"status\":\"error\",\"message\":\"No data available for the selected filters.\",\"errors\":{\"filters\":[\"No data available for the selected filters.\"]}}" source=console
+time="2026-09-12T17:57:52+06:00" level=info msg="[reports] small STUDENT_PERFORMANCE/XLSX: create=201 records=9 bytes=15530 dl=200" source=console
+time="2026-09-12T17:57:56+06:00" level=info msg="[reports] medium STUDENT_PERFORMANCE/XLSX: create=201 records=9 bytes=15532 dl=200" source=console
+time="2026-09-12T17:58:01+06:00" level=info msg="[reports] large STUDENT_PERFORMANCE/XLSX: create=201 records=9 bytes=15532 dl=200" source=console
+time="2026-09-12T17:58:05+06:00" level=info msg="[reports] create course PO_COVERAGE/CSV → 422 {\"status\":\"error\",\"message\":\"No data available for the selected filters.\",\"errors\":{\"filters\":[\"No data available for the selected filters.\"]}}" source=console
+time="2026-09-12T17:58:05+06:00" level=info msg="[reports] small GRADING/CSV: create=201 records=12 bytes=1679 dl=200" source=console
+time="2026-09-12T17:58:09+06:00" level=info msg="[reports] medium GRADING/CSV: create=201 records=102 bytes=6661 dl=200" source=console
+time="2026-09-12T17:58:13+06:00" level=info msg="[reports] large GRADING/CSV: create=201 records=202 bytes=11778 dl=200" source=console
+time="2026-09-12T17:58:17+06:00" level=info msg="[reports] create course PO_COVERAGE/CSV → 422 {\"status\":\"error\",\"message\":\"No data available for the selected filters.\",\"errors\":{\"filters\":[\"No data available for the selected filters.\"]}}" source=console
+time="2026-09-12T17:58:18+06:00" level=info msg="[reports] small ASSESSMENT/PDF: create=201 records=42 bytes=863224 dl=200" source=console
+time="2026-09-12T17:58:22+06:00" level=info msg="[reports] medium ASSESSMENT/PDF: create=201 records=127 bytes=886758 dl=200" source=console
+time="2026-09-12T17:58:27+06:00" level=info msg="[reports] large ASSESSMENT/PDF: create=201 records=234 bytes=922501 dl=200" source=console
+time="2026-09-12T17:58:32+06:00" level=info msg="[reports] create course PO_COVERAGE/CSV → 422 {\"status\":\"error\",\"message\":\"No data available for the selected filters.\",\"errors\":{\"filters\":[\"No data available for the selected filters.\"]}}" source=console
+time="2026-09-12T17:58:32+06:00" level=info msg="[reports] small CO_COVERAGE/CSV: create=201 records=5 bytes=1169 dl=200" source=console
+time="2026-09-12T17:58:36+06:00" level=info msg="[reports] create medium CO_COVERAGE/CSV → 429 {\n    \"message\": \"Too Many Attempts.\"\n}" source=console
+time="2026-09-12T17:58:36+06:00" level=info msg="[reports] create large CO_COVERAGE/CSV → 429 {\n    \"message\": \"Too Many Attempts.\"\n}" source=console
+time="2026-09-12T17:58:36+06:00" level=info msg="[reports] create course PO_COVERAGE/CSV → 429 {\n    \"message\": \"Too Many Attempts.\"\n}" source=console
+
+{
+  "reports_list": {
+    "avg": 46.2,
+    "min": 42,
+    "med": 45,
+    "p90": 52.7,
+    "p95": 53,
+    "p99": 56.1,
+    "max": 57,
+    "count": 24
+  },
+  "report_download_xlsx": {
+    "avg": 14.7,
+    "min": 14,
+    "med": 15,
+    "p90": 15,
+    "p95": 15,
+    "p99": 15,
+    "max": 15,
+    "count": 3
+  },
+  "report_preview": {
+    "avg": 25.1,
+    "min": 9,
+    "med": 24.5,
+    "p90": 36.4,
+    "p95": 43.8,
+    "p99": 47.3,
+    "max": 48,
+    "count": 24
+  },
+  "report_create_course": {
+    "avg": 12.2,
+    "min": 8,
+    "med": 13,
+    "p90": 14,
+    "p95": 14.5,
+    "p99": 14.9,
+    "max": 15,
+    "count": 6
+  },
+  "report_create_small": {
+    "avg": 114.2,
+    "min": 37,
+    "med": 48,
+    "p90": 253.5,
+    "p95": 258.3,
+    "p99": 262.1,
+    "max": 263,
+    "count": 6
+  },
+  "report_download_csv": {
+    "avg": 15,
+    "min": 14,
+    "med": 15,
+    "p90": 15.4,
+    "p95": 15.7,
+    "p99": 15.9,
+    "max": 16,
+    "count": 7
+  },
+  "report_create_medium": {
+    "avg": 142.7,
+    "min": 9,
+    "med": 51,
+    "p90": 349.5,
+    "p95": 436.8,
+    "p99": 506.6,
+    "max": 524,
+    "count": 6
+  },
+  "report_download_pdf": {
+    "avg": 21.7,
+    "min": 19,
+    "med": 20.5,
+    "p90": 25.5,
+    "p95": 26.8,
+    "p99": 27.8,
+    "max": 28,
+    "count": 6
+  },
+  "report_create_large": {
+    "avg": 224.5,
+    "min": 9,
+    "med": 56,
+    "p90": 590,
+    "p95": 796.5,
+    "p99": 961.7,
+    "max": 1003,
+    "count": 6
+  }
+}
+time="2026-09-12T17:58:36+06:00" level=error msg="thresholds on metrics 'http_req_failed' have been crossed"
+── resources during reports-baseline-after (70s) ──
+  facultylens-perf-ai-service      cpu avg    0.1%  max    0.1%   mem max   6.3% (472.1MiB)  samples 10
+  facultylens-perf-app             cpu avg    3.1%  max   21.7%   mem max   1.3% (100.5MiB)  samples 10
+  facultylens-perf-mysql           cpu avg    1.9%  max    8.4%   mem max  10.5% (787.1MiB)  samples 10
+  facultylens-perf-nginx           cpu avg    0.3%  max    2.1%   mem max   0.2% (15.51MiB)  samples 10
+  facultylens-perf-redis           cpu avg    0.3%  max    0.5%   mem max   0.1% (11.21MiB)  samples 10
+  facultylens-perf-scheduler       cpu avg    0.1%  max    0.1%   mem max   0.4% (32.27MiB)  samples 10
+  facultylens-perf-worker          cpu avg    0.0%  max    0.0%   mem max   0.7% (52.79MiB)  samples 10
+  mysql: Threads_connected	2 Max_used_connections	33 max_connections	200  (max_used before run: 33)
+  redis: used_memory_human:1.62M
+  redis queue depth: 0

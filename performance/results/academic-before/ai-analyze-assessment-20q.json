@@ -1,0 +1,2517 @@
+{
+ "alignment_analysis": {
+  "aligned_questions_count": 2,
+  "covered_learning_outcomes_count": 1,
+  "findings": [
+   "Unassessed Learning Outcomes: LO1, LO2 currently have no matching exam questions (similarity < 0.5).",
+   "Marginal Coverage: LO3 are only weakly represented by assessment questions.",
+   "18 question(s) (Q1, Q2, Q3, Q5, Q6...) did not clearly align with any defined course learning outcomes."
+  ],
+  "learning_outcome_coverage": [
+   {
+    "code": "LO1",
+    "coverage_status": "NOT_COVERED",
+    "description": "Explain relational database indexing structures.",
+    "learning_outcome_id": 1,
+    "matching_question_numbers": [],
+    "matching_questions_count": 0,
+    "max_similarity": 0.4754
+   },
+   {
+    "code": "LO2",
+    "coverage_status": "NOT_COVERED",
+    "description": "Apply normalization to relational schemas.",
+    "learning_outcome_id": 2,
+    "matching_question_numbers": [],
+    "matching_questions_count": 0,
+    "max_similarity": 0.0
+   },
+   {
+    "code": "LO3",
+    "coverage_status": "WEAKLY_COVERED",
+    "description": "Evaluate transaction isolation and concurrency control.",
+    "learning_outcome_id": 3,
+    "matching_question_numbers": [
+     4,
+     14
+    ],
+    "matching_questions_count": 2,
+    "max_similarity": 0.5143
+   }
+  ],
+  "method": "sentence-transformers/all-MiniLM-L6-v2 + cosine_similarity",
+  "overall_alignment_score": 5.0,
+  "question_alignment": [
+   {
+    "alignment_status": "NOT_ALIGNED",
+    "alternative_matches": [],
+    "matched_learning_outcome": {
+     "alignment_level": "NOT_ALIGNED",
+     "code": "LO3",
+     "description": "Evaluate transaction isolation and concurrency control.",
+     "id": 3,
+     "similarity": 0.4737
+    },
+    "question_id": 1,
+    "question_number": 1,
+    "question_text": "Explain a B+ tree index for topic 0 and discuss trade-offs under 10 concurrent transactions.",
+    "reasoning": "No strong match found. Highest similarity was only 47.4% with [LO3] Evaluate transaction isolation and concurrency control....",
+    "similarity_score": 0.4737
+   },
+   {
+    "alignment_status": "NOT_ALIGNED",
+    "alternative_matches": [],
+    "matched_learning_outcome": {
+     "alignment_level": "NOT_ALIGNED",
+     "code": "LO3",
+     "description": "Evaluate transaction isolation and concurrency control.",
+     "id": 3,
+     "similarity": 0.4919
+    },
+    "question_id": 2,
+    "question_number": 2,
+    "question_text": "Explain a B+ tree index for topic 1 and discuss trade-offs under 11 concurrent transactions.",
+    "reasoning": "No strong match found. Highest similarity was only 49.2% with [LO3] Evaluate transaction isolation and concurrency control....",
+    "similarity_score": 0.4919
+   },
+   {
+    "alignment_status": "NOT_ALIGNED",
+    "alternative_matches": [],
+    "matched_learning_outcome": {
+     "alignment_level": "NOT_ALIGNED",
+     "code": "LO3",
+     "description": "Evaluate transaction isolation and concurrency control.",
+     "id": 3,
+     "similarity": 0.4754
+    },
+    "question_id": 3,
+    "question_number": 3,
+    "question_text": "Explain a B+ tree index for topic 2 and discuss trade-offs under 12 concurrent transactions.",
+    "reasoning": "No strong match found. Highest similarity was only 47.5% with [LO3] Evaluate transaction isolation and concurrency control....",
+    "similarity_score": 0.4754
+   },
+   {
+    "alignment_status": "WEAK",
+    "alternative_matches": [],
+    "matched_learning_outcome": {
+     "alignment_level": "WEAK",
+     "code": "LO3",
+     "description": "Evaluate transaction isolation and concurrency control.",
+     "id": 3,
+     "similarity": 0.5128
+    },
+    "question_id": 4,
+    "question_number": 4,
+    "question_text": "Explain a B+ tree index for topic 3 and discuss trade-offs under 13 concurrent transactions.",
+    "reasoning": "Moderate semantic alignment (51.3%) with [LO3] Evaluate transaction isolation and concurrency control....",
+    "similarity_score": 0.5128
+   },
+   {
+    "alignment_status": "NOT_ALIGNED",
+    "alternative_matches": [],
+    "matched_learning_outcome": {
+     "alignment_level": "NOT_ALIGNED",
+     "code": "LO3",
+     "description": "Evaluate transaction isolation and concurrency control.",
+     "id": 3,
+     "similarity": 0.4865
+    },
+    "question_id": 5,
+    "question_number": 5,
+    "question_text": "Explain a B+ tree index for topic 4 and discuss trade-offs under 14 concurrent transactions.",
+    "reasoning": "No strong match found. Highest similarity was only 48.6% with [LO3] Evaluate transaction isolation and concurrency control....",
+    "similarity_score": 0.4865
+   },
+   {
+    "alignment_status": "NOT_ALIGNED",
+    "alternative_matches": [],
+    "matched_learning_outcome": {
+     "alignment_level": "NOT_ALIGNED",
+     "code": "LO3",
+     "description": "Evaluate transaction isolation and concurrency control.",
+     "id": 3,
+     "similarity": 0.4694
+    },
+    "question_id": 6,
+    "question_number": 6,
+    "question_text": "Explain a B+ tree index for topic 0 and discuss trade-offs under 15 concurrent transactions.",
+    "reasoning": "No strong match found. Highest similarity was only 46.9% with [LO3] Evaluate transaction isolation and concurrency control....",
+    "similarity_score": 0.4694
+   },
+   {
+    "alignment_status": "NOT_ALIGNED",
+    "alternative_matches": [],
+    "matched_learning_outcome": {
+     "alignment_level": "NOT_ALIGNED",
+     "code": "LO3",
+     "description": "Evaluate transaction isolation and concurrency control.",
+     "id": 3,
+     "similarity": 0.4875
+    },
+    "question_id": 7,
+    "question_number": 7,
+    "question_text": "Explain a B+ tree index for topic 1 and discuss trade-offs under 16 concurrent transactions.",
+    "reasoning": "No strong match found. Highest similarity was only 48.8% with [LO3] Evaluate transaction isolation and concurrency control....",
+    "similarity_score": 0.4875
+   },
+   {
+    "alignment_status": "NOT_ALIGNED",
+    "alternative_matches": [],
+    "matched_learning_outcome": {
+     "alignment_level": "NOT_ALIGNED",
+     "code": "LO3",
+     "description": "Evaluate transaction isolation and concurrency control.",
+     "id": 3,
+     "similarity": 0.4803
+    },
+    "question_id": 8,
+    "question_number": 8,
+    "question_text": "Explain a B+ tree index for topic 2 and discuss trade-offs under 17 concurrent transactions.",
+    "reasoning": "No strong match found. Highest similarity was only 48.0% with [LO3] Evaluate transaction isolation and concurrency control....",
+    "similarity_score": 0.4803
+   },
+   {
+    "alignment_status": "NOT_ALIGNED",
+    "alternative_matches": [],
+    "matched_learning_outcome": {
+     "alignment_level": "NOT_ALIGNED",
+     "code": "LO3",
+     "description": "Evaluate transaction isolation and concurrency control.",
+     "id": 3,
+     "similarity": 0.4986
+    },
+    "question_id": 9,
+    "question_number": 9,
+    "question_text": "Explain a B+ tree index for topic 3 and discuss trade-offs under 18 concurrent transactions.",
+    "reasoning": "No strong match found. Highest similarity was only 49.9% with [LO3] Evaluate transaction isolation and concurrency control....",
+    "similarity_score": 0.4986
+   },
+   {
+    "alignment_status": "NOT_ALIGNED",
+    "alternative_matches": [],
+    "matched_learning_outcome": {
+     "alignment_level": "NOT_ALIGNED",
+     "code": "LO3",
+     "description": "Evaluate transaction isolation and concurrency control.",
+     "id": 3,
+     "similarity": 0.4988
+    },
+    "question_id": 10,
+    "question_number": 10,
+    "question_text": "Explain a B+ tree index for topic 4 and discuss trade-offs under 19 concurrent transactions.",
+    "reasoning": "No strong match found. Highest similarity was only 49.9% with [LO3] Evaluate transaction isolation and concurrency control....",
+    "similarity_score": 0.4988
+   },
+   {
+    "alignment_status": "NOT_ALIGNED",
+    "alternative_matches": [],
+    "matched_learning_outcome": {
+     "alignment_level": "NOT_ALIGNED",
+     "code": "LO1",
+     "description": "Explain relational database indexing structures.",
+     "id": 1,
+     "similarity": 0.4747
+    },
+    "question_id": 11,
+    "question_number": 11,
+    "question_text": "Explain a B+ tree index for topic 0 and discuss trade-offs under 20 concurrent transactions.",
+    "reasoning": "No strong match found. Highest similarity was only 47.5% with [LO1] Explain relational database indexing structures....",
+    "similarity_score": 0.4747
+   },
+   {
+    "alignment_status": "NOT_ALIGNED",
+    "alternative_matches": [],
+    "matched_learning_outcome": {
+     "alignment_level": "NOT_ALIGNED",
+     "code": "LO3",
+     "description": "Evaluate transaction isolation and concurrency control.",
+     "id": 3,
+     "similarity": 0.4824
+    },
+    "question_id": 12,
+    "question_number": 12,
+    "question_text": "Explain a B+ tree index for topic 1 and discuss trade-offs under 21 concurrent transactions.",
+    "reasoning": "No strong match found. Highest similarity was only 48.2% with [LO3] Evaluate transaction isolation and concurrency control....",
+    "similarity_score": 0.4824
+   },
+   {
+    "alignment_status": "NOT_ALIGNED",
+    "alternative_matches": [],
+    "matched_learning_outcome": {
+     "alignment_level": "NOT_ALIGNED",
+     "code": "LO3",
+     "description": "Evaluate transaction isolation and concurrency control.",
+     "id": 3,
+     "similarity": 0.4831
+    },
+    "question_id": 13,
+    "question_number": 13,
+    "question_text": "Explain a B+ tree index for topic 2 and discuss trade-offs under 22 concurrent transactions.",
+    "reasoning": "No strong match found. Highest similarity was only 48.3% with [LO3] Evaluate transaction isolation and concurrency control....",
+    "similarity_score": 0.4831
+   },
+   {
+    "alignment_status": "WEAK",
+    "alternative_matches": [],
+    "matched_learning_outcome": {
+     "alignment_level": "WEAK",
+     "code": "LO3",
+     "description": "Evaluate transaction isolation and concurrency control.",
+     "id": 3,
+     "similarity": 0.5143
+    },
+    "question_id": 14,
+    "question_number": 14,
+    "question_text": "Explain a B+ tree index for topic 3 and discuss trade-offs under 23 concurrent transactions.",
+    "reasoning": "Moderate semantic alignment (51.4%) with [LO3] Evaluate transaction isolation and concurrency control....",
+    "similarity_score": 0.5143
+   },
+   {
+    "alignment_status": "NOT_ALIGNED",
+    "alternative_matches": [],
+    "matched_learning_outcome": {
+     "alignment_level": "NOT_ALIGNED",
+     "code": "LO3",
+     "description": "Evaluate transaction isolation and concurrency control.",
+     "id": 3,
+     "similarity": 0.4696
+    },
+    "question_id": 15,
+    "question_number": 15,
+    "question_text": "Explain a B+ tree index for topic 4 and discuss trade-offs under 24 concurrent transactions.",
+    "reasoning": "No strong match found. Highest similarity was only 47.0% with [LO3] Evaluate transaction isolation and concurrency control....",
+    "similarity_score": 0.4696
+   },
+   {
+    "alignment_status": "NOT_ALIGNED",
+    "alternative_matches": [],
+    "matched_learning_outcome": {
+     "alignment_level": "NOT_ALIGNED",
+     "code": "LO1",
+     "description": "Explain relational database indexing structures.",
+     "id": 1,
+     "similarity": 0.4754
+    },
+    "question_id": 16,
+    "question_number": 16,
+    "question_text": "Explain a B+ tree index for topic 0 and discuss trade-offs under 25 concurrent transactions.",
+    "reasoning": "No strong match found. Highest similarity was only 47.5% with [LO1] Explain relational database indexing structures....",
+    "similarity_score": 0.4754
+   },
+   {
+    "alignment_status": "NOT_ALIGNED",
+    "alternative_matches": [],
+    "matched_learning_outcome": {
+     "alignment_level": "NOT_ALIGNED",
+     "code": "LO3",
+     "description": "Evaluate transaction isolation and concurrency control.",
+     "id": 3,
+     "similarity": 0.4887
+    },
+    "question_id": 17,
+    "question_number": 17,
+    "question_text": "Explain a B+ tree index for topic 1 and discuss trade-offs under 26 concurrent transactions.",
+    "reasoning": "No strong match found. Highest similarity was only 48.9% with [LO3] Evaluate transaction isolation and concurrency control....",
+    "similarity_score": 0.4887
+   },
+   {
+    "alignment_status": "NOT_ALIGNED",
+    "alternative_matches": [],
+    "matched_learning_outcome": {
+     "alignment_level": "NOT_ALIGNED",
+     "code": "LO3",
+     "description": "Evaluate transaction isolation and concurrency control.",
+     "id": 3,
+     "similarity": 0.4846
+    },
+    "question_id": 18,
+    "question_number": 18,
+    "question_text": "Explain a B+ tree index for topic 2 and discuss trade-offs under 27 concurrent transactions.",
+    "reasoning": "No strong match found. Highest similarity was only 48.5% with [LO3] Evaluate transaction isolation and concurrency control....",
+    "similarity_score": 0.4846
+   },
+   {
+    "alignment_status": "NOT_ALIGNED",
+    "alternative_matches": [],
+    "matched_learning_outcome": {
+     "alignment_level": "NOT_ALIGNED",
+     "code": "LO3",
+     "description": "Evaluate transaction isolation and concurrency control.",
+     "id": 3,
+     "similarity": 0.4941
+    },
+    "question_id": 19,
+    "question_number": 19,
+    "question_text": "Explain a B+ tree index for topic 3 and discuss trade-offs under 28 concurrent transactions.",
+    "reasoning": "No strong match found. Highest similarity was only 49.4% with [LO3] Evaluate transaction isolation and concurrency control....",
+    "similarity_score": 0.4941
+   },
+   {
+    "alignment_status": "NOT_ALIGNED",
+    "alternative_matches": [],
+    "matched_learning_outcome": {
+     "alignment_level": "NOT_ALIGNED",
+     "code": "LO3",
+     "description": "Evaluate transaction isolation and concurrency control.",
+     "id": 3,
+     "similarity": 0.4809
+    },
+    "question_id": 20,
+    "question_number": 20,
+    "question_text": "Explain a B+ tree index for topic 4 and discuss trade-offs under 29 concurrent transactions.",
+    "reasoning": "No strong match found. Highest similarity was only 48.1% with [LO3] Evaluate transaction isolation and concurrency control....",
+    "similarity_score": 0.4809
+   }
+  ],
+  "status": "success",
+  "thresholds": {
+   "strong": 0.7,
+   "weak": 0.5
+  },
+  "total_learning_outcomes": 3,
+  "total_questions": 20
+ },
+ "assessment_id": 1,
+ "course_id": 1,
+ "method": "unified_assessment_analysis_pipeline",
+ "quality_analysis": {
+  "cognitive_analysis": {
+   "distribution": [
+    {
+     "level": "Remember",
+     "marks": 0.0,
+     "marks_percentage": 0.0,
+     "question_count": 0,
+     "question_percentage": 0.0
+    },
+    {
+     "level": "Understand",
+     "marks": 100.0,
+     "marks_percentage": 100.0,
+     "question_count": 20,
+     "question_percentage": 100.0
+    },
+    {
+     "level": "Apply",
+     "marks": 0.0,
+     "marks_percentage": 0.0,
+     "question_count": 0,
+     "question_percentage": 0.0
+    },
+    {
+     "level": "Analyze",
+     "marks": 0.0,
+     "marks_percentage": 0.0,
+     "question_count": 0,
+     "question_percentage": 0.0
+    },
+    {
+     "level": "Evaluate",
+     "marks": 0.0,
+     "marks_percentage": 0.0,
+     "question_count": 0,
+     "question_percentage": 0.0
+    },
+    {
+     "level": "Create",
+     "marks": 0.0,
+     "marks_percentage": 0.0,
+     "question_count": 0,
+     "question_percentage": 0.0
+    }
+   ],
+   "dominant_level": "Understand",
+   "dominant_percentage": 100.0,
+   "max_possible_entropy": 1.7918,
+   "methodology": "Normalized Shannon entropy H / ln(6) calculated across 6 Bloom taxonomy cognitive tiers.",
+   "score": 0.0,
+   "shannon_entropy": 0.0,
+   "status": "AVAILABLE"
+  },
+  "components": {
+   "cognitive_diversity": 0.0,
+   "difficulty_balance": 20.0,
+   "learning_outcome_coverage": 66.67,
+   "marks_distribution": 100.0,
+   "question_diversity": 0.0,
+   "topic_coverage": 66.67
+  },
+  "difficulty_analysis": {
+   "distribution": [
+    {
+     "deviation": 30.0,
+     "level": "Easy",
+     "marks": 0.0,
+     "marks_percentage": 0.0,
+     "question_count": 0,
+     "question_percentage": 0.0,
+     "target_percentage": 30.0
+    },
+    {
+     "deviation": 50.0,
+     "level": "Medium",
+     "marks": 0.0,
+     "marks_percentage": 0.0,
+     "question_count": 0,
+     "question_percentage": 0.0,
+     "target_percentage": 50.0
+    },
+    {
+     "deviation": 80.0,
+     "level": "Hard",
+     "marks": 100.0,
+     "marks_percentage": 100.0,
+     "question_count": 20,
+     "question_percentage": 100.0,
+     "target_percentage": 20.0
+    }
+   ],
+   "methodology": "Marks-weighted absolute deviation against target distribution (Easy: 30.0%, Medium: 50.0%, Hard: 20.0%).",
+   "score": 20.0,
+   "status": "AVAILABLE",
+   "total_deviation": 160.0
+  },
+  "excluded_components": [],
+  "findings": [
+   "Topic Coverage: 1 syllabus topic(s) have no assessed questions (normalization).",
+   "LO Coverage: 1 Learning Outcome(s) have no mapped questions (LO2).",
+   "Difficulty Balance: Assessment significantly deviates (160.0% total deviation) from standard target difficulty.",
+   "Difficulty Balance: Heavily weighted towards Hard questions (100.0% of marks).",
+   "Cognitive Diversity: High concentration detected \u2014 100.0% of marks are at the 'Understand' level. Faculty review recommended.",
+   "Cognitive Diversity: No higher-order cognitive questions (0% Analyze, Evaluate, Create).",
+   "Question Diversity: Single format detected \u2014 100% of questions are 'Descriptive'. Consider diversifying question types if appropriate for the assessment format."
+  ],
+  "learning_outcome_analysis": {
+   "covered_los_count": 2,
+   "learning_outcomes": [
+    {
+     "code": "LO1",
+     "coverage_percentage": 10.0,
+     "coverage_status": "COVERED",
+     "description": "Explain relational database indexing structures.",
+     "marks": 10.0,
+     "question_count": 2,
+     "strongly_aligned_questions": 2,
+     "weakly_aligned_questions": 0
+    },
+    {
+     "code": "LO2",
+     "coverage_percentage": 0.0,
+     "coverage_status": "NOT_COVERED",
+     "description": "Apply normalization to relational schemas.",
+     "marks": 0.0,
+     "question_count": 0,
+     "strongly_aligned_questions": 0,
+     "weakly_aligned_questions": 0
+    },
+    {
+     "code": "LO3",
+     "coverage_percentage": 90.0,
+     "coverage_status": "COVERED",
+     "description": "Evaluate transaction isolation and concurrency control.",
+     "marks": 90.0,
+     "question_count": 18,
+     "strongly_aligned_questions": 18,
+     "weakly_aligned_questions": 0
+    }
+   ],
+   "methodology": "Equal-weight learning outcome coverage (covered LOs / total LOs).",
+   "score": 66.67,
+   "status": "AVAILABLE",
+   "total_los_defined": 3
+  },
+  "marks_analysis": {
+   "assessment_expected_marks": 100.0,
+   "average_marks": 5.0,
+   "high_concentration_detected": false,
+   "highest_single_question_number": 1,
+   "highest_single_question_share": 5.0,
+   "marks_by_cognitive": {
+    "Understand": 100.0
+   },
+   "marks_by_difficulty": {
+    "Hard": 100.0
+   },
+   "marks_by_lo": {
+    "LO1": 10.0,
+    "LO3": 90.0
+   },
+   "marks_by_topic": {
+    "indexing": 100.0,
+    "transactions": 100.0
+   },
+   "marks_match_assessment": true,
+   "max_marks": 5.0,
+   "median_marks": 5.0,
+   "methodology": "Assessment marks summation integrity and single-question mark concentration checks.",
+   "min_marks": 5.0,
+   "score": 100.0,
+   "status": "AVAILABLE",
+   "total_question_marks": 100.0
+  },
+  "method": "assessment_quality_engine",
+  "overall_quality_score": 44.67,
+  "question_diversity_analysis": {
+   "distribution": [
+    {
+     "marks": 100.0,
+     "marks_percentage": 100.0,
+     "question_count": 20,
+     "question_percentage": 100.0,
+     "question_type": "Descriptive"
+    }
+   ],
+   "dominant_percentage": 100.0,
+   "dominant_type": "Descriptive",
+   "methodology": "Normalized Shannon entropy over 1 distinct question formats.",
+   "score": 0.0,
+   "shannon_entropy": 0.0,
+   "status": "AVAILABLE",
+   "unique_types_count": 1
+  },
+  "rating": "REQUIRES_ATTENTION",
+  "status": "success",
+  "topic_analysis": {
+   "covered_topics_count": 2,
+   "methodology": "Unweighted syllabus topic representation (adequately represented topics / total topics).",
+   "score": 66.67,
+   "status": "AVAILABLE",
+   "topics": [
+    {
+     "coverage_percentage": 100.0,
+     "coverage_status": "COVERED",
+     "marks": 100.0,
+     "question_count": 20,
+     "topic": "indexing"
+    },
+    {
+     "coverage_percentage": 0.0,
+     "coverage_status": "NOT_COVERED",
+     "marks": 0.0,
+     "question_count": 0,
+     "topic": "normalization"
+    },
+    {
+     "coverage_percentage": 100.0,
+     "coverage_status": "COVERED",
+     "marks": 100.0,
+     "question_count": 20,
+     "topic": "transactions"
+    }
+   ],
+   "total_topics_defined": 3
+  },
+  "weights_applied": {
+   "cognitive": 15.0,
+   "difficulty": 15.0,
+   "learning_outcome": 20.0,
+   "marks": 15.0,
+   "question_diversity": 15.0,
+   "topic": 20.0
+  }
+ },
+ "questions_analysis": {
+  "questions": [
+   {
+    "classification": {
+     "confidence": 0.86,
+     "question_type": "DESCRIPTIVE"
+    },
+    "cognitive_level": {
+     "level": "UNDERSTAND",
+     "method": "baseline"
+    },
+    "difficulty": {
+     "level": "HARD",
+     "method": "baseline"
+    },
+    "number": 1,
+    "question": "Explain a B+ tree index for topic 0 and discuss trade-offs under 10 concurrent transactions.",
+    "topics": [
+     {
+      "confidence": 0.44,
+      "name": "transactions"
+     },
+     {
+      "confidence": 0.42,
+      "name": "indexing"
+     }
+    ]
+   },
+   {
+    "classification": {
+     "confidence": 0.86,
+     "question_type": "DESCRIPTIVE"
+    },
+    "cognitive_level": {
+     "level": "UNDERSTAND",
+     "method": "baseline"
+    },
+    "difficulty": {
+     "level": "HARD",
+     "method": "baseline"
+    },
+    "number": 2,
+    "question": "Explain a B+ tree index for topic 1 and discuss trade-offs under 11 concurrent transactions.",
+    "topics": [
+     {
+      "confidence": 0.46,
+      "name": "transactions"
+     },
+     {
+      "confidence": 0.42,
+      "name": "indexing"
+     }
+    ]
+   },
+   {
+    "classification": {
+     "confidence": 0.86,
+     "question_type": "DESCRIPTIVE"
+    },
+    "cognitive_level": {
+     "level": "UNDERSTAND",
+     "method": "baseline"
+    },
+    "difficulty": {
+     "level": "HARD",
+     "method": "baseline"
+    },
+    "number": 3,
+    "question": "Explain a B+ tree index for topic 2 and discuss trade-offs under 12 concurrent transactions.",
+    "topics": [
+     {
+      "confidence": 0.45,
+      "name": "transactions"
+     },
+     {
+      "confidence": 0.41,
+      "name": "indexing"
+     }
+    ]
+   },
+   {
+    "classification": {
+     "confidence": 0.86,
+     "question_type": "DESCRIPTIVE"
+    },
+    "cognitive_level": {
+     "level": "UNDERSTAND",
+     "method": "baseline"
+    },
+    "difficulty": {
+     "level": "HARD",
+     "method": "baseline"
+    },
+    "number": 4,
+    "question": "Explain a B+ tree index for topic 3 and discuss trade-offs under 13 concurrent transactions.",
+    "topics": [
+     {
+      "confidence": 0.46,
+      "name": "transactions"
+     },
+     {
+      "confidence": 0.42,
+      "name": "indexing"
+     }
+    ]
+   },
+   {
+    "classification": {
+     "confidence": 0.86,
+     "question_type": "DESCRIPTIVE"
+    },
+    "cognitive_level": {
+     "level": "UNDERSTAND",
+     "method": "baseline"
+    },
+    "difficulty": {
+     "level": "HARD",
+     "method": "baseline"
+    },
+    "number": 5,
+    "question": "Explain a B+ tree index for topic 4 and discuss trade-offs under 14 concurrent transactions.",
+    "topics": [
+     {
+      "confidence": 0.46,
+      "name": "transactions"
+     },
+     {
+      "confidence": 0.43,
+      "name": "indexing"
+     }
+    ]
+   },
+   {
+    "classification": {
+     "confidence": 0.86,
+     "question_type": "DESCRIPTIVE"
+    },
+    "cognitive_level": {
+     "level": "UNDERSTAND",
+     "method": "baseline"
+    },
+    "difficulty": {
+     "level": "HARD",
+     "method": "baseline"
+    },
+    "number": 6,
+    "question": "Explain a B+ tree index for topic 0 and discuss trade-offs under 15 concurrent transactions.",
+    "topics": [
+     {
+      "confidence": 0.44,
+      "name": "transactions"
+     },
+     {
+      "confidence": 0.42,
+      "name": "indexing"
+     }
+    ]
+   },
+   {
+    "classification": {
+     "confidence": 0.86,
+     "question_type": "DESCRIPTIVE"
+    },
+    "cognitive_level": {
+     "level": "UNDERSTAND",
+     "method": "baseline"
+    },
+    "difficulty": {
+     "level": "HARD",
+     "method": "baseline"
+    },
+    "number": 7,
+    "question": "Explain a B+ tree index for topic 1 and discuss trade-offs under 16 concurrent transactions.",
+    "topics": [
+     {
+      "confidence": 0.46,
+      "name": "transactions"
+     },
+     {
+      "confidence": 0.42,
+      "name": "indexing"
+     }
+    ]
+   },
+   {
+    "classification": {
+     "confidence": 0.86,
+     "question_type": "DESCRIPTIVE"
+    },
+    "cognitive_level": {
+     "level": "UNDERSTAND",
+     "method": "baseline"
+    },
+    "difficulty": {
+     "level": "HARD",
+     "method": "baseline"
+    },
+    "number": 8,
+    "question": "Explain a B+ tree index for topic 2 and discuss trade-offs under 17 concurrent transactions.",
+    "topics": [
+     {
+      "confidence": 0.45,
+      "name": "transactions"
+     },
+     {
+      "confidence": 0.41,
+      "name": "indexing"
+     }
+    ]
+   },
+   {
+    "classification": {
+     "confidence": 0.86,
+     "question_type": "DESCRIPTIVE"
+    },
+    "cognitive_level": {
+     "level": "UNDERSTAND",
+     "method": "baseline"
+    },
+    "difficulty": {
+     "level": "HARD",
+     "method": "baseline"
+    },
+    "number": 9,
+    "question": "Explain a B+ tree index for topic 3 and discuss trade-offs under 18 concurrent transactions.",
+    "topics": [
+     {
+      "confidence": 0.45,
+      "name": "transactions"
+     },
+     {
+      "confidence": 0.41,
+      "name": "indexing"
+     }
+    ]
+   },
+   {
+    "classification": {
+     "confidence": 0.86,
+     "question_type": "DESCRIPTIVE"
+    },
+    "cognitive_level": {
+     "level": "UNDERSTAND",
+     "method": "baseline"
+    },
+    "difficulty": {
+     "level": "HARD",
+     "method": "baseline"
+    },
+    "number": 10,
+    "question": "Explain a B+ tree index for topic 4 and discuss trade-offs under 19 concurrent transactions.",
+    "topics": [
+     {
+      "confidence": 0.48,
+      "name": "transactions"
+     },
+     {
+      "confidence": 0.43,
+      "name": "indexing"
+     }
+    ]
+   },
+   {
+    "classification": {
+     "confidence": 0.86,
+     "question_type": "DESCRIPTIVE"
+    },
+    "cognitive_level": {
+     "level": "UNDERSTAND",
+     "method": "baseline"
+    },
+    "difficulty": {
+     "level": "HARD",
+     "method": "baseline"
+    },
+    "number": 11,
+    "question": "Explain a B+ tree index for topic 0 and discuss trade-offs under 20 concurrent transactions.",
+    "topics": [
+     {
+      "confidence": 0.43,
+      "name": "transactions"
+     },
+     {
+      "confidence": 0.42,
+      "name": "indexing"
+     }
+    ]
+   },
+   {
+    "classification": {
+     "confidence": 0.86,
+     "question_type": "DESCRIPTIVE"
+    },
+    "cognitive_level": {
+     "level": "UNDERSTAND",
+     "method": "baseline"
+    },
+    "difficulty": {
+     "level": "HARD",
+     "method": "baseline"
+    },
+    "number": 12,
+    "question": "Explain a B+ tree index for topic 1 and discuss trade-offs under 21 concurrent transactions.",
+    "topics": [
+     {
+      "confidence": 0.46,
+      "name": "transactions"
+     },
+     {
+      "confidence": 0.42,
+      "name": "indexing"
+     }
+    ]
+   },
+   {
+    "classification": {
+     "confidence": 0.86,
+     "question_type": "DESCRIPTIVE"
+    },
+    "cognitive_level": {
+     "level": "UNDERSTAND",
+     "method": "baseline"
+    },
+    "difficulty": {
+     "level": "HARD",
+     "method": "baseline"
+    },
+    "number": 13,
+    "question": "Explain a B+ tree index for topic 2 and discuss trade-offs under 22 concurrent transactions.",
+    "topics": [
+     {
+      "confidence": 0.46,
+      "name": "transactions"
+     },
+     {
+      "confidence": 0.4,
+      "name": "indexing"
+     }
+    ]
+   },
+   {
+    "classification": {
+     "confidence": 0.86,
+     "question_type": "DESCRIPTIVE"
+    },
+    "cognitive_level": {
+     "level": "UNDERSTAND",
+     "method": "baseline"
+    },
+    "difficulty": {
+     "level": "HARD",
+     "method": "baseline"
+    },
+    "number": 14,
+    "question": "Explain a B+ tree index for topic 3 and discuss trade-offs under 23 concurrent transactions.",
+    "topics": [
+     {
+      "confidence": 0.47,
+      "name": "transactions"
+     },
+     {
+      "confidence": 0.41,
+      "name": "indexing"
+     }
+    ]
+   },
+   {
+    "classification": {
+     "confidence": 0.86,
+     "question_type": "DESCRIPTIVE"
+    },
+    "cognitive_level": {
+     "level": "UNDERSTAND",
+     "method": "baseline"
+    },
+    "difficulty": {
+     "level": "HARD",
+     "method": "baseline"
+    },
+    "number": 15,
+    "question": "Explain a B+ tree index for topic 4 and discuss trade-offs under 24 concurrent transactions.",
+    "topics": [
+     {
+      "confidence": 0.45,
+      "name": "transactions"
+     },
+     {
+      "confidence": 0.43,
+      "name": "indexing"
+     }
+    ]
+   },
+   {
+    "classification": {
+     "confidence": 0.86,
+     "question_type": "DESCRIPTIVE"
+    },
+    "cognitive_level": {
+     "level": "UNDERSTAND",
+     "method": "baseline"
+    },
+    "difficulty": {
+     "level": "HARD",
+     "method": "baseline"
+    },
+    "number": 16,
+    "question": "Explain a B+ tree index for topic 0 and discuss trade-offs under 25 concurrent transactions.",
+    "topics": [
+     {
+      "confidence": 0.44,
+      "name": "transactions"
+     },
+     {
+      "confidence": 0.42,
+      "name": "indexing"
+     }
+    ]
+   },
+   {
+    "classification": {
+     "confidence": 0.86,
+     "question_type": "DESCRIPTIVE"
+    },
+    "cognitive_level": {
+     "level": "UNDERSTAND",
+     "method": "baseline"
+    },
+    "difficulty": {
+     "level": "HARD",
+     "method": "baseline"
+    },
+    "number": 17,
+    "question": "Explain a B+ tree index for topic 1 and discuss trade-offs under 26 concurrent transactions.",
+    "topics": [
+     {
+      "confidence": 0.47,
+      "name": "transactions"
+     },
+     {
+      "confidence": 0.43,
+      "name": "indexing"
+     }
+    ]
+   },
+   {
+    "classification": {
+     "confidence": 0.86,
+     "question_type": "DESCRIPTIVE"
+    },
+    "cognitive_level": {
+     "level": "UNDERSTAND",
+     "method": "baseline"
+    },
+    "difficulty": {
+     "level": "HARD",
+     "method": "baseline"
+    },
+    "number": 18,
+    "question": "Explain a B+ tree index for topic 2 and discuss trade-offs under 27 concurrent transactions.",
+    "topics": [
+     {
+      "confidence": 0.45,
+      "name": "transactions"
+     },
+     {
+      "confidence": 0.41,
+      "name": "indexing"
+     }
+    ]
+   },
+   {
+    "classification": {
+     "confidence": 0.86,
+     "question_type": "DESCRIPTIVE"
+    },
+    "cognitive_level": {
+     "level": "UNDERSTAND",
+     "method": "baseline"
+    },
+    "difficulty": {
+     "level": "HARD",
+     "method": "baseline"
+    },
+    "number": 19,
+    "question": "Explain a B+ tree index for topic 3 and discuss trade-offs under 28 concurrent transactions.",
+    "topics": [
+     {
+      "confidence": 0.46,
+      "name": "transactions"
+     },
+     {
+      "confidence": 0.42,
+      "name": "indexing"
+     }
+    ]
+   },
+   {
+    "classification": {
+     "confidence": 0.86,
+     "question_type": "DESCRIPTIVE"
+    },
+    "cognitive_level": {
+     "level": "UNDERSTAND",
+     "method": "baseline"
+    },
+    "difficulty": {
+     "level": "HARD",
+     "method": "baseline"
+    },
+    "number": 20,
+    "question": "Explain a B+ tree index for topic 4 and discuss trade-offs under 29 concurrent transactions.",
+    "topics": [
+     {
+      "confidence": 0.46,
+      "name": "transactions"
+     },
+     {
+      "confidence": 0.43,
+      "name": "indexing"
+     }
+    ]
+   }
+  ],
+  "status": "success",
+  "summary": {
+   "cognitive_distribution": {
+    "UNDERSTAND": 20
+   },
+   "difficulty_distribution": {
+    "HARD": 20
+   },
+   "question_types": {
+    "DESCRIPTIVE": 20
+   },
+   "topics_detected": [
+    "indexing",
+    "transactions"
+   ]
+  },
+  "total_questions": 20
+ },
+ "recommendations": {
+  "high_priority_count": 3,
+  "low_priority_count": 0,
+  "medium_priority_count": 2,
+  "method": "evidence_based_recommendation_engine",
+  "recommendations": [
+   {
+    "category": "topic_coverage",
+    "evidence": {
+     "coverage_percentage": 0.0,
+     "question_count": 0,
+     "status": "NOT_COVERED",
+     "topic_name": "normalization"
+    },
+    "explanation": "The examination contains no questions mapped to the topic 'normalization'.",
+    "id": "rec_top_603139b2",
+    "priority": "HIGH",
+    "problem": "Syllabus Topic 'normalization' is not represented",
+    "recommendation": "Consider adding or revising at least one question that directly assesses core concepts from 'normalization' to ensure balanced curriculum coverage.",
+    "source_metric": "Topic Coverage Analysis",
+    "status": "pending"
+   },
+   {
+    "category": "learning_outcome",
+    "evidence": {
+     "aligned_questions_count": 0,
+     "description": "Apply normalization to relational schemas.",
+     "lo_code": "LO2",
+     "max_similarity_score": 0.0,
+     "strong_matches_count": 0,
+     "weak_matches_count": 0
+    },
+    "explanation": "None of the examination questions demonstrate sufficient semantic alignment with LO2.",
+    "id": "rec_lea_97c7165a",
+    "priority": "HIGH",
+    "problem": "LO2 has no aligned examination questions",
+    "recommendation": "Consider designing or updating an assessment question to specifically target LO2. Align the question phrasing and tasks with the competency verbs defined in the LO.",
+    "source_metric": "Learning Outcome Alignment",
+    "status": "pending"
+   },
+   {
+    "category": "assessment_quality",
+    "evidence": {
+     "overall_quality_score": 44.7,
+     "rating": "REQUIRES_ATTENTION"
+    },
+    "explanation": "Multiple pedagogical dimensions are currently imbalanced or unfulfilled.",
+    "id": "rec_ass_623b2f3c",
+    "priority": "HIGH",
+    "problem": "Overall assessment quality index is low (44.7/100)",
+    "recommendation": "The overall assessment score is 44.7/100. Review the prioritized high and medium recommendations above to improve curriculum balance, LO alignment, and question variety.",
+    "source_metric": "Assessment Quality Engine",
+    "status": "pending"
+   },
+   {
+    "category": "difficulty",
+    "evidence": {
+     "easy_percentage": 0.0,
+     "hard_percentage": 0.0,
+     "medium_percentage": 0.0,
+     "target_easy_percentage": 30.0
+    },
+    "explanation": "The assessment contains 0% introductory/easy questions, which may create a steep entry barrier for basic competency verification.",
+    "id": "rec_dif_d5423c43",
+    "priority": "MEDIUM",
+    "problem": "No foundational (Easy) difficulty questions found",
+    "recommendation": "Consider introducing foundational, easy-difficulty questions (e.g. definitions, direct concept verification) to provide a fair baseline for all students.",
+    "source_metric": "Difficulty Balance Analysis",
+    "status": "pending"
+   },
+   {
+    "category": "cognitive_level",
+    "evidence": {
+     "level": "Understand",
+     "percentage": 100.0,
+     "threshold": 60.0
+    },
+    "explanation": "A large proportion of questions/marks (100.0%) is concentrated at the 'Understand' Bloom taxonomy level.",
+    "id": "rec_cog_55a36b69",
+    "priority": "MEDIUM",
+    "problem": "Cognitive concentration at 'Understand' level (100.0%)",
+    "recommendation": "With 100.0% of evaluation concentrated in 'Understand', consider incorporating questions from higher cognitive tiers (e.g., Analyze, Evaluate, Create) to stimulate deeper student inquiry.",
+    "source_metric": "Bloom Cognitive Distribution",
+    "status": "pending"
+   }
+  ],
+  "status": "success",
+  "total_recommendations": 5
+ },
+ "similarity_analysis": {
+  "average_similarity_score": 79.4,
+  "findings": [
+   "High Repetition Risk: 20 question(s) (Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8, Q9, Q10, Q11, Q12, Q13, Q14, Q15, Q16, Q17, Q18, Q19, Q20) share substantial phrasing and concept overlap (70% - 85%) with prior assessments."
+  ],
+  "highly_similar_count": 20,
+  "method": "semantic_embedding_cosine_similarity",
+  "model": "sentence-transformers/all-MiniLM-L6-v2",
+  "potential_duplicates_count": 0,
+  "results": [
+   {
+    "current_cognitive_level": null,
+    "current_question_id": 1,
+    "current_question_number": 1,
+    "current_question_text": "Explain a B+ tree index for topic 0 and discuss trade-offs under 10 concurrent transactions.",
+    "current_question_type": null,
+    "matches": [
+     {
+      "cognitive_level": null,
+      "previous_question_id": 110,
+      "previous_question_text": "Describe a B+ tree index for topic 0 and its trade-offs (old exam 10).",
+      "question_type": null,
+      "similarity_score": 0.7962,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 115,
+      "previous_question_text": "Describe a B+ tree index for topic 0 and its trade-offs (old exam 15).",
+      "question_type": null,
+      "similarity_score": 0.7924,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 105,
+      "previous_question_text": "Describe a B+ tree index for topic 0 and its trade-offs (old exam 5).",
+      "question_type": null,
+      "similarity_score": 0.7904,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 106,
+      "previous_question_text": "Describe a B+ tree index for topic 1 and its trade-offs (old exam 6).",
+      "question_type": null,
+      "similarity_score": 0.7883,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 111,
+      "previous_question_text": "Describe a B+ tree index for topic 1 and its trade-offs (old exam 11).",
+      "question_type": null,
+      "similarity_score": 0.787,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     }
+    ],
+    "max_similarity_score": 0.7962,
+    "max_similarity_status": "HIGHLY_SIMILAR",
+    "reasoning": "High semantic similarity (79.6%) with historical question. Verify whether task requirements or datasets differ."
+   },
+   {
+    "current_cognitive_level": null,
+    "current_question_id": 2,
+    "current_question_number": 2,
+    "current_question_text": "Explain a B+ tree index for topic 1 and discuss trade-offs under 11 concurrent transactions.",
+    "current_question_type": null,
+    "matches": [
+     {
+      "cognitive_level": null,
+      "previous_question_id": 111,
+      "previous_question_text": "Describe a B+ tree index for topic 1 and its trade-offs (old exam 11).",
+      "question_type": null,
+      "similarity_score": 0.7973,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 113,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 13).",
+      "question_type": null,
+      "similarity_score": 0.7955,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 118,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 18).",
+      "question_type": null,
+      "similarity_score": 0.7945,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 106,
+      "previous_question_text": "Describe a B+ tree index for topic 1 and its trade-offs (old exam 6).",
+      "question_type": null,
+      "similarity_score": 0.7935,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 126,
+      "previous_question_text": "Describe a B+ tree index for topic 1 and its trade-offs (old exam 26).",
+      "question_type": null,
+      "similarity_score": 0.7924,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     }
+    ],
+    "max_similarity_score": 0.7973,
+    "max_similarity_status": "HIGHLY_SIMILAR",
+    "reasoning": "High semantic similarity (79.7%) with historical question. Verify whether task requirements or datasets differ."
+   },
+   {
+    "current_cognitive_level": null,
+    "current_question_id": 3,
+    "current_question_number": 3,
+    "current_question_text": "Explain a B+ tree index for topic 2 and discuss trade-offs under 12 concurrent transactions.",
+    "current_question_type": null,
+    "matches": [
+     {
+      "cognitive_level": null,
+      "previous_question_id": 112,
+      "previous_question_text": "Describe a B+ tree index for topic 2 and its trade-offs (old exam 12).",
+      "question_type": null,
+      "similarity_score": 0.791,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 117,
+      "previous_question_text": "Describe a B+ tree index for topic 2 and its trade-offs (old exam 17).",
+      "question_type": null,
+      "similarity_score": 0.7907,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 107,
+      "previous_question_text": "Describe a B+ tree index for topic 2 and its trade-offs (old exam 7).",
+      "question_type": null,
+      "similarity_score": 0.7903,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 113,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 13).",
+      "question_type": null,
+      "similarity_score": 0.7902,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 118,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 18).",
+      "question_type": null,
+      "similarity_score": 0.788,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     }
+    ],
+    "max_similarity_score": 0.791,
+    "max_similarity_status": "HIGHLY_SIMILAR",
+    "reasoning": "High semantic similarity (79.1%) with historical question. Verify whether task requirements or datasets differ."
+   },
+   {
+    "current_cognitive_level": null,
+    "current_question_id": 4,
+    "current_question_number": 4,
+    "current_question_text": "Explain a B+ tree index for topic 3 and discuss trade-offs under 13 concurrent transactions.",
+    "current_question_type": null,
+    "matches": [
+     {
+      "cognitive_level": null,
+      "previous_question_id": 113,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 13).",
+      "question_type": null,
+      "similarity_score": 0.7926,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 118,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 18).",
+      "question_type": null,
+      "similarity_score": 0.7889,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 103,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 3).",
+      "question_type": null,
+      "similarity_score": 0.7849,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 123,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 23).",
+      "question_type": null,
+      "similarity_score": 0.7829,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 128,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 28).",
+      "question_type": null,
+      "similarity_score": 0.7805,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     }
+    ],
+    "max_similarity_score": 0.7926,
+    "max_similarity_status": "HIGHLY_SIMILAR",
+    "reasoning": "High semantic similarity (79.3%) with historical question. Verify whether task requirements or datasets differ."
+   },
+   {
+    "current_cognitive_level": null,
+    "current_question_id": 5,
+    "current_question_number": 5,
+    "current_question_text": "Explain a B+ tree index for topic 4 and discuss trade-offs under 14 concurrent transactions.",
+    "current_question_type": null,
+    "matches": [
+     {
+      "cognitive_level": null,
+      "previous_question_id": 114,
+      "previous_question_text": "Describe a B+ tree index for topic 4 and its trade-offs (old exam 14).",
+      "question_type": null,
+      "similarity_score": 0.7923,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 113,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 13).",
+      "question_type": null,
+      "similarity_score": 0.7894,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 118,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 18).",
+      "question_type": null,
+      "similarity_score": 0.7884,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 119,
+      "previous_question_text": "Describe a B+ tree index for topic 4 and its trade-offs (old exam 19).",
+      "question_type": null,
+      "similarity_score": 0.7857,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 108,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 8).",
+      "question_type": null,
+      "similarity_score": 0.7852,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     }
+    ],
+    "max_similarity_score": 0.7923,
+    "max_similarity_status": "HIGHLY_SIMILAR",
+    "reasoning": "High semantic similarity (79.2%) with historical question. Verify whether task requirements or datasets differ."
+   },
+   {
+    "current_cognitive_level": null,
+    "current_question_id": 6,
+    "current_question_number": 6,
+    "current_question_text": "Explain a B+ tree index for topic 0 and discuss trade-offs under 15 concurrent transactions.",
+    "current_question_type": null,
+    "matches": [
+     {
+      "cognitive_level": null,
+      "previous_question_id": 115,
+      "previous_question_text": "Describe a B+ tree index for topic 0 and its trade-offs (old exam 15).",
+      "question_type": null,
+      "similarity_score": 0.7959,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 118,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 18).",
+      "question_type": null,
+      "similarity_score": 0.794,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 113,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 13).",
+      "question_type": null,
+      "similarity_score": 0.7916,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 116,
+      "previous_question_text": "Describe a B+ tree index for topic 1 and its trade-offs (old exam 16).",
+      "question_type": null,
+      "similarity_score": 0.7901,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 106,
+      "previous_question_text": "Describe a B+ tree index for topic 1 and its trade-offs (old exam 6).",
+      "question_type": null,
+      "similarity_score": 0.7882,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     }
+    ],
+    "max_similarity_score": 0.7959,
+    "max_similarity_status": "HIGHLY_SIMILAR",
+    "reasoning": "High semantic similarity (79.6%) with historical question. Verify whether task requirements or datasets differ."
+   },
+   {
+    "current_cognitive_level": null,
+    "current_question_id": 7,
+    "current_question_number": 7,
+    "current_question_text": "Explain a B+ tree index for topic 1 and discuss trade-offs under 16 concurrent transactions.",
+    "current_question_type": null,
+    "matches": [
+     {
+      "cognitive_level": null,
+      "previous_question_id": 116,
+      "previous_question_text": "Describe a B+ tree index for topic 1 and its trade-offs (old exam 16).",
+      "question_type": null,
+      "similarity_score": 0.793,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 118,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 18).",
+      "question_type": null,
+      "similarity_score": 0.7898,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 113,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 13).",
+      "question_type": null,
+      "similarity_score": 0.7866,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 106,
+      "previous_question_text": "Describe a B+ tree index for topic 1 and its trade-offs (old exam 6).",
+      "question_type": null,
+      "similarity_score": 0.7847,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 126,
+      "previous_question_text": "Describe a B+ tree index for topic 1 and its trade-offs (old exam 26).",
+      "question_type": null,
+      "similarity_score": 0.7842,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     }
+    ],
+    "max_similarity_score": 0.793,
+    "max_similarity_status": "HIGHLY_SIMILAR",
+    "reasoning": "High semantic similarity (79.3%) with historical question. Verify whether task requirements or datasets differ."
+   },
+   {
+    "current_cognitive_level": null,
+    "current_question_id": 8,
+    "current_question_number": 8,
+    "current_question_text": "Explain a B+ tree index for topic 2 and discuss trade-offs under 17 concurrent transactions.",
+    "current_question_type": null,
+    "matches": [
+     {
+      "cognitive_level": null,
+      "previous_question_id": 117,
+      "previous_question_text": "Describe a B+ tree index for topic 2 and its trade-offs (old exam 17).",
+      "question_type": null,
+      "similarity_score": 0.8013,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 118,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 18).",
+      "question_type": null,
+      "similarity_score": 0.7964,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 107,
+      "previous_question_text": "Describe a B+ tree index for topic 2 and its trade-offs (old exam 7).",
+      "question_type": null,
+      "similarity_score": 0.7939,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 113,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 13).",
+      "question_type": null,
+      "similarity_score": 0.7929,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 116,
+      "previous_question_text": "Describe a B+ tree index for topic 1 and its trade-offs (old exam 16).",
+      "question_type": null,
+      "similarity_score": 0.7907,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     }
+    ],
+    "max_similarity_score": 0.8013,
+    "max_similarity_status": "HIGHLY_SIMILAR",
+    "reasoning": "High semantic similarity (80.1%) with historical question. Verify whether task requirements or datasets differ."
+   },
+   {
+    "current_cognitive_level": null,
+    "current_question_id": 9,
+    "current_question_number": 9,
+    "current_question_text": "Explain a B+ tree index for topic 3 and discuss trade-offs under 18 concurrent transactions.",
+    "current_question_type": null,
+    "matches": [
+     {
+      "cognitive_level": null,
+      "previous_question_id": 118,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 18).",
+      "question_type": null,
+      "similarity_score": 0.7977,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 113,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 13).",
+      "question_type": null,
+      "similarity_score": 0.7883,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 103,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 3).",
+      "question_type": null,
+      "similarity_score": 0.7857,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 123,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 23).",
+      "question_type": null,
+      "similarity_score": 0.785,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 128,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 28).",
+      "question_type": null,
+      "similarity_score": 0.7825,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     }
+    ],
+    "max_similarity_score": 0.7977,
+    "max_similarity_status": "HIGHLY_SIMILAR",
+    "reasoning": "High semantic similarity (79.8%) with historical question. Verify whether task requirements or datasets differ."
+   },
+   {
+    "current_cognitive_level": null,
+    "current_question_id": 10,
+    "current_question_number": 10,
+    "current_question_text": "Explain a B+ tree index for topic 4 and discuss trade-offs under 19 concurrent transactions.",
+    "current_question_type": null,
+    "matches": [
+     {
+      "cognitive_level": null,
+      "previous_question_id": 118,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 18).",
+      "question_type": null,
+      "similarity_score": 0.7883,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 119,
+      "previous_question_text": "Describe a B+ tree index for topic 4 and its trade-offs (old exam 19).",
+      "question_type": null,
+      "similarity_score": 0.7836,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 113,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 13).",
+      "question_type": null,
+      "similarity_score": 0.7834,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 123,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 23).",
+      "question_type": null,
+      "similarity_score": 0.7803,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 103,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 3).",
+      "question_type": null,
+      "similarity_score": 0.7787,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     }
+    ],
+    "max_similarity_score": 0.7883,
+    "max_similarity_status": "HIGHLY_SIMILAR",
+    "reasoning": "High semantic similarity (78.8%) with historical question. Verify whether task requirements or datasets differ."
+   },
+   {
+    "current_cognitive_level": null,
+    "current_question_id": 11,
+    "current_question_number": 11,
+    "current_question_text": "Explain a B+ tree index for topic 0 and discuss trade-offs under 20 concurrent transactions.",
+    "current_question_type": null,
+    "matches": [
+     {
+      "cognitive_level": null,
+      "previous_question_id": 115,
+      "previous_question_text": "Describe a B+ tree index for topic 0 and its trade-offs (old exam 15).",
+      "question_type": null,
+      "similarity_score": 0.798,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 120,
+      "previous_question_text": "Describe a B+ tree index for topic 0 and its trade-offs (old exam 20).",
+      "question_type": null,
+      "similarity_score": 0.7976,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 110,
+      "previous_question_text": "Describe a B+ tree index for topic 0 and its trade-offs (old exam 10).",
+      "question_type": null,
+      "similarity_score": 0.7954,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 105,
+      "previous_question_text": "Describe a B+ tree index for topic 0 and its trade-offs (old exam 5).",
+      "question_type": null,
+      "similarity_score": 0.7944,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 125,
+      "previous_question_text": "Describe a B+ tree index for topic 0 and its trade-offs (old exam 25).",
+      "question_type": null,
+      "similarity_score": 0.7942,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     }
+    ],
+    "max_similarity_score": 0.798,
+    "max_similarity_status": "HIGHLY_SIMILAR",
+    "reasoning": "High semantic similarity (79.8%) with historical question. Verify whether task requirements or datasets differ."
+   },
+   {
+    "current_cognitive_level": null,
+    "current_question_id": 12,
+    "current_question_number": 12,
+    "current_question_text": "Explain a B+ tree index for topic 1 and discuss trade-offs under 21 concurrent transactions.",
+    "current_question_type": null,
+    "matches": [
+     {
+      "cognitive_level": null,
+      "previous_question_id": 118,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 18).",
+      "question_type": null,
+      "similarity_score": 0.7924,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 121,
+      "previous_question_text": "Describe a B+ tree index for topic 1 and its trade-offs (old exam 21).",
+      "question_type": null,
+      "similarity_score": 0.791,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 126,
+      "previous_question_text": "Describe a B+ tree index for topic 1 and its trade-offs (old exam 26).",
+      "question_type": null,
+      "similarity_score": 0.7905,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 113,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 13).",
+      "question_type": null,
+      "similarity_score": 0.7881,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 106,
+      "previous_question_text": "Describe a B+ tree index for topic 1 and its trade-offs (old exam 6).",
+      "question_type": null,
+      "similarity_score": 0.7878,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     }
+    ],
+    "max_similarity_score": 0.7924,
+    "max_similarity_status": "HIGHLY_SIMILAR",
+    "reasoning": "High semantic similarity (79.2%) with historical question. Verify whether task requirements or datasets differ."
+   },
+   {
+    "current_cognitive_level": null,
+    "current_question_id": 13,
+    "current_question_number": 13,
+    "current_question_text": "Explain a B+ tree index for topic 2 and discuss trade-offs under 22 concurrent transactions.",
+    "current_question_type": null,
+    "matches": [
+     {
+      "cognitive_level": null,
+      "previous_question_id": 117,
+      "previous_question_text": "Describe a B+ tree index for topic 2 and its trade-offs (old exam 17).",
+      "question_type": null,
+      "similarity_score": 0.7901,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 122,
+      "previous_question_text": "Describe a B+ tree index for topic 2 and its trade-offs (old exam 22).",
+      "question_type": null,
+      "similarity_score": 0.7869,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 118,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 18).",
+      "question_type": null,
+      "similarity_score": 0.7866,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 107,
+      "previous_question_text": "Describe a B+ tree index for topic 2 and its trade-offs (old exam 7).",
+      "question_type": null,
+      "similarity_score": 0.7856,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 127,
+      "previous_question_text": "Describe a B+ tree index for topic 2 and its trade-offs (old exam 27).",
+      "question_type": null,
+      "similarity_score": 0.7855,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     }
+    ],
+    "max_similarity_score": 0.7901,
+    "max_similarity_status": "HIGHLY_SIMILAR",
+    "reasoning": "High semantic similarity (79.0%) with historical question. Verify whether task requirements or datasets differ."
+   },
+   {
+    "current_cognitive_level": null,
+    "current_question_id": 14,
+    "current_question_number": 14,
+    "current_question_text": "Explain a B+ tree index for topic 3 and discuss trade-offs under 23 concurrent transactions.",
+    "current_question_type": null,
+    "matches": [
+     {
+      "cognitive_level": null,
+      "previous_question_id": 118,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 18).",
+      "question_type": null,
+      "similarity_score": 0.7891,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 123,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 23).",
+      "question_type": null,
+      "similarity_score": 0.7863,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 113,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 13).",
+      "question_type": null,
+      "similarity_score": 0.7858,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 103,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 3).",
+      "question_type": null,
+      "similarity_score": 0.7849,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 128,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 28).",
+      "question_type": null,
+      "similarity_score": 0.7834,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     }
+    ],
+    "max_similarity_score": 0.7891,
+    "max_similarity_status": "HIGHLY_SIMILAR",
+    "reasoning": "High semantic similarity (78.9%) with historical question. Verify whether task requirements or datasets differ."
+   },
+   {
+    "current_cognitive_level": null,
+    "current_question_id": 15,
+    "current_question_number": 15,
+    "current_question_text": "Explain a B+ tree index for topic 4 and discuss trade-offs under 24 concurrent transactions.",
+    "current_question_type": null,
+    "matches": [
+     {
+      "cognitive_level": null,
+      "previous_question_id": 118,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 18).",
+      "question_type": null,
+      "similarity_score": 0.7913,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 119,
+      "previous_question_text": "Describe a B+ tree index for topic 4 and its trade-offs (old exam 19).",
+      "question_type": null,
+      "similarity_score": 0.7906,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 144,
+      "previous_question_text": "Describe a B+ tree index for topic 4 and its trade-offs (old exam 44).",
+      "question_type": null,
+      "similarity_score": 0.7899,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 114,
+      "previous_question_text": "Describe a B+ tree index for topic 4 and its trade-offs (old exam 14).",
+      "question_type": null,
+      "similarity_score": 0.7893,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 113,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 13).",
+      "question_type": null,
+      "similarity_score": 0.7876,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     }
+    ],
+    "max_similarity_score": 0.7913,
+    "max_similarity_status": "HIGHLY_SIMILAR",
+    "reasoning": "High semantic similarity (79.1%) with historical question. Verify whether task requirements or datasets differ."
+   },
+   {
+    "current_cognitive_level": null,
+    "current_question_id": 16,
+    "current_question_number": 16,
+    "current_question_text": "Explain a B+ tree index for topic 0 and discuss trade-offs under 25 concurrent transactions.",
+    "current_question_type": null,
+    "matches": [
+     {
+      "cognitive_level": null,
+      "previous_question_id": 115,
+      "previous_question_text": "Describe a B+ tree index for topic 0 and its trade-offs (old exam 15).",
+      "question_type": null,
+      "similarity_score": 0.7946,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 125,
+      "previous_question_text": "Describe a B+ tree index for topic 0 and its trade-offs (old exam 25).",
+      "question_type": null,
+      "similarity_score": 0.7945,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 118,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 18).",
+      "question_type": null,
+      "similarity_score": 0.7939,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 105,
+      "previous_question_text": "Describe a B+ tree index for topic 0 and its trade-offs (old exam 5).",
+      "question_type": null,
+      "similarity_score": 0.7928,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 135,
+      "previous_question_text": "Describe a B+ tree index for topic 0 and its trade-offs (old exam 35).",
+      "question_type": null,
+      "similarity_score": 0.7921,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     }
+    ],
+    "max_similarity_score": 0.7946,
+    "max_similarity_status": "HIGHLY_SIMILAR",
+    "reasoning": "High semantic similarity (79.5%) with historical question. Verify whether task requirements or datasets differ."
+   },
+   {
+    "current_cognitive_level": null,
+    "current_question_id": 17,
+    "current_question_number": 17,
+    "current_question_text": "Explain a B+ tree index for topic 1 and discuss trade-offs under 26 concurrent transactions.",
+    "current_question_type": null,
+    "matches": [
+     {
+      "cognitive_level": null,
+      "previous_question_id": 126,
+      "previous_question_text": "Describe a B+ tree index for topic 1 and its trade-offs (old exam 26).",
+      "question_type": null,
+      "similarity_score": 0.7925,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 118,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 18).",
+      "question_type": null,
+      "similarity_score": 0.7916,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 113,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 13).",
+      "question_type": null,
+      "similarity_score": 0.7902,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 106,
+      "previous_question_text": "Describe a B+ tree index for topic 1 and its trade-offs (old exam 6).",
+      "question_type": null,
+      "similarity_score": 0.7891,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 128,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 28).",
+      "question_type": null,
+      "similarity_score": 0.7879,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     }
+    ],
+    "max_similarity_score": 0.7925,
+    "max_similarity_status": "HIGHLY_SIMILAR",
+    "reasoning": "High semantic similarity (79.2%) with historical question. Verify whether task requirements or datasets differ."
+   },
+   {
+    "current_cognitive_level": null,
+    "current_question_id": 18,
+    "current_question_number": 18,
+    "current_question_text": "Explain a B+ tree index for topic 2 and discuss trade-offs under 27 concurrent transactions.",
+    "current_question_type": null,
+    "matches": [
+     {
+      "cognitive_level": null,
+      "previous_question_id": 117,
+      "previous_question_text": "Describe a B+ tree index for topic 2 and its trade-offs (old exam 17).",
+      "question_type": null,
+      "similarity_score": 0.7966,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 118,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 18).",
+      "question_type": null,
+      "similarity_score": 0.7964,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 127,
+      "previous_question_text": "Describe a B+ tree index for topic 2 and its trade-offs (old exam 27).",
+      "question_type": null,
+      "similarity_score": 0.7957,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 113,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 13).",
+      "question_type": null,
+      "similarity_score": 0.7957,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 107,
+      "previous_question_text": "Describe a B+ tree index for topic 2 and its trade-offs (old exam 7).",
+      "question_type": null,
+      "similarity_score": 0.7953,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     }
+    ],
+    "max_similarity_score": 0.7966,
+    "max_similarity_status": "HIGHLY_SIMILAR",
+    "reasoning": "High semantic similarity (79.7%) with historical question. Verify whether task requirements or datasets differ."
+   },
+   {
+    "current_cognitive_level": null,
+    "current_question_id": 19,
+    "current_question_number": 19,
+    "current_question_text": "Explain a B+ tree index for topic 3 and discuss trade-offs under 28 concurrent transactions.",
+    "current_question_type": null,
+    "matches": [
+     {
+      "cognitive_level": null,
+      "previous_question_id": 128,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 28).",
+      "question_type": null,
+      "similarity_score": 0.7906,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 118,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 18).",
+      "question_type": null,
+      "similarity_score": 0.7878,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 103,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 3).",
+      "question_type": null,
+      "similarity_score": 0.7852,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 113,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 13).",
+      "question_type": null,
+      "similarity_score": 0.7851,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 138,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 38).",
+      "question_type": null,
+      "similarity_score": 0.7851,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     }
+    ],
+    "max_similarity_score": 0.7906,
+    "max_similarity_status": "HIGHLY_SIMILAR",
+    "reasoning": "High semantic similarity (79.1%) with historical question. Verify whether task requirements or datasets differ."
+   },
+   {
+    "current_cognitive_level": null,
+    "current_question_id": 20,
+    "current_question_number": 20,
+    "current_question_text": "Explain a B+ tree index for topic 4 and discuss trade-offs under 29 concurrent transactions.",
+    "current_question_type": null,
+    "matches": [
+     {
+      "cognitive_level": null,
+      "previous_question_id": 118,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 18).",
+      "question_type": null,
+      "similarity_score": 0.7897,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 128,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 28).",
+      "question_type": null,
+      "similarity_score": 0.7889,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 129,
+      "previous_question_text": "Describe a B+ tree index for topic 4 and its trade-offs (old exam 29).",
+      "question_type": null,
+      "similarity_score": 0.7879,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 113,
+      "previous_question_text": "Describe a B+ tree index for topic 3 and its trade-offs (old exam 13).",
+      "question_type": null,
+      "similarity_score": 0.7875,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     },
+     {
+      "cognitive_level": null,
+      "previous_question_id": 119,
+      "previous_question_text": "Describe a B+ tree index for topic 4 and its trade-offs (old exam 19).",
+      "question_type": null,
+      "similarity_score": 0.7871,
+      "similarity_status": "HIGHLY_SIMILAR",
+      "source_assessment": null,
+      "source_year": null
+     }
+    ],
+    "max_similarity_score": 0.7897,
+    "max_similarity_status": "HIGHLY_SIMILAR",
+    "reasoning": "High semantic similarity (79.0%) with historical question. Verify whether task requirements or datasets differ."
+   }
+  ],
+  "somewhat_similar_count": 0,
+  "status": "success",
+  "thresholds": {
+   "high_similarity": 0.7,
+   "moderate_similarity": 0.5,
+   "potential_duplicate": 0.85
+  },
+  "total_current_questions": 20,
+  "total_previous_questions": 50
+ },
+ "status": "success",
+ "summary": {
+  "cognitive_diversity_score": null,
+  "difficulty_balance_score": null,
+  "high_priority_recommendations": 3,
+  "lo_coverage_percentage": null,
+  "overall_quality_score": 44.67,
+  "potential_duplicates_count": 0,
+  "quality_rating": "REQUIRES_ATTENTION",
+  "topic_coverage_percentage": null,
+  "total_questions": 20,
+  "total_recommendations": 5
+ }
+}

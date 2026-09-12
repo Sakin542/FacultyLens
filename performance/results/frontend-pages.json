@@ -1,0 +1,496 @@
+{
+  "generated_at": "2026-09-12T18:05:56.902Z",
+  "base_url": "http://127.0.0.1:8090",
+  "pages": [
+    {
+      "page": "dashboard",
+      "path": "/dashboard",
+      "wall_ms": 1957,
+      "domContentLoaded": 13,
+      "load": 15,
+      "fcp": 44,
+      "transferKB": 12,
+      "api_requests": 5,
+      "api_wait_ms_total": 124,
+      "api_bytes_kb": 109,
+      "duplicate_requests": [],
+      "dom_nodes": 832,
+      "calls": [
+        {
+          "url": "GET /api/auth/user",
+          "ms": 18,
+          "status": 200,
+          "bytes": 159
+        },
+        {
+          "url": "GET /api/notifications",
+          "ms": 17,
+          "status": 200,
+          "bytes": 134
+        },
+        {
+          "url": "GET /api/ai/health",
+          "ms": 20,
+          "status": 200,
+          "bytes": 129
+        },
+        {
+          "url": "GET /api/analytics/overview",
+          "ms": 47,
+          "status": 200,
+          "bytes": 111077
+        },
+        {
+          "url": "GET /api/collaboration/summary",
+          "ms": 22,
+          "status": 200,
+          "bytes": 238
+        }
+      ]
+    },
+    {
+      "page": "courses",
+      "path": "/courses",
+      "wall_ms": 1645,
+      "domContentLoaded": 10,
+      "load": 11,
+      "fcp": 32,
+      "transferKB": 2,
+      "api_requests": 4,
+      "api_wait_ms_total": 68,
+      "api_bytes_kb": 4,
+      "duplicate_requests": [],
+      "dom_nodes": 867,
+      "calls": [
+        {
+          "url": "GET /api/auth/user",
+          "ms": 17,
+          "status": 200,
+          "bytes": 159
+        },
+        {
+          "url": "GET /api/notifications",
+          "ms": 15,
+          "status": 200,
+          "bytes": 134
+        },
+        {
+          "url": "GET /api/ai/health",
+          "ms": 17,
+          "status": 200,
+          "bytes": 129
+        },
+        {
+          "url": "GET /api/courses",
+          "ms": 19,
+          "status": 200,
+          "bytes": 3761
+        }
+      ]
+    },
+    {
+      "page": "course-detail",
+      "path": "/courses/1013",
+      "wall_ms": 1644,
+      "domContentLoaded": 12,
+      "load": 13,
+      "fcp": 32,
+      "transferKB": 3,
+      "api_requests": 5,
+      "api_wait_ms_total": 88,
+      "api_bytes_kb": 6,
+      "duplicate_requests": [],
+      "dom_nodes": 536,
+      "calls": [
+        {
+          "url": "GET /api/auth/user",
+          "ms": 16,
+          "status": 200,
+          "bytes": 159
+        },
+        {
+          "url": "GET /api/notifications",
+          "ms": 15,
+          "status": 200,
+          "bytes": 134
+        },
+        {
+          "url": "GET /api/ai/health",
+          "ms": 19,
+          "status": 200,
+          "bytes": 129
+        },
+        {
+          "url": "GET /api/courses/1013",
+          "ms": 21,
+          "status": 200,
+          "bytes": 5389
+        },
+        {
+          "url": "GET /api/documents?course_id=1013",
+          "ms": 17,
+          "status": 200,
+          "bytes": 11
+        }
+      ]
+    },
+    {
+      "page": "assessments",
+      "path": "/assessments",
+      "wall_ms": 1675,
+      "domContentLoaded": 11,
+      "load": 11,
+      "fcp": 32,
+      "transferKB": 3,
+      "api_requests": 5,
+      "api_wait_ms_total": 93,
+      "api_bytes_kb": 17,
+      "duplicate_requests": [],
+      "dom_nodes": 1754,
+      "calls": [
+        {
+          "url": "GET /api/auth/user",
+          "ms": 15,
+          "status": 200,
+          "bytes": 159
+        },
+        {
+          "url": "GET /api/notifications",
+          "ms": 16,
+          "status": 200,
+          "bytes": 134
+        },
+        {
+          "url": "GET /api/courses",
+          "ms": 19,
+          "status": 200,
+          "bytes": 3761
+        },
+        {
+          "url": "GET /api/ai/health",
+          "ms": 20,
+          "status": 200,
+          "bytes": 129
+        },
+        {
+          "url": "GET /api/assessments",
+          "ms": 23,
+          "status": 200,
+          "bytes": 13705
+        }
+      ]
+    },
+    {
+      "page": "assessment-200q",
+      "path": "/assessments/112",
+      "wall_ms": 1950,
+      "domContentLoaded": 12,
+      "load": 12,
+      "fcp": 36,
+      "transferKB": 15,
+      "api_requests": 7,
+      "api_wait_ms_total": 179,
+      "api_bytes_kb": 191,
+      "duplicate_requests": [],
+      "dom_nodes": 6605,
+      "calls": [
+        {
+          "url": "GET /api/auth/user",
+          "ms": 14,
+          "status": 200,
+          "bytes": 159
+        },
+        {
+          "url": "GET /api/notifications",
+          "ms": 19,
+          "status": 200,
+          "bytes": 134
+        },
+        {
+          "url": "GET /api/ai/health",
+          "ms": 22,
+          "status": 200,
+          "bytes": 129
+        },
+        {
+          "url": "GET /api/assessments/112/submissions/summary",
+          "ms": 26,
+          "status": 200,
+          "bytes": 356
+        },
+        {
+          "url": "GET /api/assessments/112",
+          "ms": 51,
+          "status": 200,
+          "bytes": 189310
+        },
+        {
+          "url": "GET /api/courses/1013/collaboration/members",
+          "ms": 22,
+          "status": 200,
+          "bytes": 5012
+        },
+        {
+          "url": "GET /api/courses/1013/comments?commentable_type=assessment&commentable_id=112&per_page=50",
+          "ms": 25,
+          "status": 200,
+          "bytes": 145
+        }
+      ]
+    },
+    {
+      "page": "analysis-200q",
+      "path": "/assessments/112/analysis",
+      "wall_ms": 1934,
+      "domContentLoaded": 19,
+      "load": 20,
+      "fcp": 48,
+      "transferKB": 86,
+      "api_requests": 8,
+      "api_wait_ms_total": 221,
+      "api_bytes_kb": 840,
+      "duplicate_requests": [],
+      "dom_nodes": 1401,
+      "calls": [
+        {
+          "url": "GET /api/auth/user",
+          "ms": 15,
+          "status": 200,
+          "bytes": 159
+        },
+        {
+          "url": "GET /api/notifications",
+          "ms": 17,
+          "status": 200,
+          "bytes": 134
+        },
+        {
+          "url": "GET /api/ai/health",
+          "ms": 19,
+          "status": 200,
+          "bytes": 129
+        },
+        {
+          "url": "GET /api/assessments",
+          "ms": 23,
+          "status": 200,
+          "bytes": 13705
+        },
+        {
+          "url": "GET /api/ai/assessments/112/analysis",
+          "ms": 78,
+          "status": 200,
+          "bytes": 840410
+        },
+        {
+          "url": "GET /api/assessments/112/performance",
+          "ms": 20,
+          "status": 200,
+          "bytes": 207
+        },
+        {
+          "url": "GET /api/courses/1013/collaboration/members",
+          "ms": 23,
+          "status": 200,
+          "bytes": 5012
+        },
+        {
+          "url": "GET /api/courses/1013/comments?commentable_type=analysis_report&commentable_id=261&per_page=50",
+          "ms": 26,
+          "status": 200,
+          "bytes": 145
+        }
+      ]
+    },
+    {
+      "page": "analytics",
+      "path": "/analytics",
+      "wall_ms": 1997,
+      "domContentLoaded": 10,
+      "load": 11,
+      "fcp": 32,
+      "transferKB": 30,
+      "api_requests": 5,
+      "api_wait_ms_total": 117,
+      "api_bytes_kb": 120,
+      "duplicate_requests": [],
+      "dom_nodes": 4248,
+      "calls": [
+        {
+          "url": "GET /api/auth/user",
+          "ms": 17,
+          "status": 200,
+          "bytes": 159
+        },
+        {
+          "url": "GET /api/notifications",
+          "ms": 16,
+          "status": 200,
+          "bytes": 134
+        },
+        {
+          "url": "GET /api/ai/health",
+          "ms": 18,
+          "status": 200,
+          "bytes": 129
+        },
+        {
+          "url": "GET /api/analytics/filters",
+          "ms": 22,
+          "status": 200,
+          "bytes": 11418
+        },
+        {
+          "url": "GET /api/analytics/overview",
+          "ms": 44,
+          "status": 200,
+          "bytes": 111077
+        }
+      ]
+    },
+    {
+      "page": "history",
+      "path": "/history",
+      "wall_ms": 1693,
+      "domContentLoaded": 14,
+      "load": 14,
+      "fcp": 32,
+      "transferKB": 18,
+      "api_requests": 7,
+      "api_wait_ms_total": 131,
+      "api_bytes_kb": 24,
+      "duplicate_requests": [],
+      "dom_nodes": 1026,
+      "calls": [
+        {
+          "url": "GET /api/auth/user",
+          "ms": 14,
+          "status": 200,
+          "bytes": 159
+        },
+        {
+          "url": "GET /api/notifications",
+          "ms": 15,
+          "status": 200,
+          "bytes": 134
+        },
+        {
+          "url": "GET /api/courses",
+          "ms": 18,
+          "status": 200,
+          "bytes": 3761
+        },
+        {
+          "url": "GET /api/ai/health",
+          "ms": 21,
+          "status": 200,
+          "bytes": 129
+        },
+        {
+          "url": "GET /api/analysis/history?sort=newest&page=1",
+          "ms": 24,
+          "status": 200,
+          "bytes": 10439
+        },
+        {
+          "url": "GET /api/analysis/trends?course_id=1013",
+          "ms": 18,
+          "status": 200,
+          "bytes": 9867
+        },
+        {
+          "url": "GET /api/analysis/improvement-summary?course_id=1013",
+          "ms": 21,
+          "status": 200,
+          "bytes": 268
+        }
+      ]
+    },
+    {
+      "page": "reports",
+      "path": "/reports",
+      "wall_ms": 1646,
+      "domContentLoaded": 12,
+      "load": 12,
+      "fcp": 48,
+      "transferKB": 10,
+      "api_requests": 4,
+      "api_wait_ms_total": 89,
+      "api_bytes_kb": 1,
+      "duplicate_requests": [],
+      "dom_nodes": 306,
+      "calls": [
+        {
+          "url": "GET /api/auth/user",
+          "ms": 15,
+          "status": 200,
+          "bytes": 159
+        },
+        {
+          "url": "GET /api/notifications",
+          "ms": 22,
+          "status": 200,
+          "bytes": 134
+        },
+        {
+          "url": "GET /api/ai/health",
+          "ms": 24,
+          "status": 200,
+          "bytes": 129
+        },
+        {
+          "url": "GET /api/reports?page=1&per_page=20",
+          "ms": 28,
+          "status": 200,
+          "bytes": 110
+        }
+      ]
+    },
+    {
+      "page": "question-bank-5000",
+      "path": "/courses/1013/question-bank",
+      "wall_ms": 1698,
+      "domContentLoaded": 13,
+      "load": 13,
+      "fcp": 36,
+      "transferKB": 10,
+      "api_requests": 5,
+      "api_wait_ms_total": 93,
+      "api_bytes_kb": 11,
+      "duplicate_requests": [],
+      "dom_nodes": 702,
+      "calls": [
+        {
+          "url": "GET /api/auth/user",
+          "ms": 15,
+          "status": 200,
+          "bytes": 159
+        },
+        {
+          "url": "GET /api/notifications",
+          "ms": 16,
+          "status": 200,
+          "bytes": 134
+        },
+        {
+          "url": "GET /api/courses",
+          "ms": 19,
+          "status": 200,
+          "bytes": 3761
+        },
+        {
+          "url": "GET /api/ai/health",
+          "ms": 20,
+          "status": 200,
+          "bytes": 129
+        },
+        {
+          "url": "GET /api/courses/1013/previous-questions?page=1&per_page=10&sort_by=newest",
+          "ms": 23,
+          "status": 200,
+          "bytes": 7304
+        }
+      ]
+    }
+  ]
+}

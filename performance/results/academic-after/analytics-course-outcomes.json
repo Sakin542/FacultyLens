@@ -1,0 +1,178 @@
+{
+ "data": {
+  "learning_outcomes": {
+   "analyzed_assessments": 10,
+   "coverage_percentage": 0,
+   "covered_outcomes": 0,
+   "explanation": "Percentage of learning outcomes with at least one strongly aligned question in the current analysis (STEP 11).",
+   "outcomes": [
+    {
+     "code": "LO1",
+     "course_code": "PERF-001",
+     "course_id": 1013,
+     "coverage_percentage": 0,
+     "description": "Understand indexing in relational database systems.",
+     "learning_outcome_id": 58,
+     "not_aligned": 61,
+     "questions": 76,
+     "status": "NOT_ALIGNED",
+     "strong": 0,
+     "weak": 0
+    },
+    {
+     "code": "LO2",
+     "course_code": "PERF-001",
+     "course_id": 1013,
+     "coverage_percentage": 0,
+     "description": "Apply transactions in relational database systems.",
+     "learning_outcome_id": 59,
+     "not_aligned": 0,
+     "questions": 80,
+     "status": "NOT_ALIGNED",
+     "strong": 0,
+     "weak": 0
+    },
+    {
+     "code": "LO3",
+     "course_code": "PERF-001",
+     "course_id": 1013,
+     "coverage_percentage": 0,
+     "description": "Analyze query optimisation in relational database systems.",
+     "learning_outcome_id": 60,
+     "not_aligned": 5,
+     "questions": 39,
+     "status": "NOT_ALIGNED",
+     "strong": 0,
+     "weak": 0
+    },
+    {
+     "code": "LO4",
+     "course_code": "PERF-001",
+     "course_id": 1013,
+     "coverage_percentage": 0,
+     "description": "Evaluate ER modelling in relational database systems.",
+     "learning_outcome_id": 61,
+     "not_aligned": 40,
+     "questions": 69,
+     "status": "NOT_ALIGNED",
+     "strong": 0,
+     "weak": 0
+    },
+    {
+     "code": "LO5",
+     "course_code": "PERF-001",
+     "course_id": 1013,
+     "coverage_percentage": 0,
+     "description": "Create concurrency control in relational database systems.",
+     "learning_outcome_id": 62,
+     "not_aligned": 43,
+     "questions": 121,
+     "status": "NOT_ALIGNED",
+     "strong": 0,
+     "weak": 0
+    }
+   ],
+   "total_outcomes": 5,
+   "weak_outcomes": [
+    {
+     "code": "LO1",
+     "course_code": "PERF-001",
+     "course_id": 1013,
+     "coverage_percentage": 0,
+     "description": "Understand indexing in relational database systems.",
+     "learning_outcome_id": 58,
+     "not_aligned": 61,
+     "questions": 76,
+     "status": "NOT_ALIGNED",
+     "strong": 0,
+     "weak": 0
+    },
+    {
+     "code": "LO2",
+     "course_code": "PERF-001",
+     "course_id": 1013,
+     "coverage_percentage": 0,
+     "description": "Apply transactions in relational database systems.",
+     "learning_outcome_id": 59,
+     "not_aligned": 0,
+     "questions": 80,
+     "status": "NOT_ALIGNED",
+     "strong": 0,
+     "weak": 0
+    },
+    {
+     "code": "LO3",
+     "course_code": "PERF-001",
+     "course_id": 1013,
+     "coverage_percentage": 0,
+     "description": "Analyze query optimisation in relational database systems.",
+     "learning_outcome_id": 60,
+     "not_aligned": 5,
+     "questions": 39,
+     "status": "NOT_ALIGNED",
+     "strong": 0,
+     "weak": 0
+    },
+    {
+     "code": "LO4",
+     "course_code": "PERF-001",
+     "course_id": 1013,
+     "coverage_percentage": 0,
+     "description": "Evaluate ER modelling in relational database systems.",
+     "learning_outcome_id": 61,
+     "not_aligned": 40,
+     "questions": 69,
+     "status": "NOT_ALIGNED",
+     "strong": 0,
+     "weak": 0
+    },
+    {
+     "code": "LO5",
+     "course_code": "PERF-001",
+     "course_id": 1013,
+     "coverage_percentage": 0,
+     "description": "Create concurrency control in relational database systems.",
+     "learning_outcome_id": 62,
+     "not_aligned": 43,
+     "questions": 121,
+     "status": "NOT_ALIGNED",
+     "strong": 0,
+     "weak": 0
+    }
+   ]
+  },
+  "meta": {
+   "benchmark_percent": 70,
+   "disclaimer": "Analytics are evidence, trends and signals for faculty review. FacultyLens never changes assessments, grades, mappings, rubrics or AI models automatically."
+  },
+  "program_outcomes": {
+   "configured": false,
+   "courses": [],
+   "message": "PO analysis is not configured for the selected course(s).",
+   "program_outcomes": []
+  },
+  "scope": {
+   "assessment_ids": [
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112
+   ],
+   "course_ids": [
+    1013
+   ],
+   "student_data_course_ids": [
+    1013
+   ],
+   "student_data_restricted": false
+  }
+ },
+ "message": "Course analytics section retrieved.",
+ "status": "success"
+}

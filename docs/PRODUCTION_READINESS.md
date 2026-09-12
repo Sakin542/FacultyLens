@@ -80,6 +80,17 @@ Regression: every previous feature suite (STEPS 01–39) is part of the 446 back
 
 ## 5. Performance status
 
+**Updated by STEP 43** — a full performance and load test was run against the production topology (nginx → php-fpm +
+opcache → MySQL/Redis, `queue:work`, FastAPI AI service) with a 100 k-answer dataset; see
+[PERFORMANCE_TEST_REPORT.md](PERFORMANCE_TEST_REPORT.md) and [PERFORMANCE_TEST_ENVIRONMENT.md](PERFORMANCE_TEST_ENVIRONMENT.md).
+Headline numbers (Docker Desktop, 16 vCPU shared with the load generator): 0 errors in every run; 100 concurrent
+faculty at 139.7 req/s with journey p50 490 ms; 50 concurrent with p95 3.5 s; 30-min soak at 20 VUs with +2 MB app
+memory drift; async AI analysis of a 200-question paper completes in 4–12 s end-to-end. Seven bottlenecks were fixed
+(php-fpm `pm.max_children`, analytics data-version scan, per-user analysis cache, AI embedding cache, MySQL 1038 on
+`SELECT *` of analysis reports, unattached `throttle:api`, queue `retry_after`). Academic outputs verified identical.
+
+The table below is the earlier dev-stack smoke test and is kept for history only.
+
 Smoke test only (sequential, single client, `scripts/perf-smoke.sh`, development stack: `php artisan serve` inside Docker
 Desktop on Windows with a bind-mounted code tree, **no opcache**). p50 values are representative of application work;
 p95/max spikes of 1.6–6 s occurred on *every* endpoint including `/up` and are caused by the dev server + bind-mount
@@ -126,7 +137,7 @@ cached per document chunk; queue jobs bounded (`--tries=2 --backoff=30 --timeout
 | # | Item | Severity | Plan |
 |---|---|---|---|
 | 1 | `react-router-dom` 6.x has 2 moderate advisories; fix is a major upgrade (7.x) | medium | upgrade in a dedicated branch with full frontend test run; open-redirect vector requires attacker-controlled `<Link to>` values, which the app does not render from user input |
-| 2 | No load test on production-like infrastructure; perf numbers above are from the Windows dev stack | high (go-live) | run `scripts/perf-smoke.sh` + a k6/Locust scenario (≥ 20 concurrent faculty, dashboard + analysis + report jobs) against the prod compose on Linux before go-live |
+| 2 | Load test performed on the prod compose topology locally (STEP 43, k6, 1–100 concurrent faculty, spike, 30-min soak — `docs/PERFORMANCE_TEST_REPORT.md`); not yet repeated on the actual production host | medium | re-run `performance/capacity.sh` and the soak profile on the staging/production host after deployment; set `PHP_FPM_MAX_CHILDREN` per §20 of the report |
 | 3 | Laravel Horizon not installed; Redis workers use `queue:work` | low | optional add-on documented; `pcntl` already in the image |
 | 4 | STEP 29 inter-grader statistics are reported as “not available” (no multi-grader data model) | low | feature backlog; indicator terminology already in place |
 | 5 | No PHPStan/Larastan or ESLint configuration | low | add in CI; TypeScript strict and Pint cover the current baseline |
@@ -148,7 +159,7 @@ cached per document chunk; queue jobs bounded (`--tries=2 --backoff=30 --timeout
 - [x] Production Docker images build; nginx config validates; prod compose validates
 - [x] README, `docs/API.md`, `docs/DEPLOYMENT.md`, this report
 - [ ] Provision production secrets, TLS, SMTP, DNS; set `CORS_ALLOWED_ORIGINS`/`SANCTUM_STATEFUL_DOMAINS` to the real domain
-- [ ] Deploy to a staging host with `docker-compose.prod.yml`; run smoke test (§4 of DEPLOYMENT.md) and load test (§8 #2)
+- [ ] Deploy to a staging host with `docker-compose.prod.yml`; run smoke test (§4 of DEPLOYMENT.md) and re-run the STEP 43 load scenarios there (§8 #2)
 - [ ] Schedule daily `scripts/backup.sh` + off-host copy; nightly `facultylens:integrity-check`
 - [ ] Wire alerts (5xx rate, readiness, failed jobs, AI readiness, disk) into institutional monitoring
 - [ ] Resolve or formally accept `react-router` advisories

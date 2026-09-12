@@ -26,4 +26,20 @@ php artisan view:cache >/dev/null
 php artisan event:cache >/dev/null 2>&1 || true
 # No storage:link on purpose: documents and reports live on the private disk and are streamed by authenticated endpoints only.
 
+# STEP 43: the php:fpm image ships pm.max_children=5, which capped the API at ~5 concurrent requests under load
+# (measured: 100 faculty → p95 8 s while CPU sat idle). One worker uses ~35–45 MB with opcache; 32 workers fit in ~1.5 GB.
+if [[ "${1:-}" == "php-fpm" && -w /usr/local/etc/php-fpm.d ]]; then
+  cat > /usr/local/etc/php-fpm.d/zz-facultylens-pool.conf <<POOL
+[www]
+pm = dynamic
+pm.max_children = ${PHP_FPM_MAX_CHILDREN:-32}
+pm.start_servers = ${PHP_FPM_START_SERVERS:-8}
+pm.min_spare_servers = ${PHP_FPM_MIN_SPARE:-4}
+pm.max_spare_servers = ${PHP_FPM_MAX_SPARE:-16}
+pm.max_requests = ${PHP_FPM_MAX_REQUESTS:-1000}
+pm.status_path = /fpm-status
+request_terminate_timeout = ${PHP_FPM_REQUEST_TIMEOUT:-180s}
+POOL
+fi
+
 exec "$@"

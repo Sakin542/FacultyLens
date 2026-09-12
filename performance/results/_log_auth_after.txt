@@ -1,0 +1,44 @@
+
+{
+  "logout": {
+    "avg": 13.2,
+    "min": 11,
+    "med": 13,
+    "p90": 14.1,
+    "p95": 17.2,
+    "p99": 20.4,
+    "max": 21,
+    "count": 30
+  },
+  "auth_user": {
+    "avg": 10.8,
+    "min": 9,
+    "med": 10,
+    "p90": 12.2,
+    "p95": 14.5,
+    "p99": 15.7,
+    "max": 16,
+    "count": 30
+  },
+  "login": {
+    "avg": 159.9,
+    "min": 155,
+    "med": 158,
+    "p90": 162.2,
+    "p95": 164.6,
+    "p99": 185.6,
+    "max": 194,
+    "count": 30
+  }
+}
+── resources during auth-baseline-after (21s) ──
+  facultylens-perf-ai-service      cpu avg    0.1%  max    0.1%   mem max   6.2% (464.9MiB)  samples 3
+  facultylens-perf-app             cpu avg   23.4%  max   23.8%   mem max   0.8% (57.38MiB)  samples 3
+  facultylens-perf-mysql           cpu avg    4.0%  max    6.2%   mem max   8.2% (615.2MiB)  samples 3
+  facultylens-perf-nginx           cpu avg    0.3%  max    0.3%   mem max   0.2% (15.47MiB)  samples 3
+  facultylens-perf-redis           cpu avg    1.2%  max    2.8%   mem max   0.1% (11.13MiB)  samples 3
+  facultylens-perf-scheduler       cpu avg    0.1%  max    0.1%   mem max   0.4% (32.28MiB)  samples 3
+  facultylens-perf-worker          cpu avg    0.0%  max    0.1%   mem max   0.4% (32.62MiB)  samples 3
+  mysql: Threads_connected	1 Max_used_connections	7 max_connections	200  (max_used before run: 7)
+  redis: used_memory_human:1.58M
+  redis queue depth: 0

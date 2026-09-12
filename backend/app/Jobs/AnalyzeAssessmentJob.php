@@ -52,7 +52,7 @@ class AnalyzeAssessmentJob implements ShouldQueue
         }
 
         // Idempotency: the row opened by the controller is the run handle; a completed latest row means nothing is pending.
-        $run = AnalysisReport::where('assessment_id', $assessment->id)->orderByDesc('id')->first();
+        $run = AnalysisReport::where('assessment_id', $assessment->id)->orderByDesc('id')->first(['id', 'analysis_status']);
         if ($run && $run->analysis_status === 'completed') {
             Log::info("AnalyzeAssessmentJob: assessment {$assessment->id} has no pending run - skipping.");
             return;
@@ -298,7 +298,7 @@ class AnalyzeAssessmentJob implements ShouldQueue
                 }
             });
 
-            Cache::forget("user:{$this->userId}:assessment:{$assessment->id}:analysis");
+            \App\Services\AnalysisPayloadCache::forget($assessment->id);
 
             $auditLogService->log('AI_ANALYSIS_COMPLETED', $assessment, $assessment->id, [
                 'assessment_title'   => $assessment->title,

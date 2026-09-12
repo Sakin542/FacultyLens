@@ -1,0 +1,74 @@
+time="2026-09-12T17:45:12+06:00" level=info msg="[ai] accept 138 (100q) → 500 {\n    \"message\": \"Server Error\"\n}" source=console
+time="2026-09-12T17:45:12+06:00" level=info msg="[ai] accept 152 (200q) → 500 {\n    \"message\": \"Server Error\"\n}" source=console
+time="2026-09-12T17:45:12+06:00" level=info msg="[ai] accept 178 (100q) → 500 {\n    \"message\": \"Server Error\"\n}" source=console
+time="2026-09-12T17:45:12+06:00" level=info msg="[ai] accept 192 (200q) → 500 {\n    \"message\": \"Server Error\"\n}" source=console
+time="2026-09-12T17:45:14+06:00" level=info msg="[ai] VU10 50q assessment 106: completed in 2.1s (1 polls)" source=console
+time="2026-09-12T17:45:14+06:00" level=info msg="[ai] VU1 10q assessment 113: completed in 2.1s (1 polls)" source=console
+time="2026-09-12T17:45:14+06:00" level=info msg="[ai] VU18 50q assessment 186: completed in 2.1s (1 polls)" source=console
+time="2026-09-12T17:45:14+06:00" level=info msg="[ai] VU13 10q assessment 133: completed in 2.1s (1 polls)" source=console
+time="2026-09-12T17:45:14+06:00" level=info msg="[ai] VU5 10q assessment 153: completed in 2.1s (1 polls)" source=console
+time="2026-09-12T17:45:14+06:00" level=info msg="[ai] VU6 50q assessment 166: completed in 2.1s (1 polls)" source=console
+time="2026-09-12T17:45:16+06:00" level=info msg="[ai] VU11 100q assessment 118: completed in 4.1s (2 polls)" source=console
+time="2026-09-12T17:45:16+06:00" level=info msg="[ai] VU16 200q assessment 172: completed in 4.1s (2 polls)" source=console
+time="2026-09-12T17:45:16+06:00" level=info msg="[ai] VU2 50q assessment 126: completed in 4.1s (2 polls)" source=console
+time="2026-09-12T17:45:18+06:00" level=info msg="[ai] VU9 10q assessment 193: completed in 6.1s (3 polls)" source=console
+time="2026-09-12T17:45:18+06:00" level=info msg="[ai] VU15 100q assessment 158: completed in 6.1s (3 polls)" source=console
+time="2026-09-12T17:45:18+06:00" level=info msg="[ai] VU20 200q assessment 112: completed in 6.1s (3 polls)" source=console
+time="2026-09-12T17:45:20+06:00" level=info msg="[ai] VU19 100q assessment 198: completed in 8.1s (4 polls)" source=console
+time="2026-09-12T17:45:22+06:00" level=info msg="[ai] VU17 10q assessment 173: completed in 10.1s (5 polls)" source=console
+time="2026-09-12T17:45:22+06:00" level=info msg="[ai] VU12 200q assessment 132: completed in 10.1s (5 polls)" source=console
+time="2026-09-12T17:45:22+06:00" level=info msg="[ai] VU14 50q assessment 146: completed in 10.1s (5 polls)" source=console
+
+{
+  "app_analysis_accept": {
+    "avg": 43,
+    "min": 21,
+    "med": 45.5,
+    "p90": 68.3,
+    "p95": 71,
+    "p99": 71,
+    "max": 71,
+    "count": 20
+  },
+  "app_analysis_queue_wait": {
+    "avg": 2055.7,
+    "min": 2037,
+    "med": 2057,
+    "p90": 2078.8,
+    "p95": 2082.4,
+    "p99": 2085.3,
+    "max": 2086,
+    "count": 10
+  },
+  "app_analysis_status_poll": {
+    "avg": 21.7,
+    "min": 13,
+    "med": 21.5,
+    "p90": 28.1,
+    "p95": 31,
+    "p99": 35.9,
+    "max": 39,
+    "count": 40
+  },
+  "app_analysis_total": {
+    "avg": 5098.9,
+    "min": 2078,
+    "med": 4110.5,
+    "p90": 10123,
+    "p95": 10123.3,
+    "p99": 10123.9,
+    "max": 10124,
+    "count": 16
+  }
+}
+── resources during ai-analysis-baseline-after (11s) ──
+  facultylens-perf-ai-service      cpu avg  249.5%  max  345.3%   mem max   6.3% (472.1MiB)  samples 2
+  facultylens-perf-app             cpu avg    1.8%  max    3.6%   mem max   1.4% (101.6MiB)  samples 2
+  facultylens-perf-mysql           cpu avg   37.4%  max   39.3%   mem max  10.0% (750.2MiB)  samples 2
+  facultylens-perf-nginx           cpu avg    0.1%  max    0.2%   mem max   0.2% (15.53MiB)  samples 2
+  facultylens-perf-redis           cpu avg    5.6%  max    7.7%   mem max   0.1% (11.39MiB)  samples 2
+  facultylens-perf-scheduler       cpu avg    0.1%  max    0.1%   mem max   0.5% (40.41MiB)  samples 2
+  facultylens-perf-worker          cpu avg   48.7%  max   49.4%   mem max   0.8% (59.41MiB)  samples 2
+  mysql: Threads_connected	2 Max_used_connections	33 max_connections	200  (max_used before run: 33)
+  redis: used_memory_human:1.67M
+  redis queue depth: 0

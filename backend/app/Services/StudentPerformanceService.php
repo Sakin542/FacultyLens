@@ -597,7 +597,7 @@ class StudentPerformanceService
     /** question_id => [learning_outcome_id, ...] from the current STEP 11 report, strong alignments only. */
     protected function alignedQuestionLos(Assessment $assessment): array
     {
-        $report = AnalysisReport::where('assessment_id', $assessment->id)->where('analysis_status', 'completed')->orderByDesc('id')->first();
+        $report = AnalysisReport::where('assessment_id', $assessment->id)->where('analysis_status', 'completed')->orderByDesc('id')->first(['id']);
         if (!$report) {
             return [];
         }

@@ -1,0 +1,147 @@
+{
+  "scenario": "ai-analysis-direct",
+  "profile": "baseline",
+  "generated_at": "2026-09-12T11:32:00.825Z",
+  "base_url": "http://127.0.0.1:8090",
+  "vus_max": 1,
+  "iterations": 1,
+  "http_reqs": 31,
+  "http_req_failed_rate": 0,
+  "app_errors": 0,
+  "rate_limited_429": 0,
+  "endpoints": {
+    "ai_full_analysis_200q": {
+      "avg": 1578.5,
+      "min": 1576,
+      "med": 1578.5,
+      "p90": 1580.5,
+      "p95": 1580.8,
+      "p99": 1581,
+      "max": 1581,
+      "count": 2
+    },
+    "ai_similarity_prev5000": {
+      "avg": 8850.5,
+      "min": 8664,
+      "med": 8850.5,
+      "p90": 8999.7,
+      "p95": 9018.4,
+      "p99": 9033.3,
+      "max": 9037,
+      "count": 2
+    },
+    "ai_similarity_prev100": {
+      "avg": 221.5,
+      "min": 215,
+      "med": 221.5,
+      "p90": 226.7,
+      "p95": 227.4,
+      "p99": 227.9,
+      "max": 228,
+      "count": 2
+    },
+    "ai_similarity_prev500": {
+      "avg": 983.5,
+      "min": 952,
+      "med": 983.5,
+      "p90": 1008.7,
+      "p95": 1011.9,
+      "p99": 1014.4,
+      "max": 1015,
+      "count": 2
+    },
+    "ai_embed_50": {
+      "avg": 101,
+      "min": 96,
+      "med": 97,
+      "p90": 107.4,
+      "p95": 108.7,
+      "p99": 109.7,
+      "max": 110,
+      "count": 3
+    },
+    "ai_embed_200": {
+      "avg": 386.7,
+      "min": 384,
+      "med": 385,
+      "p90": 389.8,
+      "p95": 390.4,
+      "p99": 390.9,
+      "max": 391,
+      "count": 3
+    },
+    "ai_full_analysis_100q": {
+      "avg": 1281.5,
+      "min": 1254,
+      "med": 1281.5,
+      "p90": 1303.5,
+      "p95": 1306.3,
+      "p99": 1308.5,
+      "max": 1309,
+      "count": 2
+    },
+    "ai_full_analysis_50q": {
+      "avg": 1078,
+      "min": 1031,
+      "med": 1078,
+      "p90": 1115.6,
+      "p95": 1120.3,
+      "p99": 1124.1,
+      "max": 1125,
+      "count": 2
+    },
+    "ai_embed_10": {
+      "avg": 30.7,
+      "min": 27,
+      "med": 28,
+      "p90": 35.2,
+      "p95": 36.1,
+      "p99": 36.8,
+      "max": 37,
+      "count": 3
+    },
+    "ai_similarity_prev1000": {
+      "avg": 1928,
+      "min": 1868,
+      "med": 1928,
+      "p90": 1976,
+      "p95": 1982,
+      "p99": 1986.8,
+      "max": 1988,
+      "count": 2
+    },
+    "ai_full_analysis_10q": {
+      "avg": 882.5,
+      "min": 879,
+      "med": 882.5,
+      "p90": 885.3,
+      "p95": 885.7,
+      "p99": 885.9,
+      "max": 886,
+      "count": 2
+    },
+    "ai_embed_1": {
+      "avg": 34.7,
+      "min": 12,
+      "med": 13,
+      "p90": 65.8,
+      "p95": 72.4,
+      "p99": 77.7,
+      "max": 79,
+      "count": 3
+    },
+    "ai_embed_100": {
+      "avg": 196.7,
+      "min": 177,
+      "med": 181,
+      "p90": 221.8,
+      "p95": 226.9,
+      "p99": 231,
+      "max": 232,
+      "count": 3
+    }
+  },
+  "extra": {
+    "concurrency": 1
+  }
+}
