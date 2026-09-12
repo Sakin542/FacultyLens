@@ -1,18 +1,21 @@
 import React from 'react';
 import { Card } from '@/components/common/Card';
 import { Badge } from '@/components/common/Badge';
-import { ShieldCheck } from 'lucide-react';
+import { ShieldCheck, Calculator } from 'lucide-react';
 
 interface OverallQualityCardProps {
   score: number | null;
   rating?: string | null;
   totalQuestions?: number;
+  /** STEP 45: opens "How this score is calculated" (weights, normalization, dimension evidence). */
+  onExplain?: () => void;
 }
 
 export const OverallQualityCard: React.FC<OverallQualityCardProps> = ({
   score,
   rating,
   totalQuestions = 0,
+  onExplain,
 }) => {
   const getRatingMeta = (rat?: string | null, sc?: number | null) => {
     const s = sc ?? 0;
@@ -141,6 +144,17 @@ export const OverallQualityCard: React.FC<OverallQualityCardProps> = ({
           <p className="text-[11px] text-sage-500 leading-relaxed">
             Initial assessment-quality indicator based on FacultyLens analysis of six academic dimensions across {totalQuestions} questions.
           </p>
+          {onExplain && (
+            <button
+              type="button"
+              onClick={onExplain}
+              data-testid="quality-how-calculated"
+              className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-sage-800 dark:text-white underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sage-700 rounded"
+            >
+              <Calculator className="w-3.5 h-3.5" aria-hidden="true" />
+              How this score is calculated
+            </button>
+          )}
         </div>
       </div>
     </Card>

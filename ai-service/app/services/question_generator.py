@@ -28,6 +28,7 @@ from app.schemas.question_generation import (
 )
 from app.services.cognitive_analyzer import CognitiveAnalyzer
 from app.services.difficulty_analyzer import DifficultyAnalyzer
+from app.services.explainability import validate_explanation
 from app.services.generation_service import get_generation_service
 from app.services.huggingface_service import get_hf_service
 from app.services.prompt_builder import PromptBuilder
@@ -448,6 +449,16 @@ class QuestionGenerator:
         if draft["question_type"] == "MCQ" and draft.get("options") and self.generation_method_is_template():
             warnings.append("MCQ distractors were drafted by the template engine and need faculty review.")
 
+        # STEP 45: a model-written explanation must not contradict the draft's own metadata.
+        if draft.get("explanation") and not self.generation_method_is_template():
+            verdict = validate_explanation(draft["explanation"], {
+                "labels": {"difficulty": draft.get("difficulty_level"), "cognitive_level": draft.get("cognitive_level")},
+                "allowed_numbers": [draft["marks"]],
+            })
+            if not verdict["valid"]:
+                draft = {**draft, "explanation": self._fallback_explanation(draft)}
+                warnings.append("The generated explanation was replaced because it did not match the question's metadata.")
+
         overall = "PASSED"
         if not checks["marks"] or checks["topic"] is False or sim_status == "POTENTIAL_DUPLICATE" or align_status == "NOT_ALIGNED":
             overall = "FAILED"
@@ -472,6 +483,13 @@ class QuestionGenerator:
 
     def generation_method_is_template(self) -> bool:
         return not getattr(self.generation, "is_configured", False)
+
+    @staticmethod
+    def _fallback_explanation(draft: Dict[str, Any]) -> str:
+        cog = str(draft.get("cognitive_level") or "UNDERSTAND").title()
+        diff = str(draft.get("difficulty_level") or "MEDIUM").lower()
+        topic = draft.get("topic") or "the requested topic"
+        return f"Drafted to target {cog} ({diff}) on '{topic}' for {draft['marks']:g} marks. Faculty review required."
 
     @staticmethod
     def _sim_status(score: float, t: Dict[str, float]) -> str:

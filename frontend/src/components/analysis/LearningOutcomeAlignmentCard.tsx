@@ -3,6 +3,7 @@ import { Card } from '@/components/common/Card';
 import { Badge } from '@/components/common/Badge';
 import { Target, ChevronDown, ChevronUp } from 'lucide-react';
 import { AlignmentAnalysisResult } from '@/types';
+import { WhyButton } from '@/components/explainability/WhyButton';
 
 interface LearningOutcomeAlignmentCardProps {
   alignmentAnalysis?: AlignmentAnalysisResult | null;
@@ -17,12 +18,15 @@ interface LearningOutcomeAlignmentCardProps {
     alignment: string;
     reasoning?: string;
   }>;
+  /** STEP 45: open the explanation for one question→LO alignment row. */
+  onExplain?: (alignmentId: number | string) => void;
 }
 
 export const LearningOutcomeAlignmentCard: React.FC<LearningOutcomeAlignmentCardProps> = ({
   alignmentAnalysis,
   overallScore,
   alignmentsList = [],
+  onExplain,
 }) => {
   const [showMappingTable, setShowMappingTable] = useState(false);
   const coverage = alignmentAnalysis?.learning_outcome_coverage || [];
@@ -124,6 +128,7 @@ export const LearningOutcomeAlignmentCard: React.FC<LearningOutcomeAlignmentCard
                         <th className="py-2 px-2.5 font-semibold">Target LO</th>
                         <th className="py-2 px-2.5 font-semibold">Semantic Similarity</th>
                         <th className="py-2 px-2.5 font-semibold">Alignment</th>
+                        {onExplain && <th className="py-2 px-2.5 font-semibold"><span className="sr-only">Explain</span></th>}
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-sage-200 dark:divide-[#3A3A3C]">
@@ -135,12 +140,17 @@ export const LearningOutcomeAlignmentCard: React.FC<LearningOutcomeAlignmentCard
                           <td className="py-2 px-2.5 font-mono text-[11px] text-sage-800 dark:text-white">
                             {item.learning_outcome_code || `LO #${item.learning_outcome_id}`}
                           </td>
-                          <td className="py-2 px-2.5 font-mono text-[11px] text-sage-500">
-                            {item.similarity_score.toFixed(2)}
+                          <td className="py-2 px-2.5 font-mono text-[11px] text-sage-500" title="Cosine similarity between the question and the LO description (0–1). Not a probability.">
+                            {item.similarity_score.toFixed(2)} / 1.00
                           </td>
                           <td className="py-2 px-2.5">
                             {getAlignmentBadge(item.alignment)}
                           </td>
+                          {onExplain && (
+                            <td className="py-2 px-2.5">
+                              <WhyButton describes={`alignment of question #${item.question_id} with ${item.learning_outcome_code || 'LO'}`} onClick={() => onExplain(item.id)} />
+                            </td>
+                          )}
                         </tr>
                       ))}
                     </tbody>

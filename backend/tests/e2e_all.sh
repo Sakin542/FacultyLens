@@ -25,6 +25,7 @@ SCRIPTS=(
   e2e_question_generation.sh
   e2e_collaboration.sh
   e2e_ai_evaluation.sh
+  e2e_ai_explainability.sh
   e2e_academic_analytics.sh
   e2e_institutional_reports.sh
 )

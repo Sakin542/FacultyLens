@@ -5,6 +5,8 @@ import { Badge } from '@/components/common/Badge';
 import { Rubric } from '@/types/rubric';
 import { RubricStatusBadge } from './RubricStatusBadge';
 import { formatMarks, marksMatch } from './rubricMath';
+import { WhyButton } from '@/components/explainability/WhyButton';
+import { useExplanationModal } from '@/hooks/useExplanationModal';
 
 interface RubricPreviewProps {
   rubric: Rubric;
@@ -35,9 +37,11 @@ export const RubricPreview: React.FC<RubricPreviewProps> = ({
   const isConsistent = marksMatch(total, questionMarks);
   const busy = isApproving || isRegenerating || isDeleting;
   const isReadOnly = rubric.status === 'ARCHIVED';
+  const { explain, modal: explanationModal } = useExplanationModal();
 
   return (
     <div className="space-y-4" data-testid="rubric-preview">
+      {explanationModal}
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div className="space-y-1">
@@ -52,6 +56,7 @@ export const RubricPreview: React.FC<RubricPreviewProps> = ({
             <Badge variant="neutral" className="text-[10px] font-mono">
               v{rubric.version}
             </Badge>
+            {rubric.id > 0 && <WhyButton describes="how this rubric was generated and validated" onClick={() => explain('rubric', rubric.id, 'Rubric')} />}
           </div>
           <h3 className="text-sm font-bold text-sage-800 dark:text-white">{rubric.title}</h3>
           {rubric.status === 'DRAFT' && (

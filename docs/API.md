@@ -112,6 +112,20 @@ Common status codes across the API: `401` unauthenticated · `403` not authorize
 - `POST /question-generation` (`throttle:question-generation`) — drafts require faculty review before they enter an assessment.
 - `/ai/evaluation/*` — STEP 35 datasets, runs, metrics (`Not evaluated` when no run exists).
 
+## AI explainability (STEP 45)
+
+Any AI result is addressed as `{type}/{id}`; `type` ∈ `question_type, difficulty, bloom, topic, lo_alignment, co_po_mapping, similarity, assessment_quality, recommendation, rubric, generated_question, rag_answer, ai_grading, inter_grader`. Authorization follows the underlying record (course ability via STEP 34; chat sessions are owner-only; grading needs `view_student_data`). See `docs/AI_EXPLAINABILITY.md`.
+
+| Method | Path | Notes |
+|---|---|---|
+| GET | `/ai-results/{type}/{id}/explanation` | result · why · evidence · method · model · confidence · limitations · evaluation status · review state; logs `AI_EXPLANATION_VIEWED` |
+| GET | `/ai-results/{type}/{id}/reviews` | faculty decision history |
+| POST | `/ai-results/{type}/{id}/review` | `{action: ACCEPTED\|REJECTED\|REVIEWED, comment?}` — never changes the AI value; recommendation/CO decisions delegate to STEP 20/31 |
+| POST | `/ai-results/{type}/{id}/override` | `{value: {label} \| {learning_outcome_id}, reason, comment?}` — writes the faculty-controlled field only; 422 for non-overridable types |
+| POST | `/ai-results/{type}/{id}/events` | `{action: AI_RESULT_VIEWED\|AI_EVIDENCE_VIEWED\|AI_SOURCE_OPENED, meta?}` → 202; other actions 422 |
+
+AI service (internal): `POST /api/v1/explain-question` (rule-table cue evidence), `POST /api/v1/validate-explanation` (contradiction check + deterministic fallback).
+
 ## Validation and limits (server-enforced)
 
 `MAX_DOCUMENT_SIZE_MB=20`, `MAX_DOCUMENT_TEXT_LENGTH=2000000`, `MAX_QUESTIONS_PER_ASSESSMENT=200`, `MAX_PREVIOUS_QUESTIONS_PER_ANALYSIS=5000`; marks ≥ 0, percentages 0–100, counts > 0, enum values checked by FormRequests; mass assignment restricted by model `$fillable`.

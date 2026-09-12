@@ -3,7 +3,7 @@
 from typing import Any, Dict, List
 
 from app.config import get_settings
-from app.services import academic_chat, grading_engine, rubric_alignment_analyzer, rubric_generator
+from app.services import academic_chat, explainability, grading_engine, rubric_alignment_analyzer, rubric_generator
 from app.services import prompt_builder, question_generation_prompt
 from app.services import question_generator as qgen
 
@@ -33,6 +33,8 @@ def model_inventory(hf_service: Any, generation_service: Any) -> Dict[str, Any]:
         {"model_name": rubric_alignment_analyzer.ENGINE_NAME, "provider": "FacultyLens", "model_type": "rule_engine", "version": "1.0.0", "tasks": ["ANSWER_RUBRIC_ALIGNMENT"]},
         {"model_name": academic_chat.ENGINE_NAME, "provider": "FacultyLens", "model_type": "extractive_engine", "version": academic_chat.ENGINE_VERSION, "tasks": ["DOCUMENT_CHAT"]},
         {"model_name": qgen.TEMPLATE_ENGINE_NAME, "provider": "FacultyLens", "model_type": "template_engine", "version": qgen.ENGINE_VERSION, "tasks": ["QUESTION_GENERATION"]},
+        {"model_name": "facultylens-explainability-engine", "provider": "FacultyLens", "model_type": "rule_engine", "version": explainability.EXPLANATION_VERSION,
+         "tasks": ["EXPLAINABILITY"], "configuration": {"rule_version": explainability.RULE_VERSION, "method": "deterministic evidence from STEP 10 rule tables + explanation validation"}},
     ]
     prompts = [
         {"feature": "document_chat", "version": prompt_builder.PROMPT_VERSION, "prompt_hash": _hash(prompt_builder.SYSTEM_INSTRUCTIONS), "description": "Grounded chat system instructions"},
