@@ -22,7 +22,7 @@ export const KPIGrid: React.FC<{ kpis: AnalyticsKpis }> = ({ kpis }) => (
         <div key={key} data-testid={`kpi-${key}`} className="rounded-lg border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-4 py-3">
           <dt className="text-xs uppercase tracking-wide text-sage-500 inline-flex items-center">{k.label}<Explain text={k.explanation} /></dt>
           <dd className="text-2xl font-semibold text-sage-800 dark:text-white mt-1 tabular-nums">{kpiValue(k)}</dd>
-          {k.basis && <p className="text-xs text-sage-400 mt-0.5">{k.basis}</p>}
+          {k.basis && <dd className="text-xs text-sage-400 mt-0.5">{k.basis}</dd>}
         </div>
       );
     })}

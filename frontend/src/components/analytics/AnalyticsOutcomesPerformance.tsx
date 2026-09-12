@@ -14,7 +14,7 @@ export const LearningOutcomeCoverage: React.FC<{ data: OutcomeCoverage }> = ({ d
     {data.total_outcomes === 0 ? <SectionEmpty title="No learning outcomes defined" description="Add course outcomes and run an assessment analysis to see coverage." /> : (
       <>
         <Bars ariaLabel="Learning outcome coverage percentage" rows={data.outcomes.map((o) => ({ label: o.code, value: o.coverage_percentage, tone: o.status === 'COVERED' ? 'good' : o.status === 'WEAK' ? 'warn' : o.status === 'NOT_ALIGNED' ? 'bad' : 'default', display: o.coverage_percentage === null ? 'Not assessed' : undefined }))} />
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto" tabIndex={0}>
           <table className="w-full text-sm"><caption className="sr-only">Learning outcome alignment details</caption>
             <thead><tr className="text-left text-xs uppercase text-sage-500"><th className="py-1 pr-3">Outcome</th><th className="py-1 pr-3 text-right">Questions</th><th className="py-1 pr-3 text-right">Strong</th><th className="py-1 pr-3 text-right">Weak</th><th className="py-1 pr-3 text-right">Not aligned</th><th className="py-1 pr-3 text-right">Coverage</th><th className="py-1">Status</th></tr></thead>
             <tbody>{data.outcomes.map((o) => (
@@ -36,7 +36,7 @@ export const ProgramOutcomeCoverage: React.FC<{ data: PoData }> = ({ data }) => 
     {!data.configured ? <SectionEmpty title="PO analysis is not configured for this course." description="Link the course to a program and map course outcomes to program outcomes (CO/PO mapping) to see PO coverage." /> : data.program_outcomes.length === 0 ? (
       <SectionEmpty title="No CO/PO analysis yet" description={data.message ?? 'Run the CO/PO mapping validator to see program-outcome evidence.'} />
     ) : (
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto" tabIndex={0}>
         <table className="w-full text-sm"><caption className="sr-only">Program outcome evidence</caption>
           <thead><tr className="text-left text-xs uppercase text-sage-500"><th className="py-1 pr-3">PO</th><th className="py-1 pr-3 text-right">Mapped COs</th><th className="py-1 pr-3 text-right">Strong</th><th className="py-1 pr-3 text-right">Weak</th><th className="py-1 pr-3 text-right">Questions</th><th className="py-1 pr-3 text-right">Evidence</th><th className="py-1">Status</th></tr></thead>
           <tbody>{data.program_outcomes.map((p) => (
@@ -127,7 +127,7 @@ export const QuestionPerformanceTable: React.FC<{ rows: QuestionPerformance[]; t
           <option value="worst">Worst performance</option><option value="gap">Highest gap</option><option value="number">Question number</option><option value="topic">Topic</option><option value="co">CO</option></select>
         {topicFilter && onClearTopic && <Button size="sm" variant="ghost" onClick={onClearTopic}>Clear topic</Button>}</div>}>
       {sorted.length === 0 ? <SectionEmpty title="No question-level performance" description="Question performance appears after a student performance analysis has been run." /> : (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto" tabIndex={0}>
           <table className="w-full text-sm"><caption className="sr-only">Question-level performance from finalized grades</caption>
             <thead><tr className="text-left text-xs uppercase text-sage-500"><th className="py-1 pr-3">Question</th><th className="py-1 pr-3">Topic</th><th className="py-1 pr-3">CO</th><th className="py-1 pr-3 text-right">Average</th><th className="py-1 pr-3 text-right">Responses</th><th className="py-1 pr-3 text-right">Gap</th><th className="py-1">Status</th></tr></thead>
             <tbody>{sorted.map((q) => (
@@ -147,7 +147,7 @@ export const QuestionPerformanceTable: React.FC<{ rows: QuestionPerformance[]; t
 export const TopicPerformanceTable: React.FC<{ rows: TopicPerformance[]; onSelect?: (topic: string) => void; selected?: string | null }> = ({ rows, onSelect, selected }) => (
   <Section testId="topic-performance" title="Topic Performance" subtitle="Finalized grades aggregated by detected topic (response-weighted).">
     {rows.length === 0 ? <SectionEmpty title="No topic-level performance" description="Topics appear after question analysis and a student performance analysis have been run." /> : (
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto" tabIndex={0}>
         <table className="w-full text-sm"><caption className="sr-only">Topic performance</caption>
           <thead><tr className="text-left text-xs uppercase text-sage-500"><th className="py-1 pr-3">Topic</th><th className="py-1 pr-3 text-right">Questions</th><th className="py-1 pr-3 text-right">Average</th><th className="py-1 pr-3 text-right">Responses</th><th className="py-1 pr-3 text-right">Gap</th><th className="py-1">Status</th></tr></thead>
           <tbody>{rows.map((t) => (
@@ -174,7 +174,7 @@ export const AssessmentComparisonPanel: React.FC<{ assessments: AssessmentRow[];
         </div>
       )}
       {comparison && (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto" tabIndex={0}>
           <table className="w-full text-sm"><caption className="sr-only">Assessment comparison</caption>
             <thead><tr className="text-left text-xs uppercase text-sage-500"><th className="py-1 pr-3">Metric</th>{comparison.assessments.map((a) => <th key={a.assessment_id} className="py-1 pr-3">{a.title}</th>)}</tr></thead>
             <tbody>
@@ -212,7 +212,7 @@ export const CourseHistoryTable: React.FC<{ history: CourseHistory | null; loadi
 export const AssessmentTable: React.FC<{ rows: AssessmentRow[] }> = ({ rows }) => (
   <Section testId="assessment-table" title="Assessments in Scope">
     {rows.length === 0 ? <SectionEmpty title="No assessments in scope" description="Adjust the filters or create an assessment." /> : (
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto" tabIndex={0}>
         <table className="w-full text-sm"><caption className="sr-only">Assessments with headline analytics</caption>
           <thead><tr className="text-left text-xs uppercase text-sage-500"><th className="py-1 pr-3">Assessment</th><th className="py-1 pr-3">Date</th><th className="py-1 pr-3 text-right">Questions</th><th className="py-1 pr-3 text-right">Quality</th><th className="py-1 pr-3 text-right">Performance</th><th className="py-1 pr-3 text-right">Similar</th></tr></thead>
           <tbody>{rows.map((a) => (

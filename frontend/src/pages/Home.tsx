@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowRight, BarChart3, BookOpen, Bot, CheckCircle2, ChevronDown, ClipboardList, Eye, FileText, GitBranch, GitCompare, History, Layers, Lightbulb,
-  Lock, Search, Scale, ScrollText, ShieldCheck, Sparkles, Target, Users, Leaf, Quote,
+  Lock, PenLine, Search, Scale, ScrollText, ShieldCheck, Sparkles, Target, Users, Leaf, Quote,
 } from 'lucide-react';
 import { Reveal, Typewriter, TypewriterCycle, useCardTilt } from '@/components/landing/Motion';
 
@@ -23,7 +23,7 @@ const PROCESS = [
   { icon: Lightbulb, title: 'Recommend', desc: 'Prioritised, evidence-linked recommendations — you review, accept or dismiss every one.' },
 ];
 
-const FEATURES = [
+const FEATURES: Array<{ icon: React.ElementType; title: string; desc: string; wide?: boolean }> = [
   { icon: ScrollText, title: 'Question Analysis', desc: 'Classify question type, difficulty and Bloom’s cognitive level, with the reasoning shown next to every label.' },
   { icon: Target, title: 'LO / CO / PO Alignment', desc: 'See which learning outcomes each question serves, which outcomes are over-tested and which are missing entirely.' },
   { icon: GitCompare, title: 'Similarity Detection', desc: 'Semantic embeddings surface duplicate or near-identical questions across semesters before a paper goes out.' },
@@ -33,6 +33,7 @@ const FEATURES = [
   { icon: ClipboardList, title: 'Assessment Blueprints', desc: 'Plan sections, marks, difficulty and outcome coverage first, then validate the real paper against the plan.' },
   { icon: History, title: 'Assessment Versioning', desc: 'Immutable version history with question snapshots, side-by-side diffs and restore-as-new-version.' },
   { icon: Users, title: 'Faculty Collaboration', desc: 'Invite co-instructors and reviewers with role-based access; every change is captured in an audit trail.' },
+  { icon: PenLine, title: 'Rubrics & Grading Assistance', desc: 'Generate outcome-aligned rubric drafts, get AI grading suggestions per answer and keep the final mark a faculty decision — recorded with who finalised it and when.', wide: true },
 ];
 
 const AUDIENCE = [
@@ -277,7 +278,7 @@ export const Home: React.FC = () => {
         <Leaf className="landing-float absolute -left-10 top-10 w-64 h-64 text-sage-200/60 pointer-events-none" aria-hidden="true" />
         <Leaf className="landing-float-slow absolute -right-16 -bottom-10 w-72 h-72 text-sage-200/40 pointer-events-none" aria-hidden="true" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative">
-          <div className="lg:col-span-5 space-y-6">
+          <div className="lg:col-span-5 space-y-6 text-center lg:text-left">
             <Reveal><Eyebrow className="inline-flex items-center gap-2"><span className="landing-pulse-dot w-1.5 h-1.5 rounded-full bg-sage-500" />AI-Powered Assessment Intelligence</Eyebrow></Reveal>
             <Reveal delay={100}>
               <h1 className="font-serif text-4xl sm:text-5xl lg:text-[3.4rem] leading-[1.08] tracking-tight">
@@ -285,18 +286,19 @@ export const Home: React.FC = () => {
               </h1>
             </Reveal>
             <Reveal delay={200}>
-              <Lede className="max-w-md">
-                FacultyLens helps faculty understand, evaluate and improve assessments using AI-powered analysis, learning-outcome alignment, performance insights and explainable recommendations — while every decision stays in your hands.
+              <Lede className="mx-auto lg:mx-0 max-w-xl lg:max-w-md text-base sm:text-lg lg:text-base leading-[1.7] [text-wrap:balance]">
+                FacultyLens helps faculty understand, evaluate and improve assessments using AI-powered analysis, learning-outcome alignment, performance insights and explainable recommendations
+                <span className="block mt-2 font-medium text-sage-700">— while every decision stays in your hands.</span>
               </Lede>
             </Reveal>
             <Reveal delay={300}>
-              <div className="flex flex-wrap gap-3 pt-1">
+              <div className="flex flex-wrap justify-center lg:justify-start gap-3 pt-1">
                 <PrimaryButton onClick={go('/register')}>Start Analyzing</PrimaryButton>
                 <button type="button" onClick={scrollTo('features')} className="inline-flex items-center rounded-lg border border-sage-300 bg-white hover:bg-sage-100 text-sage-800 text-sm px-5 py-2.5 transition-colors">Explore FacultyLens</button>
               </div>
             </Reveal>
             <Reveal delay={400}>
-              <ul className="flex flex-wrap gap-x-5 gap-y-2 pt-2 text-xs text-sage-500">
+              <ul className="flex flex-wrap justify-center lg:justify-start gap-x-5 gap-y-2 pt-2 text-xs text-sage-500">
                 {['No automatic changes', 'Explainable scores', 'Immutable history'].map((t) => <li key={t} className="inline-flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-sage-600" aria-hidden="true" />{t}</li>)}
               </ul>
             </Reveal>
@@ -347,13 +349,15 @@ export const Home: React.FC = () => {
       <section id="features" className="bg-sage-50 border-y border-sage-200/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 text-center">
           <Reveal><Eyebrow>AI-Powered Assessment Intelligence</Eyebrow><Heading className="mt-3">Everything you need, in one place.</Heading></Reveal>
-          <Reveal delay={120}><Lede className="mt-4 max-w-2xl mx-auto">Nine connected modules share one course model, so a question analysed today is the same question that appears in tomorrow’s blueprint check, next week’s grading and next semester’s version comparison.</Lede></Reveal>
+          <Reveal delay={120}><Lede className="mt-4 max-w-2xl mx-auto">Ten connected modules share one course model, so a question analysed today is the same question that appears in tomorrow’s blueprint check, next week’s grading and next semester’s version comparison.</Lede></Reveal>
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-left">
             {FEATURES.map((f, i) => (
-              <Reveal as="article" key={f.title} delay={(i % 3) * 100} className="group rounded-xl border border-sage-200 bg-white p-6 hover:shadow-elevated hover:-translate-y-1 transition-all duration-300">
-                <div className="w-10 h-10 rounded-lg bg-sage-100 flex items-center justify-center transition-colors group-hover:bg-sage-700 group-hover:text-white"><f.icon className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" /></div>
-                <h3 className="mt-4 text-sm font-semibold">{f.title}</h3>
-                <p className="mt-1.5 text-xs text-sage-500 leading-relaxed">{f.desc}</p>
+              <Reveal as="article" key={f.title} delay={(i % 3) * 100} className={`group rounded-xl border border-sage-200 bg-white p-6 hover:shadow-elevated hover:-translate-y-1 transition-all duration-300 ${f.wide ? 'md:col-span-2 lg:col-span-3 md:flex md:items-center md:gap-6 bg-gradient-to-r from-white to-sage-100/60' : ''}`}>
+                <div className="w-10 h-10 shrink-0 rounded-lg bg-sage-100 flex items-center justify-center transition-colors group-hover:bg-sage-700 group-hover:text-white"><f.icon className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" /></div>
+                <div>
+                  <h3 className={`text-sm font-semibold ${f.wide ? 'mt-4 md:mt-0' : 'mt-4'}`}>{f.title}</h3>
+                  <p className={`mt-1.5 text-xs text-sage-500 leading-relaxed ${f.wide ? 'max-w-3xl' : ''}`}>{f.desc}</p>
+                </div>
               </Reveal>
             ))}
           </div>

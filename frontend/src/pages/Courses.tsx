@@ -145,6 +145,7 @@ export const Courses: React.FC = () => {
           </div>
           {uniqueSemesters.length > 0 && (
             <select
+              aria-label="Filter courses by semester"
               value={selectedSemester}
               onChange={(e) => setSelectedSemester(e.target.value)}
               className="rounded-lg border border-sage-200 dark:border-[#2C2C2E] bg-white dark:bg-[#2C2C2E] px-3 py-2 text-xs text-sage-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sage-600"

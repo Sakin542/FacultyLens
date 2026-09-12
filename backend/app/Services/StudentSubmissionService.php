@@ -112,6 +112,18 @@ class StudentSubmissionService
         $from = $submission->status;
         $attributes = ['status' => $status];
 
+        // STEP 41 integrity guard: a submission is only "graded" when every recorded answer carries a faculty grade.
+        if ($status === StudentSubmission::STATUS_GRADED) {
+            $ungraded = StudentAnswer::where('student_submission_id', $submission->id)
+                ->where('answer_status', '!=', StudentAnswer::STATUS_REVIEWED)->count();
+            if ($ungraded > 0) {
+                throw new SubmissionException(
+                    "{$ungraded} answer(s) still need a faculty grade before this submission can be marked as graded.",
+                    422
+                );
+            }
+        }
+
         if ($status === StudentSubmission::STATUS_SUBMITTED && !$submission->submitted_at) {
             $attributes['submitted_at'] = now();
         }

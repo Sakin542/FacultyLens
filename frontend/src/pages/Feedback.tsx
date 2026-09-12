@@ -181,6 +181,7 @@ export const Feedback: React.FC = () => {
         <div className="flex items-center gap-2 w-full sm:w-auto">
           {/* Course filter */}
           <select
+            aria-label="Filter feedback by course"
             value={selectedCourseId}
             onChange={(e) => {
               setSelectedCourseId(e.target.value);

@@ -8,7 +8,7 @@ import { TASK_LABELS, EvaluationTask } from '@/types/aiEvaluation';
 /** STEP 36: similarity, question bank, rubric, AI grading, inter-grader, AI evaluation, recommendation and collaboration summaries. */
 
 const Stat: React.FC<{ label: string; value: string; hint?: string }> = ({ label, value, hint }) => (
-  <div className="rounded-md border border-sage-100 dark:border-[#2A2A2A] px-2 py-1"><p className="text-xs text-sage-500">{label}</p><p className="font-semibold tabular-nums">{value}</p>{hint && <p className="text-[10px] text-sage-400">{hint}</p>}</div>
+  <div className="rounded-md border border-sage-100 dark:border-[#2A2A2A] px-2 py-1"><dt className="text-xs text-sage-500">{label}</dt><dd className="font-semibold tabular-nums">{value}</dd>{hint && <dd className="text-[10px] text-sage-400">{hint}</dd>}</div>
 );
 
 const SIM_ORDER: Array<keyof SimilarityAnalytics['by_status']> = ['POTENTIAL_DUPLICATE', 'HIGHLY_SIMILAR', 'SOMEWHAT_SIMILAR', 'NOT_SIMILAR'];

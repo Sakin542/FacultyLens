@@ -979,9 +979,15 @@ cd backend && php artisan test                 # PHPUnit feature suite (sqlite)
 cd frontend && npm test && npm run build       # Vitest + production build (tsc strict)
 cd ai-service && pytest -q && ruff check .     # FastAPI tests + lint
 bash backend/tests/e2e_all.sh                  # every end-to-end journey against the Docker stack (real AI)
+bash backend/tests/e2e_golden_path.sh          # Golden Path: login → … → reports, one script, real AI
+cd frontend && npm run test:e2e                # Playwright browser journeys + axe accessibility (Docker stack up)
+scripts/test-all.sh [--e2e] [--golden]         # aggregated regression run (also scripts/test-all.ps1)
+scripts/clean-start-test.sh                    # clean Docker start on an isolated project/ports
 php artisan facultylens:integrity-check        # read-only academic data consistency report
 scripts/perf-smoke.sh <email> <password>       # latency snapshot of key endpoints
 ```
+
+The most recent validation run is recorded in [docs/E2E_VALIDATION_REPORT.md](docs/E2E_VALIDATION_REPORT.md).
 
 Dependency audits: `composer audit`, `npm audit`, `pip-audit`. Current results are recorded in
 [docs/PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md).

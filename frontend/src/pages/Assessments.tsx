@@ -169,6 +169,7 @@ export const Assessments: React.FC = () => {
         <div className="flex items-center gap-1.5">
           <span className="font-semibold text-sage-500">Course:</span>
           <select
+            aria-label="Filter assessments by course"
             value={selectedCourseId}
             onChange={(e) => setSelectedCourseId(e.target.value)}
             className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white"
@@ -185,6 +186,7 @@ export const Assessments: React.FC = () => {
         <div className="flex items-center gap-1.5">
           <span className="font-semibold text-sage-500">Type:</span>
           <select
+            aria-label="Filter assessments by type"
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
             className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white capitalize"
@@ -202,6 +204,7 @@ export const Assessments: React.FC = () => {
         <div className="flex items-center gap-1.5">
           <span className="font-semibold text-sage-500">Status:</span>
           <select
+            aria-label="Filter assessments by status"
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
             className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white capitalize"
@@ -318,7 +321,7 @@ export const Assessments: React.FC = () => {
                         <span className="truncate max-w-[200px]">{paper.file_name}</span>
                       </div>
                     ) : (
-                      <div className="pt-1 text-[11px] text-amber-600 dark:text-amber-400">
+                      <div className="pt-1 text-[11px] text-amber-700 dark:text-amber-400">
                         No question paper attached
                       </div>
                     )}
