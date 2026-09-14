@@ -493,9 +493,13 @@ class RubricGenerator:
     @staticmethod
     def _topic_phrase(question_text: str, tasks: List[Dict[str, Any]]) -> str:
         if tasks and tasks[0]["object"]:
-            return tasks[0]["object"]
-        words = re.sub(r"[^\w\s\-]", " ", question_text).split()
-        phrase = " ".join(words[:8]).strip()
+            phrase = tasks[0]["object"]
+        else:
+            words = re.sub(r"[^\w\s\-]", " ", question_text).split()
+            phrase = " ".join(words[:8]).strip()
+        # STEP 46 (BUG): a single very long token used to overflow criterion/guidance length limits.
+        if len(phrase) > 120:
+            phrase = phrase[:120].rstrip() + "…"
         return phrase or "the topic"
 
     # ----------------------------------------------------- generative support

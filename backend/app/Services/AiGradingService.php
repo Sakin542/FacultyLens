@@ -43,6 +43,7 @@ class AiGradingService
         protected AuditLogService $auditLogService,
         protected DocumentTextExtractor $extractor,
         protected StudentSubmissionService $submissionService,
+        protected AiSafetyService $safety,
     ) {}
 
     // ---------------------------------------------------------------- request
@@ -157,6 +158,7 @@ class AiGradingService
             try {
                 $aiResponse = $this->aiService->gradeAnswer($payload);
             } catch (Exception $e) {
+                $this->safety->recordServiceFailure($result, $result->id, 'grade_answer', $e->getMessage());
                 throw $this->translateAiException($e);
             }
 
@@ -763,6 +765,7 @@ class AiGradingService
     protected function invalidAi(string $reason): AiGradingException
     {
         Log::warning('AI grading result rejected: ' . $reason);
+        $this->safety->recordRejection('AiGradingResult', null, 'grading: ' . $reason);
 
         return new AiGradingException(self::MSG_INVALID_AI, self::STATUS_AI_INVALID);
     }

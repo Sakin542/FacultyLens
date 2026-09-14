@@ -6,7 +6,7 @@ from app.services.huggingface_service import HuggingFaceService, get_hf_service
 from app.services.text_cleaner import TextCleaner
 from app.services.analyzer import AcademicTextAnalyzer
 from app.services.question_analyzer import QuestionAnalyzer
-from app.services.alignment_analyzer import AlignmentAnalyzer
+from app.services.alignment_analyzer import AlignmentAnalyzer, AlignmentEvidenceError
 from app.services.semantic_similarity_analyzer import SemanticSimilarityAnalyzer
 from app.services.assessment_quality_engine import AssessmentQualityEngine
 from app.services.recommendation_engine import RecommendationEngine
@@ -332,6 +332,9 @@ def analyze_learning_outcome_alignment(
         )
 
         return AnalyzeAlignmentResponse(**result)
+    except AlignmentEvidenceError as e:
+        # STEP 46: missing evidence is a client-side data problem, not an analysis failure.
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e))
     except Exception as e:
         logger.error(f"Error analyzing LO alignment: {e}", exc_info=True)
         raise HTTPException(

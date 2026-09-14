@@ -35,6 +35,21 @@ export interface ChatSource {
   source_order: number;
 }
 
+export type ChatEvidenceStatus = 'SUFFICIENT' | 'INSUFFICIENT' | 'CONFLICTING';
+
+export interface ChatConflictingValue {
+  chunk_id: number | null;
+  document_id: number | null;
+  document_name: string | null;
+  value: number;
+  unit: string | null;
+}
+
+export interface ChatConflictingEvidence {
+  subject: string;
+  values: ChatConflictingValue[];
+}
+
 export interface ChatMessage {
   id: number;
   role: ChatRole;
@@ -49,6 +64,10 @@ export interface ChatMessage {
   disclaimer: string | null;
   sources: ChatSource[];
   created_at: string | null;
+  /** STEP 46 safety state (optional for messages persisted before STEP 46). */
+  evidence_status?: ChatEvidenceStatus | null;
+  conflicting_evidence?: ChatConflictingEvidence[];
+  injection_detected?: boolean;
 }
 
 export interface ChatSession {

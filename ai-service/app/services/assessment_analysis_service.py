@@ -12,7 +12,7 @@ import logging
 from typing import Dict, Any, List, Optional
 from app.services.huggingface_service import HuggingFaceService
 from app.services.question_analyzer import QuestionAnalyzer
-from app.services.alignment_analyzer import AlignmentAnalyzer
+from app.services.alignment_analyzer import AlignmentAnalyzer, AlignmentEvidenceError
 from app.services.semantic_similarity_analyzer import SemanticSimilarityAnalyzer
 from app.services.assessment_quality_engine import AssessmentQualityEngine
 from app.services.recommendation_engine import RecommendationEngine
@@ -178,6 +178,9 @@ class AssessmentAnalysisService:
                     matched_lo = q_align.get("matched_learning_outcome")
                     if matched_lo and matched_lo.get("code"):
                         q_lo_match_map[q_num] = matched_lo
+            except AlignmentEvidenceError as e:
+                # STEP 46: no LO text to compare against → report unavailable, never NOT_ALIGNED.
+                alignment_result = {"status": "UNAVAILABLE", "message": str(e)}
             except Exception as e:
                 logger.error(f"Error during LO alignment in unified analysis: {e}", exc_info=True)
                 alignment_result = {

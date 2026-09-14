@@ -75,6 +75,7 @@ class GenerateQuestionsRequest(BaseModel):
     feedback: List[str] = Field(default_factory=list, max_length=10)
     similarity_thresholds: Optional[Dict[str, float]] = None  # duplicate/high/moderate
     alignment_thresholds: Optional[Dict[str, float]] = None  # strong/weak
+    require_grounding: bool = Field(False, description="STEP 46: refuse to draft when the retrieved documents do not cover the topic")
 
     @field_validator("topic")
     @classmethod
@@ -144,7 +145,7 @@ class BlueprintSummary(BaseModel):
 
 
 class GenerateQuestionsResponse(BaseModel):
-    status: str = "success"
+    status: str = "success"  # success | insufficient_source_material
     questions: List[GeneratedQuestionOut]
     generation_method: str  # generative | template
     model: str
@@ -153,6 +154,7 @@ class GenerateQuestionsResponse(BaseModel):
     prompt_version: str
     requested_count: int
     generated_count: int
+    grounding_status: str = "NOT_REQUESTED"  # NOT_REQUESTED | GROUNDED | UNGROUNDED | INSUFFICIENT_SOURCE_MATERIAL
     blueprint_summary: Optional[BlueprintSummary] = None
     warnings: List[str] = Field(default_factory=list)
     disclaimer: str

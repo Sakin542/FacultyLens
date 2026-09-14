@@ -148,6 +148,19 @@ class QuestionGenerationService
         try {
             $payload = $this->buildPayload($request);
             $response = $this->aiService->generateQuestions($payload);
+
+            // STEP 46: the generator refused because course material does not cover the topic.
+            if (($response['status'] ?? 'success') === 'insufficient_source_material' || ($response['grounding_status'] ?? null) === 'INSUFFICIENT_SOURCE_MATERIAL' && ($response['questions'] ?? []) === []) {
+                app(AiSafetyService::class)->recordRejection($request, $request->id, 'insufficient source material for requested topic', $request->course_id);
+                $request->update([
+                    'generation_status' => QuestionGenerationRequest::STATUS_FAILED,
+                    'error_message' => 'Insufficient source material: the authorized course documents do not cover the requested topic. No questions were drafted.',
+                    'warnings' => array_values(array_unique(array_merge($request->warnings ?? [], $response['warnings'] ?? []))) ?: null,
+                ]);
+
+                return;
+            }
+
             $drafts = $this->validateResponse($response, $request);
 
             DB::transaction(function () use ($request, $response, $drafts, $payload) {
@@ -177,6 +190,7 @@ class QuestionGenerationService
             ], $request->user);
         } catch (Exception $e) {
             Log::warning("QuestionGenerationService: request {$request->id} failed: {$e->getMessage()}");
+            app(AiSafetyService::class)->recordServiceFailure($request, $request->id, 'generate_questions', $e->getMessage(), $request->course_id);
             $request->update([
                 'generation_status' => QuestionGenerationRequest::STATUS_FAILED,
                 'error_message' => 'The question generator could not produce drafts. Please try again.',

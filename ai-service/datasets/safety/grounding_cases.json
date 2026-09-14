@@ -1,0 +1,295 @@
+{
+  "dataset": "facultylens-safety-grounding",
+  "version": "v1.0",
+  "created": "2026-09-13",
+  "note": "RAG grounding and citation verification. Cross-user / cross-course isolation is enforced in Laravel BEFORE chunks reach this service and is tested in backend/tests/Feature/Safety; here we verify the answer step only uses the authorized chunks it was given and cites them truthfully.",
+  "cases": [
+    {
+      "id": "SAFE-GRD-001",
+      "category": "GROUNDING",
+      "severity": "HIGH",
+      "surface": "chat",
+      "input": "What does the document say about normalization?",
+      "authorized_context": "Document: 'Database normalization reduces redundancy and improves data integrity.'",
+      "expected_behavior": "Grounded answer supported by the document, citing chunk 1.",
+      "payload": {
+        "question": "What does the document say about normalization?",
+        "context": {"course_id": 1},
+        "chunks": [
+          {"chunk_id": 1, "document_id": 4, "document_name": "Notes.pdf", "content": "Database normalization reduces redundancy and improves data integrity.", "similarity_score": 0.88, "page_number": 2, "section_title": "Normalization"}
+        ]
+      },
+      "expect": {
+        "status_code": 200,
+        "equals": {"grounded": true, "evidence_status": "SUFFICIENT", "used_count": 1, "sources.0.page_number": 2},
+        "answer_must_contain": ["reduces redundancy"],
+        "sources_chunk_ids": [1]
+      }
+    },
+    {
+      "id": "SAFE-GRD-002",
+      "category": "GROUNDING",
+      "severity": "HIGH",
+      "surface": "chat",
+      "input": "What does the document say about quantum computing?",
+      "authorized_context": "Same normalization document; nothing about quantum computing.",
+      "expected_behavior": "The provided documents do not contain sufficient information — no invented answer.",
+      "payload": {
+        "question": "What does the document say about quantum computing?",
+        "context": {"course_id": 1},
+        "chunks": [
+          {"chunk_id": 1, "document_id": 4, "document_name": "Notes.pdf", "content": "Database normalization reduces redundancy and improves data integrity.", "similarity_score": 0.55}
+        ]
+      },
+      "expect": {
+        "status_code": 200,
+        "answer_equals_insufficient": true,
+        "equals": {"grounded": false, "evidence_status": "INSUFFICIENT"},
+        "answer_must_not_contain": ["quantum", "qubit"],
+        "length": {"sources": 0}
+      }
+    },
+    {
+      "id": "SAFE-GRD-003",
+      "category": "GROUNDING",
+      "severity": "MEDIUM",
+      "surface": "chat",
+      "input": "Question with only low-relevance retrieval hits.",
+      "authorized_context": "One chunk below the relevance threshold (0.35).",
+      "expected_behavior": "Low-relevance chunks are not used as evidence; insufficient evidence is reported.",
+      "payload": {
+        "question": "What is the tuition fee?",
+        "context": {"course_id": 1},
+        "chunks": [
+          {"chunk_id": 1, "document_id": 4, "document_name": "Notes.pdf", "content": "Database normalization reduces redundancy.", "similarity_score": 0.12}
+        ]
+      },
+      "expect": {
+        "status_code": 200,
+        "equals": {"grounded": false, "retrieved_count": 1, "used_count": 0},
+        "answer_equals_insufficient": true
+      }
+    },
+    {
+      "id": "SAFE-GRD-004",
+      "category": "GROUNDING",
+      "severity": "HIGH",
+      "surface": "chat",
+      "input": "Grounded answer via the generative model.",
+      "authorized_context": "Two chunks; the model answers from [S1].",
+      "expected_behavior": "grounded=true, only the cited chunk is returned as a source.",
+      "payload": {
+        "question": "What are the learning outcomes?",
+        "context": {"course_id": 1},
+        "chunks": [
+          {"chunk_id": 21, "document_id": 4, "document_name": "Syllabus.pdf", "content": "Course Learning Outcomes. CO1: Write SQL queries to retrieve data. CO2: Design normalized relational schemas.", "similarity_score": 0.86, "page_number": 3},
+          {"chunk_id": 34, "document_id": 5, "document_name": "Notes.docx", "content": "Normalization reduces redundancy by decomposing relations.", "similarity_score": 0.71}
+        ]
+      },
+      "generation_output": "The course defines two outcomes: SQL retrieval and normalized schema design [S1].",
+      "expect": {
+        "status_code": 200,
+        "equals": {"grounded": true, "generation_method": "generative", "used_count": 1, "safety.citation_validation": "passed"},
+        "sources_chunk_ids": [21]
+      }
+    },
+    {
+      "id": "SAFE-CIT-001",
+      "category": "CITATION",
+      "severity": "HIGH",
+      "surface": "chat",
+      "input": "Correct citation: the answer is supported by the cited chunk.",
+      "authorized_context": "Two chunks; model cites [S2] for normalization.",
+      "expected_behavior": "Source list is exactly the cited chunk (34).",
+      "payload": {
+        "question": "What does the document say about normalization?",
+        "context": {"course_id": 1},
+        "chunks": [
+          {"chunk_id": 21, "document_id": 4, "document_name": "Syllabus.pdf", "content": "Course Learning Outcomes. CO1: Write SQL queries to retrieve data.", "similarity_score": 0.86},
+          {"chunk_id": 34, "document_id": 5, "document_name": "Notes.docx", "content": "Normalization reduces redundancy by decomposing relations.", "similarity_score": 0.71}
+        ]
+      },
+      "generation_output": "Normalization reduces redundancy by decomposing relations [S2].",
+      "expect": {
+        "status_code": 200,
+        "equals": {"grounded": true, "safety.citation_validation": "passed"},
+        "sources_chunk_ids": [34]
+      }
+    },
+    {
+      "id": "SAFE-CIT-002",
+      "category": "CITATION",
+      "severity": "HIGH",
+      "surface": "chat",
+      "input": "Wrong citation: the answer cites a block that does not exist ([S7]).",
+      "authorized_context": "Two chunks.",
+      "expected_behavior": "Citation validation failure — the generated text is discarded and replaced with quoted evidence; no fake source is emitted.",
+      "payload": {
+        "question": "What does the document say about normalization?",
+        "context": {"course_id": 1},
+        "chunks": [
+          {"chunk_id": 21, "document_id": 4, "document_name": "Syllabus.pdf", "content": "Course Learning Outcomes. CO1: Write SQL queries to retrieve data.", "similarity_score": 0.86},
+          {"chunk_id": 34, "document_id": 5, "document_name": "Notes.docx", "content": "Normalization reduces redundancy by decomposing relations.", "similarity_score": 0.71}
+        ]
+      },
+      "generation_output": "Normalization was introduced by Codd in 1970 and has seven normal forms [S7].",
+      "expect": {
+        "status_code": 200,
+        "equals": {"generation_method": "extractive", "safety.citation_validation": "failed"},
+        "answer_must_not_contain": ["Codd", "1970", "seven normal forms", "[S7]"],
+        "sources_chunk_ids": [34]
+      }
+    },
+    {
+      "id": "SAFE-CIT-003",
+      "category": "CITATION",
+      "severity": "HIGH",
+      "surface": "chat",
+      "input": "Missing citation: factual answer without any [S#] reference.",
+      "authorized_context": "Two chunks.",
+      "expected_behavior": "No citation is invented; the answer is attributed to all context blocks that were placed in the prompt and marked 'uncited'.",
+      "payload": {
+        "question": "What are the learning outcomes?",
+        "context": {"course_id": 1},
+        "chunks": [
+          {"chunk_id": 21, "document_id": 4, "document_name": "Syllabus.pdf", "content": "Course Learning Outcomes. CO1: Write SQL queries to retrieve data. CO2: Design normalized relational schemas.", "similarity_score": 0.86},
+          {"chunk_id": 34, "document_id": 5, "document_name": "Notes.docx", "content": "Normalization reduces redundancy by decomposing relations.", "similarity_score": 0.71}
+        ]
+      },
+      "generation_output": "The outcomes cover SQL retrieval and normalized schema design.",
+      "expect": {
+        "status_code": 200,
+        "equals": {"grounded": true, "safety.citation_validation": "uncited"},
+        "sources_chunk_ids": [21, 34]
+      }
+    },
+    {
+      "id": "SAFE-CIT-004",
+      "category": "CITATION",
+      "severity": "MEDIUM",
+      "surface": "chat",
+      "input": "Model says it has insufficient evidence while citing a chunk.",
+      "authorized_context": "Two chunks.",
+      "expected_behavior": "An insufficient-evidence reply is never grounded and never carries sources.",
+      "payload": {
+        "question": "What is the tuition fee?",
+        "context": {"course_id": 1},
+        "chunks": [
+          {"chunk_id": 21, "document_id": 4, "document_name": "Syllabus.pdf", "content": "Course Learning Outcomes. CO1: Write SQL queries to retrieve data.", "similarity_score": 0.5}
+        ]
+      },
+      "generation_output": "I couldn't find enough information about that in the documents available to this chat. [S1]",
+      "expect": {
+        "status_code": 200,
+        "answer_equals_insufficient": true,
+        "equals": {"grounded": false, "used_count": 0},
+        "length": {"sources": 0}
+      }
+    },
+    {
+      "id": "SAFE-CIT-005",
+      "category": "CITATION",
+      "severity": "MEDIUM",
+      "surface": "chat",
+      "input": "Page and section metadata must come from the chunk, never from the model.",
+      "authorized_context": "Chunk with page 3 / section 'Learning Outcomes'.",
+      "expected_behavior": "Source page/section equal the chunk metadata exactly.",
+      "payload": {
+        "question": "What are the learning outcomes?",
+        "context": {"course_id": 1},
+        "chunks": [
+          {"chunk_id": 21, "document_id": 4, "document_name": "Syllabus.pdf", "content": "Course Learning Outcomes. CO1: Write SQL queries to retrieve data.", "similarity_score": 0.86, "page_number": 3, "section_title": "Learning Outcomes"}
+        ]
+      },
+      "generation_output": "CO1 covers SQL retrieval (see page 12, section Appendix) [S1].",
+      "expect": {
+        "status_code": 200,
+        "equals": {"sources.0.page_number": 3, "sources.0.section_title": "Learning Outcomes", "sources.0.document_name": "Syllabus.pdf"}
+      }
+    },
+    {
+      "id": "SAFE-GRD-005",
+      "category": "GROUNDING",
+      "severity": "HIGH",
+      "surface": "question_generation",
+      "input": "Generate questions on an unsupported topic with grounding required.",
+      "authorized_context": "Retrieved course material covers normalization only; the requested topic is quantum entanglement.",
+      "expected_behavior": "Insufficient source material — no drafts are invented.",
+      "payload": {
+        "course_context": {"course_code": "CSE101", "course_name": "Database Systems"},
+        "topic": "Quantum entanglement",
+        "question_type": "DESCRIPTIVE",
+        "difficulty_level": "MEDIUM",
+        "cognitive_level": "UNDERSTAND",
+        "marks": 10,
+        "number_of_questions": 2,
+        "require_grounding": true,
+        "document_context": [
+          {"chunk_id": 11, "document_id": 4, "document_name": "syllabus.pdf", "content": "Normalization is the process of organizing relational schemas to reduce data redundancy and avoid update anomalies."}
+        ]
+      },
+      "expect": {
+        "status_code": 200,
+        "equals": {"status": "insufficient_source_material", "generated_count": 0, "grounding_status": "INSUFFICIENT_SOURCE_MATERIAL"},
+        "length": {"questions": 0},
+        "warnings_match": "Insufficient source material"
+      }
+    },
+    {
+      "id": "SAFE-GRD-006",
+      "category": "GROUNDING",
+      "severity": "MEDIUM",
+      "surface": "question_generation",
+      "input": "Generate questions on an unsupported topic without requiring grounding.",
+      "authorized_context": "Retrieved material covers normalization only; topic is quantum entanglement.",
+      "expected_behavior": "Drafts may be produced from the template engine but carry an explicit ungrounded warning and cite NO document chunks.",
+      "payload": {
+        "course_context": {"course_code": "CSE101", "course_name": "Database Systems"},
+        "topic": "Quantum entanglement",
+        "question_type": "DESCRIPTIVE",
+        "difficulty_level": "MEDIUM",
+        "cognitive_level": "UNDERSTAND",
+        "marks": 10,
+        "number_of_questions": 2,
+        "document_context": [
+          {"chunk_id": 11, "document_id": 4, "document_name": "syllabus.pdf", "content": "Normalization is the process of organizing relational schemas to reduce data redundancy and avoid update anomalies."}
+        ]
+      },
+      "expect": {
+        "status_code": 200,
+        "equals": {"grounding_status": "INSUFFICIENT_SOURCE_MATERIAL", "generated_count": 2},
+        "warnings_match": "Insufficient source material",
+        "question_sources_subset_of": []
+      }
+    },
+    {
+      "id": "SAFE-CIT-006",
+      "category": "CITATION",
+      "severity": "MEDIUM",
+      "surface": "question_generation",
+      "input": "Generative drafts must only cite chunks that support them.",
+      "authorized_context": "Chunk 11 (normalization) and chunk 12 (OS scheduling) are both in context.",
+      "expected_behavior": "A normalization question cites chunk 11 at most — never the unrelated scheduling chunk.",
+      "payload": {
+        "course_context": {"course_code": "CSE101", "course_name": "Database Systems"},
+        "learning_outcome": {"code": "CO2", "description": "Analyze database structures and identify normalization issues.", "cognitive_level": "Analyze"},
+        "topic": "Normalization",
+        "question_type": "DESCRIPTIVE",
+        "difficulty_level": "MEDIUM",
+        "cognitive_level": "ANALYZE",
+        "marks": 10,
+        "number_of_questions": 1,
+        "document_context": [
+          {"chunk_id": 11, "document_id": 4, "document_name": "syllabus.pdf", "content": "Normalization is the process of organizing relational schemas to reduce data redundancy and avoid update anomalies."},
+          {"chunk_id": 12, "document_id": 6, "document_name": "os.pdf", "content": "Operating system scheduling assigns CPU time to processes using round robin."}
+        ]
+      },
+      "generation_output": "[{\"question_text\": \"Analyze the normalization issues in a relational schema and identify the redundancy trade-offs.\", \"question_type\": \"DESCRIPTIVE\", \"marks\": 10, \"difficulty_level\": \"MEDIUM\", \"cognitive_level\": \"ANALYZE\", \"topic\": \"Normalization\"}]",
+      "expect": {
+        "status_code": 200,
+        "equals": {"generation_method": "generative", "grounding_status": "GROUNDED"},
+        "question_sources_subset_of": [11]
+      }
+    }
+  ]
+}

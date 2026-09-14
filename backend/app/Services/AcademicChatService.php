@@ -30,6 +30,7 @@ class AcademicChatService
         protected AiService $aiService,
         protected AcademicDocumentRetrievalService $retrieval,
         protected AuditLogService $audit,
+        protected AiSafetyService $safety,
     ) {}
 
     /**
@@ -127,6 +128,7 @@ class AcademicChatService
                 'answer' => self::INSUFFICIENT_EVIDENCE_TEXT,
                 'sources' => [],
                 'grounded' => false,
+                'evidence_status' => AiSafetyService::EVIDENCE_INSUFFICIENT,
                 'generation_method' => 'insufficient_evidence',
                 'model' => null,
                 'embedding_model' => $retrieval['embedding_model'],
@@ -134,13 +136,24 @@ class AcademicChatService
                 'disclaimer' => self::DISCLAIMER,
             ];
         } else {
-            $response = $this->aiService->chatWithAcademicDocuments($payload);
+            try {
+                $response = $this->aiService->chatWithAcademicDocuments($payload);
+            } catch (Exception $e) {
+                $this->safety->recordServiceFailure($session, $session->id, 'academic_chat', $e->getMessage(), $session->course_id);
+                throw $e;
+            }
         }
 
         $answer = trim((string) $response['answer']);
         if ($answer === '') {
             throw new Exception('AI Service returned an empty answer.');
         }
+        // STEP 46: a leaked system prompt or credential is never shown or stored.
+        if ($this->safety->containsSecretLeak($answer)) {
+            $this->safety->recordRejection($session, $session->id, 'chat answer contained a secret or system-prompt fragment', $session->course_id);
+            throw new Exception('AI Service returned an unsafe answer. Nothing was saved.');
+        }
+        $assessment = $this->safety->assessChatResponse($response, count($retrieval['chunks']), $session, $session->course_id);
 
         // Sources come back as references to the chunks WE sent; never trust anything else.
         $chunkMap = collect($retrieval['chunks'])->keyBy('chunk_id');
@@ -163,8 +176,13 @@ class AcademicChatService
             ];
         }
         $grounded = (bool) $response['grounded'] && $sources !== [];
+        if ($grounded && $assessment['evidence_status'] === AiSafetyService::EVIDENCE_INSUFFICIENT) {
+            $assessment['evidence_status'] = AiSafetyService::EVIDENCE_SUFFICIENT;
+        } elseif (!$grounded && $assessment['evidence_status'] === AiSafetyService::EVIDENCE_SUFFICIENT) {
+            $assessment['evidence_status'] = AiSafetyService::EVIDENCE_INSUFFICIENT;
+        }
 
-        return DB::transaction(function () use ($user, $session, $question, $answer, $response, $sources, $grounded, $retrieval, $retrievalQuery) {
+        return DB::transaction(function () use ($user, $session, $question, $answer, $response, $sources, $grounded, $retrieval, $retrievalQuery, $assessment) {
             $userMessage = $session->messages()->create([
                 'role' => AcademicChatMessage::ROLE_USER,
                 'content' => $question,
@@ -187,6 +205,10 @@ class AcademicChatService
                     'threshold' => $retrieval['threshold'],
                     'top_k' => (int) config('academic_chat.top_k'),
                     'disclaimer' => $response['disclaimer'] ?? self::DISCLAIMER,
+                    'evidence_status' => $assessment['evidence_status'],
+                    'safety_events' => $assessment['events'],
+                    'injection_detected' => $assessment['injection_detected'],
+                    'conflicting_evidence' => $assessment['conflicting_evidence'],
                 ],
                 'status' => 'COMPLETED',
             ]);
@@ -207,6 +229,7 @@ class AcademicChatService
             $this->audit->log('ACADEMIC_CHAT_RESPONSE_GENERATED', $assistant, $assistant->id, [
                 'session_id' => $session->id,
                 'grounded' => $grounded,
+                'evidence_status' => $assessment['evidence_status'],
                 'generation_method' => $assistant->generation_method,
                 'retrieved_count' => count($retrieval['chunks']),
                 'used_count' => count($sources),
