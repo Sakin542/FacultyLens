@@ -31,9 +31,9 @@ export const NotificationBell: React.FC<NotificationBellProps> = ({ className })
         aria-expanded={open}
         aria-controls="notification-dropdown"
         onClick={() => setOpen((o) => !o)}
-        className="relative p-2 rounded-full bg-white border border-sage-200 text-sage-800 hover:bg-sage-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sage-700"
+        className="relative inline-flex items-center justify-center h-10 w-10 sm:h-9 sm:w-9 rounded-full bg-white border border-sage-200 text-sage-800 hover:bg-sage-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sage-700"
       >
-        <Bell className="w-4 h-4" aria-hidden="true" strokeWidth={1.8} />
+        <Bell className="w-[18px] h-[18px] sm:w-4 sm:h-4" aria-hidden="true" strokeWidth={1.8} />
         <NotificationBadge count={unreadCount} className="absolute -top-1 -right-1" />
       </button>
       <NotificationDropdown open={open} onClose={close} anchorRef={buttonRef} />
