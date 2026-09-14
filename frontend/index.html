@@ -6,13 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#FAF9F6" />
     <title>FacultyLens | AI Academic Decision Support</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,600&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
     <style>
       /* Pre-React boot splash: shown while the bundle loads, replaced by the app on mount. */
       html, body { margin: 0; background: #FAF9F6; color: #1E261D; }
-      #boot { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: #FAF9F6; overflow: hidden; font-family: 'Plus Jakarta Sans', Inter, system-ui, sans-serif; }
+      #boot { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: #FAF9F6; overflow: hidden; font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
       #boot::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(#E8ECE3 1px, transparent 1px); background-size: 22px 22px; opacity: .6; }
       #boot::after { content: ''; position: absolute; top: -8rem; left: 50%; width: 24rem; height: 24rem; transform: translateX(-50%); border-radius: 9999px; background: rgba(232,236,227,.5); filter: blur(64px); }
       .boot-inner { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; }
@@ -22,7 +19,7 @@
       .boot-orbit { transform-origin: 50% 50%; animation: bootSpinRev 2s linear infinite; }
       .boot-glow { transform-origin: 50% 50%; animation: bootGlow 3.2s ease-in-out infinite; }
       .boot-step { animation: bootStepIn .5s cubic-bezier(.22,1,.36,1) both; }
-      .boot-name { margin: 20px 0 0; font-family: 'Instrument Serif', Georgia, serif; font-size: 30px; line-height: 1; letter-spacing: -.02em; color: #2F3E2E; animation-delay: .35s; }
+      .boot-name { margin: 20px 0 0; font-weight: 700; font-size: 30px; line-height: 1; letter-spacing: -.02em; color: #2F3E2E; animation-delay: .35s; }
       .boot-text { margin-top: 24px; animation-delay: .7s; }
       .boot-text strong { display: block; font-size: 14px; font-weight: 600; letter-spacing: -.01em; color: #2F3E2E; }
       .boot-text span { display: block; margin-top: 6px; font-size: 12px; color: #8C9A82; }

@@ -301,6 +301,9 @@ class AnalyzeAssessmentJob implements ShouldQueue
 
             \App\Services\AnalysisPayloadCache::forget($assessment->id);
 
+            // STEP 47: recommendations are persisted → notify faculty who may decide on them (guarded listener)
+            event(new \App\Events\RecommendationsCreated($run, count($recommendationsData['recommendations'] ?? [])));
+
             $auditLogService->log('AI_ANALYSIS_COMPLETED', $assessment, $assessment->id, [
                 'assessment_title'   => $assessment->title,
                 'overall_score'      => $aiResult['quality_analysis']['overall_quality_score'] ?? null,

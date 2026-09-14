@@ -1577,6 +1577,11 @@ class AiAnalysisController extends Controller
             if ($assessment) {
                 \App\Services\AnalysisPayloadCache::forget($assessment->id);
 
+                // STEP 47: recommendations persisted → notify faculty who may decide on them (guarded listener)
+                if ($run) {
+                    event(new \App\Events\RecommendationsCreated($run, count($recommendationsData['recommendations'] ?? [])));
+                }
+
                 $this->auditLogService->log(
                     'AI_ANALYSIS_COMPLETED',
                     $assessment,
