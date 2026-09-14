@@ -84,10 +84,16 @@ class RubricService
         try {
             $aiResponse = $this->aiService->generateRubric($payload);
         } catch (Exception $e) {
+            event(new \App\Events\RubricGenerationFailed($question, $user));
             throw $this->translateAiException($e);
         }
 
-        $normalized = $this->validateAiResponse($aiResponse, $questionMarks);
+        try {
+            $normalized = $this->validateAiResponse($aiResponse, $questionMarks);
+        } catch (Exception $e) {
+            event(new \App\Events\RubricGenerationFailed($question, $user));
+            throw $e;
+        }
 
         $rubric = $this->persistNewVersion($question, $user, $normalized, $questionMarks, [
             'generation_method' => $normalized['generation_method'],
@@ -101,6 +107,9 @@ class RubricService
             'criteria_count' => count($normalized['criteria']),
             'generation_method' => $rubric->generation_method,
         ], $user);
+
+        // STEP 47: draft ready for faculty review (never implies approval)
+        event(new \App\Events\RubricGenerated($rubric, $user));
 
         return $rubric->load('criteria');
     }

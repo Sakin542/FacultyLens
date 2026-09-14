@@ -6,6 +6,7 @@ namespace App\Models;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -124,6 +125,20 @@ class User extends Authenticatable
     public function students(): HasMany
     {
         return $this->hasMany(Student::class, 'created_by');
+    }
+
+    /**
+     * STEP 47: in-app notifications (FacultyLens model over Laravel's notifications table).
+     * Overrides HasDatabaseNotifications so unreadNotifications()/readNotifications() use the same model.
+     */
+    public function notifications(): MorphMany
+    {
+        return $this->morphMany(Notification::class, 'notifiable')->latest();
+    }
+
+    public function notificationPreferences(): HasMany
+    {
+        return $this->hasMany(NotificationPreference::class);
     }
 
     /**

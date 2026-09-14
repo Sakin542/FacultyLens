@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\InstitutionalReportController;
 use App\Http\Controllers\Api\CollaborationCommentController;
 use App\Http\Controllers\Api\CollaborationController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\NotificationPreferenceController;
 use App\Http\Controllers\Api\QuestionGenerationController;
 use App\Http\Controllers\Api\AiAnalysisController;
 use App\Http\Controllers\Api\AiGradingController;
@@ -288,9 +289,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/comments/{comment}/resolve', [CollaborationCommentController::class, 'resolve']);
     Route::post('/comments/{comment}/reopen', [CollaborationCommentController::class, 'reopen']);
 
+    // STEP 47: Notification center (owner-scoped; ids are uuids) + per-type preferences
     Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead']);
-    Route::post('/notifications/{id}/read', [NotificationController::class, 'markRead']);
+    Route::get('/notifications/{notification}', [NotificationController::class, 'show']);
+    Route::post('/notifications/{notification}/read', [NotificationController::class, 'markRead']);
+    Route::post('/notifications/{notification}/dismiss', [NotificationController::class, 'dismiss']);
+    Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy']);
+    Route::get('/notification-preferences', [NotificationPreferenceController::class, 'index']);
+    Route::put('/notification-preferences', [NotificationPreferenceController::class, 'update']);
+    Route::patch('/notification-preferences/{type}', [NotificationPreferenceController::class, 'patch']);
 
     // STEP 37: Assessment Blueprint (planning + validation layer; never publishes/finalizes the assessment)
     Route::get('/assessments/{assessment}/blueprint', [AssessmentBlueprintController::class, 'show']);

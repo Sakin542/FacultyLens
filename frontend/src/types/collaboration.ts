@@ -99,18 +99,4 @@ export interface CollaborationSummary {
   unread_notifications_count: number;
 }
 
-export interface AppNotification {
-  id: string;
-  read_at: string | null;
-  created_at: string | null;
-  event?: string;
-  title?: string;
-  body?: string;
-  course_id?: number;
-  course_code?: string;
-  course_name?: string;
-  actor_name?: string;
-  url?: string;
-}
-
 export interface MentionableUser { id: number; name: string; role: CollaborationRole }

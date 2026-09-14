@@ -46,6 +46,7 @@ const AssessmentVersionCompare = lazy(() => import('@/pages/AssessmentVersionCom
 const InstitutionalReports = lazy(() => import('@/pages/InstitutionalReports').then(m => ({ default: m.InstitutionalReports })));
 const ReportBuilder      = lazy(() => import('@/pages/ReportBuilder').then(m => ({ default: m.ReportBuilder })));
 const ReportDetails      = lazy(() => import('@/pages/ReportDetails').then(m => ({ default: m.ReportDetails })));
+const Notifications      = lazy(() => import('@/pages/Notifications').then(m => ({ default: m.Notifications })));
 
 /**
  * Lightweight fallback shown while a lazy page chunk loads.
@@ -114,6 +115,8 @@ export const AppRoutes: React.FC = () => {
             <Route path="/analysis/:analysisId" element={<AnalysisDetails />} />
             <Route path="/analysis" element={<Analysis />} />
             <Route path="/feedback" element={<Feedback />} />
+            {/* STEP 47: Notification center */}
+            <Route path="/notifications" element={<Notifications />} />
             <Route path="/settings" element={<Settings />} />
           </Route>
         </Route>

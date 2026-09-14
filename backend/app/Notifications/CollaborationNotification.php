@@ -8,8 +8,9 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 /**
- * STEP 34: generic collaboration notification (database + optional mail). Payload carries only
- * non-sensitive metadata (course code/name, actor name, role, links) — never documents, answers or tokens.
+ * STEP 34 / STEP 47: e-mail carrier for collaboration invitations (the only collaboration message that must reach
+ * people without an account). In-app rows are created by App\Services\Notification\NotificationService, never by
+ * this class, so the two systems cannot double-write. Payload carries only non-sensitive metadata.
  */
 class CollaborationNotification extends Notification implements ShouldQueue
 {
@@ -18,11 +19,11 @@ class CollaborationNotification extends Notification implements ShouldQueue
     /**
      * @param array<string, mixed> $data  keys: event, title, body, course_id, course_code, course_name, actor_name, role, url, action_text, expires_at
      */
-    public function __construct(protected array $data, protected bool $sendMail = false) {}
+    public function __construct(protected array $data, protected bool $sendMail = true) {}
 
     public function via(object $notifiable): array
     {
-        return $this->sendMail ? ['database', 'mail'] : ['database'];
+        return ['mail'];
     }
 
     public function toDatabase(object $notifiable): array
