@@ -108,6 +108,15 @@ _UNSAFE_EVIDENCE = re.compile(
     r"\bgenerate\b.*\b(password|credential|key)|system prompt|api[_ ]?key|you are now|disregard)", re.I)
 _DEFAULT_ASPECTS = ["a realistic academic case study", "system design decisions", "performance and correctness requirements", "real-world applications"]
 
+GROUNDING_NOT_REQUESTED = "NOT_REQUESTED"
+GROUNDING_GROUNDED = "GROUNDED"
+GROUNDING_UNGROUNDED = "UNGROUNDED"
+GROUNDING_INSUFFICIENT = "INSUFFICIENT_SOURCE_MATERIAL"
+INSUFFICIENT_SOURCE_MATERIAL_TEXT = (
+    "Insufficient source material: the retrieved course documents do not cover the requested topic, "
+    "so drafts cannot be grounded in course material."
+)
+
 
 class QuestionGenerator:
     def __init__(self, generation_service: Any = None, hf_service: Any = None) -> None:
@@ -120,6 +129,27 @@ class QuestionGenerator:
     def generate(self, request: GenerateQuestionsRequest) -> Dict[str, Any]:
         slots = self._slots(request)
         warnings: List[str] = []
+
+        # STEP 46: grounding check happens BEFORE drafting so nothing is invented for an uncovered topic.
+        grounding_status = self._grounding_status(request)
+        if grounding_status == GROUNDING_INSUFFICIENT:
+            warnings.append(INSUFFICIENT_SOURCE_MATERIAL_TEXT)
+            if request.require_grounding:
+                return {
+                    "status": "insufficient_source_material",
+                    "questions": [],
+                    "generation_method": "template",
+                    "model": TEMPLATE_ENGINE_NAME,
+                    "model_version": ENGINE_VERSION,
+                    "embedding_model": getattr(self.hf, "model_name", self.settings.hf_model_name),
+                    "prompt_version": PROMPT_VERSION,
+                    "requested_count": len(slots),
+                    "generated_count": 0,
+                    "grounding_status": grounding_status,
+                    "blueprint_summary": None,
+                    "warnings": warnings,
+                    "disclaimer": DISCLAIMER,
+                }
 
         drafts, method = self._draft(request, slots, warnings)
         drafts = drafts[: len(slots)]
@@ -139,10 +169,40 @@ class QuestionGenerator:
             "prompt_version": PROMPT_VERSION,
             "requested_count": len(slots),
             "generated_count": len(validated),
+            "grounding_status": grounding_status,
             "blueprint_summary": self._blueprint_summary(request, slots, validated) if request.blueprint else None,
             "warnings": warnings,
             "disclaimer": DISCLAIMER,
         }
+
+    # ------------------------------------------------------------------ grounding (STEP 46)
+    @staticmethod
+    def _grounding_status(request: GenerateQuestionsRequest) -> str:
+        if not request.document_context:
+            return GROUNDING_INSUFFICIENT if request.require_grounding else GROUNDING_NOT_REQUESTED
+        lo_desc = request.learning_outcome.description if request.learning_outcome else ""
+        subject = f"{request.topic or ''} {lo_desc}".strip()
+        terms = set(key_terms(subject))
+        if not terms:
+            return GROUNDING_UNGROUNDED
+        for c in request.document_context:
+            if terms & set(key_terms(c.content)):
+                return GROUNDING_GROUNDED
+        return GROUNDING_INSUFFICIENT
+
+    @staticmethod
+    def _supporting_chunk_ids(text: str, request: GenerateQuestionsRequest, limit: int = 5) -> List[int]:
+        """Only chunks that share key terms with the draft may be cited as its sources."""
+        q_terms = set(key_terms(text))
+        if not q_terms:
+            return []
+        ids: List[int] = []
+        for c in request.document_context:
+            if c.chunk_id is None:
+                continue
+            if len(q_terms & set(key_terms(c.content))) >= 2:
+                ids.append(c.chunk_id)
+        return ids[:limit]
 
     # ------------------------------------------------------------------ slots
     @staticmethod
@@ -227,12 +287,9 @@ class QuestionGenerator:
             qtype = slot["question_type"]
         diff = str(item.get("difficulty_level") or slot["difficulty_level"] or "").upper() or None
         cog = str(item.get("cognitive_level") or slot["cognitive_level"] or "").upper() or None
-        try:
-            marks = float(item.get("marks") or slot["marks"])
-        except (TypeError, ValueError):
-            marks = float(slot["marks"])
-        if marks <= 0:
-            marks = float(slot["marks"])
+        # STEP 46: marks are a faculty constraint. A model value that differs from the slot is ignored,
+        # never adopted silently (Laravel would otherwise persist the model's number).
+        marks = float(slot["marks"])
         options = item.get("options") if isinstance(item.get("options"), list) else None
         if options:
             options = [str(o).strip()[:500] for o in options if str(o).strip()][:6]
@@ -247,7 +304,7 @@ class QuestionGenerator:
             "correct_option": (str(item["correct_option"]).strip()[:500] if item.get("correct_option") else None),
             "expected_answer": (str(item["expected_answer"]).strip()[:5000] if request.include_expected_answer and item.get("expected_answer") else None),
             "explanation": (str(item["explanation"]).strip()[:2000] if request.include_explanation and item.get("explanation") else None),
-            "source_chunk_ids": [c.chunk_id for c in request.document_context if c.chunk_id is not None][:5],
+            "source_chunk_ids": self._supporting_chunk_ids(text, request),
         }
 
     # ------------------------------------------------------------------ template engine
@@ -259,7 +316,9 @@ class QuestionGenerator:
 
         chunks = [{"chunk_id": c.chunk_id, "content": c.content, "document_name": c.document_name} for c in request.document_context]
         evidence = best_sentences(f"{topic} {lo_desc}", chunks, limit=max(4, len(slots))) if chunks else []
-        evidence = [e for e in evidence if not PromptBuilder.contains_injection(e["sentence"]) and not _UNSAFE_EVIDENCE.search(e["sentence"])]
+        # STEP 46: only sentences that actually mention the topic/outcome may be cited as grounding evidence.
+        evidence = [e for e in evidence if e.get("overlap", 0) > 0
+                    and not PromptBuilder.contains_injection(e["sentence"]) and not _UNSAFE_EVIDENCE.search(e["sentence"])]
         aspects = self._aspects(f"{lo_desc} {' '.join(e['sentence'] for e in evidence)}", topic)
 
         drafts: List[Dict[str, Any]] = []

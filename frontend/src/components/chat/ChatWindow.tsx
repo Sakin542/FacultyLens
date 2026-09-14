@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Bot, SendHorizontal, User } from 'lucide-react';
-import { Badge } from '@/components/common/Badge';
+import { Bot, SendHorizontal, ShieldAlert, User } from 'lucide-react';
 import { Button } from '@/components/common/Button';
+import { AiSafetyState, chatEvidenceState } from '@/components/common/AiSafety';
 import { ChatMessage as ChatMessageType } from '@/types/chat';
 import { ChatSourceList } from './ChatSources';
 import { ChatEmptyState, ChatLoading, GroundingDisclaimer } from './ChatStates';
@@ -12,11 +12,14 @@ import { useExplanationModal } from '@/hooks/useExplanationModal';
 /**
  * STEP 32: Message rendering + input. Answers are rendered as plain text (no HTML) — document content
  * is untrusted and must never be interpreted as markup.
+ * STEP 46: evidence state (grounded / insufficient / conflicting) and injection notices are explicit.
  */
 
 export const ChatMessage: React.FC<{ message: ChatMessageType }> = ({ message }) => {
   const isUser = message.role === 'USER';
   const { explain, modal } = useExplanationModal();
+  const evidence = chatEvidenceState(message.evidence_status, message.grounded);
+  const conflicts = message.conflicting_evidence ?? [];
   return (
     <div data-testid={`chat-message-${message.role.toLowerCase()}`} className={cn('flex gap-3', isUser ? 'flex-row-reverse' : 'flex-row')}>
       <div
@@ -40,14 +43,33 @@ export const ChatMessage: React.FC<{ message: ChatMessageType }> = ({ message })
         </div>
         {!isUser && (
           <div className="flex flex-wrap items-center gap-2 text-xs text-sage-500">
-            {message.grounded ? (
-              <Badge variant="Good" data-testid="grounded-badge">Grounded in documents</Badge>
-            ) : (
-              <Badge variant="Attention" data-testid="ungrounded-badge">No supporting evidence found</Badge>
-            )}
+            <AiSafetyState state={evidence} data-testid={evidence === 'GROUNDED' ? 'grounded-badge' : evidence === 'CONFLICTING_EVIDENCE' ? 'ai-safety-conflicting_evidence' : 'ungrounded-badge'}>
+              {evidence === 'INSUFFICIENT_EVIDENCE' ? 'No supporting evidence found' : undefined}
+            </AiSafetyState>
+            {evidence === 'CONFLICTING_EVIDENCE' && <AiSafetyState state="FACULTY_REVIEW_RECOMMENDED" />}
             {message.generation_method && <span className="font-mono">{message.generation_method}</span>}
             {message.id > 0 && <WhyButton describes="how this answer was produced and its sources" onClick={() => explain('rag_answer', message.id, 'Answer sources & grounding')} />}
           </div>
+        )}
+        {!isUser && conflicts.length > 0 && (
+          <div data-testid="conflicting-evidence" className="rounded-lg border border-[#FECACA] bg-[#FEF2F2] dark:bg-[#2A1515] px-3 py-2 text-xs text-[#991B1B] dark:text-red-200">
+            <p className="font-medium">The documents disagree. FacultyLens has not chosen a value — review both sources.</p>
+            <ul className="mt-1 space-y-0.5">
+              {conflicts.map((c) =>
+                c.values.map((v, i) => (
+                  <li key={`${c.subject}-${i}`}>
+                    <span className="font-medium">{v.document_name ?? 'Document'}</span>: {c.subject} = {v.value}{v.unit ? ` ${v.unit}` : ''}
+                  </li>
+                ))
+              )}
+            </ul>
+          </div>
+        )}
+        {!isUser && message.injection_detected && (
+          <p data-testid="injection-notice" className="flex items-center gap-1.5 text-xs text-sage-500" role="note">
+            <ShieldAlert className="w-3 h-3" aria-hidden />
+            Instruction-like text was found in the documents or question. It was treated as untrusted content and not followed.
+          </p>
         )}
         {!isUser && message.sources.length > 0 && <ChatSourceList sources={message.sources} />}
         {!isUser && modal}

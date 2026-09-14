@@ -58,18 +58,42 @@ class ChatSourceOut(BaseModel):
     similarity_score: float
 
 
+class ConflictingValueOut(BaseModel):
+    chunk_id: Optional[int] = None
+    document_id: Optional[int] = None
+    document_name: Optional[str] = None
+    value: float
+    unit: Optional[str] = None
+
+
+class ConflictingEvidenceOut(BaseModel):
+    subject: str
+    values: List[ConflictingValueOut] = Field(default_factory=list)
+
+
+class ChatSafetyOut(BaseModel):
+    """STEP 46: what the safety layer observed. Never contains document or question text."""
+
+    injection_detected: bool = False
+    injection_chunk_ids: List[int] = Field(default_factory=list)
+    conflicting_evidence: List[ConflictingEvidenceOut] = Field(default_factory=list)
+    citation_validation: str = Field(default="not_applicable", description="passed | uncited | failed | not_applicable")
+
+
 class AcademicChatResponse(BaseModel):
     status: str = "success"
     answer: str = Field(..., min_length=1, max_length=20000)
     sources: List[ChatSourceOut] = Field(default_factory=list)
     grounded: bool
-    generation_method: str = Field(..., description="generative | extractive | insufficient_evidence")
+    evidence_status: str = Field(default="SUFFICIENT", description="SUFFICIENT | INSUFFICIENT | CONFLICTING")
+    generation_method: str = Field(..., description="generative | extractive | insufficient_evidence | conflicting_evidence")
     model: str
     model_version: str = "1.0.0"
     embedding_model: Optional[str] = None
     prompt_version: str
     retrieved_count: int = 0
     used_count: int = 0
+    safety: ChatSafetyOut = Field(default_factory=ChatSafetyOut)
     disclaimer: str = (
         "Answers are generated from the academic documents available to this chat. Review the cited "
         "source material before making academic decisions. FacultyLens may miss information or "

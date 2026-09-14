@@ -3,6 +3,7 @@ import { Sparkles, Target } from 'lucide-react';
 import { AIGradingResult } from '@/types/grading';
 import { RubricAlignment, isAlignmentCompleted } from '@/types/rubricAlignment';
 import { GradingStatusBadge } from './GradingStatusBadge';
+import { AiOriginBadge, AiSafetyState, AiSuggestionNotice } from '@/components/common/AiSafety';
 
 interface SuggestedMarksCardProps {
   result: AIGradingResult;
@@ -23,6 +24,7 @@ export const SuggestedMarksCard: React.FC<SuggestedMarksCardProps> = ({ result, 
   const hasFaculty = facultyMarks !== null && facultyMarks !== undefined;
   const diff = hasFaculty && result.suggested_marks !== null ? Number((facultyMarks - result.suggested_marks).toFixed(2)) : null;
   const showAlignment = alignment && isAlignmentCompleted(alignment.analysis_status) && alignment.overall_alignment_score !== null;
+  const aiUnavailable = result.grading_status === 'FAILED';
 
   return (
     <div className={`grid grid-cols-1 ${showAlignment ? 'sm:grid-cols-3' : 'sm:grid-cols-2'} gap-3`} data-testid="suggested-marks-card">
@@ -31,11 +33,16 @@ export const SuggestedMarksCard: React.FC<SuggestedMarksCardProps> = ({ result, 
           <span className="text-[10px] uppercase tracking-wider font-semibold text-sage-500 flex items-center gap-1.5">
             <Sparkles className="w-3 h-3 text-amber-500" /> AI Suggested Marks
           </span>
-          <GradingStatusBadge status={result.grading_status} />
+          <div className="flex items-center gap-1.5">
+            <AiOriginBadge origin="AI_SUGGESTED" />
+            <GradingStatusBadge status={result.grading_status} />
+          </div>
         </div>
         <p className="mt-2 text-2xl font-bold font-mono text-sage-800 dark:text-white" data-testid="suggested-marks">
-          {formatMarks(result.suggested_marks)} <span className="text-sm text-sage-500 font-normal">/ {formatMarks(result.maximum_marks)}</span>
+          {aiUnavailable ? '—' : formatMarks(result.suggested_marks)} <span className="text-sm text-sage-500 font-normal">/ {formatMarks(result.maximum_marks)}</span>
         </p>
+        {aiUnavailable && <AiSafetyState state="AI_UNAVAILABLE" className="mt-1" />}
+        {!aiUnavailable && <AiSuggestionNotice className="mt-1" />}
         {result.generated_at && (
           <p className="text-[10px] text-sage-500 mt-1">
             Generated {new Date(result.generated_at).toLocaleString()}
@@ -44,7 +51,10 @@ export const SuggestedMarksCard: React.FC<SuggestedMarksCardProps> = ({ result, 
         )}
       </div>
       <div className="p-4 rounded-xl bg-white dark:bg-[#1C1C1E] border border-sage-200 dark:border-[#3A3A3C]">
-        <span className="text-[10px] uppercase tracking-wider font-semibold text-sage-500">Faculty Final Marks</span>
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-[10px] uppercase tracking-wider font-semibold text-sage-500">Faculty Final Marks</span>
+          {hasFaculty && <AiOriginBadge origin="FACULTY_FINAL" />}
+        </div>
         <p className="mt-2 text-2xl font-bold font-mono text-sage-800 dark:text-white" data-testid="faculty-final-marks">
           {hasFaculty ? formatMarks(facultyMarks) : 'Not set'}
           {hasFaculty && <span className="text-sm text-sage-500 font-normal"> / {formatMarks(result.maximum_marks)}</span>}

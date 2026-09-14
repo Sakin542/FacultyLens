@@ -63,7 +63,7 @@ class SemanticSimilarityAnalyzer:
                     "max_similarity_score": 0.0,
                     "max_similarity_status": "NOT_SIMILAR",
                     "matches": [],
-                    "reasoning": "No previous questions available in course bank for historical comparison.",
+                    "reasoning": "No previous questions available for comparison; historical similarity was not evaluated.",
                 })
 
             return {
@@ -82,7 +82,8 @@ class SemanticSimilarityAnalyzer:
                 "somewhat_similar_count": 0,
                 "average_similarity_score": 0.0,
                 "results": results,
-                "findings": ["No historical questions found in the course question bank. All questions are novel."],
+                # STEP 46: absence of a question bank is not evidence of novelty — say what was (not) evaluated.
+                "findings": ["No previous questions available for comparison. Similarity against historical questions was not evaluated."],
             }
 
         # Step 1: Encode Current and Previous Questions

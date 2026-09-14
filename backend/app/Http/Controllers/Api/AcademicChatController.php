@@ -215,6 +215,12 @@ class AcademicChatController extends Controller
             'prompt_version' => $message->prompt_version,
             'retrieved_count' => $meta['retrieved_count'] ?? null,
             'used_count' => $meta['used_count'] ?? null,
+            // STEP 46 safety state (historic messages without the field fall back on `grounded`).
+            'evidence_status' => $message->role === AcademicChatMessage::ROLE_ASSISTANT
+                ? ($meta['evidence_status'] ?? ($message->grounded ? 'SUFFICIENT' : 'INSUFFICIENT'))
+                : null,
+            'conflicting_evidence' => $meta['conflicting_evidence'] ?? [],
+            'injection_detected' => (bool) ($meta['injection_detected'] ?? false),
             'disclaimer' => $message->role === AcademicChatMessage::ROLE_ASSISTANT
                 ? ($meta['disclaimer'] ?? AcademicChatService::DISCLAIMER)
                 : null,

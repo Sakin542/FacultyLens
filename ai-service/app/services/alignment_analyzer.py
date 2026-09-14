@@ -10,6 +10,12 @@ from app.schemas.alignment import (
 
 logger = logging.getLogger("facultylens.ai")
 
+UNEVALUABLE_LO_MESSAGE = "Unable to evaluate alignment because the learning outcome description is unavailable."
+
+
+class AlignmentEvidenceError(ValueError):
+    """STEP 46: raised when the request carries no learning outcome text to compare against."""
+
 
 class AlignmentAnalyzer:
     """
@@ -39,10 +45,17 @@ class AlignmentAnalyzer:
         """
         th = thresholds or ThresholdsConfig()
 
+        # STEP 46: an LO code without a description carries no evidence. It must not be matched
+        # (a code like "LO-3" would only produce noise) and must not be reported as NOT_COVERED.
+        evaluable_los = [lo for lo in learning_outcomes if (lo.description or "").strip()]
+        unevaluable_los = [lo for lo in learning_outcomes if not (lo.description or "").strip()]
+        if not evaluable_los:
+            raise AlignmentEvidenceError(UNEVALUABLE_LO_MESSAGE)
+
         # Step 1: Match questions to LOs (pass precomputed embeddings when available)
         question_alignments = self.matcher.match_questions_to_los(
             questions=questions,
-            learning_outcomes=learning_outcomes,
+            learning_outcomes=evaluable_los,
             thresholds=th,
             precomputed_q_embeddings=precomputed_q_embeddings,
         )
@@ -53,7 +66,7 @@ class AlignmentAnalyzer:
         # Step 2: Compute Learning Outcome Coverage
         # Initialize map for each LO
         lo_stats: Dict[str, Dict[str, Any]] = {}
-        for idx, lo in enumerate(learning_outcomes):
+        for idx, lo in enumerate(evaluable_los):
             key = str(lo.id) if lo.id is not None else f"lo_idx_{idx}"
             lo_stats[key] = {
                 "learning_outcome_id": lo.id,
@@ -138,6 +151,21 @@ class AlignmentAnalyzer:
 
         # Step 4: Generate Structured Explainable Findings
         findings: List[str] = []
+
+        # STEP 46: report what could not be evaluated, separately from what was not covered.
+        for lo in unevaluable_los:
+            lo_coverage_results.append({
+                "learning_outcome_id": lo.id,
+                "code": lo.code,
+                "description": "",
+                "coverage_status": "NOT_EVALUATED",
+                "matching_questions_count": 0,
+                "matching_question_numbers": [],
+                "max_similarity": 0.0,
+            })
+        if unevaluable_los:
+            labels = [lo.code or f"LO#{lo.id}" for lo in unevaluable_los]
+            findings.append(f"{UNEVALUABLE_LO_MESSAGE} Affected: {', '.join(labels)}.")
 
         # Finding: Uncovered LOs
         uncovered_los = [lo for lo in lo_coverage_results if lo["coverage_status"] == "NOT_COVERED"]
