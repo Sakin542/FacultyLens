@@ -63,6 +63,22 @@ Artisan::command('newsletter:purge-unconfirmed', function (\App\Services\Newslet
 
 Schedule::command('newsletter:purge-unconfirmed')->dailyAt('03:15');
 
+// E-mail delivery log retention (metadata rows only; audit rows are never touched)
+Artisan::command('email:purge-deliveries', function () {
+    $days = (int) config('email.retention_days', 0);
+    if ($days <= 0) {
+        $this->info('Retention disabled (EMAIL_DELIVERY_RETENTION_DAYS=0).');
+
+        return 0;
+    }
+    $n = \App\Models\EmailDelivery::query()->where('created_at', '<', now()->subDays($days))->delete();
+    $this->info("Purged {$n} e-mail delivery record(s) older than {$days} days.");
+
+    return 0;
+})->purpose('Delete old email_deliveries rows according to config/email.php retention');
+
+Schedule::command('email:purge-deliveries')->dailyAt('03:30');
+
 // STEP 47: operator-raised SYSTEM_ALERT (e.g. planned maintenance, AI service incident) to all admins or to given user ids
 Artisan::command('notifications:system-alert {title} {message} {--user=* : user ids (default: all ADMIN users)} {--severity=WARNING} {--key= : dedupe key}', function (\App\Services\Notification\NotificationRecipientResolver $resolver) {
     $users = $this->option('user') ? \App\Models\User::whereIn('id', array_map('intval', (array) $this->option('user')))->get() : $resolver->admins();

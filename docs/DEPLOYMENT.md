@@ -23,7 +23,7 @@ Internet ──HTTPS──▶ nginx (facultylens/frontend image: static React + 
                     app (php-fpm, Laravel)  ──▶ mysql (internal only)
                        │                     ──▶ redis (cache + queue, password, internal only)
                        │                     ──▶ ai-service (FastAPI, X-AI-Service-Key, internal only, /ready gate)
-                    worker (queue:work redis)   scheduler (schedule:work: reports:purge-expired)
+                    horizon (php artisan horizon: queues default + emails)   scheduler (schedule:work: reports:purge-expired)
 ```
 
 Only nginx publishes ports (80 → 301 https, 443). MySQL, Redis and the AI service have no published ports.
@@ -132,7 +132,7 @@ curl -fsS https://<host>/api/health && curl -fsS https://<host>/api/health/ready
 
 ## 9. Queue
 
-Production uses Redis queues with `queue:work redis --tries=2 --backoff=30 --timeout=900 --max-time=3600 --memory=512`.
+Production uses Redis queues supervised by **Laravel Horizon** (`horizon` service, `php artisan horizon`; supervisors and timeouts in `config/horizon.php`, sized with `HORIZON_DEFAULT_PROCESSES` / `HORIZON_EMAIL_PROCESSES`). Outbound e-mail runs on the dedicated `emails` queue — see `docs/EMAIL_SYSTEM.md` and `docs/EMAIL_CONFIGURATION.md` (Gmail SMTP via `MAIL_*` environment variables only).
 Jobs: document extraction/embeddings, assessment analysis, question generation, grading assistance, performance analysis,
 AI evaluation, institutional reports. All jobs have bounded tries/backoff and `failed()` handlers that persist a safe
 status; none retry indefinitely. Laravel Horizon is optional: `composer require laravel/horizon`, add `HORIZON_*` env and

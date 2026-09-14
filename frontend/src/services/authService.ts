@@ -34,6 +34,19 @@ export interface ChangePasswordPayload {
   password_confirmation: string;
 }
 
+export interface ResetPasswordPayload {
+  token: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+}
+
+export interface MessageResponse {
+  status: 'success' | 'error';
+  message?: string;
+  code?: string;
+}
+
 export const authService = {
   /**
    * Request Sanctum CSRF cookie initialization
@@ -90,6 +103,24 @@ export const authService = {
   changePassword: async (data: ChangePasswordPayload): Promise<AuthResponse> => {
     await getCsrfCookie();
     return apiClient<AuthResponse>('/auth/change-password', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+
+  /** Always resolves with a generic message — the server never reveals whether the account exists. */
+  forgotPassword: async (email: string): Promise<MessageResponse> => {
+    await getCsrfCookie();
+    return apiClient<MessageResponse>('/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    });
+  },
+
+  /** Token + e-mail come from the reset link; the new password is sent in the body only. */
+  resetPassword: async (data: ResetPasswordPayload): Promise<MessageResponse> => {
+    await getCsrfCookie();
+    return apiClient<MessageResponse>('/auth/reset-password', {
       method: 'POST',
       body: JSON.stringify(data),
     });

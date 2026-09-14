@@ -30,7 +30,8 @@ class NotificationPreferenceController extends Controller
                 'preferences' => NotificationPreference::matrixFor($request->user()->id),
                 'categories' => NotificationCategory::all(),
                 'mandatory_categories' => (array) config('notifications.mandatory_categories'),
-                'email_available' => config('mail.default') !== null && config('mail.default') !== 'log' && config('mail.default') !== 'array',
+                'email_available' => (bool) config('email.enabled', true) && config('mail.default') !== null && config('mail.default') !== 'log' && config('mail.default') !== 'array',
+                'email_mandatory_categories' => (array) config('email.mandatory_categories', []),
             ],
         ]);
     }
@@ -75,15 +76,22 @@ class NotificationPreferenceController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Notification preference updated.', 'data' => $row]);
     }
 
-    /** Mandatory types are always stored/returned as enabled regardless of the request. */
+    /** Mandatory types are always stored/returned as enabled regardless of the request (in-app and e-mail separately). */
     protected function apply(int $userId, string $type, bool $inApp, ?bool $email): array
     {
         $mandatory = NotificationPreference::isMandatory($type);
+        $emailMandatory = NotificationPreference::isEmailMandatory($type);
         $pref = NotificationPreference::updateOrCreate(
             ['user_id' => $userId, 'notification_type' => $type],
-            ['in_app_enabled' => $mandatory ? true : $inApp] + ($email !== null ? ['email_enabled' => $email] : [])
+            ['in_app_enabled' => $mandatory ? true : $inApp] + ($email !== null ? ['email_enabled' => $emailMandatory ? true : $email] : [])
         );
 
-        return ['notification_type' => $type, 'in_app_enabled' => (bool) $pref->in_app_enabled, 'email_enabled' => (bool) $pref->email_enabled, 'mandatory' => $mandatory];
+        return [
+            'notification_type' => $type,
+            'in_app_enabled' => (bool) $pref->in_app_enabled,
+            'email_enabled' => NotificationPreference::emailEnabled($userId, $type),
+            'mandatory' => $mandatory,
+            'email_mandatory' => $emailMandatory,
+        ];
     }
 }

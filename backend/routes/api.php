@@ -19,7 +19,9 @@ use App\Http\Controllers\Api\AssessmentController;
 use App\Http\Controllers\Api\AssessmentQuestionPaperController;
 use App\Http\Controllers\Api\AssessmentReportController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\EmailController;
 use App\Http\Controllers\Api\NewsletterController;
+use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\Api\ProfilePictureController;
 use App\Http\Controllers\Api\CoPoMappingController;
 use App\Http\Controllers\Api\CourseController;
@@ -52,6 +54,12 @@ Route::prefix('auth')->group(function () {
     Route::middleware('throttle:auth')->group(function () {
         Route::post('/register', [AuthController::class, 'register']);
         Route::post('/login', [AuthController::class, 'login']);
+    });
+
+    // Password recovery (Laravel password broker → queued FacultyLens reset e-mail). Generic responses; per-IP + per-address limits.
+    Route::middleware('throttle:password-reset')->group(function () {
+        Route::post('/forgot-password', [PasswordResetController::class, 'forgot']);
+        Route::post('/reset-password', [PasswordResetController::class, 'reset']);
     });
 
     // Protected auth routes
@@ -315,6 +323,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notification-preferences', [NotificationPreferenceController::class, 'index']);
     Route::put('/notification-preferences', [NotificationPreferenceController::class, 'update']);
     Route::patch('/notification-preferences/{type}', [NotificationPreferenceController::class, 'patch']);
+
+    // E-mail system: status, own delivery log, developer preview, operator test (never exposes SMTP configuration)
+    Route::get('/email/status', [EmailController::class, 'status']);
+    Route::get('/email/deliveries', [EmailController::class, 'deliveries']);
+    Route::get('/email/deliveries/{delivery}', [EmailController::class, 'delivery'])->whereNumber('delivery');
+    Route::get('/email/preview/{template}', [EmailController::class, 'preview']);
+    Route::post('/email/test', [EmailController::class, 'test'])->middleware('throttle:email-test');
 
     // STEP 37: Assessment Blueprint (planning + validation layer; never publishes/finalizes the assessment)
     Route::get('/assessments/{assessment}/blueprint', [AssessmentBlueprintController::class, 'show']);

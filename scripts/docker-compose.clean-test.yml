@@ -11,13 +11,23 @@ services:
       - APP_KEY=${CLEAN_APP_KEY}
       - CACHE_STORE=database
       - SESSION_DRIVER=database
-      - QUEUE_CONNECTION=database
-  queue-worker:
-    container_name: facultylens-clean-queue-worker
+      - QUEUE_CONNECTION=redis
+      - MAIL_MAILER=log
+  horizon:
+    container_name: facultylens-clean-horizon
     environment:
       - APP_KEY=${CLEAN_APP_KEY}
       - CACHE_STORE=database
       - SESSION_DRIVER=database
+      - MAIL_MAILER=log
+  redis:
+    container_name: facultylens-clean-redis
+    ports: !override
+      - "6380:6379"
+  mailpit:
+    container_name: facultylens-clean-mailpit
+    ports: !override
+      - "8125:8025"
   mysql:
     container_name: facultylens-clean-mysql
     ports: !override

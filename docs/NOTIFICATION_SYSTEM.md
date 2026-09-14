@@ -73,7 +73,7 @@ The full type list with category, default severity, recipients and wording is in
 
 Indexes: `(user_id, dismissed_at, created_at)`, `(user_id, read_at, dismissed_at)`, `(user_id, category, created_at)`, `(user_id, type)`, `expires_at`, unique `(user_id, dedupe_key)`.
 
-`notification_preferences`: `id, user_id FK, notification_type, in_app_enabled, email_enabled, timestamps`, unique `(user_id, notification_type)`. No row = in-app enabled / email disabled.
+`notification_preferences`: `id, user_id FK, notification_type, in_app_enabled, email_enabled (nullable), timestamps`, unique `(user_id, notification_type)`. No row = in-app enabled; `email_enabled` NULL = category default from `config/email.php` (see `docs/EMAIL_SYSTEM.md`).
 
 ## 4. API
 
@@ -96,7 +96,7 @@ Responses follow the project envelope `{status, message, data, meta}`; notificat
 
 ## 5. Preferences
 
-Faculty can switch off any non-mandatory type in-app (grouped by category on `/notifications?view=preferences`). Mandatory types are stored/returned as enabled regardless of input. `email_enabled` is persisted for future use; e-mail is only sent today for collaboration **invitations** (existing STEP 34 mail channel, which must reach people without an account) and `email_available` tells the UI whether a real mailer is configured.
+Faculty can switch off any non-mandatory type in-app and per e-mail (grouped by category on `/settings` and `/notifications?view=preferences`). Mandatory types are stored/returned as enabled regardless of input. `email_enabled` drives the e-mail channel (`EmailService`, `docs/EMAIL_SYSTEM.md`): SECURITY is e-mail-mandatory, a few low-value types are never e-mailed, and `email_available` tells the UI whether a real mailer is configured. Collaboration **invitations** to people without an account still use the STEP 34 `CollaborationNotification` mail.
 
 ## 6. Authorization & privacy
 
@@ -107,7 +107,7 @@ Faculty can switch off any non-mandatory type in-app (grouped by category on `/n
 
 ## 7. Queue / Redis / Horizon
 
-* `StoreNotificationJob` is dispatched `afterCommit()` on `config('notifications.queue.connection') ?: queue.default` — the database queue in dev (`queue-worker` container) and **Redis** in production (`worker` service runs `queue:work redis`). Horizon is not installed in this repository; the job exposes `tags()` so it groups cleanly if Horizon is added (see `docs/DEPLOYMENT.md` §9).
+* `StoreNotificationJob` is dispatched `afterCommit()` on `config('notifications.queue.connection') ?: queue.default` — Redis in dev and production, consumed by **Laravel Horizon** (`horizon` service; `config/horizon.php` supervisors `supervisor-default` for `default` and `supervisor-emails` for `emails`). The job exposes `tags()` so it groups cleanly in the Horizon UI. E-mails ride the separate `emails` queue (`SendFacultyLensEmailJob`).
 * Failure isolation: the domain operation is already committed before the job is queued; listeners are wrapped in `guard()`; `notify()` swallows dispatch errors. `NotificationQueueTest` proves a report/analysis stays `COMPLETED` when notification storage throws.
 * Retries never duplicate: `store()` checks `(user_id, dedupe_key)` and the unique index backs the race. `notifications.queue.enabled=false` writes inline (useful for tests that count `jobs` rows).
 * Env: `NOTIFICATIONS_QUEUE_ENABLED`, `NOTIFICATIONS_QUEUE_CONNECTION`, `NOTIFICATIONS_QUEUE`, `NOTIFICATIONS_QUEUE_TRIES`, `NOTIFICATIONS_POLL_INTERVAL`, `NOTIFICATIONS_FAILED_LOGIN_THRESHOLD`, `NOTIFICATIONS_FAILED_LOGIN_WINDOW`, `NOTIFICATIONS_READ_RETENTION_DAYS`, `NOTIFICATIONS_MAX_RETENTION_DAYS`.
@@ -139,7 +139,7 @@ Faculty can switch off any non-mandatory type in-app (grouped by category on `/n
 
 | Symptom | Check |
 |---|---|
-| Notification never appears | `php artisan queue:work` / `docker compose logs queue-worker`; `failed_jobs`; user preference for the type (`notification_preferences`); recipient role in `course_collaborators` (must be `ACTIVE`) |
+| Notification never appears | `docker compose logs horizon` / `/horizon`; `failed_jobs`; user preference for the type (`notification_preferences`); recipient role in `course_collaborators` (must be `ACTIVE`) |
 | Duplicate notification | should be impossible — inspect `dedupe_key` of both rows; a `NULL` key means the producer passed none and no entity |
 | Bell count differs from list | count excludes dismissed/expired rows; force `GET /api/notifications/unread-count` |
 | 404 on a valid-looking id | ids are uuids and owner-scoped; another user's id is deliberately indistinguishable from a missing one |

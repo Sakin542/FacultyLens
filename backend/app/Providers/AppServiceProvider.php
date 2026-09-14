@@ -67,6 +67,31 @@ class AppServiceProvider extends ServiceProvider
                 ], 429));
         });
 
+        // Password recovery: per IP and per target address. The 429 body is identical whether or not the account exists.
+        RateLimiter::for('password-reset', function (Request $request) {
+            $tooMany = fn () => response()->json([
+                'status' => 'error',
+                'message' => 'Too many password reset attempts. Please wait a few minutes and try again.',
+            ], 429);
+            $email = strtolower(trim((string) $request->input('email', '')));
+
+            return [
+                Limit::perMinute(5)->by('password-reset:ip:' . $request->ip())->response($tooMany),
+                Limit::perHour(20)->by('password-reset:ip-hour:' . $request->ip())->response($tooMany),
+                Limit::perHour(6)->by('password-reset:email:' . sha1($email))->response($tooMany),
+            ];
+        });
+
+        // Operator e-mail test messages (real SMTP traffic) per user per hour
+        RateLimiter::for('email-test', function (Request $request) {
+            return Limit::perHour(max(1, (int) config('email.test_rate_limit_per_hour', 5)))
+                ->by('email-test:' . ($request->user()?->id ?: $request->ip()))
+                ->response(fn () => response()->json([
+                    'status' => 'error',
+                    'message' => 'Too many test e-mails requested. Please try again later.',
+                ], 429));
+        });
+
         // STEP 32: Academic chat messages (configurable via CHAT_RATE_LIMIT)
         RateLimiter::for('academic-chat', function (Request $request) {
             return Limit::perMinute((int) config('academic_chat.rate_limit_per_minute', 30))

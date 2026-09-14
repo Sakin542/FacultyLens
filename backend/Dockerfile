@@ -18,7 +18,7 @@ RUN apk add --no-cache \
     mariadb-client \
     bash \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
-    && docker-php-ext-install pdo_mysql mbstring bcmath xml zip gd exif
+    && docker-php-ext-install pdo_mysql mbstring bcmath xml zip gd exif pcntl
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer

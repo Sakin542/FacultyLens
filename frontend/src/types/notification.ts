@@ -87,8 +87,14 @@ export interface NotificationPreference {
   category: NotificationCategory;
   label: string;
   in_app_enabled: boolean;
+  /** Effective e-mail flag (explicit choice, or the category default when never chosen). */
   email_enabled: boolean;
+  /** In-app channel cannot be muted (SECURITY / SYSTEM). */
   mandatory: boolean;
+  /** E-mail channel cannot be muted (SECURITY). */
+  email_mandatory?: boolean;
+  /** False for low-value types the platform never e-mails. */
+  email_available?: boolean;
 }
 
 export interface NotificationPreferencesResponse {
@@ -97,7 +103,9 @@ export interface NotificationPreferencesResponse {
     preferences: NotificationPreference[];
     categories: NotificationCategory[];
     mandatory_categories: NotificationCategory[];
+    /** Whether a real mail transport is configured (false = log/array mailer). */
     email_available: boolean;
+    email_mandatory_categories?: NotificationCategory[];
   };
 }
 

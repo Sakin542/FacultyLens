@@ -21,8 +21,8 @@ services:
     container_name: facultylens-perf-app
     env_file: !override ./performance/env/backend.env
 
-  worker:
-    container_name: facultylens-perf-worker
+  horizon:
+    container_name: facultylens-perf-horizon
     env_file: !override ./performance/env/backend.env
 
   scheduler:

@@ -30,7 +30,9 @@ class NotificationPreferenceTest extends TestCase
         $prefs = collect($res->json('data.preferences'));
 
         $this->assertSame(count(NotificationType::all()), $prefs->count());
-        $this->assertTrue($prefs->every(fn ($p) => $p['in_app_enabled'] === true && $p['email_enabled'] === false));
+        $this->assertTrue($prefs->every(fn ($p) => $p['in_app_enabled'] === true));
+        // e-mail defaults come from config/email.php per category (null stored flag = default)
+        $this->assertTrue($prefs->every(fn ($p) => $p['email_enabled'] === (bool) (in_array($p['category'], config('email.mandatory_categories')) || (!in_array($p['notification_type'], config('email.never_email_types')) && config("email.default_email_enabled.{$p['category']}")))));
         $security = $prefs->firstWhere('notification_type', 'SECURITY_ALERT');
         $this->assertTrue($security['mandatory']);
         $this->assertFalse($prefs->firstWhere('notification_type', 'AI_ANALYSIS_COMPLETED')['mandatory']);
