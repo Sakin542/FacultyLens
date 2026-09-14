@@ -122,8 +122,8 @@ export const QuestionPerformanceTable: React.FC<{ rows: QuestionPerformance[]; t
   }, [rows, sort, topicFilter]);
   return (
     <Section testId="question-performance" title="Question Performance" subtitle={topicFilter ? `Topic: ${topicFilter}` : undefined}
-      actions={<div className="flex items-center gap-2"><label htmlFor="qp-sort" className="text-xs text-sage-500">Sort</label>
-        <select id="qp-sort" value={sort} onChange={(e) => setSort(e.target.value as QSort)} className="rounded-md border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-2 py-1 text-xs">
+      actions={<div className="flex items-center gap-2 w-full sm:w-auto"><label htmlFor="qp-sort" className="text-xs text-sage-500">Sort</label>
+        <select id="qp-sort" value={sort} onChange={(e) => setSort(e.target.value as QSort)} className="flex-1 sm:flex-none min-w-0 h-9 sm:h-auto rounded-md border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-2 py-1 text-xs">
           <option value="worst">Worst performance</option><option value="gap">Highest gap</option><option value="number">Question number</option><option value="topic">Topic</option><option value="co">CO</option></select>
         {topicFilter && onClearTopic && <Button size="sm" variant="ghost" onClick={onClearTopic}>Clear topic</Button>}</div>}>
       {sorted.length === 0 ? <SectionEmpty title="No question-level performance" description="Question performance appears after a student performance analysis has been run." /> : (
@@ -167,7 +167,7 @@ export const AssessmentComparisonPanel: React.FC<{ assessments: AssessmentRow[];
     <tr key={label} className="border-t border-sage-100 dark:border-[#2A2A2A]"><th scope="row" className="py-1 pr-3 text-left font-medium">{label}</th>{comparison.assessments.map((a) => <td key={a.assessment_id} className="py-1 pr-3 tabular-nums">{get(a)}</td>)}</tr>
   );
   return (
-    <Section testId="assessment-comparison" title="Compare Assessments" subtitle="Select two or more assessments in scope." actions={<div className="flex flex-wrap gap-2"><Button size="sm" onClick={onCompare} disabled={selected.length < 2 || loading}>{loading ? 'Comparing…' : 'Compare'}</Button>{comparison && <Button size="sm" variant="ghost" onClick={onClear}>Clear</Button>}</div>}>
+    <Section testId="assessment-comparison" title="Compare Assessments" subtitle="Select two or more assessments in scope." actions={<div className="grid grid-cols-2 gap-2 w-full sm:flex sm:flex-wrap sm:w-auto"><Button size="sm" className="justify-center" onClick={onCompare} disabled={selected.length < 2 || loading}>{loading ? 'Comparing…' : 'Compare'}</Button>{comparison && <Button size="sm" variant="ghost" className="justify-center" onClick={onClear}>Clear</Button>}</div>}>
       {assessments.length === 0 ? <SectionEmpty title="No assessments in scope" description="Adjust the filters to include assessments." /> : (
         <div className="flex flex-wrap gap-2" role="group" aria-label="Assessments to compare">
           {assessments.map((a) => <label key={a.assessment_id} className="inline-flex items-center gap-1 text-xs border border-sage-200 dark:border-[#2A2A2A] rounded px-2 py-1"><input type="checkbox" checked={selected.includes(a.assessment_id)} onChange={() => onToggle(a.assessment_id)} disabled={!selected.includes(a.assessment_id) && selected.length >= 6} aria-label={`Select ${a.title} for comparison`} />{a.title}{a.course && <span className="text-sage-400"> · {a.course.code}</span>}</label>)}

@@ -48,8 +48,8 @@ export const Explain: React.FC<{ text?: string; label?: string }> = ({ text, lab
 
 export const Section: React.FC<{ title: string; explanation?: string; testId: string; children: React.ReactNode; actions?: React.ReactNode; className?: string; subtitle?: string }> = ({ title, explanation, testId, children, actions, className, subtitle }) => (
   <Card data-testid={testId} className={cn('p-4 space-y-3', className)}>
-    <div className="flex items-start justify-between gap-2">
-      <div><h3 className="text-sm font-semibold text-sage-800 dark:text-white inline-flex items-center">{title}<Explain text={explanation} /></h3>{subtitle && <p className="text-xs text-sage-500 mt-0.5">{subtitle}</p>}</div>
+    <div className="flex flex-wrap items-start justify-between gap-2">
+      <div className="min-w-0"><h3 className="text-sm font-semibold text-sage-800 dark:text-white inline-flex items-center">{title}<Explain text={explanation} /></h3>{subtitle && <p className="text-xs text-sage-500 mt-0.5">{subtitle}</p>}</div>
       {actions}
     </div>
     {children}
@@ -125,8 +125,8 @@ export const periodStart = (p: TrendPeriod, now = new Date()): Date | null => {
   }
 };
 export const PeriodPicker: React.FC<{ value: TrendPeriod; onChange: (p: TrendPeriod) => void; label: string }> = ({ value, onChange, label }) => (
-  <div role="group" aria-label={label} className="flex gap-1">
-    {PERIODS.map((p) => <button key={p} type="button" aria-pressed={value === p} onClick={() => onChange(p)} className={cn('px-2 py-0.5 rounded text-xs border', value === p ? 'bg-sage-700 text-white border-sage-700 dark:bg-white dark:text-black' : 'border-sage-200 dark:border-[#2A2A2A] text-sage-600 dark:text-sage-400')}>{p}</button>)}
+  <div role="group" aria-label={label} className="grid grid-cols-6 gap-1 w-full sm:flex sm:w-auto">
+    {PERIODS.map((p) => <button key={p} type="button" aria-pressed={value === p} onClick={() => onChange(p)} className={cn('px-2 py-1 sm:py-0.5 rounded text-xs border text-center min-w-0', value === p ? 'bg-sage-700 text-white border-sage-700 dark:bg-white dark:text-black' : 'border-sage-200 dark:border-[#2A2A2A] text-sage-600 dark:text-sage-400')}>{p}</button>)}
   </div>
 );
 
