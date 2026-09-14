@@ -151,18 +151,7 @@ export const Navbar: React.FC = () => {
           ))}
           <div className="pt-4 border-t border-sage-200 flex flex-col gap-2">
             {isAuthenticated ? (
-              <Link
-                to="/dashboard"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-3 py-2 rounded-lg border border-sage-300 bg-white"
-                aria-label={`Open your profile, ${displayName}`}
-              >
-                <ProfilePicture src={user?.profile_picture_url} name={displayName} size="sm" tone="dark" decorative />
-                <span className="min-w-0">
-                  <span className="block text-sm text-sage-800 truncate">{displayName}</span>
-                  <span className="block text-[11px] text-sage-500">Go to dashboard</span>
-                </span>
-              </Link>
+              <button type="button" className="w-full text-sm text-white rounded-lg px-4 py-2 bg-sage-700 hover:bg-sage-800" onClick={() => { setMobileMenuOpen(false); navigate('/dashboard'); }} data-testid="navbar-mobile-dashboard">Go to dashboard</button>
             ) : !loading && (
               <>
                 <button type="button" className="w-full text-sm text-sage-800 border border-sage-300 rounded-lg px-4 py-2 bg-white" onClick={() => { setMobileMenuOpen(false); navigate('/login'); }}>Sign In</button>
