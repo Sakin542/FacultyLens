@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { BrandMark } from './Navbar';
 import { ConfirmSignOutDialog } from '@/components/common/ConfirmSignOutDialog';
 import {
-  LayoutDashboard, BookOpen, FileCheck2, HelpCircle, BrainCircuit, History, MessageSquare, MessageSquareText, Sparkles, Gauge, BarChart3, Users, Settings, LogOut, X, User as UserIcon, ExternalLink, Leaf, FileBarChart2, Bell,
+  LayoutDashboard, BookOpen, FileCheck2, HelpCircle, BrainCircuit, History, MessageSquare, MessageSquareText, Sparkles, Gauge, BarChart3, Users, Settings, LogOut, X, User as UserIcon, ExternalLink, Leaf, FileBarChart2,
 } from 'lucide-react';
 
 export interface SidebarProps {
@@ -35,7 +35,6 @@ export const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
   ] },
   { title: 'Workspace', items: [
     { name: 'Collaboration', path: '/collaboration/invitations', icon: Users },
-    { name: 'Notifications', path: '/notifications', icon: Bell },
     { name: 'Feedback', path: '/feedback', icon: MessageSquare },
     { name: 'Settings', path: '/settings', icon: Settings },
   ] },
@@ -79,7 +78,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
       <div className="absolute inset-x-0 top-0 h-40 bg-white/5 blur-2xl pointer-events-none" aria-hidden="true" />
 
       <div className="relative flex items-center justify-between h-16 px-5 border-b border-white/10">
-        <NavLink to="/" onClick={onCloseMobile} aria-label="FacultyLens home"><BrandMark light /></NavLink>
+        <NavLink to="/dashboard" onClick={onCloseMobile} aria-label="FacultyLens dashboard"><BrandMark light /></NavLink>
         {mobileOpen && (
           <button type="button" className="p-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 md:hidden" onClick={onCloseMobile} aria-label="Close sidebar"><X className="w-5 h-5" /></button>
         )}

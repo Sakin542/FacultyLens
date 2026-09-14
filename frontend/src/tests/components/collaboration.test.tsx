@@ -4,7 +4,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { CollaboratorRoleBadge, PermissionBadge, CollaborationHeader, CollaborationEmptyState, CollaborationError, CollaborationLoading, getCollaborationErrorMessage } from '@/components/collaboration/CollaborationStates';
 import { CollaboratorList, CollaboratorCard, InvitationCard, InviteCollaboratorModal, ChangeRoleModal, RemoveCollaboratorModal } from '@/components/collaboration/CollaboratorPanels';
 import { CollaborationComments, CommentEditor, MentionSelector } from '@/components/collaboration/CollaborationComments';
-import { CollaborationActivity, CollaborationSummaryCard } from '@/components/collaboration/CollaborationActivity';
+import { CollaborationActivity, CollaborationSummaryCard, NotificationBell } from '@/components/collaboration/CollaborationActivity';
 import { CourseCollaboration } from '@/pages/CourseCollaboration';
 import { PendingInvitations, InvitationLanding } from '@/pages/Invitations';
 import { ApiError } from '@/services/api';
@@ -15,7 +15,7 @@ vi.mock('@/services/collaborationService', () => ({
     getCollaboration: vi.fn(), getCollaborators: vi.fn(), getMembers: vi.fn(), inviteCollaborator: vi.fn(), revokeInvitation: vi.fn(), changeCollaboratorRole: vi.fn(),
     removeCollaborator: vi.fn(), getMyInvitations: vi.fn(), previewInvitation: vi.fn(), acceptInvitation: vi.fn(), declineInvitation: vi.fn(), acceptInvitationById: vi.fn(),
     declineInvitationById: vi.fn(), getSummary: vi.fn(), getComments: vi.fn(), createComment: vi.fn(), updateComment: vi.fn(), deleteComment: vi.fn(), resolveComment: vi.fn(),
-    reopenComment: vi.fn(), getCollaborationActivity: vi.fn(),
+    reopenComment: vi.fn(), getCollaborationActivity: vi.fn(), getNotifications: vi.fn(), markNotificationRead: vi.fn(), markAllNotificationsRead: vi.fn(),
   },
 }));
 const authState: { user: { id: number; name: string } | null; loading: boolean } = { user: { id: 1, name: 'Dr. A' }, loading: false };
@@ -138,16 +138,20 @@ describe('STEP 34 collaboration components', () => {
     expect(screen.queryByTestId('comment-editor')).toBeNull();
   });
 
-  it('activity timeline paginates; summary card loads', async () => {
+  it('activity timeline paginates; summary card and bell load', async () => {
     svc.getCollaborationActivity.mockResolvedValueOnce({ status: 'success', data: [{ id: 1, action: 'COMMENT_CREATED', entity_type: 'CollaborationComment', entity_id: 1, actor: { id: 2, name: 'Dr. B' }, summary: 'Dr. B commented on question #4.', metadata: {}, created_at: new Date().toISOString() }], meta: { current_page: 1, last_page: 2, total: 2 } })
       .mockResolvedValueOnce({ status: 'success', data: [{ id: 2, action: 'COLLABORATION_ACCEPTED', entity_type: 'CourseCollaborator', entity_id: 1, actor: { id: 2, name: 'Dr. B' }, summary: 'Dr. B joined the course as Editor.', metadata: {}, created_at: '2026-09-01T10:00:00Z' }], meta: { current_page: 2, last_page: 2, total: 2 } });
     svc.getSummary.mockResolvedValue({ status: 'success', data: { shared_courses_count: 1, shared_courses: [{ id: 1, course_code: 'CSE101', course_name: 'DB', role: 'EDITOR' }], pending_invitations_count: 2, pending_invitations: [], unresolved_discussions_count: 3, unread_notifications_count: 1 } });
-    render(<MemoryRouter><CollaborationActivity courseId={1} /><CollaborationSummaryCard /></MemoryRouter>);
+    svc.getNotifications.mockResolvedValue({ status: 'success', data: [{ id: 'n1', read_at: null, created_at: null, title: 'Invitation', body: 'x' }], meta: { current_page: 1, last_page: 1, total: 1, unread_count: 1 } });
+    render(<MemoryRouter><CollaborationActivity courseId={1} /><CollaborationSummaryCard /><NotificationBell /></MemoryRouter>);
     await waitFor(() => expect(screen.getByTestId('activity-1')).toHaveTextContent('Dr. B commented'));
     expect(screen.getByText('Today')).toBeInTheDocument();
     fireEvent.click(screen.getByTestId('activity-load-more'));
     await waitFor(() => expect(screen.getByTestId('activity-2')).toBeInTheDocument());
     await waitFor(() => expect(screen.getByTestId('pending-invitations-count')).toHaveTextContent('2'));
+    await waitFor(() => expect(screen.getByTestId('unread-count')).toHaveTextContent('1'));
+    fireEvent.click(screen.getByLabelText('Notifications'));
+    expect(screen.getByText('Invitation')).toBeInTheDocument();
   });
 });
 

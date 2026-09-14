@@ -5,8 +5,10 @@ namespace App\Services;
 use App\Models\CollaborationComment;
 use App\Models\Course;
 use App\Models\User;
+use App\Notifications\CollaborationNotification;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
@@ -206,18 +208,33 @@ class CollaborationCommentService
 
     protected function notifyParticipants(User $actor, Course $course, CollaborationComment $comment, ?CollaborationComment $parent, array $mentions, string $type): void
     {
-        $participants = collect();
+        $recipients = collect($mentions);
         if ($parent) {
-            $participants->push($parent->user_id);
-            $participants = $participants->merge($parent->replies()->pluck('user_id'));
+            $recipients->push($parent->user_id);
+            $recipients = $recipients->merge($parent->replies()->pluck('user_id'));
         }
-        $participantIds = $participants->map(fn ($id) => (int) $id)->unique()->reject(fn (int $id) => $id === (int) $actor->id)->values()->all();
-        $mentionIds = array_values(array_map('intval', $mentions));
-        if ($participantIds === [] && $mentionIds === []) {
+        $recipientIds = $recipients->unique()->reject(fn ($id) => (int) $id === $actor->id)->values();
+        if ($recipientIds->isEmpty()) {
             return;
         }
-        // STEP 47: membership is re-verified by the listener; the notification pipeline never breaks the request.
-        event(new \App\Events\CommentCreated($comment, $course, $actor, $mentionIds, $participantIds));
+        $label = Str::of($type)->replace('_', ' ')->toString();
+        foreach (User::whereIn('id', $recipientIds)->get() as $user) {
+            if (!$this->access->isMember($user, $course)) {
+                continue;
+            }
+            try {
+                $user->notify(new CollaborationNotification([
+                    'event' => in_array($user->id, $mentions, true) ? 'MENTION_RECEIVED' : 'COLLABORATION_COMMENT_ADDED',
+                    'title' => in_array($user->id, $mentions, true) ? "{$actor->name} mentioned you" : "{$actor->name} replied to a discussion",
+                    'body' => Str::limit($comment->body, 160),
+                    'course_id' => $course->id, 'course_code' => $course->course_code, 'course_name' => $course->course_name,
+                    'actor_name' => $actor->name, 'comment_id' => $comment->id, 'target' => $label,
+                    'url' => rtrim(config('collaboration.frontend_url'), '/') . "/courses/{$course->id}/collaboration?comment={$comment->id}",
+                ]));
+            } catch (\Throwable) {
+                // notification failures never break the request
+            }
+        }
     }
 
     protected function courseIdOf(Model $model): ?int

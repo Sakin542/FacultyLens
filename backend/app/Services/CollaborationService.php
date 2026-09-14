@@ -111,9 +111,7 @@ class CollaborationService
             'course_id' => $course->id, 'role' => $role, 'invited_user_id' => $invitee?->id,
         ], $inviter);
 
-        // In-app notification (STEP 47 pipeline) + e-mail carrying the single-use link (the token is never stored in-app).
-        event(new \App\Events\CollaborationInvitationCreated($invitation, $inviter, $invitee));
-        $this->mail($invitee, [
+        $this->notify($invitee, [
             'event' => 'COLLABORATION_INVITATION_RECEIVED',
             'title' => 'FacultyLens Collaboration Invitation',
             'body' => "{$inviter->name} invited you to collaborate on {$course->course_code} — {$course->course_name} as " . ucfirst(strtolower($role)) . '.',
@@ -122,7 +120,7 @@ class CollaborationService
             'url' => rtrim(config('collaboration.frontend_url'), '/') . "/collaboration/invitations/{$token}",
             'action_text' => 'Review invitation',
             'expires_at' => $invitation->expires_at->toDayDateTimeString(),
-        ], $email);
+        ], true, $email);
 
         return ['invitation' => $invitation, 'token' => $token];
     }
@@ -178,7 +176,14 @@ class CollaborationService
         $this->access->forget($user, $course);
         CourseController::forgetCourseListCaches($course);
         $this->audit->log('COLLABORATION_ACCEPTED', $member, $member->id, ['course_id' => $course->id, 'role' => $member->role], $user);
-        event(new \App\Events\CollaborationInvitationAccepted($invitation->fresh(['course', 'inviter']), $member, $user));
+        $this->notify($invitation->inviter, [
+            'event' => 'COLLABORATION_INVITATION_ACCEPTED',
+            'title' => 'Collaboration invitation accepted',
+            'body' => "{$user->name} joined {$course->course_code} as " . ucfirst(strtolower($member->role)) . '.',
+            'course_id' => $course->id, 'course_code' => $course->course_code, 'course_name' => $course->course_name,
+            'actor_name' => $user->name, 'role' => $member->role,
+            'url' => rtrim(config('collaboration.frontend_url'), '/') . "/courses/{$course->id}/collaboration",
+        ]);
 
         return $member->load('user:id,name,email');
     }
@@ -201,7 +206,13 @@ class CollaborationService
         });
 
         $this->audit->log('COLLABORATION_DECLINED', $invitation, $invitation->id, ['course_id' => $invitation->course_id], $user);
-        event(new \App\Events\CollaborationInvitationDeclined($invitation->fresh(['course', 'inviter']), $user));
+        $this->notify($invitation->inviter, [
+            'event' => 'COLLABORATION_INVITATION_DECLINED',
+            'title' => 'Collaboration invitation declined',
+            'body' => "{$user->name} declined the invitation to {$invitation->course?->course_code}.",
+            'course_id' => $invitation->course_id, 'course_code' => $invitation->course?->course_code, 'course_name' => $invitation->course?->course_name,
+            'actor_name' => $user->name,
+        ]);
 
         return $invitation->fresh();
     }
@@ -257,7 +268,14 @@ class CollaborationService
         DB::transaction(fn () => $row->update(['role' => $role]));
         $this->access->forget($member, $course);
         $this->audit->log('COLLABORATOR_ROLE_CHANGED', $row, $row->id, ['course_id' => $course->id, 'from' => $from, 'to' => $role, 'member_id' => $member->id], $actor);
-        event(new \App\Events\CollaboratorRoleChanged($course, $member, $actor, $from, $role));
+        $this->notify($member, [
+            'event' => 'COLLABORATOR_ROLE_CHANGED',
+            'title' => 'Your collaboration role changed',
+            'body' => "{$actor->name} changed your role on {$course->course_code} from " . ucfirst(strtolower($from)) . ' to ' . ucfirst(strtolower($role)) . '.',
+            'course_id' => $course->id, 'course_code' => $course->course_code, 'course_name' => $course->course_name,
+            'actor_name' => $actor->name, 'role' => $role,
+            'url' => rtrim(config('collaboration.frontend_url'), '/') . "/courses/{$course->id}",
+        ]);
 
         return $row->fresh(['user:id,name,email']);
     }
@@ -281,7 +299,13 @@ class CollaborationService
         $this->access->forget($member, $course);
         CourseController::forgetCourseListCaches($course);
         $this->audit->log('COLLABORATOR_REMOVED', $row, $row->id, ['course_id' => $course->id, 'member_id' => $member->id, 'role' => $row->role], $actor);
-        event(new \App\Events\CollaboratorRemoved($course, $member, $actor, (string) $row->role));
+        $this->notify($member, [
+            'event' => 'COLLABORATOR_REMOVED',
+            'title' => 'Removed from a course collaboration',
+            'body' => "You no longer have access to {$course->course_code} — {$course->course_name}.",
+            'course_id' => $course->id, 'course_code' => $course->course_code, 'course_name' => $course->course_name,
+            'actor_name' => $actor->name,
+        ]);
     }
 
     /**
@@ -357,21 +381,17 @@ class CollaborationService
         }
     }
 
-    /**
-     * E-mail delivery only (invitation link). In-app delivery is handled by the STEP 47 notification pipeline.
-     * Recipients without an account receive the mail at the invited address.
-     */
-    protected function mail(?User $recipient, array $data, ?string $fallbackEmail = null): void
+    protected function notify(?User $recipient, array $data, bool $mail = false, ?string $fallbackEmail = null): void
     {
         try {
             if ($recipient) {
-                $recipient->notify(new CollaborationNotification($data, true));
-            } elseif ($fallbackEmail) {
+                $recipient->notify(new CollaborationNotification($data, $mail));
+            } elseif ($mail && $fallbackEmail) {
                 \Illuminate\Support\Facades\Notification::route('mail', $fallbackEmail)->notify(new CollaborationNotification($data, true));
             }
         } catch (\Throwable $e) {
-            // Never fail the request because the mail channel is unavailable.
-            Log::warning('CollaborationService: invitation mail failed: ' . $e->getMessage());
+            // Never fail the request because a mail/notification channel is unavailable.
+            Log::warning('CollaborationService: notification failed: ' . $e->getMessage());
         }
     }
 

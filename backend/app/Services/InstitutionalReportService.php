@@ -132,14 +132,11 @@ class InstitutionalReportService
                 'generated_at' => now(),
             ]);
             $this->audit->log('REPORT_GENERATION_COMPLETED', $report, $report->id, ['report_type' => $report->report_type, 'scope' => $report->scope_type, 'format' => $report->format, 'record_count' => $report->record_count, 'file_size' => $file['size']], $user);
-            // STEP 47: the report is COMPLETED regardless of whether the notification can be delivered (guarded listener)
-            event(new \App\Events\ReportGenerated($report));
         } catch (Throwable $e) {
             Log::error('Institutional report generation failed', ['report_id' => $report->id, 'error' => $e->getMessage()]);
             $safe = $e instanceof ReportValidationException ? $e->getMessage() : 'Report generation failed. Please try again.';
             $report->update(['status' => InstitutionalReport::STATUS_FAILED, 'error_message' => $safe]);
             $this->audit->log('REPORT_GENERATION_FAILED', $report, $report->id, ['report_type' => $report->report_type, 'scope' => $report->scope_type, 'reason' => $safe], $report->creator);
-            event(new \App\Events\ReportGenerationFailed($report));
         }
 
         return $report->refresh();

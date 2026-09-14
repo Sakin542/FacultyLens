@@ -55,7 +55,6 @@ class AnalyzeStudentPerformanceJob implements ShouldQueue, ShouldBeUnique
                 'status' => PerformanceAnalysisRun::STATUS_FAILED,
                 'error_message' => 'The performance analysis could not be completed. Please try again.',
             ]);
-            event(new \App\Events\PerformanceAnalysisFailed($run));
         }
     }
 }
