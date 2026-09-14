@@ -256,7 +256,6 @@ describe('STEP 33 QuestionGenerator page', () => {
     await waitFor(() => expect(screen.getByTestId('generation-loading')).toBeInTheDocument());
     await waitFor(() => expect(screen.getByTestId('generated-question-11')).toBeInTheDocument(), { timeout: 6000 });
     expect(screen.getByTestId('generation-status')).toHaveTextContent('Completed');
-    expect(screen.getByTestId('generation-disclaimer')).toBeInTheDocument();
 
     fireEvent.click(screen.getByTestId('approve-button'));
     await waitFor(() => expect(screen.getByTestId('add-to-assessment-button')).toBeInTheDocument());

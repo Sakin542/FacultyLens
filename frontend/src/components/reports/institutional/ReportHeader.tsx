@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, FileBarChart2, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, FileBarChart2 } from 'lucide-react';
 
 interface ReportHeaderProps {
   title: string;
@@ -30,10 +30,6 @@ export const ReportHeader: React.FC<ReportHeaderProps> = ({ title, subtitle, bac
             {badge}
           </div>
           {subtitle && <p className="text-xs text-sage-500 mt-1">{subtitle}</p>}
-          <p className="text-[11px] text-sage-400 mt-1 inline-flex items-center gap-1">
-            <ShieldCheck className="w-3.5 h-3.5 text-sage-600" />
-            Reports are evidence artifacts for authorized review — FacultyLens never changes grades, assessments or mappings automatically.
-          </p>
         </div>
       </div>
       {actions && <div className="flex flex-wrap items-center gap-2 shrink-0">{actions}</div>}

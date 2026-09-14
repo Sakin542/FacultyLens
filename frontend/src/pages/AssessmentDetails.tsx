@@ -471,7 +471,7 @@ export const AssessmentDetails: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Section 1: Question Paper File */}
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-lg bg-sage-100 dark:bg-[#2C2C2E] flex items-center justify-center text-sage-800 dark:text-white">
                 <FileText className="w-4 h-4" />
@@ -557,7 +557,7 @@ export const AssessmentDetails: React.FC = () => {
 
         {/* Section 2: Questions & Question Bank Context */}
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-lg bg-sage-100 dark:bg-[#2C2C2E] flex items-center justify-center text-sage-800 dark:text-white">
                 <HelpCircle className="w-4 h-4" />
@@ -565,7 +565,7 @@ export const AssessmentDetails: React.FC = () => {
               <h2 className="text-base font-bold text-sage-800 dark:text-white">Questions & Question Bank</h2>
             </div>
             {course && (
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <Link to={`/assessments/${assessment?.id ?? ''}/blueprint`} data-testid="blueprint-link">
                   <Button variant="outline" size="sm">
                     Blueprint

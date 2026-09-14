@@ -61,7 +61,7 @@ export const ReportRecommendationsSection: React.FC<ReportRecommendationsSection
       </div>
 
       {recommendations && recommendations.length > 0 ? (
-        <div className="border border-sage-200 rounded-lg overflow-hidden">
+        <div className="border border-sage-200 rounded-lg overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead className="bg-sage-100 border-b border-sage-200 text-sage-700 font-semibold">
               <tr>

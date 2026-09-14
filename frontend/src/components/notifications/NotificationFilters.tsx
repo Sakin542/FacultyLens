@@ -49,13 +49,13 @@ export const NotificationFilters: React.FC<NotificationFiltersProps> = ({ value,
             onClick={() => onChange(f.value)}
             onKeyDown={(e) => onKeyDown(e, i)}
             className={cn(
-              'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1E6F5C]',
-              selected ? 'bg-[#171717] text-white border-[#171717]' : 'bg-white text-[#171717] border-[#E7E2D8] hover:bg-[#F7F4EE]',
+              'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sage-700',
+              selected ? 'bg-sage-700 text-white border-sage-700' : 'bg-white text-sage-800 border-sage-200 hover:bg-sage-100',
             )}
           >
             {f.label}
             {f.value === 'unread' && typeof unreadCount === 'number' && unreadCount > 0 && (
-              <span className={cn('rounded-full px-1.5 text-[10px] tabular-nums', selected ? 'bg-white/20' : 'bg-[#F7F4EE] border border-[#E7E2D8]')} aria-label={`${unreadCount} unread`}>{unreadCount > 99 ? '99+' : unreadCount}</span>
+              <span className={cn('rounded-full px-1.5 text-[10px] tabular-nums', selected ? 'bg-white/20' : 'bg-sage-100 border border-sage-200')} aria-label={`${unreadCount} unread`}>{unreadCount > 99 ? '99+' : unreadCount}</span>
             )}
           </button>
         );

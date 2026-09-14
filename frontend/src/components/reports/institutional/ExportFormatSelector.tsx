@@ -20,7 +20,7 @@ interface ExportFormatSelectorProps {
 export const ExportFormatSelector: React.FC<ExportFormatSelectorProps> = ({ value, onChange, allowed, disabled, largeDataset }) => (
   <div>
     <p className="block text-xs font-medium text-sage-700 mb-1.5">Format</p>
-    <div role="radiogroup" aria-label="Export format" className="grid grid-cols-3 gap-2">
+    <div role="radiogroup" aria-label="Export format" className="grid grid-cols-1 sm:grid-cols-3 gap-2">
       {FORMATS.filter((f) => !allowed || allowed.includes(f.key)).map((f) => {
         const active = value === f.key;
         const Icon = f.icon;

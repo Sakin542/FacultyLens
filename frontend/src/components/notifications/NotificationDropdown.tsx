@@ -61,21 +61,21 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ open
       role="dialog"
       aria-label="Notifications"
       data-testid="notification-dropdown"
-      className={cn('absolute right-0 mt-2 w-[min(92vw,380px)] rounded-xl border border-[#E7E2D8] bg-white shadow-lg z-30 overflow-hidden text-sm')}
+      className={cn('absolute right-0 mt-2 w-[min(92vw,380px)] rounded-xl border border-sage-200 bg-white shadow-lg z-30 overflow-hidden text-sm')}
       onBlur={(e) => { if (!panelRef.current?.contains(e.relatedTarget as Node) && e.relatedTarget !== anchorRef.current) onClose(); }}
     >
-      <div className="flex items-center justify-between gap-2 px-3 py-2.5 border-b border-[#E7E2D8] bg-[#F7F4EE]">
-        <h2 className="text-sm font-semibold text-[#171717]">
+      <div className="flex items-center justify-between gap-2 px-3 py-2.5 border-b border-sage-200 bg-sage-100">
+        <h2 className="text-sm font-semibold text-sage-800">
           Notifications
-          {unreadCount > 0 && <span className="ml-1.5 text-xs font-normal text-[#6B6B63]">({unreadCount} unread)</span>}
+          {unreadCount > 0 && <span className="ml-1.5 text-xs font-normal text-sage-500">({unreadCount} unread)</span>}
         </h2>
         <div className="flex items-center gap-1">
           {unreadCount > 0 && (
-            <button type="button" onClick={() => { void markAllAsRead().catch(() => undefined); }} className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-[#1E6F5C] hover:bg-white focus-visible:outline-2 focus-visible:outline-[#1E6F5C]" data-testid="dropdown-mark-all-read">
+            <button type="button" onClick={() => { void markAllAsRead().catch(() => undefined); }} className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-sage-700 hover:bg-white focus-visible:outline-2 focus-visible:outline-sage-700" data-testid="dropdown-mark-all-read">
               <CheckCheck className="w-3.5 h-3.5" aria-hidden="true" /> Mark all read
             </button>
           )}
-          <Link to="/notifications?view=preferences" onClick={onClose} className="p-1.5 rounded-md text-[#6B6B63] hover:text-[#171717] hover:bg-white focus-visible:outline-2 focus-visible:outline-[#1E6F5C]" aria-label="Notification preferences">
+          <Link to="/notifications?view=preferences" onClick={onClose} className="p-1.5 rounded-md text-sage-500 hover:text-sage-800 hover:bg-white focus-visible:outline-2 focus-visible:outline-sage-700" aria-label="Notification preferences">
             <Settings2 className="w-4 h-4" aria-hidden="true" />
           </Link>
         </div>
@@ -85,8 +85,8 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ open
         <NotificationList notifications={notifications} loading={loading} error={error} onRetry={() => { void refresh(); }} onOpen={onOpen} onDismiss={(id) => { void dismiss(id).catch(() => undefined); }} compact aria-label="Recent notifications" />
       </div>
 
-      <div className="border-t border-[#E7E2D8] bg-white px-3 py-2 text-center">
-        <Link to="/notifications" onClick={onClose} className="text-xs font-medium text-[#1E6F5C] hover:underline focus-visible:outline-2 focus-visible:outline-[#1E6F5C] rounded" data-testid="dropdown-view-all">
+      <div className="border-t border-sage-200 bg-white px-3 py-2 text-center">
+        <Link to="/notifications" onClick={onClose} className="text-xs font-medium text-sage-700 hover:underline focus-visible:outline-2 focus-visible:outline-sage-700 rounded" data-testid="dropdown-view-all">
           View all notifications
         </Link>
       </div>

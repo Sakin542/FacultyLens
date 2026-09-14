@@ -89,10 +89,10 @@ export const DifficultyDistribution: React.FC<{ data: DifficultyData }> = ({ dat
     {data.total_questions === 0 ? <SectionEmpty title="No questions in scope" description="Add questions to an assessment to see the difficulty profile." /> : (
       <>
         <Bars ariaLabel="Difficulty distribution versus target" rows={data.distribution.map((d) => ({ label: humanize(d.level), value: d.percentage, target: d.target_percentage, count: d.count, tone: d.level === 'easy' ? 'good' : d.level === 'hard' ? 'bad' : 'default' }))} />
-        <table className="w-full text-xs"><caption className="sr-only">Difficulty actual versus target</caption>
+        <div className="overflow-x-auto"><table className="w-full text-xs"><caption className="sr-only">Difficulty actual versus target</caption>
           <thead><tr className="text-left text-sage-500"><th className="py-0.5">Level</th><th className="py-0.5 text-right">Actual</th><th className="py-0.5 text-right">Target</th><th className="py-0.5 text-right">Difference</th></tr></thead>
           <tbody>{data.distribution.map((d) => <tr key={d.level} className="border-t border-sage-100 dark:border-[#2A2A2A]"><td className="py-0.5">{humanize(d.level)}</td><td className="py-0.5 text-right tabular-nums">{fmtPct(d.percentage)}</td><td className="py-0.5 text-right tabular-nums">{d.target_percentage}%</td><td className="py-0.5 text-right tabular-nums">{d.difference === null ? 'N/A' : `${d.difference > 0 ? '+' : ''}${d.difference}%`}</td></tr>)}</tbody>
-        </table>
+        </table></div>
         {data.unclassified > 0 && <p className="text-xs text-sage-500">{data.unclassified} question(s) have no difficulty level yet.</p>}
         {data.total_deviation !== null && <p className="text-xs text-sage-500">Total deviation from target {data.total_deviation}% (slight &gt; {data.bands.slight_deviation}%, significant &gt; {data.bands.significant_deviation}%).</p>}
       </>

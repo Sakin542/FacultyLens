@@ -65,7 +65,6 @@ export const InstitutionalReports: React.FC = () => {
     <div className="space-y-5">
       <ReportHeader
         title="Institutional Reports"
-        subtitle="Generate, preview and export institution-ready evidence: quality, coverage, performance, rubrics, grading, AI evaluation and version history."
         actions={
           <>
             <Button type="button" variant="outline" size="sm" onClick={() => load()} leftIcon={<RefreshCw className="w-4 h-4" />} disabled={loading}>Refresh</Button>
@@ -103,7 +102,7 @@ export const InstitutionalReports: React.FC = () => {
           {data.pagination.last_page > 1 && (
             <div className="flex items-center justify-between text-xs text-sage-600">
               <span>Page {data.pagination.current_page} of {data.pagination.last_page}</span>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <Button type="button" variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>Previous</Button>
                 <Button type="button" variant="outline" size="sm" disabled={page >= data.pagination.last_page} onClick={() => setPage((p) => p + 1)}>Next</Button>
               </div>

@@ -74,7 +74,7 @@ export const CollaborationSummaryCard: React.FC<{ className?: string }> = ({ cla
       {error && <CollaborationError message={error} />}
       {!summary && !error ? <CollaborationLoading /> : summary && (
         <>
-          <dl className="grid grid-cols-3 gap-2 text-center">
+          <dl className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-center">
             <div className="rounded-lg bg-sage-100 dark:bg-[#1F1F1F] p-2"><dt className="text-[11px] text-sage-500">Pending invitations</dt><dd className="text-lg font-bold text-sage-800 dark:text-white" data-testid="pending-invitations-count">{summary.pending_invitations_count}</dd></div>
             <div className="rounded-lg bg-sage-100 dark:bg-[#1F1F1F] p-2"><dt className="text-[11px] text-sage-500">Courses shared with you</dt><dd className="text-lg font-bold text-sage-800 dark:text-white">{summary.shared_courses_count}</dd></div>
             <div className="rounded-lg bg-sage-100 dark:bg-[#1F1F1F] p-2"><dt className="text-[11px] text-sage-500">Unresolved discussions</dt><dd className="text-lg font-bold text-sage-800 dark:text-white">{summary.unresolved_discussions_count}</dd></div>

@@ -241,17 +241,19 @@ export const QuestionBank: React.FC = () => {
 
       {/* Course Selector Bar */}
       <div className="p-4 bg-white dark:bg-[#1C1C1E] rounded-xl border border-sage-200 dark:border-[#2C2C2E] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <BookOpen className="w-4 h-4 text-sage-500" />
-          <span className="text-xs font-semibold text-sage-500">Selected Course:</span>
+        <div className="flex flex-wrap items-center gap-2">
+          <BookOpen className="w-4 h-4 text-sage-500 shrink-0" />
+          <span className="text-xs font-semibold text-sage-500 whitespace-nowrap">Selected Course:</span>
           <select
             value={selectedCourseId}
             onChange={(e) => {
               setSelectedCourseId(e.target.value);
               setCurrentPage(1);
             }}
-            className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] px-3 py-1.5 text-xs font-bold text-sage-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sage-600"
+            aria-label="Selected course"
+            className="min-w-[14rem] w-full sm:w-auto sm:max-w-md h-9 rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] px-3 text-xs font-bold text-sage-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sage-600"
           >
+            {courses.length === 0 && <option value="">No courses available</option>}
             {courses.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.course_code || c.code} — {c.course_name || c.title}

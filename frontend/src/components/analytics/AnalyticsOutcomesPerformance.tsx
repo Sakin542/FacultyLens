@@ -167,7 +167,7 @@ export const AssessmentComparisonPanel: React.FC<{ assessments: AssessmentRow[];
     <tr key={label} className="border-t border-sage-100 dark:border-[#2A2A2A]"><th scope="row" className="py-1 pr-3 text-left font-medium">{label}</th>{comparison.assessments.map((a) => <td key={a.assessment_id} className="py-1 pr-3 tabular-nums">{get(a)}</td>)}</tr>
   );
   return (
-    <Section testId="assessment-comparison" title="Compare Assessments" subtitle="Select two or more assessments in scope." actions={<div className="flex gap-2"><Button size="sm" onClick={onCompare} disabled={selected.length < 2 || loading}>{loading ? 'Comparing…' : 'Compare'}</Button>{comparison && <Button size="sm" variant="ghost" onClick={onClear}>Clear</Button>}</div>}>
+    <Section testId="assessment-comparison" title="Compare Assessments" subtitle="Select two or more assessments in scope." actions={<div className="flex flex-wrap gap-2"><Button size="sm" onClick={onCompare} disabled={selected.length < 2 || loading}>{loading ? 'Comparing…' : 'Compare'}</Button>{comparison && <Button size="sm" variant="ghost" onClick={onClear}>Clear</Button>}</div>}>
       {assessments.length === 0 ? <SectionEmpty title="No assessments in scope" description="Adjust the filters to include assessments." /> : (
         <div className="flex flex-wrap gap-2" role="group" aria-label="Assessments to compare">
           {assessments.map((a) => <label key={a.assessment_id} className="inline-flex items-center gap-1 text-xs border border-sage-200 dark:border-[#2A2A2A] rounded px-2 py-1"><input type="checkbox" checked={selected.includes(a.assessment_id)} onChange={() => onToggle(a.assessment_id)} disabled={!selected.includes(a.assessment_id) && selected.length >= 6} aria-label={`Select ${a.title} for comparison`} />{a.title}{a.course && <span className="text-sage-400"> · {a.course.code}</span>}</label>)}
@@ -201,10 +201,10 @@ export const CourseHistoryTable: React.FC<{ history: CourseHistory | null; loadi
     {error && <p role="alert" className="text-sm text-red-700 dark:text-red-300">{error} {onRetry && <button type="button" className="underline" onClick={onRetry}>Retry</button>}</p>}
     {history && history.terms.length === 0 && <SectionEmpty title="No historical records" description="Only actual analyzed assessments are shown here." />}
     {history && history.terms.length > 0 && (
-      <table className="w-full text-sm"><caption className="sr-only">Course analytics by term</caption>
+      <div className="overflow-x-auto"><table className="w-full text-sm"><caption className="sr-only">Course analytics by term</caption>
         <thead><tr className="text-left text-xs uppercase text-sage-500"><th className="py-1 pr-3">Term</th><th className="py-1 pr-3 text-right">Assessments</th><th className="py-1 pr-3 text-right">Quality</th><th className="py-1 pr-3 text-right">LO alignment</th><th className="py-1 pr-3 text-right">Performance</th></tr></thead>
         <tbody>{history.terms.map((t) => <tr key={t.term} className="border-t border-sage-100 dark:border-[#2A2A2A]"><td className="py-1 pr-3 font-medium">{t.term}</td><td className="py-1 pr-3 text-right tabular-nums">{t.assessments}</td><td className="py-1 pr-3 text-right tabular-nums">{fmtNum(t.average_quality)}<span className="text-xs text-sage-400"> ({t.analyzed_assessments})</span></td><td className="py-1 pr-3 text-right tabular-nums">{fmtNum(t.average_lo_alignment)}</td><td className="py-1 pr-3 text-right tabular-nums">{fmtPct(t.average_performance)}<span className="text-xs text-sage-400"> ({t.performance_assessments})</span></td></tr>)}</tbody>
-      </table>
+      </table></div>
     )}
   </Section>
 );

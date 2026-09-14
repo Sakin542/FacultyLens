@@ -22,7 +22,7 @@ export const CATEGORY_ICONS: Record<NotificationCategory, React.ElementType> = {
 
 /** Severity is conveyed by icon + text label, never by colour alone. */
 export const SEVERITY_META: Record<NotificationSeverity, { icon: React.ElementType; className: string; label: string }> = {
-  INFO: { icon: Info, className: 'text-[#4C6B62] bg-[#F7F4EE] border-[#E7E2D8]', label: SEVERITY_LABELS.INFO },
+  INFO: { icon: Info, className: 'text-sage-500 bg-sage-100 border-sage-200', label: SEVERITY_LABELS.INFO },
   SUCCESS: { icon: CheckCircle2, className: 'text-[#166534] bg-[#F0FDF4] border-[#BBF7D0]', label: SEVERITY_LABELS.SUCCESS },
   WARNING: { icon: AlertTriangle, className: 'text-[#92400E] bg-[#FFFBEB] border-[#FDE68A]', label: SEVERITY_LABELS.WARNING },
   ERROR: { icon: XCircle, className: 'text-[#991B1B] bg-[#FEF2F2] border-[#FECACA]', label: SEVERITY_LABELS.ERROR },

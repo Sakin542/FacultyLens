@@ -106,10 +106,10 @@ const CmpTable: React.FC<{ title: string; dim: ComparisonDimension }> = ({ title
   if (!dim.configured || rows.length === 0) return <div><p className="text-xs font-semibold uppercase tracking-wide text-sage-500">{title}</p><p className="text-xs text-sage-400">{dim.message ?? 'Not configured'}</p></div>;
   return (
     <div><p className="text-xs font-semibold uppercase tracking-wide text-sage-500">{title} <span className="font-normal normal-case">({dim.basis}-based)</span></p>
-      <table className="w-full text-sm"><caption className="sr-only">{title} target versus actual</caption>
+      <div className="overflow-x-auto"><table className="w-full text-sm"><caption className="sr-only">{title} target versus actual</caption>
         <thead><tr className="text-left text-xs text-sage-500"><th className="py-0.5">Item</th><th className="py-0.5 text-right">Target</th><th className="py-0.5 text-right">Actual</th><th className="py-0.5 text-right">Diff</th><th className="py-0.5">Status</th></tr></thead>
         <tbody>{rows.map((r) => <tr key={r.key} className="border-t border-sage-100 dark:border-[#2A2A2A]"><td className="py-0.5">{r.label}</td><td className="py-0.5 text-right tabular-nums">{r.target_percentage}%</td><td className="py-0.5 text-right tabular-nums">{r.actual_percentage === null ? '—' : `${r.actual_percentage}%`}</td><td className="py-0.5 text-right tabular-nums">{r.difference === null ? '—' : `${r.difference > 0 ? '+' : ''}${r.difference}%`}</td><td className="py-0.5"><Badge variant={statusVariant(r.status)} size="sm">{humanize(r.status)}</Badge></td></tr>)}</tbody>
-      </table>
+      </table></div>
     </div>
   );
 };

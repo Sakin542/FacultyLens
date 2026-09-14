@@ -58,7 +58,7 @@ export const BlueprintSectionEditor: React.FC<{ value: BlueprintInput; onChange:
   const update = (i: number, patch: Partial<BlueprintInput['sections'][number]>) => onChange({ ...value, sections: sections.map((s, j) => (j === i ? { ...s, ...patch } : s)) });
   return (
     <Card data-testid="blueprint-section-editor" className="p-4 space-y-3">
-      <div className="flex items-center justify-between"><h3 className="text-sm font-semibold text-sage-800 dark:text-white">Sections & question structure</h3>
+      <div className="flex flex-wrap items-center justify-between gap-2"><h3 className="text-sm font-semibold text-sage-800 dark:text-white">Sections & question structure</h3>
         <Button type="button" size="sm" variant="outline" onClick={() => onChange({ ...value, sections: [...sections, { title: `Section ${String.fromCharCode(65 + sections.length)}`, section_order: sections.length + 1, question_type: 'mcq', question_count: 1, marks_per_question: 1, instructions: null }] })}><Plus className="w-3.5 h-3.5 mr-1" aria-hidden="true" />Add section</Button></div>
       {sections.length === 0 && <p className="text-xs text-sage-500">No sections yet. Sections define question type, count and marks per question (e.g. Section A: MCQ 10 × 1 = 10).</p>}
       {sections.map((s, i) => (
@@ -89,7 +89,7 @@ export const BlueprintQuestionStructure: React.FC<{ value: BlueprintInput; onCha
   const marks = rows.reduce((s, r) => s + r.target_count * (r.marks_each ?? 0), 0);
   return (
     <Card data-testid="blueprint-question-structure" className="p-4 space-y-2">
-      <div className="flex items-center justify-between"><h3 className="text-sm font-semibold text-sage-800 dark:text-white">Question type distribution</h3>
+      <div className="flex flex-wrap items-center justify-between gap-2"><h3 className="text-sm font-semibold text-sage-800 dark:text-white">Question type distribution</h3>
         <Button type="button" size="sm" variant="outline" onClick={() => set([...rows, { question_type: QUESTION_TYPES.find((t) => !rows.some((r) => r.question_type === t)) ?? 'descriptive', target_count: 1, marks_each: 1 }])} disabled={rows.length >= QUESTION_TYPES.length}><Plus className="w-3.5 h-3.5 mr-1" aria-hidden="true" />Add type</Button></div>
       {rows.length === 0 && <p className="text-xs text-sage-500">Optional. Leave empty to rely on sections.</p>}
       {rows.map((r, i) => (
@@ -117,10 +117,10 @@ const PercentTable: React.FC<{ testId: string; title: string; keys: readonly str
   const configured = rows.some((r) => r.target_percentage !== null || r.target_count !== null);
   return (
     <Card data-testid={testId} className="p-4 space-y-2">
-      <div className="flex items-center justify-between gap-2"><h3 className="text-sm font-semibold text-sage-800 dark:text-white">{title}</h3>
+      <div className="flex flex-wrap items-center justify-between gap-2"><h3 className="text-sm font-semibold text-sage-800 dark:text-white">{title}</h3>
         <div role="group" aria-label={`${title} input mode`} className="flex gap-1 text-xs">{(['percentage', 'count'] as const).map((m) => <button key={m} type="button" aria-pressed={mode === m} onClick={() => onMode(m)} className={`px-2 py-0.5 rounded border ${mode === m ? 'bg-sage-700 text-white border-sage-700 dark:bg-white dark:text-black' : 'border-sage-200 dark:border-[#2A2A2A]'}`}>{m === 'percentage' ? '%' : 'Count'}</button>)}</div>
         <Button type="button" size="sm" variant="ghost" onClick={() => onChange([])}>Clear</Button></div>
-      <table className="w-full text-sm"><caption className="sr-only">{title} targets</caption>
+      <div className="overflow-x-auto"><table className="w-full text-sm"><caption className="sr-only">{title} targets</caption>
         <thead><tr className="text-left text-xs text-sage-500"><th className="py-1">Level</th><th className="py-1">{mode === 'percentage' ? 'Target %' : 'Target count'}</th>{targets && <th className="py-1">STEP 13 target</th>}<th className="py-1">Derived</th></tr></thead>
         <tbody>{keys.map((k) => {
           const r = get(k);
@@ -137,7 +137,7 @@ const PercentTable: React.FC<{ testId: string; title: string; keys: readonly str
             </tr>
           );
         })}</tbody>
-      </table>
+      </table></div>
       {configured && mode === 'percentage' && <Hint ok={Math.abs(pctSum - 100) < 0.5}>Total {Math.round(pctSum * 10) / 10}%{Math.abs(pctSum - 100) >= 0.5 ? ' — must equal 100% (blueprint requires correction)' : ' ✓'}</Hint>}
       {configured && mode === 'count' && <Hint ok={cntSum === total}>Total {cntSum} of {total} questions{cntSum !== total ? ' — counts must add up to the question count' : ' ✓'}</Hint>}
       {note && <p className="text-xs text-sage-400">{note}</p>}
@@ -173,7 +173,7 @@ export const BlueprintOutcomeDistribution: React.FC<{ value: BlueprintInput; onC
     <Card data-testid="blueprint-outcomes" className="p-4 space-y-3">
       <h3 className="text-sm font-semibold text-sage-800 dark:text-white">Learning outcome (CO) coverage</h3>
       {outcomes.length === 0 ? <p className="text-xs text-sage-500">This course has no learning outcomes yet.</p> : (
-        <table className="w-full text-sm"><caption className="sr-only">Course outcome targets</caption>
+        <div className="overflow-x-auto"><table className="w-full text-sm"><caption className="sr-only">Course outcome targets</caption>
           <thead><tr className="text-left text-xs text-sage-500"><th className="py-1">Outcome</th><th className="py-1">Target %</th><th className="py-1">Target marks</th><th className="py-1">Questions</th></tr></thead>
           <tbody>{outcomes.map((o) => {
             const r = los.find((x) => x.learning_outcome_id === o.id);
@@ -187,7 +187,7 @@ export const BlueprintOutcomeDistribution: React.FC<{ value: BlueprintInput; onC
               </tr>
             );
           })}</tbody>
-        </table>
+        </table></div>
       )}
       {los.some((r) => r.target_percentage !== null) && <Hint ok={Math.abs(loSum - 100) < 0.5}>CO total {Math.round(loSum * 10) / 10}%{Math.abs(loSum - 100) >= 0.5 ? ' — must equal 100%' : ' ✓'}</Hint>}
       <h3 className="text-sm font-semibold text-sage-800 dark:text-white pt-2">Program outcome (PO) coverage</h3>
@@ -208,7 +208,7 @@ export const BlueprintTopicDistribution: React.FC<{ value: BlueprintInput; onCha
   const count = rows.reduce((s, r) => s + (r.target_count ?? 0), 0);
   return (
     <Card data-testid="blueprint-topics" className="p-4 space-y-2">
-      <div className="flex items-center justify-between"><h3 className="text-sm font-semibold text-sage-800 dark:text-white">Topic coverage</h3><Button type="button" size="sm" variant="outline" onClick={() => set([...rows, { topic: '', target_count: 1, target_marks: null }])}><Plus className="w-3.5 h-3.5 mr-1" aria-hidden="true" />Add topic</Button></div>
+      <div className="flex flex-wrap items-center justify-between gap-2"><h3 className="text-sm font-semibold text-sage-800 dark:text-white">Topic coverage</h3><Button type="button" size="sm" variant="outline" onClick={() => set([...rows, { topic: '', target_count: 1, target_marks: null }])}><Plus className="w-3.5 h-3.5 mr-1" aria-hidden="true" />Add topic</Button></div>
       {rows.length === 0 && <p className="text-xs text-sage-500">Optional. Topics are matched against AI-detected question topics during comparison.</p>}
       {rows.map((r, i) => (
         <div key={i} className="grid grid-cols-2 md:grid-cols-4 gap-2 items-end">
@@ -232,7 +232,7 @@ export const BlueprintQuestionPlan: React.FC<{ value: BlueprintInput; onChange: 
   const upd = (i: number, patch: Partial<BlueprintInput['items'][number]>) => set(items.map((x, j) => (j === i ? { ...x, ...patch } : x)));
   return (
     <Card data-testid="blueprint-question-plan" className="p-4 space-y-2">
-      <div className="flex items-center justify-between"><div><h3 className="text-sm font-semibold text-sage-800 dark:text-white">Cross-dimension question plan</h3><p className="text-xs text-sage-500">Rows like “CO2 / Analyze / Medium / Problem solving — 2 × 5 marks” drive the CO × difficulty and CO × Bloom matrices and the STEP 33 hand-off.</p></div>
+      <div className="flex flex-wrap items-center justify-between gap-2"><div><h3 className="text-sm font-semibold text-sage-800 dark:text-white">Cross-dimension question plan</h3><p className="text-xs text-sage-500">Rows like “CO2 / Analyze / Medium / Problem solving — 2 × 5 marks” drive the CO × difficulty and CO × Bloom matrices and the STEP 33 hand-off.</p></div>
         <Button type="button" size="sm" variant="outline" onClick={() => set([...items, { section_order: value.sections[0]?.section_order ?? null, topic: null, learning_outcome_id: outcomes[0]?.id ?? null, program_outcome_id: null, question_type: value.sections[0]?.question_type ?? 'descriptive', difficulty_level: 'medium', cognitive_level: 'Apply', question_count: 1, marks_each: value.sections[0]?.marks_per_question ?? 1 }])}><Plus className="w-3.5 h-3.5 mr-1" aria-hidden="true" />Add row</Button></div>
       {items.length > 0 && (
         <div className="overflow-x-auto">
@@ -296,7 +296,7 @@ export const BlueprintForm: React.FC<{
       </div>
       <BlueprintQuestionPlan value={value} onChange={setValue} outcomes={outcomes} programOutcomes={programOutcomes} />
       {error && <p role="alert" className="text-sm text-red-700 dark:text-red-300">{error}</p>}
-      <div className="flex justify-end gap-2">
+      <div className="flex flex-wrap justify-end gap-2">
         {onCancel && <Button type="button" variant="ghost" size="sm" onClick={onCancel} disabled={saving}>Cancel</Button>}
         <Button type="submit" size="sm" disabled={saving}>{saving ? 'Saving…' : submitLabel}</Button>
       </div>

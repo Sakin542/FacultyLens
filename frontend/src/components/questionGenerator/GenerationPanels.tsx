@@ -135,7 +135,7 @@ export const AddToAssessmentModal: React.FC<{
           {assessments.map((a) => <option key={a.id} value={String(a.id)}>{a.title}{a.total_marks != null ? ` (${a.total_marks} marks)` : ''}</option>)}
         </select>
       </label>
-      <div className="flex justify-end gap-2">
+      <div className="flex flex-wrap justify-end gap-2">
         <Button variant="ghost" size="sm" onClick={onClose}>Cancel</Button>
         <Button size="sm" disabled={!assessmentId} isLoading={submitting} onClick={() => void onConfirm(assessmentId)} data-testid="confirm-add-question">Add question</Button>
       </div>
@@ -164,7 +164,7 @@ export const RegenerateQuestionModal: React.FC<{
       </div>
       <textarea aria-label="Feedback note" value={note} onChange={(e) => setNote(e.target.value)} rows={2} maxLength={500} placeholder="Optional note for the generator"
         className="w-full rounded-lg border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-3 py-2 text-sm text-sage-800 dark:text-white" />
-      <div className="flex justify-end gap-2">
+      <div className="flex flex-wrap justify-end gap-2">
         <Button variant="ghost" size="sm" onClick={onClose}>Cancel</Button>
         <Button size="sm" isLoading={submitting} disabled={regenerationsLeft <= 0} onClick={() => void onConfirm({ feedback: reasons, feedback_note: note.trim() || undefined })} data-testid="confirm-regenerate">Regenerate</Button>
       </div>

@@ -99,7 +99,7 @@ const Lede: React.FC<{ children: React.ReactNode; className?: string }> = ({ chi
 );
 
 const PrimaryButton: React.FC<{ onClick: () => void; children: React.ReactNode; className?: string }> = ({ onClick, children, className }) => (
-  <button type="button" onClick={onClick} className={`group inline-flex items-center gap-2 rounded-full bg-accent hover:bg-accent-hover text-white text-sm font-medium px-6 py-3 transition-all hover:shadow-elevated hover:-translate-y-0.5 ${className ?? ''}`}>
+  <button type="button" onClick={onClick} className={`group inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-accent hover:bg-accent-hover text-white text-sm font-medium px-6 py-3 transition-all hover:shadow-elevated hover:-translate-y-0.5 ${className ?? ''}`}>
     {children}<ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
   </button>
 );
@@ -136,7 +136,7 @@ const PipelineShowcase: React.FC = () => {
       <ol className="relative mt-5 grid grid-cols-6 gap-1" aria-label="Pipeline stages">
         <div className="absolute left-[8%] right-[8%] top-5 h-px bg-sage-200" aria-hidden="true" />
         <div className="absolute left-[8%] top-5 h-px bg-sage-600 transition-all duration-700 ease-out" style={{ width: `${(active / (PIPELINE.length - 1)) * 84}%` }} aria-hidden="true" />
-        <span className="landing-pipeline-pulse absolute top-5 -mt-1.5 w-3 h-3 rounded-full bg-accent shadow-[0_0_0_6px_rgba(90,103,216,0.18)] transition-all duration-700 ease-out" style={{ left: `calc(8% + ${(active / (PIPELINE.length - 1)) * 84}% - 6px)` }} aria-hidden="true" />
+        <span className="landing-pipeline-pulse absolute top-5 -mt-1.5 w-3 h-3 rounded-full bg-accent shadow-[0_0_0_6px_rgba(194,65,12,0.18)] transition-all duration-700 ease-out" style={{ left: `calc(8% + ${(active / (PIPELINE.length - 1)) * 84}% - 6px)` }} aria-hidden="true" />
         {PIPELINE.map((p, i) => {
           const done = i < active;
           const on = i === active;
@@ -226,7 +226,7 @@ const TraceabilityMap: React.FC = () => {
             const on = i === active;
             return <line key={`${l.from}-${l.to}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={on ? '#1E6F5C' : '#A9CFC3'} strokeWidth={on ? 0.9 : 0.5} strokeDasharray={on ? undefined : '1.5 1.5'} vectorEffect="non-scaling-stroke" className="landing-trace-line transition-all duration-500" style={{ animationDelay: `${i * 120}ms` }} />;
           })}
-          <circle r="1.3" fill="#5A67D8" className="landing-trace-dot" key={active} style={{ offsetPath: `path('M ${node(link.from).x} ${node(link.from).y} L ${node(link.to).x} ${node(link.to).y}')` }} />
+          <circle r="1.3" fill="#C2410C" className="landing-trace-dot" key={active} style={{ offsetPath: `path('M ${node(link.from).x} ${node(link.from).y} L ${node(link.to).x} ${node(link.to).y}')` }} />
         </svg>
         {TRACE_NODES.map((n) => {
           const on = lit.has(n.id);
@@ -281,7 +281,6 @@ export const Home: React.FC = () => {
         <Leaf className="landing-float-slow absolute -right-16 -bottom-10 w-72 h-72 text-sage-200/40 pointer-events-none" aria-hidden="true" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative">
           <div className="lg:col-span-5 space-y-6 text-center lg:text-left">
-            <Reveal><Eyebrow className="inline-flex items-center gap-2"><span className="landing-pulse-dot w-1.5 h-1.5 rounded-full bg-accent" />AI-Powered Assessment Intelligence</Eyebrow></Reveal>
             <Reveal delay={100}>
               <h1 className="font-serif text-4xl sm:text-5xl lg:text-[3.4rem] leading-[1.08] tracking-tight">
                 <TypewriterCycle lines={HERO_LINES} textClassName="landing-sheen" />
@@ -296,13 +295,8 @@ export const Home: React.FC = () => {
             <Reveal delay={300}>
               <div className="flex flex-wrap justify-center lg:justify-start gap-3 pt-1">
                 <PrimaryButton onClick={go('/register')}>Start Analyzing</PrimaryButton>
-                <button type="button" onClick={scrollTo('features')} className="inline-flex items-center rounded-full border border-sage-800 bg-transparent hover:bg-sage-800 hover:text-white text-sage-800 text-sm font-medium px-6 py-3 transition-colors">Explore FacultyLens</button>
+                <button type="button" onClick={scrollTo('features')} className="inline-flex items-center whitespace-nowrap rounded-full border border-sage-800 bg-transparent hover:bg-sage-800 hover:text-white text-sage-800 text-sm font-medium px-6 py-3 transition-colors">Explore FacultyLens</button>
               </div>
-            </Reveal>
-            <Reveal delay={400}>
-              <ul className="flex flex-wrap justify-center lg:justify-start gap-x-5 gap-y-2 pt-2 text-xs text-sage-500">
-                {['No automatic changes', 'Explainable scores', 'Immutable history'].map((t) => <li key={t} className="inline-flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-accent" aria-hidden="true" />{t}</li>)}
-              </ul>
             </Reveal>
           </div>
           <Reveal delay={200} className="lg:col-span-7 lg:pl-6"><PipelineShowcase /></Reveal>
@@ -350,7 +344,7 @@ export const Home: React.FC = () => {
       {/* Features */}
       <section id="features" className="bg-sage-50 border-y border-sage-200/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 text-center">
-          <Reveal><Eyebrow>AI-Powered Assessment Intelligence</Eyebrow><Heading className="mt-3">Everything you need, in one place.</Heading></Reveal>
+          <Reveal><Heading>Everything you need, in one place.</Heading></Reveal>
           <Reveal delay={120}><Lede className="mt-4 max-w-2xl mx-auto">Twelve connected modules share one course model, so a question analysed today is the same question that appears in tomorrow’s blueprint check, next week’s grading and next semester’s version comparison.</Lede></Reveal>
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-left">
             {FEATURES.map((f, i) => (
@@ -369,7 +363,6 @@ export const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
             <Reveal className="lg:col-span-4 space-y-4">
-              <Eyebrow>Why FacultyLens</Eyebrow>
               <Heading>Built for people who have to <span className="landing-ink">stand behind the result.</span></Heading>
               <Lede>An assessment tool for universities cannot be a black box. Faculty defend their papers to students, colleagues, and accreditation bodies — so every output has to be traceable, reversible and yours.</Lede>
             </Reveal>
@@ -391,7 +384,7 @@ export const Home: React.FC = () => {
         <Leaf className="landing-float-slow absolute -right-10 -top-10 w-80 h-80 text-white/5 pointer-events-none" aria-hidden="true" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 relative">
           <Reveal className="max-w-2xl">
-            <p className="text-[11px] uppercase tracking-[0.18em] text-accent">The full lifecycle</p>
+            <p className="text-[11px] uppercase tracking-[0.18em] text-sage-300">The full lifecycle</p>
             <h2 className="mt-3 font-serif text-3xl sm:text-4xl lg:text-[2.75rem] leading-[1.1] tracking-tight">
               <Typewriter text="From the first blueprint to the final version, nothing is lost." />
             </h2>
@@ -401,7 +394,7 @@ export const Home: React.FC = () => {
             {LIFECYCLE.map((l, i) => (
               <Reveal as="li" key={l.title} delay={i * 90} className="rounded-[1.5rem] bg-white/10 p-5 hover:bg-white/15 transition-colors">
                 <div className="flex items-center gap-3">
-                  <span className="font-serif text-2xl text-accent w-8">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="font-serif text-2xl text-sage-300 w-8">{String(i + 1).padStart(2, '0')}</span>
                   <l.icon className="w-5 h-5 text-white" strokeWidth={1.6} aria-hidden="true" />
                   <h3 className="text-sm font-semibold">{l.title}</h3>
                 </div>
@@ -452,7 +445,6 @@ export const Home: React.FC = () => {
       <section className="bg-white border-t border-sage-200/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 grid grid-cols-1 lg:grid-cols-12 gap-10">
           <Reveal className="lg:col-span-4 space-y-4">
-            <Eyebrow>Questions faculty ask first</Eyebrow>
             <Heading>Straight answers.</Heading>
             <Lede>The questions we hear before anyone uploads their first paper — answered the way the system actually behaves.</Lede>
           </Reveal>
@@ -472,12 +464,12 @@ export const Home: React.FC = () => {
               <Leaf className="landing-float absolute -left-4 -bottom-6 w-32 h-32 text-white/10" aria-hidden="true" />
               <div className="hidden md:block w-24 shrink-0" />
               <div className="flex-1 space-y-2 relative">
-                <Eyebrow className="!text-accent">Built for Academic Excellence</Eyebrow>
-                <h2 className="font-serif text-2xl sm:text-3xl tracking-tight">AI assists. <span className="text-accent">Faculty decides.</span></h2>
+                <Eyebrow className="!text-sage-300">Built for Academic Excellence</Eyebrow>
+                <h2 className="font-serif text-2xl sm:text-3xl tracking-tight">AI assists. <span className="text-sage-300">Faculty decides.</span></h2>
                 <p className="text-sm text-white/85 max-w-xl">Upload one assessment and see its quality, alignment and similarity picture in minutes — no automatic changes, no lock-in, every decision left to you.</p>
                 <p className="text-xs text-white/70 flex flex-wrap gap-x-4"><span>Explainable</span><span>·</span><span>Private</span><span>·</span><span>Auditable</span></p>
               </div>
-              <PrimaryButton onClick={go('/register')} className="self-start md:self-center relative">Get Started</PrimaryButton>
+              <PrimaryButton onClick={go('/register')} className="self-start md:self-center relative !bg-white !text-sage-800 hover:!bg-sage-100">Get Started</PrimaryButton>
             </div>
           </Reveal>
         </div>

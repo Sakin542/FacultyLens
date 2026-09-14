@@ -78,7 +78,7 @@ export const BlueprintActions: React.FC<{
   return (
     <div data-testid="blueprint-actions" className="flex flex-wrap items-center gap-2" role="group" aria-label="Blueprint actions">
       {canEdit && !finalized && <Button size="sm" variant="outline" onClick={onValidate} disabled={busy}>Validate</Button>}
-      {canEdit && !finalized && <Button size="sm" onClick={onFinalize} disabled={busy || !canFinalize} title={canFinalize ? 'Finalize this blueprint version' : 'Validate the blueprint (without errors) before finalizing'}><Lock className="w-3.5 h-3.5 mr-1" aria-hidden="true" />Finalize</Button>}
+      {canEdit && !finalized && <Button size="sm" onClick={onFinalize} disabled={busy || !canFinalize} title={canFinalize ? 'Finalize this blueprint version' : 'Validate the blueprint (without errors) before finalizing'} leftIcon={<Lock className="w-3.5 h-3.5" aria-hidden="true" />}>Finalize</Button>}
       {canEdit && finalized && <Button size="sm" variant="outline" onClick={onNewVersion} disabled={busy}>Create new version</Button>}
       <Button size="sm" variant="outline" onClick={onCompare} disabled={busy}>Compare with questions</Button>
       {canGenerate && <Button size="sm" variant="outline" onClick={onGenerate} disabled={busy || !finalized} title={finalized ? 'Create STEP 33 generation requests from this blueprint' : 'Finalize the blueprint first'}>Generate Questions from Blueprint</Button>}

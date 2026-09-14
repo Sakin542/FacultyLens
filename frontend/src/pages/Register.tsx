@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { ApiError } from '@/services/api';
 import { isValidEmail } from '@/utils/validation';
 import { AuthAlert, AuthShell, AuthSuccess, authButtonClass, authInputClass, authLinkClass } from '@/components/landing/AuthShell';
-import { Mail, Lock, User as UserIcon, Building, Award, ArrowRight, Eye, EyeOff, ShieldCheck } from 'lucide-react';
+import { Mail, Lock, User as UserIcon, Building, Award, ArrowRight, Eye, EyeOff } from 'lucide-react';
 
 export const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -186,7 +186,6 @@ export const Register: React.FC = () => {
             {isLoading ? 'Creating account…' : 'Create Account'}
           </Button>
 
-          <p className="flex items-center justify-center gap-1.5 text-[11px] text-sage-400 pt-1"><ShieldCheck className="w-3.5 h-3.5" aria-hidden="true" />AI assists, faculty decides — nothing in your courses changes without you</p>
         </form>
       )}
     </AuthShell>

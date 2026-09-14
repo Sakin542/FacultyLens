@@ -30,7 +30,7 @@ export const VersionRestoreDialog: React.FC<{
           <textarea value={summary} onChange={(e) => setSummary(e.target.value)} rows={2} placeholder={`Restored structure from ${version.version_label}`} className="mt-1 w-full rounded-lg border border-sage-200 bg-white dark:bg-sage-700 px-3 py-2 text-sm font-normal normal-case tracking-normal" />
         </label>
         {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
-        <div className="flex justify-end gap-2">
+        <div className="flex flex-wrap justify-end gap-2">
           <Button type="button" variant="outline" size="sm" onClick={onClose} disabled={busy}>Cancel</Button>
           <Button type="submit" size="sm" isLoading={busy}>Restore as new version</Button>
         </div>

@@ -103,10 +103,10 @@ export const LineChart: React.FC<{ points: { label: string; date: string | null;
       )}
       <details className="mt-1">
         <summary className="text-xs text-sage-500 cursor-pointer">Data table</summary>
-        <table className="w-full text-xs mt-1"><caption className="sr-only">{ariaLabel}</caption>
+        <div className="overflow-x-auto mt-1"><table className="w-full text-xs"><caption className="sr-only">{ariaLabel}</caption>
           <thead><tr className="text-left text-sage-500"><th className="py-0.5 pr-2">Item</th><th className="py-0.5 pr-2">Date</th><th className="py-0.5 pr-2 text-right">Value</th><th className="py-0.5">Note</th></tr></thead>
           <tbody>{points.map((p, i) => <tr key={i} className="border-t border-sage-100 dark:border-[#2A2A2A]"><td className="py-0.5 pr-2">{p.label}</td><td className="py-0.5 pr-2">{p.date ?? 'No date'}</td><td className="py-0.5 pr-2 text-right tabular-nums">{p.value === null ? 'N/A' : `${p.value}${unit}`}</td><td className="py-0.5 text-sage-500">{p.note ?? ''}</td></tr>)}</tbody>
-        </table>
+        </table></div>
       </details>
     </div>
   );
@@ -143,13 +143,12 @@ export const AnalyticsHeader: React.FC<{ meta: AnalyticsMeta | null; onRefresh: 
   <header data-testid="analytics-header" className="flex flex-col md:flex-row md:items-start md:justify-between gap-3">
     <div>
       <div className="flex items-center gap-2 mb-1"><BarChart3 className="w-5 h-5" aria-hidden="true" /><h1 className="text-2xl font-bold text-sage-800 dark:text-white">Academic Analytics</h1></div>
-      <p className="text-sm text-sage-500 max-w-2xl">Evidence, trends and signals from your assessments, outcomes, student performance and AI activity. Analytics never change assessments, grades, mappings or models.</p>
       {meta && <p className="text-xs text-sage-400 mt-1" data-testid="freshness" role="status">{freshness(meta)}</p>}
     </div>
-    <div className="flex items-center gap-2">
-      <Button variant="outline" size="sm" onClick={() => onExport('pdf')} disabled={busy}><Download className="w-3.5 h-3.5 mr-1" aria-hidden="true" />PDF</Button>
-      <Button variant="outline" size="sm" onClick={() => onExport('csv')} disabled={busy}><Download className="w-3.5 h-3.5 mr-1" aria-hidden="true" />CSV</Button>
-      <Button variant="outline" size="sm" onClick={onRefresh} disabled={busy} aria-label="Recalculate analytics"><RefreshCw className={cn('w-3.5 h-3.5 mr-1', busy && 'animate-spin')} aria-hidden="true" />Refresh</Button>
+    <div className="flex flex-wrap items-center gap-2">
+      <Button variant="outline" size="sm" onClick={() => onExport('pdf')} disabled={busy} leftIcon={<Download className="w-3.5 h-3.5" aria-hidden="true" />}>PDF</Button>
+      <Button variant="outline" size="sm" onClick={() => onExport('csv')} disabled={busy} leftIcon={<Download className="w-3.5 h-3.5" aria-hidden="true" />}>CSV</Button>
+      <Button variant="outline" size="sm" onClick={onRefresh} disabled={busy} aria-label="Recalculate analytics" leftIcon={<RefreshCw className={cn('w-3.5 h-3.5', busy && 'animate-spin')} aria-hidden="true" />}>Refresh</Button>
     </div>
   </header>
 );
@@ -182,7 +181,7 @@ export const AnalyticsFilters: React.FC<{ options: FilterOptions | null; value: 
         <div className="space-y-1"><label htmlFor={`${id}-start`} className="block text-xs font-medium uppercase tracking-wider text-sage-600 dark:text-sage-400">Start</label><input id={`${id}-start`} type="date" value={draft.start_date ?? ''} onChange={(e) => setDraft({ ...draft, start_date: e.target.value })} className="w-full rounded-md border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-2 py-1.5 text-sm" /></div>
         <div className="space-y-1"><label htmlFor={`${id}-end`} className="block text-xs font-medium uppercase tracking-wider text-sage-600 dark:text-sage-400">End</label><input id={`${id}-end`} type="date" value={draft.end_date ?? ''} onChange={(e) => setDraft({ ...draft, end_date: e.target.value })} className="w-full rounded-md border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-2 py-1.5 text-sm" /></div>
       </div>
-      <div className="flex justify-end gap-2 mt-3">
+      <div className="flex flex-wrap justify-end gap-2 mt-3">
         <Button type="button" variant="ghost" size="sm" onClick={() => { setDraft({}); onReset(); }} disabled={disabled}>Reset</Button>
         <Button type="submit" size="sm" disabled={disabled}>Apply Filters</Button>
       </div>

@@ -64,7 +64,7 @@ export const VersionCreateDialog: React.FC<{
           {touched && summaryMissing && <span className="block text-xs text-[#DC2626] font-normal normal-case tracking-normal mt-1">Describe what will change in this version (at least 3 characters).</span>}
         </label>
         {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
-        <div className="flex justify-end gap-2">
+        <div className="flex flex-wrap justify-end gap-2">
           <Button type="button" variant="outline" size="sm" onClick={onClose} disabled={busy}>Cancel</Button>
           <Button type="submit" size="sm" isLoading={busy}>{first ? 'Create v1.0' : 'Create draft version'}</Button>
         </div>

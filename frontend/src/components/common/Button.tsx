@@ -24,7 +24,7 @@ export const Button: React.FC<ButtonProps> = ({
   disabled,
   ...props
 }) => {
-  const baseStyles = 'inline-flex items-center justify-center font-medium transition-all duration-150 rounded-lg select-none disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none focus-visible:outline-2 focus-visible:outline-offset-2';
+  const baseStyles = 'inline-flex items-center justify-center whitespace-nowrap shrink-0 font-medium transition-all duration-150 rounded-lg select-none disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none focus-visible:outline-2 focus-visible:outline-offset-2';
 
   const variants: Record<ButtonVariant, string> = {
     primary: 'bg-sage-700 text-white hover:bg-sage-800 active:bg-black focus-visible:outline-sage-700 shadow-subtle',
@@ -51,7 +51,7 @@ export const Button: React.FC<ButtonProps> = ({
       ) : (
         leftIcon && <span className="shrink-0">{leftIcon}</span>
       )}
-      <span>{children}</span>
+      <span className="inline-flex items-center gap-1.5">{children}</span>
       {!isLoading && rightIcon && <span className="shrink-0">{rightIcon}</span>}
     </button>
   );
