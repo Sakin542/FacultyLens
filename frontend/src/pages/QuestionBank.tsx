@@ -209,27 +209,30 @@ export const QuestionBank: React.FC = () => {
           </h1>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="grid grid-cols-3 gap-2 sm:flex sm:items-center" data-testid="question-bank-actions">
           <Button
             variant="outline"
             size="sm"
+            className="w-full justify-center sm:w-auto"
             leftIcon={<Sparkles className="w-3.5 h-3.5" />}
             onClick={() => setIsAiAnalysisOpen(true)}
           >
-            AI Question Sandbox
+            <span className="sm:hidden">AI Sandbox</span><span className="hidden sm:inline">AI Question Sandbox</span>
           </Button>
           <Button
             variant="outline"
             size="sm"
+            className="w-full justify-center sm:w-auto"
             leftIcon={<UploadCloud className="w-3.5 h-3.5" />}
             onClick={() => setIsUploadModalOpen(true)}
             disabled={!selectedCourseId}
           >
-            Upload Past Paper
+            <span className="sm:hidden">Upload Paper</span><span className="hidden sm:inline">Upload Past Paper</span>
           </Button>
           <Button
             variant="primary"
             size="sm"
+            className="w-full justify-center sm:w-auto"
             leftIcon={<Plus className="w-3.5 h-3.5" />}
             onClick={() => setIsAddModalOpen(true)}
             disabled={!selectedCourseId}
