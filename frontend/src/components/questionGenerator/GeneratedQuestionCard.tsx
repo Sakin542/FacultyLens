@@ -65,14 +65,14 @@ export const ConstraintValidation: React.FC<{ question: GeneratedQuestion }> = (
         <span className="font-semibold text-sage-800 dark:text-white">Constraint validation</span>
         <Badge variant={variant} data-testid="validation-status">{fmt(v.overall_status)}</Badge>
       </div>
-      <table className="w-full">
+      <div className="overflow-x-auto"><table className="w-full">
         <thead><tr className="text-sage-500 text-left"><th className="py-0.5">Constraint</th><th>Requested</th><th>AI-estimated</th><th className="w-8"></th></tr></thead>
         <tbody>
           {rows.map(([k, req, det, ok]) => (
             <tr key={k} className="border-t border-sage-100 dark:border-[#1F1F1F]"><td className="py-1 text-sage-600 dark:text-sage-400">{k}</td><td>{req}</td><td>{det}</td><td><Check_ ok={ok} /></td></tr>
           ))}
         </tbody>
-      </table>
+      </table></div>
       {v.warnings.length > 0 && (
         <ul className="mt-2 space-y-0.5 text-amber-800 dark:text-amber-300" data-testid="validation-warnings">
           {v.warnings.map((w, i) => <li key={i}>⚠ {w}</li>)}
@@ -128,7 +128,7 @@ export const GeneratedQuestionEditor: React.FC<{
       )}
       <textarea aria-label="Expected answer" value={expected} onChange={(e) => setExpected(e.target.value)} rows={3} placeholder="Expected answer (draft)"
         className="w-full rounded-lg border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-3 py-2 text-sm text-sage-800 dark:text-white" />
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         <Button type="submit" size="sm" disabled={!valid} isLoading={saving} data-testid="editor-save">Save changes</Button>
         <Button type="button" size="sm" variant="ghost" onClick={onCancel}>Cancel</Button>
       </div>

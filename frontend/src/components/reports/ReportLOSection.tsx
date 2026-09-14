@@ -45,7 +45,7 @@ export const ReportLOSection: React.FC<ReportLOSectionProps> = ({ loAlignment })
         <h4 className="text-xs font-bold uppercase tracking-wider text-sage-600 mb-2.5">
           Course Learning Outcomes Summary
         </h4>
-        <div className="border border-sage-200 rounded-lg overflow-hidden">
+        <div className="border border-sage-200 rounded-lg overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead className="bg-sage-100 border-b border-sage-200 text-sage-700 font-semibold">
               <tr>
@@ -95,7 +95,7 @@ export const ReportLOSection: React.FC<ReportLOSectionProps> = ({ loAlignment })
           <h4 className="text-xs font-bold uppercase tracking-wider text-sage-600 mb-2.5">
             Question-to-Learning Outcome Detailed Mapping
           </h4>
-          <div className="border border-sage-200 rounded-lg overflow-hidden">
+          <div className="border border-sage-200 rounded-lg overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead className="bg-sage-100 border-b border-sage-200 text-sage-700 font-semibold">
                 <tr>

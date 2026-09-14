@@ -17,7 +17,6 @@ import {
   GraduationCap,
   Target,
   BarChart3,
-  HelpCircle,
 } from 'lucide-react';
 
 interface QuestionAnalysisModalProps {
@@ -40,10 +39,8 @@ export const QuestionAnalysisModal: React.FC<QuestionAnalysisModalProps> = ({
   const [activeTab, setActiveTab] = useState<'assessment' | 'tester'>(assessmentId ? 'assessment' : 'tester');
 
   // Interactive Single Tester State
-  const [testQuestion, setTestQuestion] = useState(
-    'Explain the differences between 3NF and BCNF in relational database design with suitable examples.'
-  );
-  const [topicsInput, setTopicsInput] = useState(defaultTopics.join(', ') || 'Relational Design, Normalization, SQL, Transactions, Indexing');
+  const [testQuestion, setTestQuestion] = useState('');
+  const [topicsInput, setTopicsInput] = useState(defaultTopics.join(', '));
   const [isAnalyzingSingle, setIsAnalyzingSingle] = useState(false);
   const [singleResult, setSingleResult] = useState<AiSingleAnalysisResponseData | null>(null);
   const [singleError, setSingleError] = useState<string | null>(null);
@@ -152,11 +149,9 @@ export const QuestionAnalysisModal: React.FC<QuestionAnalysisModalProps> = ({
             </div>
             <div>
               <h3 className="text-base font-bold text-sage-800 dark:text-white">
-                Hugging Face AI Question Analysis
+                AI Question Analysis
               </h3>
-              <p className="text-xs text-sage-500">
-                {assessmentTitle ? `Evaluating: ${assessmentTitle}` : 'Intelligent classification, Bloom taxonomy, difficulty & topic detection'}
-              </p>
+              {assessmentTitle && <p className="text-xs text-sage-500">Evaluating: {assessmentTitle}</p>}
             </div>
           </div>
           <button
@@ -423,11 +418,7 @@ export const QuestionAnalysisModal: React.FC<QuestionAnalysisModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3 border-t border-sage-200 dark:border-[#2C2C2E] flex items-center justify-between bg-sage-50 dark:bg-[#1C1C1E] text-xs text-sage-500">
-          <div className="flex items-center gap-1.5">
-            <HelpCircle className="w-3.5 h-3.5" />
-            <span>FastAPI + sentence-transformers/all-MiniLM-L6-v2 pipeline</span>
-          </div>
+        <div className="px-6 py-3 border-t border-sage-200 dark:border-[#2C2C2E] flex items-center justify-end bg-sage-50 dark:bg-[#1C1C1E] text-xs text-sage-500">
           <Button variant="outline" size="sm" onClick={onClose}>
             Close
           </Button>

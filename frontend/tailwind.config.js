@@ -51,9 +51,9 @@ export default {
           800: "#1B2A27",
         },
         accent: {
-          DEFAULT: "#5A67D8",
-          hover: "#4C56C4",
-          light: "#EEF0FC",
+          DEFAULT: "#C2410C",
+          hover: "#9A3412",
+          light: "#FFF1E8",
         },
       },
       fontFamily: {

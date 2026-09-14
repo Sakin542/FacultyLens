@@ -3,7 +3,6 @@ import { AiImprovementSignalItem, ImprovementSignalsResponse } from '@/types/fee
 import { Card } from '@/components/common/Card';
 import { Badge } from '@/components/common/Badge';
 import {
-  Sparkles,
   TrendingUp,
   AlertTriangle,
   Info,
@@ -111,18 +110,6 @@ export const ImprovementSignalsView: React.FC<ImprovementSignalsViewProps> = ({
           </p>
           <span className="text-[10px] text-sage-500">Domain-specific baseline data</span>
         </Card>
-      </div>
-
-      {/* Assistive Transparency Disclaimer */}
-      <div className="p-3.5 bg-blue-50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/40 rounded-xl flex items-start gap-2.5 text-xs text-blue-900 dark:text-blue-200">
-        <Sparkles className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
-        <div className="space-y-0.5">
-          <p className="font-semibold">AI Improvement Telemetry</p>
-          <p className="text-[11px] text-blue-700 dark:text-blue-300 leading-relaxed">
-            {summary?.disclaimer ||
-              'These telemetry signals capture faculty decisions to calibrate recommendation heuristics and prompt parameters. Signals never alter historical assessment evaluations or execute automated parameter reweighting without explicit review.'}
-          </p>
-        </div>
       </div>
 
       {/* Signals List Card */}

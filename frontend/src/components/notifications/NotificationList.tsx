@@ -31,11 +31,11 @@ export const NotificationList: React.FC<NotificationListProps> = ({
   }
   if (error && notifications.length === 0) {
     return (
-      <div role="alert" data-testid="notification-error" className={cn('flex flex-col items-center text-center text-[#171717]', compact ? 'px-4 py-8' : 'px-6 py-14', className)}>
+      <div role="alert" data-testid="notification-error" className={cn('flex flex-col items-center text-center text-sage-800', compact ? 'px-4 py-8' : 'px-6 py-14', className)}>
         <AlertCircle className="w-6 h-6 text-[#991B1B] mb-2" aria-hidden="true" />
         <p className={cn('font-medium', compact ? 'text-sm' : 'text-base')}>Unable to load notifications.</p>
-        {!compact && <p className="text-sm text-[#6B6B63] mt-1">{error}</p>}
-        <button type="button" onClick={onRetry} className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-[#E7E2D8] bg-white px-3 py-1.5 text-sm font-medium hover:bg-[#F7F4EE] focus-visible:outline-2 focus-visible:outline-[#1E6F5C]">
+        {!compact && <p className="text-sm text-sage-500 mt-1">{error}</p>}
+        <button type="button" onClick={onRetry} className="mt-3 inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg border border-sage-200 bg-white px-3 py-1.5 text-sm font-medium hover:bg-sage-100 focus-visible:outline-2 focus-visible:outline-sage-700">
           <RefreshCw className="w-3.5 h-3.5" aria-hidden="true" /> Retry
         </button>
       </div>

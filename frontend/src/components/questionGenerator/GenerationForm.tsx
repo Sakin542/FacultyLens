@@ -126,7 +126,6 @@ export const DocumentContextSelector: React.FC<{
         ))}
       </select>
     )}
-    <p className="text-[11px] text-sage-400">Only indexed documents you own are used. Retrieved passages ground the drafts; they are never treated as instructions.</p>
   </div>
 );
 
@@ -191,7 +190,6 @@ export const GenerationForm: React.FC<GenerationFormProps> = ({
     <form data-testid="generation-form" onSubmit={submit} noValidate className="space-y-4 rounded-xl border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] p-5">
       <div>
         <h3 className="text-base font-semibold text-sage-800 dark:text-white">Generate questions</h3>
-        <p className="text-xs text-sage-500">Drafts are generated under your constraints, validated, and always require your review before use.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <label>

@@ -36,7 +36,7 @@ export const ReportBalanceSection: React.FC<ReportBalanceSectionProps> = ({
             </span>
           </div>
 
-          <table className="w-full text-left text-xs border-collapse">
+          <div className="overflow-x-auto"><table className="w-full text-left text-xs border-collapse">
             <thead className="border-b border-sage-200 text-sage-600 font-medium">
               <tr>
                 <th className="py-2">Difficulty Tier</th>
@@ -67,7 +67,7 @@ export const ReportBalanceSection: React.FC<ReportBalanceSectionProps> = ({
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
 
           {/* Comparative Stacked Bar */}
           <div className="mt-4 pt-3 border-t border-[#EBEBEB]">
@@ -117,7 +117,7 @@ export const ReportBalanceSection: React.FC<ReportBalanceSectionProps> = ({
             </span>
           </div>
 
-          <table className="w-full text-left text-xs border-collapse">
+          <div className="overflow-x-auto"><table className="w-full text-left text-xs border-collapse">
             <thead className="border-b border-sage-200 text-sage-600 font-medium">
               <tr>
                 <th className="py-2">Cognitive Level</th>
@@ -144,7 +144,7 @@ export const ReportBalanceSection: React.FC<ReportBalanceSectionProps> = ({
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
 
           <p className="text-[11px] text-sage-500 mt-4 pt-3 border-t border-[#EBEBEB] leading-relaxed">
             Standard university accreditation guidelines advise maintaining higher-order cognitive questions (Apply, Analyze, Evaluate, Create) for advanced undergraduate assessments.

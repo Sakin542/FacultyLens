@@ -408,7 +408,7 @@ export const CourseDetails: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Section 1: Learning Outcomes */}
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-lg bg-sage-100 dark:bg-[#2C2C2E] flex items-center justify-center text-sage-800 dark:text-white">
                 <Sparkles className="w-4 h-4" />
@@ -496,7 +496,7 @@ export const CourseDetails: React.FC = () => {
 
         {/* Section 2: Course Materials & Reference Files */}
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-lg bg-sage-100 dark:bg-[#2C2C2E] flex items-center justify-center text-sage-800 dark:text-white">
                 <FileText className="w-4 h-4" />
@@ -591,7 +591,7 @@ export const CourseDetails: React.FC = () => {
 
       {/* Section 3: Processed Academic Documents (STEP 08) */}
       <div className="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-700/80">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-sage-100 dark:bg-[#2C2C2E] flex items-center justify-center text-sage-800 dark:text-white">
               <FileText className="w-4 h-4" />

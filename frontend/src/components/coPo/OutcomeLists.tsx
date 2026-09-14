@@ -71,7 +71,7 @@ export const ProgramOutcomeList: React.FC<ProgramOutcomeListProps> = ({ outcomes
             <Input id="po-title" label="Title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Engineering Knowledge" disabled={busy} />
           </div>
           {error && <p className="text-xs text-red-600" role="alert">{error}</p>}
-          <div className="flex justify-end gap-2">
+          <div className="flex flex-wrap justify-end gap-2">
             <Button variant="ghost" size="sm" onClick={() => { setAdding(false); setError(null); }} disabled={busy}>Cancel</Button>
             <Button variant="primary" size="sm" onClick={submit} isLoading={busy} data-testid="save-po">Save PO</Button>
           </div>

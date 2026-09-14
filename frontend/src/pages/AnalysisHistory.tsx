@@ -20,7 +20,6 @@ import { AnalysisHistoryLoading } from '@/components/history/AnalysisHistoryLoad
 import { AnalysisHistoryError } from '@/components/history/AnalysisHistoryError';
 import { Button } from '@/components/common/Button';
 import {
-  History as HistoryIcon,
   TrendingUp,
   Layers,
   ChevronLeft,
@@ -198,20 +197,9 @@ export const AnalysisHistory: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs text-sage-500 mb-1">
-            <HistoryIcon className="w-3.5 h-3.5" />
-            <span>Academic Decision Support</span>
-            <span>•</span>
-            <span className="font-semibold text-sage-800 dark:text-white">
-              Analysis History & Versioning
-            </span>
-          </div>
           <h1 className="text-2xl font-bold tracking-tight text-sage-800 dark:text-white">
             Analysis History
           </h1>
-          <p className="text-xs text-sage-500 mt-0.5">
-            Audit historical assessment evaluations, monitor quality evolution, and compare analysis versions.
-          </p>
         </div>
 
         {/* View Toggle */}
@@ -319,7 +307,7 @@ export const AnalysisHistory: React.FC = () => {
 
               {/* Pagination Bar */}
               {meta.last_page > 1 && (
-                <div className="flex items-center justify-between p-3 bg-white dark:bg-[#1C1C1E] rounded-xl border border-sage-200 dark:border-[#2C2C2E] shadow-sm text-xs">
+                <div className="flex flex-wrap items-center justify-between gap-2 p-3 bg-white dark:bg-[#1C1C1E] rounded-xl border border-sage-200 dark:border-[#2C2C2E] shadow-sm text-xs">
                   <div className="text-sage-500">
                     Showing Page <span className="font-semibold text-sage-800 dark:text-white">{meta.current_page}</span> of{' '}
                     <span className="font-semibold text-sage-800 dark:text-white">{meta.last_page}</span> ({meta.total} total)

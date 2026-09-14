@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowUp, CheckCircle2, Github, Leaf, Linkedin, Mail, ShieldCheck, Twitter } from 'lucide-react';
+import { ArrowRight, ArrowUp, CheckCircle2, Github, Leaf, Linkedin, Mail, Twitter } from 'lucide-react';
 import { BrandMark, useScrollToSection } from './Navbar';
 
 const PRODUCT: { id: string; label: string }[] = [
@@ -57,10 +57,6 @@ export const Footer: React.FC = () => {
             <p className="text-sm text-white/65 leading-relaxed">
               AI-powered decision support for university faculty: analyze assessments, align them with learning outcomes, detect similar questions, grade with rubrics and keep an immutable record of every version — while every decision stays yours.
             </p>
-          </div>
-          <div className="flex flex-col items-start md:items-end gap-2 shrink-0">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-[11px]"><ShieldCheck className="w-3.5 h-3.5 text-sage-300" aria-hidden="true" />Explainable · Private · Auditable</span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-[11px]"><span className="landing-pulse-dot w-1.5 h-1.5 rounded-full bg-[#86EFAC]" aria-hidden="true" />All systems operational</span>
           </div>
         </div>
 

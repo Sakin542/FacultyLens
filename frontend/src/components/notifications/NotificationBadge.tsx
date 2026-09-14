@@ -17,7 +17,7 @@ export const NotificationBadge: React.FC<NotificationBadgeProps> = ({ count, max
       data-testid="unread-count"
       data-count={count}
       className={cn(
-        'inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-[#171717] text-white text-[10px] font-semibold leading-none tabular-nums',
+        'inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-sage-700 text-white text-[10px] font-semibold leading-none tabular-nums',
         className,
       )}
     >

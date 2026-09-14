@@ -144,7 +144,7 @@ export const DatasetManager: React.FC<DatasetManagerProps> = ({ datasets, select
             <p className="text-xs text-sage-500">Held-out TEST examples are recommended. Do not evaluate only on data used to tune prompts or rules.</p>
           </div>
           {formError && <p role="alert" className="text-sm text-red-700 dark:text-red-300">{formError}</p>}
-          <div className="flex justify-end gap-2"><Button type="button" variant="ghost" size="sm" onClick={() => setOpen(false)}>Cancel</Button><Button type="submit" size="sm" disabled={busy}>Create dataset</Button></div>
+          <div className="flex flex-wrap justify-end gap-2"><Button type="button" variant="ghost" size="sm" onClick={() => setOpen(false)}>Cancel</Button><Button type="submit" size="sm" disabled={busy}>Create dataset</Button></div>
         </form>
       )}
 
@@ -159,7 +159,7 @@ export const DatasetManager: React.FC<DatasetManagerProps> = ({ datasets, select
                 <p className="text-xs text-sage-500">{TASK_LABELS[d.task]} · {d.examples_count ?? 0} examples · {statusText(d.source)} · {d.split}</p>
               </button>
               <Badge variant={d.status === 'READY' || d.status === 'COMPLETED' ? 'Good' : d.status === 'RUNNING' ? 'Pending' : 'neutral'} size="sm">{statusText(d.status)}</Badge>
-              <div className="flex items-center gap-1">
+              <div className="flex flex-wrap items-center gap-1">
                 <Button size="sm" variant="outline" disabled={busy || d.status === 'RUNNING'} onClick={() => void onValidate(d)}>Validate</Button>
                 <Button size="sm" disabled={busy || d.status === 'RUNNING' || !(d.validation_report?.is_valid)} onClick={() => void onRun(d)} title={d.validation_report?.is_valid ? 'Start evaluation' : 'Validate the dataset first'}>Run</Button>
                 <Button size="sm" variant="ghost" aria-label={`Delete dataset ${d.name}`} disabled={busy || d.status === 'RUNNING'} onClick={() => void onDelete(d)}><Trash2 className="w-4 h-4" /></Button>

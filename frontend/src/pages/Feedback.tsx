@@ -171,9 +171,6 @@ export const Feedback: React.FC = () => {
               <h1 className="text-xl font-bold tracking-tight text-sage-800 dark:text-white">
                 Faculty Feedback & Decisions
               </h1>
-              <p className="text-xs text-sage-500">
-                Audit trail of recommendation reviews, usefulness ratings, and AI calibration telemetry
-              </p>
             </div>
           </div>
         </div>

@@ -109,9 +109,9 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-16">
           <Link to="/" aria-label="FacultyLens home"><BrandMark /></Link>
 
-          <nav className="hidden md:flex items-center gap-8 text-sm text-sage-700">
+          <nav className="hidden md:flex items-center gap-8 text-sm text-black">
             {LINKS.map((l) => (
-              <button key={l.id} type="button" onClick={() => handleNavClick(l.id)} className="hover:text-sage-800 transition-colors">{l.label}</button>
+              <button key={l.id} type="button" onClick={() => handleNavClick(l.id)} className="hover:text-sage-700 transition-colors">{l.label}</button>
             ))}
           </nav>
 
@@ -128,7 +128,7 @@ export const Navbar: React.FC = () => {
       {mobileMenuOpen && (
         <div className="md:hidden border-b border-sage-200 bg-sage-50 px-4 pt-2 pb-6 space-y-1">
           {LINKS.map((l) => (
-            <button key={l.id} type="button" className="block w-full text-left py-2 text-sm text-sage-800" onClick={() => handleNavClick(l.id)}>{l.label}</button>
+            <button key={l.id} type="button" className="block w-full text-left py-2 text-sm text-black" onClick={() => handleNavClick(l.id)}>{l.label}</button>
           ))}
           <div className="pt-4 border-t border-sage-200 flex flex-col gap-2">
             <button type="button" className="w-full text-sm text-sage-800 border border-sage-300 rounded-lg px-4 py-2 bg-white" onClick={() => { setMobileMenuOpen(false); navigate('/login'); }}>Sign In</button>

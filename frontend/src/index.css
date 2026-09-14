@@ -152,7 +152,7 @@
     135deg,
     #E2E6E1 0%,
     #FFFFFF 50%,
-    #5A67D8 100%
+    #C2410C 100%
   );
   -webkit-background-clip: text;
   background-clip: text;
@@ -177,6 +177,10 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #1E6F5C;
 }
+
+/* Scrollable but with no visible scrollbar (sidebar nav) */
+.scrollbar-none { scrollbar-width: none; -ms-overflow-style: none; }
+.scrollbar-none::-webkit-scrollbar { display: none; width: 0; height: 0; }
 
 /* ------------------------------------------------------------------ Landing page (cream / sage) animations */
 @keyframes landingFadeUp {
@@ -224,7 +228,7 @@
 .landing-marquee { animation: landingMarquee 38s linear infinite; }
 .landing-marquee:hover { animation-play-state: paused; }
 .landing-ink { position: relative; }
-.landing-ink::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0.05em; height: 0.12em; background: #5A67D8; border-radius: 999px; transform-origin: left; animation: landingInkUnderline 0.9s 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; z-index: -1; }
+.landing-ink::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0.05em; height: 0.12em; background: #C2410C; border-radius: 999px; transform-origin: left; animation: landingInkUnderline 0.9s 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; z-index: -1; }
 .landing-caret { display: inline-block; width: 2px; height: 1em; background: currentColor; margin-left: 2px; vertical-align: -0.1em; animation: landingCaret 1s steps(1) infinite; }
 .landing-pulse-dot { animation: landingPulseDot 1.8s ease-in-out infinite; }
 .landing-sheen { background: linear-gradient(90deg, #1B2A27 0%, #1E6F5C 45%, #1B2A27 55%, #1B2A27 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; color: transparent; animation: landingSheen 6s linear infinite; }
@@ -275,7 +279,7 @@ section[id] { scroll-margin-top: 7rem; }
 .landing-showcase { position: relative; border-radius: 1rem; animation: landingCardBreathe 4.5s ease-in-out infinite; transition: transform 0.25s ease-out; transform-style: preserve-3d; will-change: transform; }
 .landing-showcase::before {
   content: ''; position: absolute; inset: -1.5px; border-radius: inherit; padding: 1.5px; pointer-events: none; z-index: 0;
-  background: conic-gradient(from var(--landing-angle), #A9CFC3 0deg, #1E6F5C 90deg, #E2E6E1 180deg, #5A67D8 270deg, #A9CFC3 360deg);
+  background: conic-gradient(from var(--landing-angle), #A9CFC3 0deg, #1E6F5C 90deg, #E2E6E1 180deg, #C2410C 270deg, #A9CFC3 360deg);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude;
   animation: landingBorderSpin 9s linear infinite;
@@ -300,7 +304,7 @@ section[id] { scroll-margin-top: 7rem; }
 .splash-logo { position: relative; display: inline-flex; padding: 14px; border-radius: 9999px; background: #fff; box-shadow: 0 12px 30px -14px rgba(20, 64, 55, 0.35); animation: splashLogoIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
 .splash-logo .logo-ring { animation-duration: 4s; }
 .splash-logo .logo-orbit { animation-duration: 2s; }
-.splash-halo { position: absolute; inset: 0; border-radius: inherit; border: 1.5px solid #5A67D8; animation: splashHalo 2s ease-out infinite; }
+.splash-halo { position: absolute; inset: 0; border-radius: inherit; border: 1.5px solid #C2410C; animation: splashHalo 2s ease-out infinite; }
 .splash-step { animation: splashStepIn 0.5s var(--ease-out-soft) both; }
 .splash-step-1 { animation-delay: 0.35s; }
 .splash-step-2 { animation-delay: 0.7s; }

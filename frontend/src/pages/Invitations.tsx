@@ -98,7 +98,7 @@ export const InvitationLanding: React.FC = () => {
             </div>
             {done ? <p className="text-sm text-emerald-700 dark:text-emerald-300" data-testid="invitation-done">{done}</p> : invitation.status === 'PENDING' && (
               isLoading ? <CollaborationLoading label="Checking your session…" /> : user ? (
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <Button onClick={() => void act(true)} isLoading={busy} data-testid="accept-invitation">Accept</Button>
                   <Button variant="outline" onClick={() => void act(false)} disabled={busy} data-testid="decline-invitation">Decline</Button>
                 </div>

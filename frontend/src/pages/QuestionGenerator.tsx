@@ -16,7 +16,7 @@ import { ProgramOutcome } from '@/types/coPo';
 import { CreateGenerationInput, FeedbackInput, GeneratedQuestion, GenerationRequest, UpdateGeneratedQuestionInput } from '@/types/questionGeneration';
 import { GenerationForm } from '@/components/questionGenerator/GenerationForm';
 import { AddToAssessmentModal, GeneratedQuestionList, GenerationRequestSummary, QuestionGenerationHistory, RegenerateQuestionModal } from '@/components/questionGenerator/GenerationPanels';
-import { GenerationDisclaimer, GenerationError, GenerationLoading, getGenerationErrorMessage } from '@/components/questionGenerator/GenerationStates';
+import { GenerationError, GenerationLoading, getGenerationErrorMessage } from '@/components/questionGenerator/GenerationStates';
 
 const POLL_MS = 3000;
 
@@ -165,11 +165,9 @@ export const QuestionGenerator: React.FC = () => {
         <div>
           <Link to={backLink} className="inline-flex items-center gap-1 text-xs text-sage-500 hover:text-sage-800 dark:hover:text-white"><ArrowLeft className="w-3.5 h-3.5" /> {routeCourseId ? 'Back to course' : 'Dashboard'}</Link>
           <h1 className="text-2xl font-bold text-sage-800 dark:text-white flex items-center gap-2"><Sparkles className="w-5 h-5" /> Constrained Question Generator</h1>
-          <p className="text-sm text-sage-500">AI drafts under your constraints — grounded in your course outcomes and documents, validated, and always reviewed by you.</p>
         </div>
       </div>
 
-      <GenerationDisclaimer />
       {error && <GenerationError message={error} />}
       {notice && <p className="text-sm text-emerald-700 dark:text-emerald-300" data-testid="generation-notice">{notice}</p>}
 

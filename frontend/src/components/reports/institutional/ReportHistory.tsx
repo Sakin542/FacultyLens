@@ -52,7 +52,7 @@ export const ReportHistory: React.FC<ReportHistoryProps> = ({ reports, onDelete,
               <td className="px-4 py-3 align-top text-xs text-sage-700 whitespace-nowrap">{r.file_deleted_at ? 'File removed' : when(r.expires_at)}</td>
               <td className="px-4 py-3 align-top">
                 <div className="flex items-center justify-end gap-1.5">
-                  <Link to={`/reports/${r.id}`} className="inline-flex items-center gap-1 rounded-lg border border-sage-200 bg-white px-2.5 py-1.5 text-xs font-medium text-sage-800 hover:bg-sage-100" aria-label={`View report ${r.id}`}><Eye className="w-3.5 h-3.5" />View</Link>
+                  <Link to={`/reports/${r.id}`} className="inline-flex items-center gap-1 whitespace-nowrap rounded-lg border border-sage-200 bg-white px-2.5 py-1.5 text-xs font-medium text-sage-800 hover:bg-sage-100" aria-label={`View report ${r.id}`}><Eye className="w-3.5 h-3.5" />View</Link>
                   <ReportDownloadButton report={r} onError={onError} />
                   <Button type="button" variant="ghost" size="sm" onClick={() => onDelete(r)} isLoading={deletingId === r.id} disabled={r.status === 'PROCESSING'} aria-label={`Delete report ${r.id}`} title={r.status === 'PROCESSING' ? 'Cannot delete while generating' : 'Delete'} className="text-red-700 hover:bg-red-50">
                     <Trash2 className="w-4 h-4" />

@@ -50,11 +50,11 @@ export const Notifications: React.FC = () => {
   const pagination = useMemo(() => {
     if (!meta || meta.last_page <= 1) return null;
     return (
-      <nav aria-label="Notification pages" className="flex items-center justify-between gap-3 px-4 py-3 border-t border-[#E7E2D8] text-xs text-[#6B6B63]">
+      <nav aria-label="Notification pages" className="flex items-center justify-between gap-3 px-4 py-3 border-t border-sage-200 text-xs text-sage-500">
         <span>Page {meta.current_page} of {meta.last_page} · {meta.total} total</span>
         <span className="flex items-center gap-1">
-          <button type="button" disabled={meta.current_page <= 1} onClick={() => update({ page: String(meta.current_page - 1) })} aria-label="Previous page" className="inline-flex items-center gap-1 rounded-md border border-[#E7E2D8] bg-white px-2 py-1 hover:bg-[#F7F4EE] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-[#1E6F5C]"><ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" /> Prev</button>
-          <button type="button" disabled={meta.current_page >= meta.last_page} onClick={() => update({ page: String(meta.current_page + 1) })} aria-label="Next page" className="inline-flex items-center gap-1 rounded-md border border-[#E7E2D8] bg-white px-2 py-1 hover:bg-[#F7F4EE] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-[#1E6F5C]">Next <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" /></button>
+          <button type="button" disabled={meta.current_page <= 1} onClick={() => update({ page: String(meta.current_page - 1) })} aria-label="Previous page" className="inline-flex items-center gap-1 rounded-md border border-sage-200 bg-white px-2 py-1 hover:bg-sage-100 disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-sage-700"><ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" /> Prev</button>
+          <button type="button" disabled={meta.current_page >= meta.last_page} onClick={() => update({ page: String(meta.current_page + 1) })} aria-label="Next page" className="inline-flex items-center gap-1 rounded-md border border-sage-200 bg-white px-2 py-1 hover:bg-sage-100 disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-sage-700">Next <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" /></button>
         </span>
       </nav>
     );
@@ -64,19 +64,20 @@ export const Notifications: React.FC = () => {
     <div className="space-y-5 page-enter" data-testid="notifications-page">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex items-start gap-3">
-          <span className="w-10 h-10 rounded-xl bg-white border border-[#E7E2D8] flex items-center justify-center text-[#171717]"><Bell className="w-5 h-5" aria-hidden="true" strokeWidth={1.8} /></span>
+          <span className="w-10 h-10 rounded-xl bg-white border border-sage-200 flex items-center justify-center text-sage-800"><Bell className="w-5 h-5" aria-hidden="true" strokeWidth={1.8} /></span>
           <div>
-            <h2 className="text-xl font-semibold text-[#171717] tracking-tight">Notification center</h2>
-            <p className="text-sm text-[#6B6B63]">
-              {view === 'inbox' ? (unreadCount > 0 ? `${unreadCount} unread ${unreadCount === 1 ? 'notification' : 'notifications'}.` : 'Nothing unread.') : 'Choose what FacultyLens tells you about.'}
-              {' '}Notifications are informational — every academic decision stays with faculty.
-            </p>
+            <h2 className="text-xl font-semibold text-sage-800 tracking-tight">Notification center</h2>
+            {(view !== 'inbox' || unreadCount > 0) && (
+              <p className="text-sm text-sage-500">
+                {view === 'inbox' ? `${unreadCount} unread ${unreadCount === 1 ? 'notification' : 'notifications'}.` : 'Choose what FacultyLens tells you about.'}
+              </p>
+            )}
           </div>
         </div>
-        <div role="tablist" aria-label="Notification center sections" className="inline-flex rounded-lg border border-[#E7E2D8] bg-white p-0.5">
+        <div role="tablist" aria-label="Notification center sections" className="inline-flex rounded-lg border border-sage-200 bg-white p-0.5">
           {(['inbox', 'preferences'] as const).map((v) => (
             <button key={v} type="button" role="tab" aria-selected={view === v} data-testid={`view-${v}`} onClick={() => update({ view: v === 'inbox' ? null : v })}
-              className={cn('inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium focus-visible:outline-2 focus-visible:outline-[#1E6F5C]', view === v ? 'bg-[#171717] text-white' : 'text-[#171717] hover:bg-[#F7F4EE]')}>
+              className={cn('inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium focus-visible:outline-2 focus-visible:outline-sage-700', view === v ? 'bg-sage-700 text-white' : 'text-sage-800 hover:bg-sage-100')}>
               {v === 'inbox' ? <Bell className="w-3.5 h-3.5" aria-hidden="true" /> : <Settings2 className="w-3.5 h-3.5" aria-hidden="true" />}
               {v === 'inbox' ? 'Inbox' : 'Preferences'}
             </button>
@@ -87,8 +88,8 @@ export const Notifications: React.FC = () => {
       {view === 'preferences' ? (
         <NotificationPreferences />
       ) : (
-        <section className="rounded-xl border border-[#E7E2D8] bg-white overflow-hidden" aria-label="Notification inbox">
-          <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-b border-[#E7E2D8] bg-[#F7F4EE]">
+        <section className="rounded-xl border border-sage-200 bg-white overflow-hidden" aria-label="Notification inbox">
+          <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-b border-sage-200 bg-sage-100">
             <NotificationFilters value={filter} unreadCount={unreadCount} onChange={(f) => update({ filter: f, page: null })} />
             <div className="flex items-center gap-1.5">
               <Button type="button" variant="ghost" size="sm" onClick={() => { void refresh(); }} leftIcon={<RefreshCw className={cn('w-3.5 h-3.5', loading && 'animate-spin')} />} aria-label="Refresh notifications">Refresh</Button>
