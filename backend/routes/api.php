@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\AssessmentController;
 use App\Http\Controllers\Api\AssessmentQuestionPaperController;
 use App\Http\Controllers\Api\AssessmentReportController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\NewsletterController;
 use App\Http\Controllers\Api\ProfilePictureController;
 use App\Http\Controllers\Api\CoPoMappingController;
 use App\Http\Controllers\Api\CourseController;
@@ -404,4 +405,11 @@ Route::get('/collaboration/invitations/{token}', [CollaborationController::class
 // Public Shared Report Endpoints (STEP 18)
 Route::get('/shared/reports/{token}', [AssessmentReportController::class, 'viewShared']);
 Route::get('/shared/reports/{token}/download', [AssessmentReportController::class, 'downloadShared']);
+
+// Public "Faculty dispatch" newsletter (double opt-in; token links arrive by e-mail)
+Route::prefix('newsletter')->group(function () {
+    Route::post('/subscribe', [NewsletterController::class, 'subscribe'])->middleware('throttle:newsletter');
+    Route::post('/confirm/{token}', [NewsletterController::class, 'confirm'])->middleware('throttle:auth');
+    Route::post('/unsubscribe/{token}', [NewsletterController::class, 'unsubscribe'])->middleware('throttle:auth');
+});
 

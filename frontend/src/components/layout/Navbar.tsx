@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { BarChart3, Bot, ClipboardList, Eye, GitCompare, GraduationCap, History, Layers, Menu, ScrollText, Target, X } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
+import { ProfilePicture } from '@/components/profile/ProfilePicture';
 
 const LINKS: { id: string; label: string }[] = [
   { id: 'features', label: 'Features' },
@@ -89,6 +91,8 @@ export const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
   const scrollToSection = useScrollToSection();
+  const { user, isAuthenticated, loading } = useAuth();
+  const displayName = user?.name || user?.fullName || 'Faculty Member';
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -116,7 +120,22 @@ export const Navbar: React.FC = () => {
           </nav>
 
           <div className="hidden md:flex items-center gap-3">
-            <button type="button" onClick={() => navigate('/login')} className="text-sm text-sage-800 border border-sage-300 rounded-lg px-4 py-1.5 bg-white hover:bg-sage-100 transition-colors">Sign In</button>
+            {isAuthenticated ? (
+              <Link
+                to="/dashboard"
+                className="flex items-center gap-2 pl-1 pr-3 py-1 rounded-full border border-sage-300 bg-white hover:bg-sage-100 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sage-700"
+                aria-label={`Open your profile, ${displayName}`}
+                data-testid="navbar-profile-link"
+              >
+                <ProfilePicture src={user?.profile_picture_url} name={displayName} size="sm" tone="dark" decorative />
+                <span className="text-sm text-sage-800 max-w-[10rem] truncate">{displayName}</span>
+              </Link>
+            ) : !loading && (
+              <>
+                <button type="button" onClick={() => navigate('/login')} className="text-sm text-sage-800 border border-sage-300 rounded-lg px-4 py-1.5 bg-white hover:bg-sage-100 transition-colors">Sign In</button>
+                <button type="button" onClick={() => navigate('/register')} className="text-sm text-white rounded-lg px-4 py-1.5 bg-sage-700 hover:bg-sage-800 transition-colors">Register</button>
+              </>
+            )}
           </div>
 
           <button type="button" className="md:hidden p-2 rounded-lg text-sage-800 hover:bg-sage-200" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle Navigation Menu">
@@ -131,8 +150,25 @@ export const Navbar: React.FC = () => {
             <button key={l.id} type="button" className="block w-full text-left py-2 text-sm text-black" onClick={() => handleNavClick(l.id)}>{l.label}</button>
           ))}
           <div className="pt-4 border-t border-sage-200 flex flex-col gap-2">
-            <button type="button" className="w-full text-sm text-sage-800 border border-sage-300 rounded-lg px-4 py-2 bg-white" onClick={() => { setMobileMenuOpen(false); navigate('/login'); }}>Sign In</button>
-            <button type="button" className="w-full text-sm text-white rounded-lg px-4 py-2 bg-sage-700 hover:bg-sage-800" onClick={() => { setMobileMenuOpen(false); navigate('/register'); }}>Start Analyzing</button>
+            {isAuthenticated ? (
+              <Link
+                to="/dashboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-3 px-3 py-2 rounded-lg border border-sage-300 bg-white"
+                aria-label={`Open your profile, ${displayName}`}
+              >
+                <ProfilePicture src={user?.profile_picture_url} name={displayName} size="sm" tone="dark" decorative />
+                <span className="min-w-0">
+                  <span className="block text-sm text-sage-800 truncate">{displayName}</span>
+                  <span className="block text-[11px] text-sage-500">Go to dashboard</span>
+                </span>
+              </Link>
+            ) : !loading && (
+              <>
+                <button type="button" className="w-full text-sm text-sage-800 border border-sage-300 rounded-lg px-4 py-2 bg-white" onClick={() => { setMobileMenuOpen(false); navigate('/login'); }}>Sign In</button>
+                <button type="button" className="w-full text-sm text-white rounded-lg px-4 py-2 bg-sage-700 hover:bg-sage-800" onClick={() => { setMobileMenuOpen(false); navigate('/register'); }}>Register</button>
+              </>
+            )}
           </div>
         </div>
       )}

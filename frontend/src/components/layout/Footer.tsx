@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowUp, CheckCircle2, Github, Leaf, Linkedin, Mail, Twitter } from 'lucide-react';
+import { ArrowRight, ArrowUp, CheckCircle2, Github, Leaf, Linkedin, Loader2, Mail, Twitter } from 'lucide-react';
 import { BrandMark, useScrollToSection } from './Navbar';
+import { newsletterService } from '@/services/newsletterService';
+import { ApiError } from '@/services/api';
 
 const PRODUCT: { id: string; label: string }[] = [
   { id: 'features', label: 'Features' },
@@ -33,15 +35,25 @@ export const Footer: React.FC = () => {
   const scrollToSection = useScrollToSection();
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [subscribed, setSubscribed] = useState(false);
+  const [subscribed, setSubscribed] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  const subscribe = (e: React.FormEvent) => {
+  const subscribe = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitting) return;
     if (!/^\S+@\S+\.\S+$/.test(email.trim())) { setError('Enter a valid email address.'); return; }
     setError(null);
-    setSubscribed(true);
-    setEmail('');
-    window.setTimeout(() => setSubscribed(false), 5000);
+    setSubmitting(true);
+    try {
+      const res = await newsletterService.subscribe(email);
+      setSubscribed(res.message || 'Check your inbox to confirm your subscription.');
+      setEmail('');
+    } catch (err) {
+      const fieldError = err instanceof ApiError ? err.errors?.email?.[0] : undefined;
+      setError(fieldError || (err instanceof Error && err.message ? err.message : 'We could not process your subscription. Please try again.'));
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -87,17 +99,20 @@ export const Footer: React.FC = () => {
             <h3 className="text-[11px] uppercase tracking-[0.18em] text-sage-300">Faculty dispatch</h3>
             <p className="text-xs text-white/60 leading-relaxed">Occasional notes on assessment design and AI governance. No marketing noise.</p>
             {subscribed ? (
-              <p role="status" className="flex items-center gap-2 rounded-lg border border-[#86EFAC]/30 bg-[#86EFAC]/10 px-3 py-2 text-xs text-[#BBF7D0]"><CheckCircle2 className="w-4 h-4 shrink-0" aria-hidden="true" />Thanks — you’re on the list.</p>
+              <p role="status" className="flex items-center gap-2 rounded-lg border border-[#86EFAC]/30 bg-[#86EFAC]/10 px-3 py-2 text-xs text-[#BBF7D0]" data-testid="newsletter-success"><CheckCircle2 className="w-4 h-4 shrink-0" aria-hidden="true" />{subscribed}</p>
             ) : (
-              <form noValidate onSubmit={subscribe} className="space-y-2">
+              <form noValidate onSubmit={subscribe} className="space-y-2" data-testid="newsletter-form">
                 <label htmlFor="footer-email" className="sr-only">Email address</label>
                 <div className="flex items-center rounded-lg border border-white/15 bg-white/5 focus-within:border-sage-300 transition-colors">
                   <Mail className="w-4 h-4 ml-3 text-white/40 shrink-0" aria-hidden="true" />
-                  <input id="footer-email" type="email" value={email} onChange={(e) => { setEmail(e.target.value); setError(null); }} placeholder="you@university.edu" aria-invalid={!!error} aria-describedby={error ? 'footer-email-error' : undefined}
-                    className="flex-1 min-w-0 bg-transparent px-2.5 py-2 text-xs text-white placeholder:text-white/35 focus:outline-none" />
-                  <button type="submit" aria-label="Subscribe" className="m-1 rounded-md bg-white text-sage-800 p-1.5 hover:bg-sage-100 transition-colors"><ArrowRight className="w-3.5 h-3.5" /></button>
+                  <input id="footer-email" type="email" value={email} disabled={submitting} autoComplete="email" onChange={(e) => { setEmail(e.target.value); setError(null); }} placeholder="you@university.edu" aria-invalid={!!error} aria-describedby={error ? 'footer-email-error' : undefined}
+                    className="flex-1 min-w-0 bg-transparent px-2.5 py-2 text-xs text-white placeholder:text-white/35 focus:outline-none disabled:opacity-60" />
+                  <button type="submit" aria-label="Subscribe" disabled={submitting} aria-busy={submitting} className="m-1 rounded-md bg-white text-sage-800 p-1.5 hover:bg-sage-100 transition-colors disabled:opacity-60">
+                    {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" aria-hidden="true" /> : <ArrowRight className="w-3.5 h-3.5" />}
+                  </button>
                 </div>
                 {error && <p id="footer-email-error" role="alert" className="text-[11px] text-[#FCA5A5]">{error}</p>}
+                <p className="text-[10px] text-white/40">Double opt-in — we only send after you confirm. Unsubscribe any time from any issue.</p>
               </form>
             )}
             <div className="flex items-center gap-3 pt-1 text-white/60">

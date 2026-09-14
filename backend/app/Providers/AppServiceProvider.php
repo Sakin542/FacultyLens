@@ -47,6 +47,16 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(25)->by($request->user()?->id ?: $request->ip());
         });
 
+        // Public newsletter sign-ups (per IP per hour)
+        RateLimiter::for('newsletter', function (Request $request) {
+            return Limit::perHour(max(1, (int) config('newsletter.subscribe_rate_limit_per_hour', 5)))
+                ->by('newsletter:' . $request->ip())
+                ->response(fn () => response()->json([
+                    'status' => 'error',
+                    'message' => 'Too many subscription attempts. Please try again later.',
+                ], 429));
+        });
+
         // Profile picture changes (upload/replace/remove) per user per hour
         RateLimiter::for('profile-picture', function (Request $request) {
             return Limit::perHour(max(1, (int) config('profile_picture.rate_limit_per_hour', 10)))
