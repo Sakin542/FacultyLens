@@ -10,6 +10,7 @@ use App\Notifications\NotificationCategory;
 use App\Notifications\NotificationSeverity;
 use App\Notifications\NotificationType;
 use App\Services\AuditLogService;
+use App\Services\Email\EmailService;
 use Carbon\CarbonInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\QueryException;
@@ -27,6 +28,10 @@ use Throwable;
  * Guarantees: a notification never carries secrets or private academic content, never goes to a recipient the
  * caller did not resolve through the authorization model, never duplicates on retry, and never makes the
  * underlying academic operation fail (dispatch errors are logged and swallowed).
+ *
+ * E-mail is a second, independent channel: notify() hands the same validated payload to EmailService, which applies
+ * the recipient's e-mail preference and queues SendFacultyLensEmailJob. An e-mail problem never affects the in-app
+ * write and vice versa.
  */
 class NotificationService
 {
@@ -35,7 +40,7 @@ class NotificationService
     public const MAX_DATA_STRING = 500;
     public const MAX_DATA_KEYS = 25;
 
-    public function __construct(protected AuditLogService $audit) {}
+    public function __construct(protected AuditLogService $audit, protected EmailService $emails) {}
 
     // =============================================================== create
 
@@ -44,7 +49,7 @@ class NotificationService
      *
      * @param array{title:string, message:string, severity?:string, data?:array, action_url?:string|null, entity_type?:string|null,
      *              entity_id?:int|null, dedupe_key?:string|null, expires_at?:CarbonInterface|string|null} $attributes
-     * @param array{queue?:bool, actor_id?:int|null} $options
+     * @param array{queue?:bool, actor_id?:int|null, email?:bool} $options
      * @return Notification|null the stored row when written inline, null when queued / skipped
      */
     public function notify(User|int $recipient, string $type, array $attributes, array $options = []): ?Notification
@@ -59,28 +64,33 @@ class NotificationService
 
         $payload = $this->buildPayload($userId, $type, $attributes, $options);
 
-        if (!NotificationPreference::inAppEnabled($userId, $type)) {
-            return null;
-        }
-
-        try {
-            $queue = $options['queue'] ?? (bool) config('notifications.queue.enabled', true);
-            if (!$queue) {
-                return $this->store($payload);
+        $stored = null;
+        if (NotificationPreference::inAppEnabled($userId, $type)) {
+            try {
+                $queue = $options['queue'] ?? (bool) config('notifications.queue.enabled', true);
+                if (!$queue) {
+                    $stored = $this->store($payload);
+                } else {
+                    StoreNotificationJob::dispatch($payload)
+                        ->onConnection(config('notifications.queue.connection') ?: config('queue.default'))
+                        ->onQueue((string) config('notifications.queue.name', 'default'))
+                        // events fire inside domain transactions; never persist a notification for a rolled-back operation
+                        ->afterCommit();
+                    $stored = $this->isSyncQueue() ? $this->findByDedupe($userId, $payload['dedupe_key']) : null;
+                }
+            } catch (Throwable $e) {
+                // Delivery problems are never allowed to fail the academic operation that produced the event.
+                Log::warning('NotificationService: dispatch failed', ['type' => $type, 'user_id' => $userId, 'error' => $e->getMessage()]);
             }
-            StoreNotificationJob::dispatch($payload)
-                ->onConnection(config('notifications.queue.connection') ?: config('queue.default'))
-                ->onQueue((string) config('notifications.queue.name', 'default'))
-                // events fire inside domain transactions; never persist a notification for a rolled-back operation
-                ->afterCommit();
-
-            return $this->isSyncQueue() ? $this->findByDedupe($userId, $payload['dedupe_key']) : null;
-        } catch (Throwable $e) {
-            // Delivery problems are never allowed to fail the academic operation that produced the event.
-            Log::warning('NotificationService: dispatch failed', ['type' => $type, 'user_id' => $userId, 'error' => $e->getMessage()]);
-
-            return null;
         }
+
+        // E-mail channel: decided and queued independently of the in-app channel (its own preference, its own job,
+        // never throws). Runs after the in-app dispatch so an inline/sync write can be linked from the delivery row.
+        if ($options['email'] ?? true) {
+            $this->emails->queueNotificationEmail($payload, $recipient instanceof User ? $recipient : null);
+        }
+
+        return $stored;
     }
 
     /**

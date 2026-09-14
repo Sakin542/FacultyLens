@@ -22,6 +22,12 @@ export interface AuthResponse {
   user?: User;
 }
 
+export interface SessionResponse {
+  status: 'success' | 'error';
+  authenticated: boolean;
+  user: User | null;
+}
+
 export interface UpdateProfilePayload {
   name: string;
   department: string;
@@ -33,6 +39,21 @@ export interface ChangePasswordPayload {
   password: string;
   password_confirmation: string;
 }
+
+export interface ResetPasswordPayload {
+  token: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+}
+
+export interface MessageResponse {
+  status: 'success' | 'error';
+  message?: string;
+  code?: string;
+}
+
+let sessionProbe: Promise<SessionResponse> | null = null;
 
 export const authService = {
   /**
@@ -74,6 +95,17 @@ export const authService = {
   },
 
   /**
+   * Boot-time session probe. Returns 200 for anonymous visitors too (no console 401, no session-expired event).
+   * Concurrent callers (React StrictMode double effects) share one in-flight request.
+   */
+  getSession: (): Promise<SessionResponse> => {
+    if (!sessionProbe) {
+      sessionProbe = apiClient<SessionResponse>('/auth/session', { method: 'GET' }).finally(() => { sessionProbe = null; });
+    }
+    return sessionProbe;
+  },
+
+  /**
    * Update editable profile fields (email is fixed and never sent)
    */
   updateProfile: async (data: UpdateProfilePayload): Promise<AuthResponse> => {
@@ -90,6 +122,24 @@ export const authService = {
   changePassword: async (data: ChangePasswordPayload): Promise<AuthResponse> => {
     await getCsrfCookie();
     return apiClient<AuthResponse>('/auth/change-password', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+
+  /** Always resolves with a generic message — the server never reveals whether the account exists. */
+  forgotPassword: async (email: string): Promise<MessageResponse> => {
+    await getCsrfCookie();
+    return apiClient<MessageResponse>('/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    });
+  },
+
+  /** Token + e-mail come from the reset link; the new password is sent in the body only. */
+  resetPassword: async (data: ResetPasswordPayload): Promise<MessageResponse> => {
+    await getCsrfCookie();
+    return apiClient<MessageResponse>('/auth/reset-password', {
       method: 'POST',
       body: JSON.stringify(data),
     });

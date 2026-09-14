@@ -89,8 +89,8 @@ export const AiEvaluationSummary: React.FC<{ data: AiEvaluationAnalytics }> = ({
       </table>
       {data.trend.length > 0 && (
         <div className="space-y-1">
-          <div className="flex items-center gap-2"><label htmlFor="ai-trend-task" className="text-xs text-sage-500">Trend task</label>
-            <select id="ai-trend-task" value={task} onChange={(e) => setTask(e.target.value)} className="rounded-md border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-2 py-1 text-xs"><option value="">All tasks</option>{[...new Set(data.trend.map((t) => t.task))].map((t) => <option key={t} value={t}>{TASK_LABELS[t as EvaluationTask] ?? t}</option>)}</select></div>
+          <div className="flex items-center gap-2 w-full sm:w-auto"><label htmlFor="ai-trend-task" className="text-xs text-sage-500">Trend task</label>
+            <select id="ai-trend-task" value={task} onChange={(e) => setTask(e.target.value)} className="flex-1 sm:flex-none min-w-0 h-9 sm:h-auto rounded-md border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-2 py-1 text-xs"><option value="">All tasks</option>{[...new Set(data.trend.map((t) => t.task))].map((t) => <option key={t} value={t}>{TASK_LABELS[t as EvaluationTask] ?? t}</option>)}</select></div>
           <LineChart points={trend} max={1} ariaLabel="AI model performance across evaluation runs" />
           <Link to="/ai-evaluation" className="text-xs underline underline-offset-2">Open AI Evaluation</Link>
         </div>
@@ -133,7 +133,7 @@ export const CollaborationSummary: React.FC<{ data: CollabData }> = ({ data }) =
 
 /** STEP 37: blueprint compliance card (links back to each assessment's blueprint). */
 export const BlueprintComplianceSummary: React.FC<{ data: BlueprintComplianceAnalytics | undefined }> = ({ data }) => (
-  <Section testId="blueprint-compliance" title="Assessment Blueprint Compliance" subtitle="Actual question sets compared with each assessment's current blueprint (STEP 37).">
+  <Section testId="blueprint-compliance" title="Assessment Blueprint Compliance" subtitle="Actual question sets compared with each assessment's current blueprint.">
     {!data || data.assessments_with_blueprint === 0 ? <SectionEmpty title="No blueprints yet" description="Create an assessment blueprint to plan and validate structure before generating or selecting questions." /> : (
       <>
         <p className="text-sm">Average compliance <span className="font-semibold tabular-nums">{fmtPct(data.average_compliance)}</span> across {data.assessments_with_blueprint} assessment(s)</p>

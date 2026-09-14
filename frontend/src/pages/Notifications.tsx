@@ -91,9 +91,9 @@ export const Notifications: React.FC = () => {
         <section className="rounded-xl border border-sage-200 bg-white overflow-hidden" aria-label="Notification inbox">
           <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-b border-sage-200 bg-sage-100">
             <NotificationFilters value={filter} unreadCount={unreadCount} onChange={(f) => update({ filter: f, page: null })} />
-            <div className="flex items-center gap-1.5">
-              <Button type="button" variant="ghost" size="sm" onClick={() => { void refresh(); }} leftIcon={<RefreshCw className={cn('w-3.5 h-3.5', loading && 'animate-spin')} />} aria-label="Refresh notifications">Refresh</Button>
-              <Button type="button" variant="outline" size="sm" disabled={unreadCount === 0} onClick={safe(markAllAsRead, 'All notifications marked as read.')} leftIcon={<CheckCheck className="w-3.5 h-3.5" />} data-testid="mark-all-read">Mark all as read</Button>
+            <div className="grid grid-cols-2 gap-1.5 w-full sm:flex sm:items-center sm:w-auto">
+              <Button type="button" variant="ghost" size="sm" className="justify-center" onClick={() => { void refresh(); }} leftIcon={<RefreshCw className={cn('w-3.5 h-3.5', loading && 'animate-spin')} />} aria-label="Refresh notifications">Refresh</Button>
+              <Button type="button" variant="outline" size="sm" className="justify-center" disabled={unreadCount === 0} onClick={safe(markAllAsRead, 'All notifications marked as read.')} leftIcon={<CheckCheck className="w-3.5 h-3.5" />} data-testid="mark-all-read">Mark all as read</Button>
             </div>
           </div>
 

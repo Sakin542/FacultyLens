@@ -8,7 +8,6 @@ import { academicAnalyticsService } from '@/services/academicAnalyticsService';
 import { ApiError } from '@/services/api';
 import { AnalyticsOverview, AssessmentRow, AttentionArea, AttentionSeverity, QualityRating } from '@/types/analytics';
 import { CollaborationSummaryCard } from '@/components/collaboration/CollaborationActivity';
-import { ProfilePicture } from '@/components/profile/ProfilePicture';
 import { Reveal } from '@/components/landing/Motion';
 
 /* ------------------------------------------------------------------ helpers */
@@ -51,22 +50,23 @@ const Panel: React.FC<{ title: string; subtitle?: string; action?: React.ReactNo
 );
 
 const Kpi: React.FC<{ label: string; value: string; note?: string; icon: React.ElementType; to: string; delay?: number }> = ({ label, value, note, icon: Icon, to, delay }) => (
-  <Reveal delay={delay}>
-    <Link to={to} className="group relative block rounded-xl border border-sage-200 bg-white p-4 shadow-subtle transition-all hover:border-sage-300 hover:-translate-y-0.5 hover:shadow-card">
+  <Reveal delay={delay} className="h-full">
+    <Link to={to} className="group relative flex h-full flex-col rounded-xl border border-sage-200 bg-white p-4 shadow-subtle transition-all hover:border-sage-300 hover:-translate-y-0.5 hover:shadow-card">
       <div className="relative flex items-start justify-between gap-2">
-        <p className="text-[11px] uppercase tracking-[0.14em] text-sage-500">{label}</p>
-        <span className="w-8 h-8 rounded-lg bg-white border border-sage-200 flex items-center justify-center text-sage-800 transition-colors group-hover:border-sage-300"><Icon className="w-4 h-4" strokeWidth={1.8} aria-hidden="true" /></span>
+        {/* reserve two label lines so values line up whether the label wraps ("Student performance") or not */}
+        <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.08em] sm:tracking-[0.14em] leading-[1.35] text-sage-500 min-h-[2.7em] [text-wrap:balance]">{label}</p>
+        <span className="w-8 h-8 shrink-0 rounded-lg bg-white border border-sage-200 flex items-center justify-center text-sage-800 transition-colors group-hover:border-sage-300"><Icon className="w-4 h-4" strokeWidth={1.8} aria-hidden="true" /></span>
       </div>
-      <p className="relative mt-2 font-serif text-3xl leading-none text-sage-800 tabular-nums">{value}</p>
-      {note && <p className="relative mt-1.5 text-xs text-sage-500 truncate">{note}</p>}
+      <p className={`relative mt-auto pt-2 font-serif text-3xl leading-none tabular-nums ${value === '—' ? 'text-sage-400' : 'text-sage-800'}`} aria-label={value === '—' ? 'Not available yet' : undefined}>{value}</p>
+      <p className="relative mt-1.5 text-xs text-sage-500 truncate min-h-[1rem]">{note ?? ''}</p>
       <ArrowRight aria-hidden="true" className="absolute right-4 bottom-4 w-3.5 h-3.5 text-sage-500 -translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
     </Link>
   </Reveal>
 );
 
 const QuickAction: React.FC<{ icon: React.ElementType; label: string; to: string; primary?: boolean }> = ({ icon: Icon, label, to, primary }) => (
-  <Link to={to} className={`inline-flex items-center gap-2 whitespace-nowrap rounded-lg text-sm px-4 py-2 transition-all hover:-translate-y-0.5 ${primary ? 'bg-sage-700 text-white hover:bg-sage-800 hover:shadow-elevated' : 'border border-sage-300 bg-white text-sage-800 hover:bg-sage-100'}`}>
-    <Icon className="w-4 h-4" strokeWidth={1.8} aria-hidden="true" />{label}
+  <Link to={to} className={`flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-2 rounded-lg text-xs sm:text-sm leading-tight text-center px-2 sm:px-4 py-2.5 sm:py-2 min-h-[3.75rem] sm:min-h-0 w-full sm:w-auto transition-all hover:-translate-y-0.5 ${primary ? 'bg-sage-700 text-white hover:bg-sage-800 hover:shadow-elevated' : 'border border-sage-300 bg-white text-sage-800 hover:bg-sage-100'}`}>
+    <Icon className="w-[18px] h-[18px] sm:w-4 sm:h-4 shrink-0" strokeWidth={1.8} aria-hidden="true" /><span className="whitespace-nowrap">{label}</span>
   </Link>
 );
 
@@ -178,13 +178,10 @@ export const Dashboard: React.FC = () => {
         <section className="relative overflow-hidden rounded-2xl border border-sage-200 bg-white p-5 sm:p-6">
           <div className="absolute -right-10 -top-12 w-48 h-48 rounded-full bg-sage-100 blur-2xl pointer-events-none" aria-hidden="true" />
           <div className="relative flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
-            <div className="flex items-start gap-4 min-w-0">
-              <Link to="/settings" className="shrink-0 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sage-700" aria-label="Open profile settings" data-testid="dashboard-avatar-link">
-                <ProfilePicture src={user?.profile_picture_url} name={displayName} size="xl" tone="dark" decorative className="ring-4 ring-sage-100" />
-              </Link>
+            <div className="min-w-0">
               <div className="space-y-1.5 min-w-0">
                 <p className="text-[11px] uppercase tracking-[0.18em] text-sage-500">{greeting}</p>
-                <h2 className="font-serif text-2xl sm:text-3xl leading-tight tracking-tight text-sage-800 truncate">Welcome back, {firstName}.</h2>
+                <h2 className="font-serif text-2xl sm:text-3xl leading-tight tracking-tight text-sage-800 break-words sm:truncate">Welcome back, {firstName}.</h2>
                 <p className="text-xs text-sage-500 truncate"><span className="font-medium text-sage-700">{displayName}</span>{user?.designation ? ` · ${user.designation}` : ''}</p>
                 {data && hasCourses && (
                   <p className="text-sm text-sage-500 max-w-xl">
@@ -193,7 +190,7 @@ export const Dashboard: React.FC = () => {
                 )}
               </div>
             </div>
-            <div className="flex flex-wrap gap-2 shrink-0">
+            <div className="grid grid-cols-3 gap-2 sm:flex sm:flex-wrap shrink-0" data-testid="dashboard-quick-actions">
               <QuickAction icon={Plus} label="New course" to="/courses" />
               <QuickAction icon={FileCheck2} label="Assessments" to="/assessments" />
               <QuickAction icon={Sparkles} label="Run analysis" to="/analysis" primary />

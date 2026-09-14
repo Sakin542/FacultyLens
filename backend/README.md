@@ -18,7 +18,9 @@ Academic Decision Support System REST API service built with Laravel 12, MySQL 8
 | **Laravel App** | pp:8000 | http://127.0.0.1:8080 | REST API service & Health Check |
 | **MySQL Database** | mysql:3306 | 127.0.0.1:3307 | Relational database engine |
 | **phpMyAdmin** | phpmyadmin:80 | http://127.0.0.1:8081 | Web database management GUI |
-| **Queue Worker** | queue-worker | — | `php artisan queue:work` (database driver) for asynchronous AI jobs (STEP 23/27: assessment analysis, AI grading assistance). Outside Docker run `php artisan queue:work` alongside the app. |
+| **Queue Worker** | horizon | — | `php artisan horizon` (Redis queues `default` + `emails`) for asynchronous AI jobs, notifications and outbound e-mail. Outside Docker run `php artisan horizon` (Linux/macOS) or `php artisan queue:work --queue=emails,default` (Windows). |
+| **Redis** | redis | 6379 | Queue backend for Horizon. |
+| **Mailpit** | mailpit | 8025 (UI), 1025 (SMTP) | Local e-mail capture for development/E2E (`MAIL_MAILER=mailpit`). See `docs/EMAIL_CONFIGURATION.md`. |
 
 ### STEP 27: AI Grading Assistance endpoints
 

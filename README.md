@@ -917,7 +917,7 @@ cd FacultyLens
 
 ```bash
 cp backend/.env.example backend/.env          # dev values; DB_PASSWORD=root123 matches docker-compose.yml
-docker compose up -d --build                   # app :8080, mysql :3307, ai-service :8001, phpmyadmin :8081, queue-worker
+docker compose up -d --build                   # app :8080, mysql :3307, ai-service :8001, phpmyadmin :8081, redis :6379, horizon, mailpit :8025
 docker compose exec app php artisan key:generate
 docker compose exec app php artisan migrate --seed   # synthetic DevelopmentSeeder (faculty@example.com / password123)
 cd frontend && npm install && npm run dev      # http://localhost:5173 (proxies to :8080)
@@ -932,7 +932,7 @@ cd backend
 cp .env.example .env
 composer install && php artisan key:generate && php artisan migrate --seed
 php artisan serve --host=127.0.0.1 --port=8080
-php artisan queue:work                          # second terminal: async AI jobs, reports
+php artisan queue:work --queue=emails,default   # second terminal: async AI jobs, reports, e-mail (or `php artisan horizon` on Linux/macOS)
 ```
 
 ---
@@ -998,7 +998,7 @@ npm run dev
 
 # Queue & Scheduler
 
-Development: `queue-worker` container (database driver). Production: Redis-backed `queue:work` workers + `schedule:work`
+Development and production: Redis queues supervised by Laravel Horizon (`horizon` service) + `schedule:work`. E-mail (Gmail SMTP, queued, preference-aware) is documented in `docs/EMAIL_SYSTEM.md`; password reset in `docs/PASSWORD_RESET_FLOW.md`.
 (`reports:purge-expired` daily); Laravel Horizon is an optional add-on (see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md#9-queue)).
 Jobs: document extraction/embeddings, assessment analysis, question generation, AI grading assistance, performance analysis,
 AI evaluation, institutional reports — all with bounded retries and safe failure states.

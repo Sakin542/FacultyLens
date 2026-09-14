@@ -176,8 +176,8 @@ export const AiEvaluation: React.FC = () => {
             <Card className="p-4 space-y-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <h2 className="text-base font-semibold text-sage-800 dark:text-white">Evaluation run #{activeRun.id}</h2>
-                <div className="flex items-center gap-1" role="group" aria-label="Export report">
-                  {(['pdf', 'csv', 'json'] as const).map((f) => <Button key={f} size="sm" variant="outline" disabled={busy} onClick={() => void exportRun(f)}><Download className="w-3.5 h-3.5 mr-1" aria-hidden="true" />{f.toUpperCase()}</Button>)}
+                <div className="grid grid-cols-3 gap-1 w-full sm:flex sm:items-center sm:w-auto" role="group" aria-label="Export report">
+                  {(['pdf', 'csv', 'json'] as const).map((f) => <Button key={f} size="sm" variant="outline" className="justify-center" disabled={busy} onClick={() => void exportRun(f)}><Download className="w-3.5 h-3.5 mr-1" aria-hidden="true" />{f.toUpperCase()}</Button>)}
                 </div>
               </div>
               <RunMeta run={activeRun} />

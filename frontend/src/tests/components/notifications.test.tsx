@@ -346,14 +346,15 @@ describe('STEP 47 Notifications page', () => {
 describe('STEP 47 NotificationPreferences', () => {
   beforeEach(() => { vi.clearAllMocks(); });
   const prefs: NotificationPreference[] = [
-    { notification_type: 'AI_ANALYSIS_COMPLETED', category: 'AI', label: 'Assessment analysis completed', in_app_enabled: true, email_enabled: false, mandatory: false },
-    { notification_type: 'AI_ANALYSIS_FAILED', category: 'AI', label: 'AI analysis failed', in_app_enabled: true, email_enabled: false, mandatory: false },
-    { notification_type: 'REPORT_GENERATED', category: 'REPORT', label: 'Report ready', in_app_enabled: false, email_enabled: false, mandatory: false },
-    { notification_type: 'SECURITY_ALERT', category: 'SECURITY', label: 'Security alert', in_app_enabled: true, email_enabled: false, mandatory: true },
+    { notification_type: 'AI_ANALYSIS_COMPLETED', category: 'AI', label: 'Assessment analysis completed', in_app_enabled: true, email_enabled: true, mandatory: false, email_mandatory: false, email_available: true },
+    { notification_type: 'AI_ANALYSIS_FAILED', category: 'AI', label: 'AI analysis failed', in_app_enabled: true, email_enabled: true, mandatory: false, email_mandatory: false, email_available: true },
+    { notification_type: 'REPORT_GENERATED', category: 'REPORT', label: 'Report ready', in_app_enabled: false, email_enabled: false, mandatory: false, email_mandatory: false, email_available: true },
+    { notification_type: 'COLLABORATION_ROLE_CHANGED', category: 'COLLABORATION', label: 'Collaboration role changed', in_app_enabled: true, email_enabled: false, mandatory: false, email_mandatory: false, email_available: false },
+    { notification_type: 'SECURITY_ALERT', category: 'SECURITY', label: 'Security alert', in_app_enabled: true, email_enabled: true, mandatory: true, email_mandatory: true, email_available: true },
   ];
 
   it('renders the matrix grouped by category, locks mandatory types, and saves only non-mandatory changes', async () => {
-    svc.getPreferences.mockResolvedValue({ status: 'success', data: { preferences: prefs, categories: ['AI', 'REPORT', 'SECURITY'], mandatory_categories: ['SECURITY', 'SYSTEM'], email_available: false } });
+    svc.getPreferences.mockResolvedValue({ status: 'success', data: { preferences: prefs, categories: ['AI', 'REPORT', 'SECURITY'], mandatory_categories: ['SECURITY', 'SYSTEM'], email_available: true } });
     svc.updatePreferences.mockResolvedValue({ status: 'success', data: { preferences: prefs.map((p) => (p.notification_type === 'AI_ANALYSIS_COMPLETED' ? { ...p, in_app_enabled: false } : p)) } });
     render(<MemoryRouter><NotificationPreferences /></MemoryRouter>);
 
@@ -363,7 +364,7 @@ describe('STEP 47 NotificationPreferences', () => {
     expect(analysis).toBeChecked();
     expect(security).toBeChecked();
     expect(security).toBeDisabled();
-    expect(screen.getByText('Always on')).toBeInTheDocument();
+    expect(screen.getAllByText('Always on').length).toBeGreaterThan(0);
     expect((screen.getByLabelText('Report ready') as HTMLInputElement).checked).toBe(false);
     expect(screen.getByTestId('save-preferences')).toBeDisabled();
 
@@ -377,11 +378,59 @@ describe('STEP 47 NotificationPreferences', () => {
 
     fireEvent.click(screen.getByTestId('save-preferences'));
     await waitFor(() => expect(svc.updatePreferences).toHaveBeenCalledWith([
-      { notification_type: 'AI_ANALYSIS_COMPLETED', in_app_enabled: false },
-      { notification_type: 'AI_ANALYSIS_FAILED', in_app_enabled: true },
-      { notification_type: 'REPORT_GENERATED', in_app_enabled: false },
+      { notification_type: 'AI_ANALYSIS_COMPLETED', in_app_enabled: false, email_enabled: true },
+      { notification_type: 'AI_ANALYSIS_FAILED', in_app_enabled: true, email_enabled: true },
+      { notification_type: 'REPORT_GENERATED', in_app_enabled: false, email_enabled: false },
+      { notification_type: 'COLLABORATION_ROLE_CHANGED', in_app_enabled: true, email_enabled: false },
     ]));
     await screen.findByText('Preferences saved.');
+  });
+
+  it('exposes an independent e-mail channel: per-type switches, per-category summary, mandatory security, never-emailed types', async () => {
+    svc.getPreferences.mockResolvedValue({ status: 'success', data: { preferences: prefs, categories: [], mandatory_categories: ['SECURITY', 'SYSTEM'], email_available: true, email_mandatory_categories: ['SECURITY'] } });
+    svc.updatePreferences.mockResolvedValue({ status: 'success', data: { preferences: prefs.map((p) => (p.category === 'AI' ? { ...p, email_enabled: false } : p.notification_type === 'REPORT_GENERATED' ? { ...p, email_enabled: true } : p)) } });
+    render(<MemoryRouter><NotificationPreferences /></MemoryRouter>);
+    await screen.findByTestId('email-preferences');
+
+    // per-category summary switches ("AI Updates [ON/OFF]")
+    const ai = screen.getByLabelText('AI Updates') as HTMLInputElement;
+    const reports = screen.getByLabelText('Reports') as HTMLInputElement;
+    const securityEmail = screen.getByLabelText(/Security Alerts/) as HTMLInputElement;
+    expect(ai).toBeChecked();
+    expect(reports).not.toBeChecked();
+    expect(securityEmail).toBeChecked();
+    expect(securityEmail).toBeDisabled();
+    expect(screen.getByTestId('email-cat-state-SECURITY')).toHaveTextContent('Always on');
+    expect(screen.getByTestId('email-cat-state-AI')).toHaveTextContent('On');
+    // COLLABORATION has only a never-emailed type → no summary switch for it
+    expect(screen.queryByLabelText('Collaboration')).toBeNull();
+    // never-emailed type has no per-type email switch; mandatory one is locked
+    expect(screen.queryByLabelText('Email: Collaboration role changed')).toBeNull();
+    expect(screen.getByLabelText('Email: Security alert')).toBeDisabled();
+    expect(screen.queryByTestId('email-unavailable')).toBeNull();
+
+    fireEvent.click(ai); // AI Updates → OFF
+    expect((screen.getByLabelText('Email: Assessment analysis completed') as HTMLInputElement).checked).toBe(false);
+    expect(screen.getByTestId('email-cat-state-AI')).toHaveTextContent('Off');
+    fireEvent.click(screen.getByLabelText('Email: Report ready')); // single type → ON
+    expect(reports).toBeChecked();
+    // in-app values untouched
+    expect((screen.getByLabelText('Assessment analysis completed') as HTMLInputElement).checked).toBe(true);
+
+    fireEvent.click(screen.getByTestId('save-preferences'));
+    await waitFor(() => expect(svc.updatePreferences).toHaveBeenCalledWith([
+      { notification_type: 'AI_ANALYSIS_COMPLETED', in_app_enabled: true, email_enabled: false },
+      { notification_type: 'AI_ANALYSIS_FAILED', in_app_enabled: true, email_enabled: false },
+      { notification_type: 'REPORT_GENERATED', in_app_enabled: false, email_enabled: true },
+      { notification_type: 'COLLABORATION_ROLE_CHANGED', in_app_enabled: true, email_enabled: false },
+    ]));
+    await screen.findByText('Preferences saved.');
+  });
+
+  it('warns when the server has no mail transport configured', async () => {
+    svc.getPreferences.mockResolvedValue({ status: 'success', data: { preferences: prefs, categories: [], mandatory_categories: [], email_available: false } });
+    render(<MemoryRouter><NotificationPreferences /></MemoryRouter>);
+    await screen.findByTestId('email-unavailable');
   });
 
   it('shows a retryable error when preferences cannot load', async () => {

@@ -209,27 +209,30 @@ export const QuestionBank: React.FC = () => {
           </h1>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="grid grid-cols-3 gap-2 sm:flex sm:items-center" data-testid="question-bank-actions">
           <Button
             variant="outline"
             size="sm"
+            className="w-full justify-center sm:w-auto"
             leftIcon={<Sparkles className="w-3.5 h-3.5" />}
             onClick={() => setIsAiAnalysisOpen(true)}
           >
-            AI Question Sandbox
+            <span className="sm:hidden">AI Sandbox</span><span className="hidden sm:inline">AI Question Sandbox</span>
           </Button>
           <Button
             variant="outline"
             size="sm"
+            className="w-full justify-center sm:w-auto"
             leftIcon={<UploadCloud className="w-3.5 h-3.5" />}
             onClick={() => setIsUploadModalOpen(true)}
             disabled={!selectedCourseId}
           >
-            Upload Past Paper
+            <span className="sm:hidden">Upload Paper</span><span className="hidden sm:inline">Upload Past Paper</span>
           </Button>
           <Button
             variant="primary"
             size="sm"
+            className="w-full justify-center sm:w-auto"
             leftIcon={<Plus className="w-3.5 h-3.5" />}
             onClick={() => setIsAddModalOpen(true)}
             disabled={!selectedCourseId}
@@ -283,8 +286,8 @@ export const QuestionBank: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 text-xs p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl border border-sage-200 dark:border-[#3A3A3C]">
-          <div className="flex items-center gap-1">
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center text-xs p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl border border-sage-200 dark:border-[#3A3A3C]" data-testid="question-bank-filters">
+          <div className="flex flex-col gap-1 min-w-0 sm:flex-row sm:items-center">
             <span className="font-semibold text-sage-500">Type:</span>
             <select
               value={selectedType}
@@ -292,7 +295,7 @@ export const QuestionBank: React.FC = () => {
                 setSelectedType(e.target.value);
                 setCurrentPage(1);
               }}
-              className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white"
+              className="w-full sm:w-auto min-w-0 h-9 sm:h-auto rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white"
             >
               <option value="all">All Types</option>
               <option value="descriptive">Descriptive</option>
@@ -303,7 +306,7 @@ export const QuestionBank: React.FC = () => {
             </select>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex flex-col gap-1 min-w-0 sm:flex-row sm:items-center">
             <span className="font-semibold text-sage-500">Difficulty:</span>
             <select
               value={selectedDifficulty}
@@ -311,7 +314,7 @@ export const QuestionBank: React.FC = () => {
                 setSelectedDifficulty(e.target.value);
                 setCurrentPage(1);
               }}
-              className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white"
+              className="w-full sm:w-auto min-w-0 h-9 sm:h-auto rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white"
             >
               <option value="all">All Difficulties</option>
               <option value="easy">Easy</option>
@@ -320,7 +323,7 @@ export const QuestionBank: React.FC = () => {
             </select>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex flex-col gap-1 min-w-0 sm:flex-row sm:items-center">
             <span className="font-semibold text-sage-500">Bloom Level:</span>
             <select
               value={selectedCognitive}
@@ -328,7 +331,7 @@ export const QuestionBank: React.FC = () => {
                 setSelectedCognitive(e.target.value);
                 setCurrentPage(1);
               }}
-              className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white"
+              className="w-full sm:w-auto min-w-0 h-9 sm:h-auto rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white"
             >
               <option value="all">All Levels</option>
               <option value="Remember">Remember</option>
@@ -340,7 +343,7 @@ export const QuestionBank: React.FC = () => {
             </select>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex flex-col gap-1 min-w-0 sm:flex-row sm:items-center">
             <span className="font-semibold text-sage-500">Year:</span>
             <select
               value={selectedYear}
@@ -348,7 +351,7 @@ export const QuestionBank: React.FC = () => {
                 setSelectedYear(e.target.value);
                 setCurrentPage(1);
               }}
-              className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white"
+              className="w-full sm:w-auto min-w-0 h-9 sm:h-auto rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white"
             >
               <option value="all">All Years</option>
               <option value="2026">2026</option>
@@ -359,7 +362,7 @@ export const QuestionBank: React.FC = () => {
             </select>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex flex-col gap-1 min-w-0 sm:flex-row sm:items-center">
             <span className="font-semibold text-sage-500">Sort By:</span>
             <select
               value={sortBy}
@@ -367,7 +370,7 @@ export const QuestionBank: React.FC = () => {
                 setSortBy(e.target.value);
                 setCurrentPage(1);
               }}
-              className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white"
+              className="w-full sm:w-auto min-w-0 h-9 sm:h-auto rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white"
             >
               <option value="newest">Newest</option>
               <option value="oldest">Oldest</option>

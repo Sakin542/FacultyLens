@@ -72,6 +72,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Laravel's password broker calls this with the freshly created (plaintext) token. FacultyLens routes it through
+     * the e-mail system (queue → Horizon → SMTP) instead of the framework's synchronous notification; the token is
+     * placed only inside the reset URL and is never logged or stored by EmailService.
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        app(\App\Services\Email\EmailService::class)->sendPasswordReset($this, (string) $token);
+    }
+
+    /**
      * Relative, authenticated avatar URL with a version token for cache-busting; null when no picture is set.
      */
     public function getProfilePictureUrlAttribute(): ?string

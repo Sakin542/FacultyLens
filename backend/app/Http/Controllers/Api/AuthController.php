@@ -85,6 +85,21 @@ class AuthController extends Controller
     }
 
     /**
+     * Session probe used on app boot. Always 200 — an anonymous visitor is a normal state, not an error, so the
+     * browser console stays clean and no "session expired" handling is triggered.
+     */
+    public function session(Request $request): JsonResponse
+    {
+        $user = $request->user('sanctum');
+
+        return response()->json([
+            'status' => 'success',
+            'authenticated' => $user !== null,
+            'user' => $user?->profilePayload(),
+        ]);
+    }
+
+    /**
      * Update user profile with strict protection against privilege escalation.
      */
     public function updateProfile(Request $request): JsonResponse

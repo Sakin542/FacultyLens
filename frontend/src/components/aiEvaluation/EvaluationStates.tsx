@@ -64,13 +64,13 @@ export const EvaluationHeader: React.FC<{ overview: EvaluationOverview | null; o
         Measures FacultyLens AI features against faculty-validated datasets. Evaluation is monitoring only — it never retrains models, changes thresholds, or promotes a model automatically.
       </p>
     </div>
-    <div className="flex items-center gap-3">
+    <div className="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-auto">
       {overview && (
         <Badge variant={statusVariant(overview.overall_status)} dot size="md" data-testid="overall-status">
           Status: {statusText(overview.overall_status)}
         </Badge>
       )}
-      <Button variant="outline" size="sm" onClick={onRefresh} disabled={refreshing} aria-label="Refresh evaluation data">{refreshing ? 'Refreshing…' : 'Refresh'}</Button>
+      <Button variant="outline" size="sm" className="justify-center" onClick={onRefresh} disabled={refreshing} aria-label="Refresh evaluation data">{refreshing ? 'Refreshing…' : 'Refresh'}</Button>
     </div>
   </header>
 );

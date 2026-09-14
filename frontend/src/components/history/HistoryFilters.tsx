@@ -43,14 +43,14 @@ export const HistoryFilters: React.FC<HistoryFiltersProps> = ({
           />
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+        <div className="grid grid-cols-[auto_1fr_auto] items-center gap-2 w-full sm:flex sm:w-auto sm:justify-end">
           <label className="text-xs font-medium text-sage-500 whitespace-nowrap">
             Sort:
           </label>
           <select
             value={filters.sort || 'newest'}
             onChange={(e) => onFilterChange('sort', e.target.value as any)}
-            className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] px-3 py-1.5 text-xs text-sage-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white"
+            className="w-full sm:w-auto min-w-0 h-9 sm:h-auto rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#2C2C2E] px-3 py-1.5 text-xs text-sage-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white"
           >
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
@@ -73,18 +73,18 @@ export const HistoryFilters: React.FC<HistoryFiltersProps> = ({
       </div>
 
       {/* Filter Options Row */}
-      <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-sage-200 dark:border-[#2C2C2E] text-xs">
-        <div className="flex items-center gap-1.5 text-sage-500">
+      <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-3 pt-3 border-t border-sage-200 dark:border-[#2C2C2E] text-xs">
+        <div className="col-span-2 sm:col-span-1 flex items-center gap-1.5 text-sage-500">
           <Filter className="w-3.5 h-3.5" />
           <span className="font-semibold">Filters:</span>
         </div>
 
         {/* Course Filter */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 min-w-0">
           <select
             value={filters.course_id || 'all'}
             onChange={(e) => onFilterChange('course_id', e.target.value)}
-            className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-sage-100 dark:bg-[#2C2C2E] px-2.5 py-1 text-xs text-sage-800 dark:text-white focus:outline-none"
+            className="w-full sm:w-auto min-w-0 h-9 sm:h-auto rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-sage-100 dark:bg-[#2C2C2E] px-2.5 py-1 text-xs text-sage-800 dark:text-white focus:outline-none"
           >
             <option value="all">All Courses</option>
             {courses.map((c) => (
@@ -96,11 +96,11 @@ export const HistoryFilters: React.FC<HistoryFiltersProps> = ({
         </div>
 
         {/* Assessment Type Filter */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 min-w-0">
           <select
             value={filters.assessment_type || 'all'}
             onChange={(e) => onFilterChange('assessment_type', e.target.value)}
-            className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-sage-100 dark:bg-[#2C2C2E] px-2.5 py-1 text-xs text-sage-800 dark:text-white focus:outline-none"
+            className="w-full sm:w-auto min-w-0 h-9 sm:h-auto rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-sage-100 dark:bg-[#2C2C2E] px-2.5 py-1 text-xs text-sage-800 dark:text-white focus:outline-none"
           >
             <option value="all">All Assessment Types</option>
             <option value="midterm">Midterm</option>
@@ -112,11 +112,11 @@ export const HistoryFilters: React.FC<HistoryFiltersProps> = ({
 
         {/* Academic Year Filter */}
         {academicYears.length > 0 && (
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 min-w-0">
             <select
               value={filters.academic_year || 'all'}
               onChange={(e) => onFilterChange('academic_year', e.target.value)}
-              className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-sage-100 dark:bg-[#2C2C2E] px-2.5 py-1 text-xs text-sage-800 dark:text-white focus:outline-none"
+              className="w-full sm:w-auto min-w-0 h-9 sm:h-auto rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-sage-100 dark:bg-[#2C2C2E] px-2.5 py-1 text-xs text-sage-800 dark:text-white focus:outline-none"
             >
               <option value="all">All Academic Years</option>
               {academicYears.map((yr) => (
@@ -130,11 +130,11 @@ export const HistoryFilters: React.FC<HistoryFiltersProps> = ({
 
         {/* Semester Filter */}
         {semesters.length > 0 && (
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 min-w-0">
             <select
               value={filters.semester || 'all'}
               onChange={(e) => onFilterChange('semester', e.target.value)}
-              className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-sage-100 dark:bg-[#2C2C2E] px-2.5 py-1 text-xs text-sage-800 dark:text-white focus:outline-none"
+              className="w-full sm:w-auto min-w-0 h-9 sm:h-auto rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-sage-100 dark:bg-[#2C2C2E] px-2.5 py-1 text-xs text-sage-800 dark:text-white focus:outline-none"
             >
               <option value="all">All Semesters</option>
               {semesters.map((sem) => (

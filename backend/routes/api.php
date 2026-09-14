@@ -19,6 +19,9 @@ use App\Http\Controllers\Api\AssessmentController;
 use App\Http\Controllers\Api\AssessmentQuestionPaperController;
 use App\Http\Controllers\Api\AssessmentReportController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\EmailController;
+use App\Http\Controllers\Api\NewsletterController;
+use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\Api\ProfilePictureController;
 use App\Http\Controllers\Api\CoPoMappingController;
 use App\Http\Controllers\Api\CourseController;
@@ -48,9 +51,18 @@ Route::get('/health/ready', [HealthController::class, 'ready']);
  * Faculty Authentication Endpoints
  */
 Route::prefix('auth')->group(function () {
+    // Anonymous-safe session probe (200 whether or not a session exists)
+    Route::get('/session', [AuthController::class, 'session']);
+
     Route::middleware('throttle:auth')->group(function () {
         Route::post('/register', [AuthController::class, 'register']);
         Route::post('/login', [AuthController::class, 'login']);
+    });
+
+    // Password recovery (Laravel password broker → queued FacultyLens reset e-mail). Generic responses; per-IP + per-address limits.
+    Route::middleware('throttle:password-reset')->group(function () {
+        Route::post('/forgot-password', [PasswordResetController::class, 'forgot']);
+        Route::post('/reset-password', [PasswordResetController::class, 'reset']);
     });
 
     // Protected auth routes
@@ -315,6 +327,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/notification-preferences', [NotificationPreferenceController::class, 'update']);
     Route::patch('/notification-preferences/{type}', [NotificationPreferenceController::class, 'patch']);
 
+    // E-mail system: status, own delivery log, developer preview, operator test (never exposes SMTP configuration)
+    Route::get('/email/status', [EmailController::class, 'status']);
+    Route::get('/email/deliveries', [EmailController::class, 'deliveries']);
+    Route::get('/email/deliveries/{delivery}', [EmailController::class, 'delivery'])->whereNumber('delivery');
+    Route::get('/email/preview/{template}', [EmailController::class, 'preview']);
+    Route::post('/email/test', [EmailController::class, 'test'])->middleware('throttle:email-test');
+
     // STEP 37: Assessment Blueprint (planning + validation layer; never publishes/finalizes the assessment)
     Route::get('/assessments/{assessment}/blueprint', [AssessmentBlueprintController::class, 'show']);
     Route::post('/assessments/{assessment}/blueprint', [AssessmentBlueprintController::class, 'store']);
@@ -404,4 +423,11 @@ Route::get('/collaboration/invitations/{token}', [CollaborationController::class
 // Public Shared Report Endpoints (STEP 18)
 Route::get('/shared/reports/{token}', [AssessmentReportController::class, 'viewShared']);
 Route::get('/shared/reports/{token}/download', [AssessmentReportController::class, 'downloadShared']);
+
+// Public "Faculty dispatch" newsletter (double opt-in; token links arrive by e-mail)
+Route::prefix('newsletter')->group(function () {
+    Route::post('/subscribe', [NewsletterController::class, 'subscribe'])->middleware('throttle:newsletter');
+    Route::post('/confirm/{token}', [NewsletterController::class, 'confirm'])->middleware('throttle:auth');
+    Route::post('/unsubscribe/{token}', [NewsletterController::class, 'unsubscribe'])->middleware('throttle:auth');
+});
 

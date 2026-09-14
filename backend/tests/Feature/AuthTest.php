@@ -141,6 +141,19 @@ class AuthTest extends TestCase
         $response->assertStatus(401);
     }
 
+    public function test_session_probe_is_200_for_anonymous_and_authenticated_visitors(): void
+    {
+        $this->getJson('/api/auth/session')->assertOk()
+            ->assertJsonPath('authenticated', false)
+            ->assertJsonPath('user', null);
+
+        $user = User::factory()->create();
+        $this->actingAs($user, 'sanctum')->getJson('/api/auth/session')->assertOk()
+            ->assertJsonPath('authenticated', true)
+            ->assertJsonPath('user.email', $user->email)
+            ->assertJsonMissingPath('user.password');
+    }
+
     public function test_authenticated_user_can_logout(): void
     {
         $user = User::factory()->create();

@@ -24,18 +24,21 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - facultylens-network
 
-  # STEP 23/27: database queue worker for asynchronous AI jobs (grading, analysis, extraction).
-  queue-worker:
+  # Laravel Horizon: supervises Redis queue workers for the `default` (AI/report jobs) and `emails` queues.
+  # Replaces the former database `queue:work` container. Restart after backend code changes: docker compose restart horizon
+  horizon:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: facultylens-queue-worker
+    container_name: facultylens-horizon
     restart: unless-stopped
     working_dir: /var/www/html
-    command: ["php", "artisan", "queue:work", "--tries=2", "--timeout=200", "--sleep=2", "--max-jobs=500"]
+    command: ["php", "artisan", "horizon"]
     volumes:
       - ./backend:/var/www/html
     environment:
@@ -47,14 +50,55 @@ services:
       - DB_DATABASE=facultylens
       - DB_USERNAME=root
       - DB_PASSWORD=root123
-      - QUEUE_CONNECTION=database
+      - QUEUE_CONNECTION=redis
+      - REDIS_HOST=redis
+      - REDIS_CLIENT=predis
       - AI_SERVICE_URL=http://ai-service:8001
       - AI_SERVICE_API_KEY=
+    healthcheck:
+      test: ["CMD-SHELL", "php artisan horizon:status | grep -q running || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
     depends_on:
       mysql:
         condition: service_healthy
+      redis:
+        condition: service_healthy
       app:
         condition: service_started
+    networks:
+      - facultylens-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: facultylens-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "128mb", "--maxmemory-policy", "noeviction"]
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - facultylens-network
+
+  # Local SMTP capture for development / E2E (set MAIL_MAILER=mailpit). UI: http://localhost:8025
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: facultylens-mailpit
+    restart: unless-stopped
+    ports:
+      - 8025:8025
+      - 1025:1025
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
     networks:
       - facultylens-network
 
@@ -139,6 +183,8 @@ services:
 
 volumes:
   mysql_data:
+    driver: local
+  redis_data:
     driver: local
   ai_models_cache:
     driver: local

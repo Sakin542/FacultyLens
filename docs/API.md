@@ -157,6 +157,18 @@ Owner-scoped: another user's id is a 404 (never the row). Ids are uuids. Notific
 
 Row shape: `{id, type, category, severity, title, message, data{ids…, action_label}, action_url, entity_type, entity_id, read_at, dismissed_at, expires_at, created_at}`.
 
+## Faculty dispatch newsletter (public, double opt-in)
+
+Sign-up from the site footer. Nothing is sent until the address is confirmed via the e-mailed link; every dispatch carries a per-subscriber unsubscribe link. Confirmation tokens are stored hashed and expire (`NEWSLETTER_CONFIRMATION_TTL_HOURS`, 48). Audit rows (`NEWSLETTER_*`) never contain the address.
+
+| Method | Path | Auth | Notes |
+|---|---|---|---|
+| POST | `/newsletter/subscribe` | — (throttle:newsletter 5/hour/IP) | `{email}` → always `202 {status, message}` for new, pending or already-confirmed addresses (no enumeration); re-sends after a 10-minute cooldown; 422 invalid e-mail; 429 |
+| POST | `/newsletter/confirm/{token}` | — (throttle:auth) | single-use; 200 confirmed · 404 unknown/used · 410 expired |
+| POST | `/newsletter/unsubscribe/{token}` | — (throttle:auth) | idempotent; 200 · 404 unknown |
+
+Sending an issue is operator-only: `php artisan newsletter:send "Subject" --body="…"|--body-file=path [--action-text= --action-url=] [--dry-run]` (queued mail per confirmed subscriber). `newsletter:purge-unconfirmed` runs daily (`NEWSLETTER_PURGE_UNCONFIRMED_AFTER_DAYS`, 7). SPA links: `/newsletter/confirm/:token`, `/newsletter/unsubscribe/:token` (built from `FRONTEND_URL`).
+
 ## Validation and limits (server-enforced)
 
 `MAX_DOCUMENT_SIZE_MB=20`, `MAX_DOCUMENT_TEXT_LENGTH=2000000`, `MAX_QUESTIONS_PER_ASSESSMENT=200`, `MAX_PREVIOUS_QUESTIONS_PER_ANALYSIS=5000`; marks ≥ 0, percentages 0–100, counts > 0, enum values checked by FormRequests; mass assignment restricted by model `$fillable`.

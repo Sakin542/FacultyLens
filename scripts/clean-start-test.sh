@@ -89,15 +89,15 @@ expect "seeded faculty login" "$(api POST /auth/login '{"email":"faculty@example
 api GET /courses >/dev/null; expect "seeded courses visible" "$(python -c "import sys,json;print(len(json.load(sys.stdin)['data'])>0)" < "$TMP_BODY")" "True"
 
 step "Queue worker + scheduler + integrity"
-expect "queue worker running" "$(dc ps --status running --services 2>/dev/null | grep -c '^queue-worker$')" "1"
+expect "queue worker (horizon) running" "$(dc ps --status running --services 2>/dev/null | grep -c '^horizon$')" "1"
 dc exec -T app php artisan schedule:list 2>/dev/null | sed 's/^/  /' | head -5
 expect "integrity issues on fresh seed" "$(dc exec -T app php artisan facultylens:integrity-check --json 2>/dev/null | python -c "import sys,json;print(json.load(sys.stdin)['issues'])")" "0"
 expect "no failed jobs" "$(sqlq 'SELECT COUNT(*) FROM failed_jobs')" "0"
 
 step "Container logs: no PHP fatals / unhandled exceptions once the schema exists"
-PRE=$(dc logs --until "$MIGRATED_AT" queue-worker 2>&1 | grep -ciE "SQLSTATE|fatal" || true)
-echo "  note: queue-worker log lines before migrations ran (expected on a truly empty database, it retries): $PRE"
-ERR=$(dc logs --since "$MIGRATED_AT" app queue-worker ai-service 2>&1 | grep -iE "fatal error|unhandled|traceback|SQLSTATE" || true)
+PRE=$(dc logs --until "$MIGRATED_AT" horizon 2>&1 | grep -ciE "SQLSTATE|fatal" || true)
+echo "  note: horizon log lines before migrations ran (expected on a truly empty database, it retries): $PRE"
+ERR=$(dc logs --since "$MIGRATED_AT" app horizon ai-service 2>&1 | grep -iE "fatal error|unhandled|traceback|SQLSTATE" || true)
 [[ -n "$ERR" ]] && echo "$ERR" | head -5 | cut -c1-200 | sed 's/^/  | /'
 expect "error lines in logs" "$(printf '%s' "$ERR" | grep -c . || true)" "0"
 

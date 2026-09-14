@@ -294,7 +294,7 @@ export const Home: React.FC = () => {
             </Reveal>
             <Reveal delay={300}>
               <div className="flex flex-wrap justify-center lg:justify-start gap-3 pt-1">
-                <PrimaryButton onClick={go('/register')}>Start Analyzing</PrimaryButton>
+                <PrimaryButton onClick={go('/register')} className="!bg-sage-700 hover:!bg-sage-800">Start Analyzing</PrimaryButton>
                 <button type="button" onClick={scrollTo('features')} className="inline-flex items-center whitespace-nowrap rounded-full border border-sage-800 bg-transparent hover:bg-sage-800 hover:text-white text-sage-800 text-sm font-medium px-6 py-3 transition-colors">Explore FacultyLens</button>
               </div>
             </Reveal>

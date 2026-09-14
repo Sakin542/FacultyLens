@@ -75,9 +75,9 @@ export const InstitutionalReports: React.FC = () => {
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h3 className="text-sm font-semibold text-sage-800">My Reports {data ? <span className="text-sage-400 font-normal">({data.pagination.total})</span> : null}</h3>
-        <label className="text-xs text-sage-600 inline-flex items-center gap-2">
+        <label className="text-xs text-sage-600 flex items-center gap-2 w-full sm:w-auto">
           Status
-          <select value={statusFilter} onChange={(e) => { setPage(1); setStatusFilter(e.target.value); }} className="rounded-lg border border-sage-200 bg-white px-2.5 py-1.5 text-xs text-sage-800" aria-label="Filter by status">
+          <select value={statusFilter} onChange={(e) => { setPage(1); setStatusFilter(e.target.value); }} className="flex-1 sm:flex-none min-w-0 h-9 sm:h-auto rounded-lg border border-sage-200 bg-white px-2.5 py-1.5 text-xs text-sage-800" aria-label="Filter by status">
             <option value="">All</option>
             {['PENDING', 'PROCESSING', 'COMPLETED', 'FAILED', 'CANCELLED'].map((s) => <option key={s} value={s}>{s.charAt(0) + s.slice(1).toLowerCase()}</option>)}
           </select>
@@ -102,8 +102,8 @@ export const InstitutionalReports: React.FC = () => {
           {data.pagination.last_page > 1 && (
             <div className="flex items-center justify-between text-xs text-sage-600">
               <span>Page {data.pagination.current_page} of {data.pagination.last_page}</span>
-              <div className="flex flex-wrap gap-2">
-                <Button type="button" variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>Previous</Button>
+              <div className="grid grid-cols-2 gap-2 sm:flex">
+                <Button type="button" variant="outline" size="sm" className="justify-center" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>Previous</Button>
                 <Button type="button" variant="outline" size="sm" disabled={page >= data.pagination.last_page} onClick={() => setPage((p) => p + 1)}>Next</Button>
               </div>
             </div>

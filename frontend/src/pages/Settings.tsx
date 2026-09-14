@@ -9,6 +9,7 @@ import { authService } from '@/services/authService';
 import { ApiError } from '@/services/api';
 import { ConfirmSignOutDialog } from '@/components/common/ConfirmSignOutDialog';
 import { ProfilePictureUploader } from '@/components/profile/ProfilePictureUploader';
+import { NotificationPreferences } from '@/components/notifications/NotificationPreferences';
 import {
   User,
   LogOut,
@@ -343,6 +344,17 @@ export const Settings: React.FC = () => {
               </Button>
             </div>
           </form>
+        </CardContent>
+      </Card>
+
+      {/* Notifications & Email Preferences (in-app + e-mail channels; security e-mails are mandatory) */}
+      <Card id="notifications" data-testid="settings-notifications">
+        <CardHeader>
+          <CardTitle>Notifications &amp; Email Preferences</CardTitle>
+          <CardDescription>Choose what FacultyLens shows in your notification center and what it also sends to {user?.email ?? 'your account e-mail'}. Password-reset and other authentication e-mails are always sent.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <NotificationPreferences />
         </CardContent>
       </Card>
 

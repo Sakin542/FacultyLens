@@ -10,6 +10,7 @@ import { Home } from '@/pages/Home';
 import { Login } from '@/pages/Login';
 import { Register } from '@/pages/Register';
 import { ForgotPassword } from '@/pages/ForgotPassword';
+import { ResetPassword } from '@/pages/ResetPassword';
 import { Dashboard } from '@/pages/Dashboard';
 import { Courses } from '@/pages/Courses';
 import { CourseDetails } from '@/pages/CourseDetails';
@@ -47,6 +48,7 @@ const InstitutionalReports = lazy(() => import('@/pages/InstitutionalReports').t
 const ReportBuilder      = lazy(() => import('@/pages/ReportBuilder').then(m => ({ default: m.ReportBuilder })));
 const ReportDetails      = lazy(() => import('@/pages/ReportDetails').then(m => ({ default: m.ReportDetails })));
 const Notifications      = lazy(() => import('@/pages/Notifications').then(m => ({ default: m.Notifications })));
+const NewsletterLanding  = lazy(() => import('@/pages/NewsletterLanding').then(m => ({ default: m.NewsletterLanding })));
 
 /**
  * Lightweight fallback shown while a lazy page chunk loads.
@@ -68,6 +70,9 @@ export const AppRoutes: React.FC = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/newsletter/confirm/:token" element={<NewsletterLanding mode="confirm" />} />
+          <Route path="/newsletter/unsubscribe/:token" element={<NewsletterLanding mode="unsubscribe" />} />
         </Route>
 
         {/* Public Shared Report Access (STEP 18) */}

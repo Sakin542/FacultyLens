@@ -61,14 +61,14 @@ class NotificationQueueTest extends TestCase
         Queue::fake();
         config(['notifications.queue.enabled' => false]);
         $n = app(NotificationService::class)->notify($this->user, NotificationType::SYSTEM_ALERT, ['title' => 't', 'message' => 'm']);
-        Queue::assertNothingPushed();
+        Queue::assertNotPushed(StoreNotificationJob::class);
         $this->assertNotNull($n);
         $this->assertSame(1, Notification::count());
     }
 
     public function test_database_queue_end_to_end_with_worker_and_redelivery(): void
     {
-        config(['queue.default' => 'database', 'notifications.queue.connection' => 'database', 'notifications.queue.name' => 'default']);
+        config(['queue.default' => 'database', 'notifications.queue.connection' => 'database', 'notifications.queue.name' => 'default', 'email.enabled' => false]);
 
         $service = app(NotificationService::class);
         $this->assertNull($service->notify($this->user, NotificationType::REPORT_GENERATED, ['title' => 'Report ready', 'message' => 'm', 'entity_type' => 'institutional_report', 'entity_id' => 3]));
@@ -173,7 +173,7 @@ class NotificationQueueTest extends TestCase
 
     protected function bindThrowingNotificationService(): void
     {
-        $throwing = new class(app(\App\Services\AuditLogService::class)) extends NotificationService {
+        $throwing = new class(app(\App\Services\AuditLogService::class), app(\App\Services\Email\EmailService::class)) extends NotificationService {
             public function store(array $payload): ?Notification
             {
                 throw new \RuntimeException('notifications table unavailable');
