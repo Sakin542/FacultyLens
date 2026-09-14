@@ -175,7 +175,7 @@ export const Feedback: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="grid grid-cols-[1fr_auto] gap-2 sm:flex sm:items-center w-full sm:w-auto">
           {/* Course filter */}
           <select
             aria-label="Filter feedback by course"
@@ -184,7 +184,7 @@ export const Feedback: React.FC = () => {
               setSelectedCourseId(e.target.value);
               setPage(1);
             }}
-            className="px-3 py-1.5 rounded-xl border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] text-xs text-sage-800 dark:text-white"
+            className="w-full sm:w-auto min-w-0 h-9 sm:h-auto px-3 py-1.5 rounded-xl border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] text-xs text-sage-800 dark:text-white"
           >
             <option value="all">All Courses</option>
             {courses.map((c) => (
@@ -197,6 +197,7 @@ export const Feedback: React.FC = () => {
           <Button
             variant="outline"
             size="sm"
+            className="h-9 sm:h-auto justify-center"
             onClick={handleRefresh}
             leftIcon={<RefreshCw className="w-3.5 h-3.5" />}
           >

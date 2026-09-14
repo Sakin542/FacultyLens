@@ -145,10 +145,10 @@ export const AnalyticsHeader: React.FC<{ meta: AnalyticsMeta | null; onRefresh: 
       <div className="flex items-center gap-2 mb-1"><BarChart3 className="w-5 h-5" aria-hidden="true" /><h1 className="text-2xl font-bold text-sage-800 dark:text-white">Academic Analytics</h1></div>
       {meta && <p className="text-xs text-sage-400 mt-1" data-testid="freshness" role="status">{freshness(meta)}</p>}
     </div>
-    <div className="flex flex-wrap items-center gap-2">
-      <Button variant="outline" size="sm" onClick={() => onExport('pdf')} disabled={busy} leftIcon={<Download className="w-3.5 h-3.5" aria-hidden="true" />}>PDF</Button>
-      <Button variant="outline" size="sm" onClick={() => onExport('csv')} disabled={busy} leftIcon={<Download className="w-3.5 h-3.5" aria-hidden="true" />}>CSV</Button>
-      <Button variant="outline" size="sm" onClick={onRefresh} disabled={busy} aria-label="Recalculate analytics" leftIcon={<RefreshCw className={cn('w-3.5 h-3.5', busy && 'animate-spin')} aria-hidden="true" />}>Refresh</Button>
+    <div className="grid grid-cols-3 gap-2 md:flex md:flex-wrap md:items-center">
+      <Button variant="outline" size="sm" className="justify-center" onClick={() => onExport('pdf')} disabled={busy} leftIcon={<Download className="w-3.5 h-3.5" aria-hidden="true" />}>PDF</Button>
+      <Button variant="outline" size="sm" className="justify-center" onClick={() => onExport('csv')} disabled={busy} leftIcon={<Download className="w-3.5 h-3.5" aria-hidden="true" />}>CSV</Button>
+      <Button variant="outline" size="sm" className="justify-center" onClick={onRefresh} disabled={busy} aria-label="Recalculate analytics" leftIcon={<RefreshCw className={cn('w-3.5 h-3.5', busy && 'animate-spin')} aria-hidden="true" />}>Refresh</Button>
     </div>
   </header>
 );

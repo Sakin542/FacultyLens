@@ -134,7 +134,7 @@ export const Courses: React.FC = () => {
 
       {/* Header Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3 flex-1 max-w-lg">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 flex-1 max-w-lg">
           <div className="relative flex-1">
             <Input
               placeholder="Search courses by code or title..."
@@ -148,7 +148,7 @@ export const Courses: React.FC = () => {
               aria-label="Filter courses by semester"
               value={selectedSemester}
               onChange={(e) => setSelectedSemester(e.target.value)}
-              className="rounded-lg border border-sage-200 dark:border-[#2C2C2E] bg-white dark:bg-[#2C2C2E] px-3 py-2 text-xs text-sage-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sage-600"
+              className="w-full sm:w-auto h-10 rounded-lg border border-sage-200 dark:border-[#2C2C2E] bg-white dark:bg-[#2C2C2E] px-3 py-2 text-xs text-sage-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-sage-600"
             >
               <option value="all">All Semesters</option>
               {uniqueSemesters.map((sem) => (
@@ -160,9 +160,10 @@ export const Courses: React.FC = () => {
           )}
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 w-full sm:w-auto">
           <Button
             variant="primary"
+            className="w-full justify-center sm:w-auto"
             leftIcon={<Plus className="w-4 h-4" />}
             onClick={() => setIsAddModalOpen(true)}
           >

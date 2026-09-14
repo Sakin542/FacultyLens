@@ -239,7 +239,7 @@ export const Analysis: React.FC = () => {
       {/* Assessment Selector Bar (when multiple assessments available) */}
       {assessmentsList.length > 1 && (
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-white dark:bg-[#1C1C1E] rounded-xl border border-sage-200 dark:border-[#2C2C2E] text-xs">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2 min-w-0">
             <span className="font-semibold text-sage-500">Select Assessment:</span>
             <select
               value={selectedAssessmentId}
@@ -248,7 +248,7 @@ export const Analysis: React.FC = () => {
                 setSelectedAssessmentId(newId);
                 navigate(`/assessments/${newId}/analysis`);
               }}
-              className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-sage-100 dark:bg-[#2C2C2E] px-2.5 py-1.5 font-medium text-sage-800 dark:text-white"
+              className="w-full sm:w-auto min-w-0 max-w-full truncate h-9 sm:h-auto rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-sage-100 dark:bg-[#2C2C2E] px-2.5 py-1.5 font-medium text-sage-800 dark:text-white"
             >
               {assessmentsList.map((asm) => (
                 <option key={asm.id} value={asm.id}>

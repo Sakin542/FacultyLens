@@ -152,9 +152,10 @@ export const Assessments: React.FC = () => {
           />
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 w-full sm:w-auto">
           <Button
             variant="primary"
+            className="w-full justify-center sm:w-auto"
             leftIcon={<Plus className="w-4 h-4" />}
             onClick={() => setIsCreateModalOpen(true)}
             disabled={courses.length === 0}
@@ -165,14 +166,14 @@ export const Assessments: React.FC = () => {
       </div>
 
       {/* Filter Toolbar */}
-      <div className="flex flex-wrap items-center gap-3 p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl border border-sage-200 dark:border-[#3A3A3C] text-xs">
-        <div className="flex items-center gap-1.5">
+      <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-3 p-3 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl border border-sage-200 dark:border-[#3A3A3C] text-xs">
+        <div className="flex flex-col gap-1 min-w-0 sm:flex-row sm:items-center sm:gap-1.5">
           <span className="font-semibold text-sage-500">Course:</span>
           <select
             aria-label="Filter assessments by course"
             value={selectedCourseId}
             onChange={(e) => setSelectedCourseId(e.target.value)}
-            className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white"
+            className="w-full sm:w-auto min-w-0 h-9 sm:h-auto rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white"
           >
             <option value="all">All Courses ({courses.length})</option>
             {courses.map((c) => (
@@ -183,13 +184,13 @@ export const Assessments: React.FC = () => {
           </select>
         </div>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex flex-col gap-1 min-w-0 sm:flex-row sm:items-center sm:gap-1.5">
           <span className="font-semibold text-sage-500">Type:</span>
           <select
             aria-label="Filter assessments by type"
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
-            className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white capitalize"
+            className="w-full sm:w-auto min-w-0 h-9 sm:h-auto rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white capitalize"
           >
             <option value="all">All Types</option>
             <option value="quiz">Quiz</option>
@@ -201,13 +202,13 @@ export const Assessments: React.FC = () => {
           </select>
         </div>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex flex-col gap-1 min-w-0 sm:flex-row sm:items-center sm:gap-1.5">
           <span className="font-semibold text-sage-500">Status:</span>
           <select
             aria-label="Filter assessments by status"
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white capitalize"
+            className="w-full sm:w-auto min-w-0 h-9 sm:h-auto rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-white dark:bg-[#1C1C1E] px-2.5 py-1 text-xs text-sage-800 dark:text-white capitalize"
           >
             <option value="all">All Statuses</option>
             <option value="draft">Draft</option>

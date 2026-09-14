@@ -203,11 +203,11 @@ export const AnalysisHistory: React.FC = () => {
         </div>
 
         {/* View Toggle */}
-        <div className="flex items-center gap-1.5 p-1 bg-sage-100 dark:bg-[#2C2C2E] rounded-xl border border-sage-200 dark:border-[#3A3A3C] self-start sm:self-auto text-xs">
+        <div className="grid grid-cols-2 gap-1.5 p-1 w-full sm:flex sm:items-center sm:w-auto bg-sage-100 dark:bg-[#2C2C2E] rounded-xl border border-sage-200 dark:border-[#3A3A3C] self-start sm:self-auto text-xs">
           <button
             type="button"
             onClick={() => setActiveTab('all')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-semibold transition-all ${
+            className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg font-semibold transition-all ${
               activeTab === 'all'
                 ? 'bg-white dark:bg-[#1C1C1E] text-sage-800 dark:text-white shadow-xs'
                 : 'text-sage-500 hover:text-sage-800 dark:hover:text-white'
@@ -219,7 +219,7 @@ export const AnalysisHistory: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveTab('trends')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-semibold transition-all ${
+            className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg font-semibold transition-all ${
               activeTab === 'trends'
                 ? 'bg-white dark:bg-[#1C1C1E] text-sage-800 dark:text-white shadow-xs'
                 : 'text-sage-500 hover:text-sage-800 dark:hover:text-white'
@@ -235,14 +235,14 @@ export const AnalysisHistory: React.FC = () => {
       {activeTab === 'trends' && (
         <div className="space-y-4 animate-in fade-in duration-200">
           {/* Course Selector for Trend View */}
-          <div className="flex items-center gap-3 p-3 bg-white dark:bg-[#1C1C1E] rounded-xl border border-sage-200 dark:border-[#2C2C2E] shadow-sm text-xs">
+          <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-3 p-3 bg-white dark:bg-[#1C1C1E] rounded-xl border border-sage-200 dark:border-[#2C2C2E] shadow-sm text-xs">
             <span className="font-semibold text-sage-500 whitespace-nowrap">
               Select Course to Inspect:
             </span>
             <select
               value={selectedCourseForTrend}
               onChange={(e) => setSelectedCourseForTrend(e.target.value)}
-              className="rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-sage-100 dark:bg-[#2C2C2E] px-3 py-1.5 text-xs text-sage-800 dark:text-white font-medium focus:outline-none"
+              className="w-full sm:w-auto min-w-0 h-9 sm:h-auto rounded-lg border border-sage-200 dark:border-[#3A3A3C] bg-sage-100 dark:bg-[#2C2C2E] px-3 py-1.5 text-xs text-sage-800 dark:text-white font-medium focus:outline-none"
             >
               {courses.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -313,13 +313,13 @@ export const AnalysisHistory: React.FC = () => {
                     <span className="font-semibold text-sage-800 dark:text-white">{meta.last_page}</span> ({meta.total} total)
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="grid grid-cols-2 gap-2 w-full sm:flex sm:items-center sm:w-auto">
                     <Button
                       variant="secondary"
                       size="sm"
                       disabled={meta.current_page <= 1}
                       onClick={() => handlePageChange(meta.current_page - 1)}
-                      className="text-xs h-8 px-2.5"
+                      className="text-xs h-8 px-2.5 justify-center"
                     >
                       <ChevronLeft className="w-3.5 h-3.5 mr-1" />
                       Previous
@@ -329,7 +329,7 @@ export const AnalysisHistory: React.FC = () => {
                       size="sm"
                       disabled={meta.current_page >= meta.last_page}
                       onClick={() => handlePageChange(meta.current_page + 1)}
-                      className="text-xs h-8 px-2.5"
+                      className="text-xs h-8 px-2.5 justify-center"
                     >
                       Next
                       <ChevronRight className="w-3.5 h-3.5 ml-1" />
