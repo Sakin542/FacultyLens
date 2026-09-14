@@ -92,6 +92,7 @@ class EmailContentResolver
             'app_url' => $frontend,
             'action_url' => $frontend . '/dashboard',
             'preferences_url' => $frontend . '/settings',
+            'logo_src' => 'cid:' . \App\Mail\FacultyLensMail::LOGO_CID,
             'year' => now()->year,
         ];
     }

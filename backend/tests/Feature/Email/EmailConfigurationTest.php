@@ -72,8 +72,11 @@ class EmailConfigurationTest extends TestCase
             $this->assertStringContainsString('FacultyLens', $html, $template);
             $this->assertStringContainsString('AI-Powered Academic Decision Support', $html, "$template header tagline");
             $this->assertStringContainsString('You are receiving this email because of activity associated with your FacultyLens account.', $html, "$template footer");
-            $this->assertStringContainsString('#F7F4EE', $html, "$template cream background");
-            $this->assertStringContainsString('#171717', $html, "$template charcoal text");
+            $this->assertStringContainsString('#FAFAF7', $html, "$template project cream background (sage-50)");
+            $this->assertStringContainsString('#1B2A27', $html, "$template project ink (sage-800)");
+            $this->assertStringContainsString('#1E6F5C', $html, "$template project primary (sage-700)");
+            $this->assertStringContainsString('cid:facultylens-logo', $html, "$template inline logo reference");
+            $this->assertStringContainsString('alt="FacultyLens logo"', $html, "$template logo alt text");
             $this->assertStringContainsString('<meta name="viewport"', $html, "$template responsive meta");
             $this->assertStringContainsString('role="presentation"', $html, "$template table layout");
             $this->assertStringNotContainsString('fonts.googleapis', $html, "$template must not load web fonts");
@@ -86,6 +89,28 @@ class EmailConfigurationTest extends TestCase
             $this->assertStringNotContainsString('<', $text, "$template plain text has no tags");
             $this->assertStringContainsString('http', $text, "$template plain text carries the link");
         }
+    }
+
+    public function test_real_message_embeds_the_logo_inline_and_preview_uses_a_data_uri(): void
+    {
+        $this->assertFileExists(resource_path('brand/facultylens-logo.png'));
+        Mail::swap(new \Illuminate\Mail\MailManager($this->app));
+        config(['mail.default' => 'array']);
+
+        Mail::to('someone@university.edu')->send(new FacultyLensMail('test-email', 'FacultyLens — Test Email', app(EmailContentResolver::class)->previewContext('test-email'), 1, 'TEST_EMAIL'));
+
+        $sent = Mail::mailer('array')->getSymfonyTransport()->messages();
+        $this->assertCount(1, $sent);
+        $email = $sent->first()->getOriginalMessage();
+        $inline = collect($email->getAttachments())->first(fn ($part) => $part->getName() === FacultyLensMail::LOGO_CID);
+        $this->assertNotNull($inline, 'logo attached as inline part');
+        $this->assertSame('image/png', $inline->getMediaType() . '/' . $inline->getMediaSubtype());
+        $this->assertStringContainsString('cid:facultylens-logo', (string) $email->getHtmlBody());
+
+        config(['email.preview_enabled' => true]);
+        $preview = $this->actingAs($this->faculty())->get('/api/email/preview/test-email')->assertOk()->getContent();
+        $this->assertStringContainsString('src="data:image/png;base64,', $preview);
+        $this->assertStringNotContainsString('cid:', $preview);
     }
 
     public function test_subjects_follow_the_brand_prefix_and_are_single_line(): void

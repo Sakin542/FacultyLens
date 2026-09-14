@@ -120,6 +120,8 @@ class EmailController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Unknown template.', 'templates' => $this->content->templates()], 404);
         }
         $context = $this->content->previewContext($template);
+        // browsers cannot resolve cid: references — inline the emblem for the preview only
+        $context['logo_src'] = FacultyLensMail::logoDataUri() ?? '';
         $mailable = new FacultyLensMail($template, $this->content->subjectFor((string) ($context['type'] ?? 'SYSTEM_ALERT')), $context, null, (string) ($context['type'] ?? null));
 
         if ($request->query('format') === 'text') {

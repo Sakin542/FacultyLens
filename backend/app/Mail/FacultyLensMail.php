@@ -10,6 +10,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailables\Headers;
 use Illuminate\Queue\SerializesModels;
+use Symfony\Component\Mime\Email;
 
 /**
  * The single FacultyLens Mailable. Every outbound message (notification e-mails, password reset, test e-mail) is an
@@ -22,6 +23,9 @@ class FacultyLensMail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    /** Content-ID of the inline brand emblem (resources/brand/facultylens-logo.png). */
+    public const LOGO_CID = 'facultylens-logo';
+
     /**
      * @param array<string, mixed> $context
      */
@@ -31,7 +35,30 @@ class FacultyLensMail extends Mailable
         public array $context = [],
         public ?int $deliveryId = null,
         public ?string $emailType = null,
-    ) {}
+    ) {
+        // Inline (CID) image: renders in Gmail/Outlook without remote loading and works from any FRONTEND_URL.
+        $logo = self::logoPath();
+        if ($logo !== null) {
+            $this->withSymfonyMessage(function (Email $message) use ($logo) {
+                $message->embedFromPath($logo, self::LOGO_CID, 'image/png');
+            });
+        }
+    }
+
+    public static function logoPath(): ?string
+    {
+        $path = resource_path('brand/facultylens-logo.png');
+
+        return is_readable($path) ? $path : null;
+    }
+
+    /** Browser-safe logo source for previews/tests (data URI); `cid:` is used in real messages. */
+    public static function logoDataUri(): ?string
+    {
+        $path = self::logoPath();
+
+        return $path ? 'data:image/png;base64,' . base64_encode((string) file_get_contents($path)) : null;
+    }
 
     public function envelope(): Envelope
     {
