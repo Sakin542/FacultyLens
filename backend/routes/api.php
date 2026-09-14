@@ -51,6 +51,9 @@ Route::get('/health/ready', [HealthController::class, 'ready']);
  * Faculty Authentication Endpoints
  */
 Route::prefix('auth')->group(function () {
+    // Anonymous-safe session probe (200 whether or not a session exists)
+    Route::get('/session', [AuthController::class, 'session']);
+
     Route::middleware('throttle:auth')->group(function () {
         Route::post('/register', [AuthController::class, 'register']);
         Route::post('/login', [AuthController::class, 'login']);

@@ -53,9 +53,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const initializeAuth = async () => {
       try {
-        const response = await authService.getCurrentUser();
-        if (isMounted && response.user) {
-          setUser(normalizeUser(response.user));
+        const session = await authService.getSession();
+        if (isMounted) {
+          setUser(session.authenticated && session.user ? normalizeUser(session.user) : null);
         }
       } catch {
         if (isMounted) {
