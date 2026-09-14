@@ -65,8 +65,8 @@ const Kpi: React.FC<{ label: string; value: string; note?: string; icon: React.E
 );
 
 const QuickAction: React.FC<{ icon: React.ElementType; label: string; to: string; primary?: boolean }> = ({ icon: Icon, label, to, primary }) => (
-  <Link to={to} className={`inline-flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap rounded-lg text-xs sm:text-sm px-2 sm:px-4 py-2 min-h-[2.5rem] w-full sm:w-auto transition-all hover:-translate-y-0.5 ${primary ? 'bg-sage-700 text-white hover:bg-sage-800 hover:shadow-elevated' : 'border border-sage-300 bg-white text-sage-800 hover:bg-sage-100'}`}>
-    <Icon className="w-4 h-4 shrink-0" strokeWidth={1.8} aria-hidden="true" />{label}
+  <Link to={to} className={`flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-2 rounded-lg text-xs sm:text-sm leading-tight text-center px-2 sm:px-4 py-2.5 sm:py-2 min-h-[3.75rem] sm:min-h-0 w-full sm:w-auto transition-all hover:-translate-y-0.5 ${primary ? 'bg-sage-700 text-white hover:bg-sage-800 hover:shadow-elevated' : 'border border-sage-300 bg-white text-sage-800 hover:bg-sage-100'}`}>
+    <Icon className="w-[18px] h-[18px] sm:w-4 sm:h-4 shrink-0" strokeWidth={1.8} aria-hidden="true" /><span className="whitespace-nowrap">{label}</span>
   </Link>
 );
 
