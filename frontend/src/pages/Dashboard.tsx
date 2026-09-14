@@ -54,10 +54,11 @@ const Kpi: React.FC<{ label: string; value: string; note?: string; icon: React.E
   <Reveal delay={delay} className="h-full">
     <Link to={to} className="group relative flex h-full flex-col rounded-xl border border-sage-200 bg-white p-4 shadow-subtle transition-all hover:border-sage-300 hover:-translate-y-0.5 hover:shadow-card">
       <div className="relative flex items-start justify-between gap-2">
-        <p className="text-[11px] uppercase tracking-[0.14em] text-sage-500">{label}</p>
+        {/* reserve two label lines so values line up whether the label wraps ("Student performance") or not */}
+        <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.08em] sm:tracking-[0.14em] leading-[1.35] text-sage-500 min-h-[2.7em] [text-wrap:balance]">{label}</p>
         <span className="w-8 h-8 shrink-0 rounded-lg bg-white border border-sage-200 flex items-center justify-center text-sage-800 transition-colors group-hover:border-sage-300"><Icon className="w-4 h-4" strokeWidth={1.8} aria-hidden="true" /></span>
       </div>
-      <p className="relative mt-auto pt-2 font-serif text-3xl leading-none text-sage-800 tabular-nums">{value}</p>
+      <p className={`relative mt-auto pt-2 font-serif text-3xl leading-none tabular-nums ${value === '—' ? 'text-sage-400' : 'text-sage-800'}`} aria-label={value === '—' ? 'Not available yet' : undefined}>{value}</p>
       <p className="relative mt-1.5 text-xs text-sage-500 truncate min-h-[1rem]">{note ?? ''}</p>
       <ArrowRight aria-hidden="true" className="absolute right-4 bottom-4 w-3.5 h-3.5 text-sage-500 -translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
     </Link>
