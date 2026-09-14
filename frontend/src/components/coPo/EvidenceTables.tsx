@@ -51,7 +51,7 @@ export const CoPerformanceMatrix: React.FC<{ rows: CoCoverage[] }> = ({ rows }) 
         </tbody>
       </table>
     </div>
-    <p className="text-[11px] text-sage-500">Performance uses finalized faculty marks only (STEP 30). A gap is a review signal, not evidence that an outcome was not learned.</p>
+    <p className="text-[11px] text-sage-500">Performance uses finalized faculty marks only. A gap is a review signal, not evidence that an outcome was not learned.</p>
   </div>
 );
 

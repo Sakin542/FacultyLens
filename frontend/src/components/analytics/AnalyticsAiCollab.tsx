@@ -133,7 +133,7 @@ export const CollaborationSummary: React.FC<{ data: CollabData }> = ({ data }) =
 
 /** STEP 37: blueprint compliance card (links back to each assessment's blueprint). */
 export const BlueprintComplianceSummary: React.FC<{ data: BlueprintComplianceAnalytics | undefined }> = ({ data }) => (
-  <Section testId="blueprint-compliance" title="Assessment Blueprint Compliance" subtitle="Actual question sets compared with each assessment's current blueprint (STEP 37).">
+  <Section testId="blueprint-compliance" title="Assessment Blueprint Compliance" subtitle="Actual question sets compared with each assessment's current blueprint.">
     {!data || data.assessments_with_blueprint === 0 ? <SectionEmpty title="No blueprints yet" description="Create an assessment blueprint to plan and validate structure before generating or selecting questions." /> : (
       <>
         <p className="text-sm">Average compliance <span className="font-semibold tabular-nums">{fmtPct(data.average_compliance)}</span> across {data.assessments_with_blueprint} assessment(s)</p>
