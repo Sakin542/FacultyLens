@@ -102,6 +102,9 @@ class AssessmentVersionService
             return $version;
         });
 
+        // STEP 47: after the transaction so collaborators are only told about a committed version
+        event(new \App\Events\AssessmentVersionStatusChanged($version, ($data['_audit_action'] ?? '') === 'ASSESSMENT_VERSION_RESTORED' ? 'RESTORED' : 'CREATED', $user));
+
         return $version->fresh(['questions', 'blueprint', 'creator', 'basedOn']);
     }
 
@@ -450,6 +453,11 @@ class AssessmentVersionService
         $version->loadMissing('assessment');
         $this->audit->log($action, $version, $version->id, ['assessment_id' => $version->assessment_id, 'course_id' => $version->assessment?->course_id, 'assessment_version_id' => $version->id,
             'version_label' => $version->version_label, 'status' => $version->status] + $extra, $user);
+
+        // STEP 47: ASSESSMENT_VERSION_SUBMITTED|APPROVED|FINALIZED|ARCHIVED → SUBMITTED|APPROVED|… (automatic archival of a superseded version is not announced separately)
+        if (empty($extra['automatic'])) {
+            event(new \App\Events\AssessmentVersionStatusChanged($version->fresh(), str_replace('ASSESSMENT_VERSION_', '', strtoupper($action)), $user));
+        }
     }
 
     // ------------------------------------------------------------- integrations

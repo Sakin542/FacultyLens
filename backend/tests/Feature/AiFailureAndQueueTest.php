@@ -129,7 +129,8 @@ class AiFailureAndQueueTest extends TestCase
 
     public function test_queued_analysis_job_fails_is_retried_by_the_worker_and_then_succeeds(): void
     {
-        config(['queue.default' => 'database']);
+        // STEP 47 notification jobs share the jobs table; write them inline so this test observes only the analysis job.
+        config(['queue.default' => 'database', 'notifications.queue.enabled' => false]);
         Http::fake(['*/api/v1/analyze-assessment' => Http::sequence()
             ->push(['detail' => 'Service Unavailable'], 503)
             ->push($this->successfulAnalysisPayload(), 200)]);
@@ -161,7 +162,7 @@ class AiFailureAndQueueTest extends TestCase
 
     public function test_job_that_exhausts_its_retries_lands_in_failed_jobs_with_a_failed_status(): void
     {
-        config(['queue.default' => 'database']);
+        config(['queue.default' => 'database', 'notifications.queue.enabled' => false]);
         Http::fake(['*/api/v1/analyze-assessment' => Http::response(null, 503)]);
         $this->postJson("/api/ai/assessments/{$this->assessment->id}/analyze?async=1")->assertStatus(202);
 
@@ -201,7 +202,8 @@ class AiFailureAndQueueTest extends TestCase
         Queue::fake();
         Http::fake(['*/api/v1/analyze-assessment' => Http::response($this->successfulAnalysisPayload(), 200)]);
         $this->postJson('/api/ai/analyze-assessment', ['assessment_id' => $this->assessment->id])->assertOk();
-        Queue::assertNothingPushed();
+        Queue::assertNotPushed(AnalyzeAssessmentJob::class);
+        Queue::assertPushed(\App\Jobs\StoreNotificationJob::class); // STEP 47: completion notification is the only queued work on the sync path
         $this->postJson("/api/ai/assessments/{$this->assessment->id}/analyze?async=1")->assertStatus(202);
         Queue::assertPushed(AnalyzeAssessmentJob::class, 1);
     }
