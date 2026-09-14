@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Activity, Bell, Users } from 'lucide-react';
-import { Badge } from '@/components/common/Badge';
+import { Activity, Users } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { collaborationService } from '@/services/collaborationService';
-import { ActivityItem, AppNotification, CollaborationSummary } from '@/types/collaboration';
+import { ActivityItem, CollaborationSummary } from '@/types/collaboration';
 import { CollaborationEmptyState, CollaborationError, CollaborationLoading, CollaboratorRoleBadge, getCollaborationErrorMessage } from './CollaborationStates';
 import { cn } from '@/utils/cn';
 
-/** STEP 34: activity timeline, dashboard widget, notification bell. */
+/** STEP 34: activity timeline and dashboard widget (the notification bell moved to components/notifications in STEP 47). */
 
 function dayLabel(iso: string | null): string {
   if (!iso) return '';
@@ -90,34 +89,5 @@ export const CollaborationSummaryCard: React.FC<{ className?: string }> = ({ cla
         </>
       )}
     </section>
-  );
-};
-
-export const NotificationBell: React.FC = () => {
-  const [open, setOpen] = useState(false);
-  const [items, setItems] = useState<AppNotification[]>([]);
-  const [unread, setUnread] = useState(0);
-  const load = () => collaborationService.getNotifications().then((r) => { setItems(r.data); setUnread(r.meta?.unread_count ?? r.data.filter((n) => !n.read_at).length); }).catch(() => undefined);
-  useEffect(() => { void load(); const t = window.setInterval(load, 60000); return () => window.clearInterval(t); }, []);
-  return (
-    <div className="relative" data-testid="notification-bell">
-      <button type="button" aria-label="Notifications" onClick={() => setOpen((o) => !o)} className="relative p-2 rounded-full bg-white border border-sage-200 text-sage-800 hover:bg-sage-100">
-        <Bell className="w-4 h-4" />
-        {unread > 0 && <span data-testid="unread-count" className="absolute -top-1 -right-1 min-w-[18px] h-[18px] rounded-full bg-sage-700 text-white text-[10px] font-bold flex items-center justify-center px-1">{unread > 9 ? '9+' : unread}</span>}
-      </button>
-      {open && (
-        <div className="absolute right-0 mt-2 w-80 max-h-96 overflow-y-auto rounded-xl border border-sage-200 bg-white shadow-lg z-30 text-sm" role="menu">
-          <div className="flex items-center justify-between px-3 py-2 border-b border-sage-200"><span className="font-semibold text-sage-800">Notifications</span>{unread > 0 && <button type="button" className="text-xs underline text-sage-500" onClick={() => collaborationService.markAllNotificationsRead().then(load)}>Mark all read</button>}</div>
-          {items.length === 0 ? <p className="px-3 py-6 text-xs text-sage-500 text-center">You're all caught up.</p> : items.slice(0, 20).map((n) => (
-            <button key={n.id} type="button" onClick={() => { if (!n.read_at) void collaborationService.markNotificationRead(n.id).then(load); if (n.url) window.location.assign(n.url); }}
-              className={cn('w-full text-left px-3 py-2 border-b border-sage-100 hover:bg-sage-50', !n.read_at && 'bg-sage-100')}>
-              <span className="block font-medium text-sage-800 truncate">{n.title ?? n.event}</span>
-              <span className="block text-xs text-sage-500 line-clamp-2">{n.body}</span>
-              {!n.read_at && <Badge variant="Pending" className="mt-1">New</Badge>}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
   );
 };

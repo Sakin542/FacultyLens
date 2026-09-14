@@ -122,12 +122,17 @@ class AnalysisReport extends Model
             'analyzed_at' => $attributes['analyzed_at'] ?? now(),
         ]))->save();
 
+        // STEP 47: notification fan-out (listener is guarded; never affects the saved report)
+        event(new \App\Events\AssessmentAnalysisCompleted($this));
+
         return $this;
     }
 
     public function failRun(string $error): self
     {
         $this->forceFill(['analysis_status' => 'failed', 'processing_error' => $error])->save();
+
+        event(new \App\Events\AssessmentAnalysisFailed($this));
 
         return $this;
     }
@@ -144,13 +149,17 @@ class AnalysisReport extends Model
             return $latest->failRun($error);
         }
 
-        return static::create([
+        $report = static::create([
             'assessment_id' => $assessmentId,
             'analysis_version' => (int) static::where('assessment_id', $assessmentId)->max('analysis_version') + 1,
             'is_current' => $latest === null,
             'analysis_status' => 'failed',
             'processing_error' => $error,
         ]);
+
+        event(new \App\Events\AssessmentAnalysisFailed($report));
+
+        return $report;
     }
 
     /**

@@ -5,6 +5,7 @@ import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Input';
 import { AssignableRole, Collaborator, Invitation, Permissions, ROLE_DESCRIPTIONS, ROLE_LABELS } from '@/types/collaboration';
 import { CollaboratorRoleBadge, CollaborationEmptyState } from './CollaborationStates';
+import { ProfilePicture } from '@/components/profile/ProfilePicture';
 
 /** STEP 34: roster, invitations and management modals. Buttons are hidden by permissions; the API still enforces. */
 
@@ -32,7 +33,7 @@ export const RoleSelect: React.FC<{ value: AssignableRole; onChange: (r: Assigna
 export const CollaboratorCard: React.FC<{ collaborator: Collaborator; canManage: boolean; onChangeRole: (c: Collaborator) => void; onRemove: (c: Collaborator) => void }> = ({ collaborator: c, canManage, onChangeRole, onRemove }) => (
   <li data-testid={`collaborator-${c.user?.id ?? c.id}`} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-b border-sage-100 dark:border-[#1F1F1F] last:border-0">
     <div className="flex items-center gap-3 min-w-0">
-      <div className="w-9 h-9 rounded-full bg-sage-100 dark:bg-[#1F1F1F] border border-sage-200 dark:border-[#2A2A2A] flex items-center justify-center text-sm font-semibold text-sage-800 dark:text-white">{(c.user?.name ?? '?').slice(0, 1).toUpperCase()}</div>
+      <ProfilePicture src={c.user?.profile_picture_url} name={c.user?.name ?? '?'} size="md" decorative />
       <div className="min-w-0">
         <p className="text-sm font-medium text-sage-800 dark:text-white truncate">{c.user?.name ?? 'Unknown user'}</p>
         <p className="text-xs text-sage-500 truncate">{c.user?.email ?? c.user?.department ?? ''}{c.invited_by ? ` · invited by ${c.invited_by.name}` : ''}</p>
@@ -51,7 +52,7 @@ export const CollaboratorCard: React.FC<{ collaborator: Collaborator; canManage:
   </li>
 );
 
-export const CollaboratorList: React.FC<{ owner: { id: number; name: string; email?: string | null } | null; collaborators: Collaborator[]; permissions: Permissions; onInvite: () => void; onChangeRole: (c: Collaborator) => void; onRemove: (c: Collaborator) => void }> = ({ owner, collaborators, permissions, onInvite, onChangeRole, onRemove }) => {
+export const CollaboratorList: React.FC<{ owner: { id: number; name: string; email?: string | null; profile_picture_url?: string | null } | null; collaborators: Collaborator[]; permissions: Permissions; onInvite: () => void; onChangeRole: (c: Collaborator) => void; onRemove: (c: Collaborator) => void }> = ({ owner, collaborators, permissions, onInvite, onChangeRole, onRemove }) => {
   const canManage = !!permissions.manage_collaborators;
   return (
     <section data-testid="collaborator-list" className="rounded-xl border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616]">
@@ -62,7 +63,7 @@ export const CollaboratorList: React.FC<{ owner: { id: number; name: string; ema
       <ul>
         {owner && (
           <li data-testid="owner-row" className="flex items-center justify-between gap-3 px-4 py-3 border-b border-sage-100 dark:border-[#1F1F1F]">
-            <div className="flex items-center gap-3"><div className="w-9 h-9 rounded-full bg-sage-700 dark:bg-white text-white dark:text-sage-800 flex items-center justify-center text-sm font-semibold">{owner.name.slice(0, 1).toUpperCase()}</div>
+            <div className="flex items-center gap-3"><ProfilePicture src={owner.profile_picture_url} name={owner.name} size="md" tone="dark" decorative />
               <div><p className="text-sm font-medium text-sage-800 dark:text-white">{owner.name}</p><p className="text-xs text-sage-500">{owner.email ?? 'Course owner'}</p></div></div>
             <CollaboratorRoleBadge role="OWNER" />
           </li>
@@ -106,7 +107,7 @@ export const InviteCollaboratorModal: React.FC<{ onSubmit: (data: { email: strin
         </label>
         {error && <p role="alert" className="text-xs text-red-600">{error}</p>}
         <p className="text-[11px] text-sage-400">The invitation expires automatically, is single-use, and does not expose course content until accepted.</p>
-        <div className="flex justify-end gap-2"><Button type="button" variant="ghost" size="sm" onClick={onClose}>Cancel</Button><Button type="submit" size="sm" disabled={!valid} isLoading={submitting} data-testid="send-invitation">Send invitation</Button></div>
+        <div className="flex flex-wrap justify-end gap-2"><Button type="button" variant="ghost" size="sm" onClick={onClose}>Cancel</Button><Button type="submit" size="sm" disabled={!valid} isLoading={submitting} data-testid="send-invitation">Send invitation</Button></div>
       </form>
     </Modal>
   );
@@ -118,7 +119,7 @@ export const ChangeRoleModal: React.FC<{ collaborator: Collaborator; onConfirm: 
     <Modal title={`Change ${c.user?.name ?? 'collaborator'}'s role`} onClose={onClose} testId="change-role-modal">
       <p className="text-sm text-sage-600 dark:text-sage-400">Current role: <strong>{ROLE_LABELS[c.role]}</strong></p>
       <RoleSelect value={role} onChange={setRole} label="New role" />
-      <div className="flex justify-end gap-2"><Button variant="ghost" size="sm" onClick={onClose}>Cancel</Button><Button size="sm" disabled={role === c.role} isLoading={submitting} onClick={() => void onConfirm(role)} data-testid="confirm-change-role">Change role</Button></div>
+      <div className="flex flex-wrap justify-end gap-2"><Button variant="ghost" size="sm" onClick={onClose}>Cancel</Button><Button size="sm" disabled={role === c.role} isLoading={submitting} onClick={() => void onConfirm(role)} data-testid="confirm-change-role">Change role</Button></div>
     </Modal>
   );
 };
@@ -126,6 +127,6 @@ export const ChangeRoleModal: React.FC<{ collaborator: Collaborator; onConfirm: 
 export const RemoveCollaboratorModal: React.FC<{ collaborator: Collaborator; courseLabel: string; onConfirm: () => Promise<void> | void; onClose: () => void; submitting?: boolean }> = ({ collaborator: c, courseLabel, onConfirm, onClose, submitting }) => (
   <Modal title="Remove collaborator" onClose={onClose} testId="remove-modal">
     <p className="text-sm text-sage-600 dark:text-sage-400">Remove <strong>{c.user?.name ?? 'this collaborator'}</strong> from {courseLabel}? They will lose access to this course and its collaborative resources. Their past comments and review history remain attributable.</p>
-    <div className="flex justify-end gap-2"><Button variant="ghost" size="sm" onClick={onClose}>Cancel</Button><Button size="sm" variant="danger" isLoading={submitting} onClick={() => void onConfirm()} data-testid="confirm-remove">Remove</Button></div>
+    <div className="flex flex-wrap justify-end gap-2"><Button variant="ghost" size="sm" onClick={onClose}>Cancel</Button><Button size="sm" variant="danger" isLoading={submitting} onClick={() => void onConfirm()} data-testid="confirm-remove">Remove</Button></div>
   </Modal>
 );

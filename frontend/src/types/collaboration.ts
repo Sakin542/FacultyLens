@@ -23,7 +23,7 @@ export const ROLE_DESCRIPTIONS: Record<AssignableRole, string> = {
   VIEWER: 'View authorized resources and activity only.',
 };
 
-export interface UserRef { id: number; name: string; email?: string | null; department?: string | null }
+export interface UserRef { id: number; name: string; email?: string | null; department?: string | null; profile_picture_url?: string | null }
 
 export interface Collaborator {
   id: number;
@@ -97,20 +97,6 @@ export interface CollaborationSummary {
   pending_invitations: Invitation[];
   unresolved_discussions_count: number;
   unread_notifications_count: number;
-}
-
-export interface AppNotification {
-  id: string;
-  read_at: string | null;
-  created_at: string | null;
-  event?: string;
-  title?: string;
-  body?: string;
-  course_id?: number;
-  course_code?: string;
-  course_name?: string;
-  actor_name?: string;
-  url?: string;
 }
 
 export interface MentionableUser { id: number; name: string; role: CollaborationRole }

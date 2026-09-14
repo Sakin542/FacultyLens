@@ -37,7 +37,10 @@ class GenerateInstitutionalReportJob implements ShouldQueue
 
     public function failed(\Throwable $e): void
     {
-        InstitutionalReport::where('id', $this->reportId)->whereIn('status', [InstitutionalReport::STATUS_PENDING, InstitutionalReport::STATUS_PROCESSING])
+        $updated = InstitutionalReport::where('id', $this->reportId)->whereIn('status', [InstitutionalReport::STATUS_PENDING, InstitutionalReport::STATUS_PROCESSING])
             ->update(['status' => InstitutionalReport::STATUS_FAILED, 'error_message' => 'Report generation failed. Please try again.']);
+        if ($updated > 0 && ($report = InstitutionalReport::find($this->reportId))) {
+            event(new \App\Events\ReportGenerationFailed($report));
+        }
     }
 }

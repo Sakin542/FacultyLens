@@ -4,8 +4,9 @@ import { cn } from '@/utils/cn';
 import { useAuth } from '@/context/AuthContext';
 import { BrandMark } from './Navbar';
 import { ConfirmSignOutDialog } from '@/components/common/ConfirmSignOutDialog';
+import { ProfilePicture } from '@/components/profile/ProfilePicture';
 import {
-  LayoutDashboard, BookOpen, FileCheck2, HelpCircle, BrainCircuit, History, MessageSquare, MessageSquareText, Sparkles, Gauge, BarChart3, Users, Settings, LogOut, X, User as UserIcon, ExternalLink, Leaf, FileBarChart2,
+  LayoutDashboard, BookOpen, FileCheck2, HelpCircle, BrainCircuit, History, MessageSquare, MessageSquareText, Sparkles, Gauge, BarChart3, Users, Settings, LogOut, X, ExternalLink, Leaf, FileBarChart2, Bell,
 } from 'lucide-react';
 
 export interface SidebarProps {
@@ -35,6 +36,7 @@ export const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
   ] },
   { title: 'Workspace', items: [
     { name: 'Collaboration', path: '/collaboration/invitations', icon: Users },
+    { name: 'Notifications', path: '/notifications', icon: Bell },
     { name: 'Feedback', path: '/feedback', icon: MessageSquare },
     { name: 'Settings', path: '/settings', icon: Settings },
   ] },
@@ -70,7 +72,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
 
   const displayName = user?.name || user?.fullName || 'Faculty Member';
   const displayDesignation = user?.designation || user?.department || 'Faculty';
-  const initials = displayName.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]?.toUpperCase()).join('') || 'F';
 
   const content = (
     <div className="relative flex flex-col h-full text-white overflow-hidden bg-gradient-to-b from-sage-500 via-sage-600 to-sage-700">
@@ -78,13 +79,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
       <div className="absolute inset-x-0 top-0 h-40 bg-white/5 blur-2xl pointer-events-none" aria-hidden="true" />
 
       <div className="relative flex items-center justify-between h-16 px-5 border-b border-white/10">
-        <NavLink to="/dashboard" onClick={onCloseMobile} aria-label="FacultyLens dashboard"><BrandMark light /></NavLink>
+        <NavLink to="/" onClick={onCloseMobile} aria-label="FacultyLens home"><BrandMark light /></NavLink>
         {mobileOpen && (
           <button type="button" className="p-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 md:hidden" onClick={onCloseMobile} aria-label="Close sidebar"><X className="w-5 h-5" /></button>
         )}
       </div>
 
-      <nav className="relative flex-1 py-4 px-3 overflow-y-auto space-y-5" aria-label="Main">
+      <nav className="relative flex-1 py-4 px-3 overflow-y-auto scrollbar-none space-y-5" aria-label="Main">
         {NAV_SECTIONS.map((section) => (
           <div key={section.title}>
             <p className="px-3 pb-1.5 text-[10px] uppercase tracking-[0.18em] text-sage-200/80">{section.title}</p>
@@ -115,7 +116,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
 
       <div className="relative p-3 border-t border-white/10 space-y-1.5">
         <NavLink to="/settings" onClick={onCloseMobile} className="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/10 hover:bg-white/15 transition-colors" aria-label="Open profile settings">
-          <span className="w-8 h-8 rounded-full bg-white text-sage-700 flex items-center justify-center text-[11px] font-semibold shrink-0" aria-hidden="true">{initials || <UserIcon className="w-4 h-4" />}</span>
+          <ProfilePicture src={user?.profile_picture_url} name={displayName} size="sm" tone="inverse" decorative className="ring-2 ring-white/30" />
           <span className="min-w-0 flex-1">
             <span className="block text-xs font-semibold text-white truncate">{displayName}</span>
             <span className="block text-[10px] text-white/65 truncate">{displayDesignation}</span>

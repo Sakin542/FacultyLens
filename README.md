@@ -354,6 +354,10 @@ Faculty → Course → Course Collaboration → Collaborators → Roles → Shar
 `GET /api/collaboration/invitations[/{token}]`, `POST /api/collaboration/invitations/{token}/{accept|decline}`,
 `GET|POST /api/courses/{course}/comments`, `PUT|DELETE /api/comments/{id}`, `POST /api/comments/{id}/{resolve|reopen}`,
 `GET /api/courses/{course}/collaboration/activity`, `GET /api/collaboration/summary`, `GET /api/notifications`.
+
+### Notification system (STEP 47)
+
+Every important FacultyLens event (AI analysis, recommendations, rubric/question drafts, assessment versions, collaboration, reviews, AI grading, performance/learning gaps, reports, faculty feedback, security) produces an **informational** in-app notification: `event → listener → NotificationService → queued StoreNotificationJob → notifications table → /api/notifications → 🔔 bell / /notifications`. Recipients are derived from the collaboration role matrix, payloads carry identifiers only, duplicates are impossible (`unique(user_id, dedupe_key)`), and a notification never approves, finalizes or grades anything. Routes: `GET /api/notifications`, `GET /api/notifications/unread-count`, `POST /api/notifications/{id}/read|dismiss`, `POST /api/notifications/read-all`, `DELETE /api/notifications/{id}`, `GET|PUT /api/notification-preferences`, `PATCH /api/notification-preferences/{type}`. See `docs/NOTIFICATION_SYSTEM.md`, `docs/NOTIFICATION_EVENT_MATRIX.md`, `docs/NOTIFICATION_VALIDATION_REPORT.md`.
 UI at `/courses/:courseId/collaboration`, `/collaboration/invitations`, `/collaboration/invitations/:token`.
 
 ---

@@ -6,9 +6,9 @@ RUN composer install --no-dev --no-interaction --no-progress --prefer-dist --opt
 
 FROM php:8.2-fpm-alpine
 
-RUN apk add --no-cache bash curl mariadb-client libzip-dev libpng-dev libjpeg-turbo-dev freetype-dev libxml2-dev oniguruma-dev icu-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j"$(nproc)" pdo_mysql mbstring bcmath xml zip gd intl opcache pcntl \
+RUN apk add --no-cache bash curl mariadb-client libzip-dev libpng-dev libjpeg-turbo-dev libwebp-dev freetype-dev libxml2-dev oniguruma-dev icu-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install -j"$(nproc)" pdo_mysql mbstring bcmath xml zip gd exif intl opcache pcntl \
     && rm -rf /tmp/*
 
 # Production PHP settings: opcache on, no error display, sane upload limits (documents up to 20 MB)

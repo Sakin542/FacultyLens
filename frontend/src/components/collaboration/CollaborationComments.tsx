@@ -5,6 +5,7 @@ import { Button } from '@/components/common/Button';
 import { collaborationService } from '@/services/collaborationService';
 import { CollaborationComment as CommentType, CommentableType, MentionableUser } from '@/types/collaboration';
 import { CollaborationEmptyState, CollaborationError, CollaborationLoading, getCollaborationErrorMessage } from './CollaborationStates';
+import { ProfilePicture } from '@/components/profile/ProfilePicture';
 import { cn } from '@/utils/cn';
 
 /**
@@ -43,7 +44,7 @@ export const CommentEditor: React.FC<{ onSubmit: (body: string, mentions: number
       <MentionSelector members={members} selected={mentions} onChange={setMentions} currentUserId={currentUserId} />
       <div className="flex items-center justify-between">
         <span className="text-[11px] text-sage-400">{body.length}/{maxLength}</span>
-        <div className="flex gap-2">{onCancel && <Button type="button" size="sm" variant="ghost" onClick={onCancel}>Cancel</Button>}<Button type="submit" size="sm" disabled={!canSend} isLoading={busy} data-testid="comment-submit">{submitLabel}</Button></div>
+        <div className="flex flex-wrap gap-2">{onCancel && <Button type="button" size="sm" variant="ghost" onClick={onCancel}>Cancel</Button>}<Button type="submit" size="sm" disabled={!canSend} isLoading={busy} data-testid="comment-submit">{submitLabel}</Button></div>
       </div>
     </form>
   );
@@ -57,7 +58,10 @@ const CommentItem: React.FC<{ comment: CommentType; currentUserId?: number; canR
   return (
     <div data-testid={`comment-${c.id}`} className={cn('rounded-lg border bg-white dark:bg-[#161616] p-3 space-y-2', resolved ? 'border-emerald-200 dark:border-emerald-900/50 opacity-90' : 'border-sage-200 dark:border-[#2A2A2A]', isReply && 'ml-6')}>
       <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-sage-500">
-        <span><strong className="text-sage-800 dark:text-white">{c.author?.name ?? 'Unknown'}</strong>{c.created_at ? ` · ${new Date(c.created_at).toLocaleString()}` : ''}{c.edited_at ? ' · edited' : ''}</span>
+        <span className="inline-flex items-center gap-2 min-w-0">
+          <ProfilePicture src={c.author?.profile_picture_url} name={c.author?.name} size="xs" decorative />
+          <span className="truncate"><strong className="text-sage-800 dark:text-white">{c.author?.name ?? 'Unknown'}</strong>{c.created_at ? ` · ${new Date(c.created_at).toLocaleString()}` : ''}{c.edited_at ? ' · edited' : ''}</span>
+        </span>
         <div className="flex items-center gap-1.5">
           {resolved && <Badge variant="Good" data-testid="resolved-badge">Resolved{c.resolved_by ? ` by ${c.resolved_by.name}` : ''}</Badge>}
           {mine && c.status !== 'DELETED' && <button type="button" aria-label="Edit comment" onClick={() => setEditing(true)} className="hover:text-sage-800"><Pencil className="w-3.5 h-3.5" /></button>}

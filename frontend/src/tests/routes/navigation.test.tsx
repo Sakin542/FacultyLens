@@ -14,6 +14,7 @@ describe('Routing and Navigation Security', () => {
     logout: vi.fn(),
     register: vi.fn(),
     refreshUser: vi.fn(),
+    updateUser: vi.fn(),
     ...overrides,
   });
 

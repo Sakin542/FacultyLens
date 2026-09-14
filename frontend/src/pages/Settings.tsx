@@ -8,6 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { authService } from '@/services/authService';
 import { ApiError } from '@/services/api';
 import { ConfirmSignOutDialog } from '@/components/common/ConfirmSignOutDialog';
+import { ProfilePictureUploader } from '@/components/profile/ProfilePictureUploader';
 import {
   User,
   LogOut,
@@ -51,7 +52,7 @@ const StatusNote: React.FC<{ tone: 'success' | 'error'; children: React.ReactNod
 
 export const Settings: React.FC = () => {
   const navigate = useNavigate();
-  const { user, logout, refreshUser } = useAuth();
+  const { user, logout, refreshUser, updateUser } = useAuth();
 
   const [profile, setProfile] = useState({
     fullName: user?.name || user?.fullName || '',
@@ -175,7 +176,7 @@ export const Settings: React.FC = () => {
       {/* Profile Section */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
               <CardTitle>Faculty Profile</CardTitle>
               <CardDescription>Manage your institutional identification and department details</CardDescription>
@@ -184,6 +185,7 @@ export const Settings: React.FC = () => {
           </div>
         </CardHeader>
         <CardContent>
+          <ProfilePictureUploader user={user} onUpdated={updateUser} className="pb-5 mb-5 border-b border-sage-100" />
           <form onSubmit={handleSaveProfile} className="space-y-4" noValidate>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input

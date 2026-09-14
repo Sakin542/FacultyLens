@@ -22,6 +22,19 @@ The SPA and API share a first-party session cookie; there are no bearer tokens i
 | POST | `/auth/change-password` | session (throttle:auth) | `current_password, password, password_confirmation` (min 6, different) | 200 | 422 |
 | POST | `/auth/logout` | session | — | 200 | 401 |
 
+`{user}` = `{id, name, email, role, department, designation, profile_picture_url}` — never the password hash, tokens or storage paths. `profile_picture_url` is `null` or a versioned, authenticated URL (`/api/users/{id}/profile-picture?v=…`).
+
+### Profile picture (private storage; see `docs/PROFILE_PICTURE_SYSTEM.md`)
+
+| Method | Endpoint | Auth | Body / notes | Success | Errors |
+|---|---|---|---|---|---|
+| GET | `/profile` | session | alias of `GET /auth/user` | 200 `{user}` | 401 |
+| PUT/PATCH | `/profile` | session | alias of `PATCH /auth/user` | 200 `{user}` | 422 |
+| POST | `/profile/picture` | session (throttle:profile-picture 10/hour) | `multipart/form-data`, field `profile_picture`: JPG/PNG/WEBP, ≤ 5 MB, 100–5000 px; normalised to 512×512 WEBP. Subject is always the session user. | 200 `{message, user}` | 422 invalid image, 429, 503 processing/storage unavailable (old picture kept) |
+| DELETE | `/profile/picture` | session (throttle:profile-picture) | idempotent | 200 `{message, user}` | 401 |
+| GET | `/profile/picture` | session | streams own image (`image/webp`, `Cache-Control: private`, `nosniff`) | 200 | 404 none |
+| GET | `/users/{user}/profile-picture` | session + `UserPolicy@viewProfilePicture` (self, admin, or shared course) | streams another faculty member's image | 200 | 403, 404 |
+
 Common status codes across the API: `401` unauthenticated · `403` not authorized (course role matrix / policy) · `404` missing · `409` state conflict (e.g. finalized version, duplicate analysis) · `419` CSRF/session expired · `422` validation · `429` rate limited · `503` dependency unavailable (AI service).
 
 ## Authorization model
@@ -125,6 +138,24 @@ Any AI result is addressed as `{type}/{id}`; `type` ∈ `question_type, difficul
 | POST | `/ai-results/{type}/{id}/events` | `{action: AI_RESULT_VIEWED\|AI_EVIDENCE_VIEWED\|AI_SOURCE_OPENED, meta?}` → 202; other actions 422 |
 
 AI service (internal): `POST /api/v1/explain-question` (rule-table cue evidence), `POST /api/v1/validate-explanation` (contradiction check + deterministic fallback).
+
+## Notifications (STEP 47)
+
+Owner-scoped: another user's id is a 404 (never the row). Ids are uuids. Notifications are informational only and never grant access to the resource behind `action_url`. See `docs/NOTIFICATION_SYSTEM.md`.
+
+| Method | Path | Notes |
+|---|---|---|
+| GET | `/notifications?filter=all\|unread\|AI\|ASSESSMENT\|COLLABORATION\|REVIEW\|GRADING\|PERFORMANCE\|REPORT\|FEEDBACK\|SECURITY\|SYSTEM&page=&per_page=` | default 20, max 50; optional `from`/`to`; `meta.unread_count`, `meta.poll_interval_seconds` |
+| GET | `/notifications/unread-count` | `{unread_count, poll_interval_seconds}` — active (not dismissed/expired) unread rows |
+| GET | `/notifications/{id}` | logs `NOTIFICATION_VIEWED` |
+| POST | `/notifications/{id}/read` · `/notifications/read-all` | idempotent |
+| POST | `/notifications/{id}/dismiss` | hides from lists/counts (also marks read) |
+| DELETE | `/notifications/{id}` | audit rows retained |
+| GET | `/notification-preferences` | matrix of every type: `in_app_enabled, email_enabled, mandatory` + `mandatory_categories`, `email_available` |
+| PUT | `/notification-preferences` | `{preferences:[{notification_type,in_app_enabled,email_enabled?}]}`; SECURITY/SYSTEM stay enabled |
+| PATCH | `/notification-preferences/{type}` | single type; unknown type 404 |
+
+Row shape: `{id, type, category, severity, title, message, data{ids…, action_label}, action_url, entity_type, entity_id, read_at, dismissed_at, expires_at, created_at}`.
 
 ## Validation and limits (server-enforced)
 

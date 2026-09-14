@@ -1,6 +1,6 @@
 import { apiClient } from './api';
 import {
-  ActivityItem, AppNotification, AssignableRole, CollaborationComment, CollaborationOverview, CollaborationSummary, Collaborator,
+  ActivityItem, AssignableRole, CollaborationComment, CollaborationOverview, CollaborationSummary, Collaborator,
   CommentableType, Invitation, MentionableUser, PageMeta, UserRef,
 } from '@/types/collaboration';
 
@@ -71,11 +71,4 @@ export const collaborationService = {
 
   getCollaborationActivity: (courseId: number | string, page = 1, perPage = 20): Promise<Envelope<ActivityItem[]>> =>
     apiClient(`/courses/${courseId}/collaboration/activity?page=${page}&per_page=${perPage}`, { method: 'GET' }),
-
-  getNotifications: (unreadOnly = false): Promise<Envelope<AppNotification[]>> =>
-    apiClient(`/notifications${unreadOnly ? '?unread=1' : ''}`, { method: 'GET' }),
-
-  markNotificationRead: (id: string): Promise<Envelope<null>> => apiClient(`/notifications/${id}/read`, { method: 'POST' }),
-
-  markAllNotificationsRead: (): Promise<Envelope<null>> => apiClient('/notifications/read-all', { method: 'POST' }),
 };

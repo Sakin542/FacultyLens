@@ -5,10 +5,8 @@ namespace App\Services;
 use App\Models\CollaborationComment;
 use App\Models\Course;
 use App\Models\User;
-use App\Notifications\CollaborationNotification;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
@@ -47,7 +45,7 @@ class CollaborationCommentService
     public function list(User $user, Course $course, array $filters, int $perPage = 20)
     {
         $query = CollaborationComment::where('course_id', $course->id)->whereNull('parent_id')
-            ->with(['user:id,name', 'resolver:id,name', 'replies.user:id,name'])
+            ->with(['user:' . User::REF_COLUMNS, 'resolver:id,name', 'replies.user:' . User::REF_COLUMNS])
             ->orderByDesc('id');
 
         if (!empty($filters['commentable_type']) && !empty($filters['commentable_id'])) {
@@ -82,7 +80,7 @@ class CollaborationCommentService
             ->where('commentable_type', $target['type'])->where('commentable_id', $target['model']->getKey())
             ->where('parent_id', $parent?->id)->where('body', $body)->where('created_at', '>=', now()->subSeconds(10))->first();
         if ($dupe) {
-            return $dupe->load(['user:id,name', 'replies.user:id,name']);
+            return $dupe->load(['user:' . User::REF_COLUMNS, 'replies.user:' . User::REF_COLUMNS]);
         }
 
         $comment = DB::transaction(fn () => CollaborationComment::create([
@@ -103,7 +101,7 @@ class CollaborationCommentService
 
         $this->notifyParticipants($user, $course, $comment, $parent, $mentions, $target['type']);
 
-        return $comment->load(['user:id,name', 'replies.user:id,name']);
+        return $comment->load(['user:' . User::REF_COLUMNS, 'replies.user:' . User::REF_COLUMNS]);
     }
 
     public function update(User $user, CollaborationComment $comment, string $body): CollaborationComment
@@ -121,7 +119,7 @@ class CollaborationCommentService
         $comment->update(['body' => $body, 'edited_at' => now()]);
         $this->audit->log('COMMENT_UPDATED', $comment, $comment->id, ['course_id' => $comment->course_id, 'previous_length' => mb_strlen($comment->getOriginal('body') ?? '')], $user);
 
-        return $comment->fresh(['user:id,name', 'replies.user:id,name']);
+        return $comment->fresh(['user:' . User::REF_COLUMNS, 'replies.user:' . User::REF_COLUMNS]);
     }
 
     /**
@@ -146,7 +144,7 @@ class CollaborationCommentService
         $comment->update(['status' => CollaborationComment::STATUS_RESOLVED, 'resolved_by' => $user->id, 'resolved_at' => now()]);
         $this->audit->log('COMMENT_RESOLVED', $comment, $comment->id, ['course_id' => $comment->course_id], $user);
 
-        return $comment->fresh(['user:id,name', 'resolver:id,name', 'replies.user:id,name']);
+        return $comment->fresh(['user:' . User::REF_COLUMNS, 'resolver:id,name', 'replies.user:' . User::REF_COLUMNS]);
     }
 
     public function reopen(User $user, CollaborationComment $comment): CollaborationComment
@@ -155,7 +153,7 @@ class CollaborationCommentService
         $comment->update(['status' => CollaborationComment::STATUS_ACTIVE, 'resolved_by' => null, 'resolved_at' => null]);
         $this->audit->log('COMMENT_REOPENED', $comment, $comment->id, ['course_id' => $comment->course_id], $user);
 
-        return $comment->fresh(['user:id,name', 'resolver:id,name', 'replies.user:id,name']);
+        return $comment->fresh(['user:' . User::REF_COLUMNS, 'resolver:id,name', 'replies.user:' . User::REF_COLUMNS]);
     }
 
     public function payload(CollaborationComment $c, bool $withReplies = true): array
@@ -169,7 +167,7 @@ class CollaborationCommentService
             'body' => $c->status === CollaborationComment::STATUS_DELETED ? '[deleted]' : $c->body,
             'mentions' => $c->mentions ?? [],
             'status' => $c->status,
-            'author' => $c->user ? ['id' => $c->user->id, 'name' => $c->user->name] : null,
+            'author' => $c->user ? $c->user->refPayload() : null,
             'resolved_by' => $c->relationLoaded('resolver') && $c->resolver ? ['id' => $c->resolver->id, 'name' => $c->resolver->name] : null,
             'resolved_at' => $c->resolved_at?->toIso8601String(),
             'edited_at' => $c->edited_at?->toIso8601String(),
@@ -208,33 +206,18 @@ class CollaborationCommentService
 
     protected function notifyParticipants(User $actor, Course $course, CollaborationComment $comment, ?CollaborationComment $parent, array $mentions, string $type): void
     {
-        $recipients = collect($mentions);
+        $participants = collect();
         if ($parent) {
-            $recipients->push($parent->user_id);
-            $recipients = $recipients->merge($parent->replies()->pluck('user_id'));
+            $participants->push($parent->user_id);
+            $participants = $participants->merge($parent->replies()->pluck('user_id'));
         }
-        $recipientIds = $recipients->unique()->reject(fn ($id) => (int) $id === $actor->id)->values();
-        if ($recipientIds->isEmpty()) {
+        $participantIds = $participants->map(fn ($id) => (int) $id)->unique()->reject(fn (int $id) => $id === (int) $actor->id)->values()->all();
+        $mentionIds = array_values(array_map('intval', $mentions));
+        if ($participantIds === [] && $mentionIds === []) {
             return;
         }
-        $label = Str::of($type)->replace('_', ' ')->toString();
-        foreach (User::whereIn('id', $recipientIds)->get() as $user) {
-            if (!$this->access->isMember($user, $course)) {
-                continue;
-            }
-            try {
-                $user->notify(new CollaborationNotification([
-                    'event' => in_array($user->id, $mentions, true) ? 'MENTION_RECEIVED' : 'COLLABORATION_COMMENT_ADDED',
-                    'title' => in_array($user->id, $mentions, true) ? "{$actor->name} mentioned you" : "{$actor->name} replied to a discussion",
-                    'body' => Str::limit($comment->body, 160),
-                    'course_id' => $course->id, 'course_code' => $course->course_code, 'course_name' => $course->course_name,
-                    'actor_name' => $actor->name, 'comment_id' => $comment->id, 'target' => $label,
-                    'url' => rtrim(config('collaboration.frontend_url'), '/') . "/courses/{$course->id}/collaboration?comment={$comment->id}",
-                ]));
-            } catch (\Throwable) {
-                // notification failures never break the request
-            }
-        }
+        // STEP 47: membership is re-verified by the listener; the notification pipeline never breaks the request.
+        event(new \App\Events\CommentCreated($comment, $course, $actor, $mentionIds, $participantIds));
     }
 
     protected function courseIdOf(Model $model): ?int

@@ -103,6 +103,16 @@ class CourseAccessService
     }
 
     /**
+     * STEP 47: roles that hold an ability (used to fan notifications out to the right course members).
+     *
+     * @return string[]
+     */
+    public function rolesWithAbility(string $ability): array
+    {
+        return $this->rolesFor($ability);
+    }
+
+    /**
      * @return string[]
      */
     protected function rolesFor(string $ability): array
