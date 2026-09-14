@@ -126,9 +126,6 @@ class RecommendationFeedbackService
                 $user
             );
 
-            // 6. STEP 47: tell the other deciding faculty on the course (notes stay private; queued after commit)
-            event(new \App\Events\FacultyFeedbackCreated($recommendation, $user, $decisionUpper));
-
             return [
                 'recommendation' => $recommendation->fresh(['feedback', 'decisions']),
                 'decision' => $decisionRecord,

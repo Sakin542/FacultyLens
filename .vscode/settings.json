@@ -5,6 +5,5 @@
     "${workspaceFolder}/ai-service",
     "${workspaceFolder}/ai-service/app"
   ],
-  "python.analysis.autoSearchPaths": true,
-  "chat.tools.terminal.ignoreDefaultAutoApproveRules": true
+  "python.analysis.autoSearchPaths": true
 }

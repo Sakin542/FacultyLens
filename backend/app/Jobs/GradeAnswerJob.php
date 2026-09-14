@@ -64,7 +64,6 @@ class GradeAnswerJob implements ShouldQueue, ShouldBeUnique
                 'grading_status' => AiGradingResult::STATUS_FAILED,
                 'error_message' => AiGradingService::MSG_UNAVAILABLE,
             ]);
-            event(new \App\Events\GradingFailed($result));
         }
     }
 }

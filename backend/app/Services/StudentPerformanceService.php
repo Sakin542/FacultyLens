@@ -180,16 +180,12 @@ class StudentPerformanceService
                 'gap_areas' => count($metrics['summary']['gap_areas']),
                 'strong_areas' => count($metrics['summary']['strong_areas']),
             ], $run->requester);
-
-            // STEP 47: aggregate-only notification (no per-student data leaves this service)
-            event(new \App\Events\PerformanceAnalysisCompleted($run->fresh()));
         } catch (\Throwable $e) {
             Log::error('Performance analysis failed for run ' . $run->id . ': ' . get_class($e) . ' ' . $e->getMessage());
             $run->update([
                 'status' => PerformanceAnalysisRun::STATUS_FAILED,
                 'error_message' => 'The performance analysis could not be completed. Please try again.',
             ]);
-            event(new \App\Events\PerformanceAnalysisFailed($run));
         }
 
         return $run->fresh();

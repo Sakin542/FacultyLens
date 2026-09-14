@@ -210,9 +210,6 @@ class AiGradingService
                 'model_name' => $normalized['model_name'],
                 'generation_method' => $normalized['generation_method'],
             ], $result->requester);
-
-            // STEP 47: suggestion ready for faculty review (marks change only when faculty confirm)
-            event(new \App\Events\GradingCompleted($result));
         } catch (AiGradingException $e) {
             $this->markFailed($result, $e->getMessage());
         } catch (\Throwable $e) {
@@ -234,8 +231,6 @@ class AiGradingService
             'student_answer_id' => $result->student_answer_id,
             'reason' => Str::limit($message, 250, ''),
         ], $result->requester);
-
-        event(new \App\Events\GradingFailed($result));
     }
 
     // ----------------------------------------------------------- faculty review

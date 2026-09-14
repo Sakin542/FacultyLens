@@ -85,9 +85,7 @@ class CollaborationTest extends TestCase
         $this->assertDatabaseMissing('course_collaboration_invitations', ['token_hash' => $token]); // stored hashed only
         $this->assertDatabaseHas('course_collaborators', ['course_id' => $this->course->id, 'user_id' => $invitee->id, 'status' => 'PENDING']);
         $this->assertDatabaseHas('audit_logs', ['action' => 'COLLABORATOR_INVITED', 'course_id' => $this->course->id]);
-        Notification::assertSentTo($invitee, CollaborationNotification::class); // e-mail with the single-use link
-        $this->assertDatabaseHas('notifications', ['user_id' => $invitee->id, 'type' => 'COLLABORATION_INVITATION', 'category' => 'COLLABORATION']);
-        $this->assertStringNotContainsString($token, (string) json_encode(\App\Models\Notification::where('user_id', $invitee->id)->first()?->toApi()), 'invitation token must never be stored in-app');
+        Notification::assertSentTo($invitee, CollaborationNotification::class);
 
         // Public preview exposes only minimal info
         $this->getJson("/api/collaboration/invitations/{$token}")->assertOk()
@@ -108,7 +106,7 @@ class CollaborationTest extends TestCase
         // Course now visible to the new editor
         $this->getJson("/api/courses/{$this->course->id}")->assertOk()->assertJsonPath('data.current_role', 'EDITOR')->assertJsonPath('data.permissions.edit_course', true)->assertJsonPath('data.permissions.delete_course', false);
         $this->getJson('/api/courses')->assertOk()->assertJsonCount(1, 'data');
-        $this->assertDatabaseHas('notifications', ['user_id' => $this->owner->id, 'type' => 'COLLABORATION_ACCEPTED']);
+        Notification::assertSentTo($this->owner, CollaborationNotification::class);
     }
 
     public function test_decline_grants_no_access(): void
@@ -156,7 +154,7 @@ class CollaborationTest extends TestCase
         Sanctum::actingAs($this->owner);
         $this->patchJson("/api/courses/{$this->course->id}/collaborators/{$this->reviewer->id}/role", ['role' => 'EDITOR'])->assertOk()->assertJsonPath('data.role', 'EDITOR');
         $this->assertDatabaseHas('audit_logs', ['action' => 'COLLABORATOR_ROLE_CHANGED']);
-        $this->assertDatabaseHas('notifications', ['user_id' => $this->reviewer->id, 'type' => 'COLLABORATION_ROLE_CHANGED']);
+        Notification::assertSentTo($this->reviewer, CollaborationNotification::class);
 
         $this->deleteJson("/api/courses/{$this->course->id}/collaborators/{$this->viewer->id}")->assertOk();
         $this->assertDatabaseHas('course_collaborators', ['user_id' => $this->viewer->id, 'status' => 'REVOKED']);
@@ -307,8 +305,7 @@ class CollaborationTest extends TestCase
         $root = $this->postJson("/api/courses/{$this->course->id}/comments", ['commentable_type' => 'analysis_report', 'commentable_id' => $report->id, 'body' => 'I think the score is too high.', 'mentions' => [$this->owner->id, $this->outsider->id]]);
         $root->assertStatus(201)->assertJsonPath('data.author.name', 'Dr. C')->assertJsonPath('data.status', 'ACTIVE')->assertJsonPath('data.mentions', [$this->owner->id]); // outsider mention dropped
         $rootId = $root->json('data.id');
-        $this->assertDatabaseHas('notifications', ['user_id' => $this->owner->id, 'type' => 'MENTION_RECEIVED', 'entity_type' => 'collaboration_comment', 'entity_id' => $rootId]);
-        $this->assertDatabaseMissing('notifications', ['user_id' => $this->outsider->id]); // dropped mention never notified
+        Notification::assertSentTo($this->owner, CollaborationNotification::class);
         $this->assertEquals(82.0, (float) $report->fresh()->overall_score, 'Comments must not alter AI results');
 
         // Retry with identical body is idempotent
@@ -403,10 +400,10 @@ class CollaborationTest extends TestCase
         Sanctum::actingAs($this->editor);
         $this->getJson('/api/collaboration/summary')->assertOk()->assertJsonPath('data.shared_courses_count', 1)->assertJsonPath('data.shared_courses.0.role', 'EDITOR')->assertJsonPath('data.pending_invitations_count', 0);
 
-        // STEP 47: in-app rows come from NotificationService (never from the notification channel)
-        app(\App\Services\Notification\NotificationService::class)->notify($this->editor, 'COLLABORATION_ROLE_CHANGED', ['title' => 'Role changed', 'message' => 'x', 'entity_type' => 'course', 'entity_id' => $this->course->id]);
-        $this->getJson('/api/notifications?unread=1')->assertOk()->assertJsonCount(1, 'data')->assertJsonPath('meta.unread_count', 1)->assertJsonPath('data.0.type', 'COLLABORATION_ROLE_CHANGED');
-        $this->getJson('/api/collaboration/summary')->assertOk()->assertJsonPath('data.unread_notifications_count', 1);
+        // Database notification round trip (channel faked in setUp, so insert the row the channel would write)
+        $this->editor->notifications()->create(['id' => (string) \Illuminate\Support\Str::uuid(), 'type' => CollaborationNotification::class,
+            'data' => ['event' => 'COLLABORATOR_ROLE_CHANGED', 'title' => 'Role changed', 'body' => 'x', 'course_id' => $this->course->id]]);
+        $this->getJson('/api/notifications?unread=1')->assertOk()->assertJsonCount(1, 'data')->assertJsonPath('meta.unread_count', 1)->assertJsonPath('data.0.event', 'COLLABORATOR_ROLE_CHANGED');
         $id = $this->getJson('/api/notifications')->json('data.0.id');
         Sanctum::actingAs($this->owner);
         $this->postJson("/api/notifications/{$id}/read")->assertStatus(404); // not theirs

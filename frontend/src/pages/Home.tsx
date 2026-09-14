@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowRight, BarChart3, BookOpen, Bot, CheckCircle2, ChevronDown, ClipboardList, Eye, FileText, GitBranch, GitCompare, History, Layers, Lightbulb,
-  Lock, PenLine, Search, Scale, ScrollText, ShieldCheck, Sparkles, Target, Users, Leaf, Quote, FileSpreadsheet,
+  Lock, PenLine, Search, Scale, ScrollText, ShieldCheck, Sparkles, Target, Users, Leaf, Quote,
 } from 'lucide-react';
 import { Reveal, Typewriter, TypewriterCycle, useCardTilt } from '@/components/landing/Motion';
 
@@ -23,7 +23,7 @@ const PROCESS = [
   { icon: Lightbulb, title: 'Recommend', desc: 'Prioritised, evidence-linked recommendations — you review, accept or dismiss every one.' },
 ];
 
-const FEATURES: Array<{ icon: React.ElementType; title: string; desc: string }> = [
+const FEATURES: Array<{ icon: React.ElementType; title: string; desc: string; wide?: boolean }> = [
   { icon: ScrollText, title: 'Question Analysis', desc: 'Classify question type, difficulty and Bloom’s cognitive level, with the reasoning shown next to every label.' },
   { icon: Target, title: 'LO / CO / PO Alignment', desc: 'See which learning outcomes each question serves, which outcomes are over-tested and which are missing entirely.' },
   { icon: GitCompare, title: 'Similarity Detection', desc: 'Semantic embeddings surface duplicate or near-identical questions across semesters before a paper goes out.' },
@@ -33,9 +33,7 @@ const FEATURES: Array<{ icon: React.ElementType; title: string; desc: string }> 
   { icon: ClipboardList, title: 'Assessment Blueprints', desc: 'Plan sections, marks, difficulty and outcome coverage first, then validate the real paper against the plan.' },
   { icon: History, title: 'Assessment Versioning', desc: 'Immutable version history with question snapshots, side-by-side diffs and restore-as-new-version.' },
   { icon: Users, title: 'Faculty Collaboration', desc: 'Invite co-instructors and reviewers with role-based access; every change is captured in an audit trail.' },
-  { icon: PenLine, title: 'Rubrics & Grading Assistance', desc: 'Generate outcome-aligned rubric drafts, get AI grading suggestions per answer and keep the final mark a faculty decision — recorded with who finalised it and when.' },
-  { icon: Sparkles, title: 'Constrained Question Generation', desc: 'Draft new questions from your own course materials within the blueprint’s difficulty, Bloom level and outcome constraints — every draft stays a proposal until you approve it.' },
-  { icon: FileSpreadsheet, title: 'Institutional Reports', desc: 'Export course, department and institution-level evidence — CO/PO coverage, assessment quality and performance — as PDF, CSV or XLSX for reviews and accreditation.' },
+  { icon: PenLine, title: 'Rubrics & Grading Assistance', desc: 'Generate outcome-aligned rubric drafts, get AI grading suggestions per answer and keep the final mark a faculty decision — recorded with who finalised it and when.', wide: true },
 ];
 
 const AUDIENCE = [
@@ -87,7 +85,7 @@ const PIPELINE = [
 /* ------------------------------------------------------------------ small pieces */
 
 const Eyebrow: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (
-  <p className={`text-[11px] uppercase tracking-[0.18em] text-sage-700 ${className ?? ''}`}>{children}</p>
+  <p className={`text-[11px] uppercase tracking-[0.18em] text-sage-500 ${className ?? ''}`}>{children}</p>
 );
 
 const Heading: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (
@@ -99,13 +97,13 @@ const Lede: React.FC<{ children: React.ReactNode; className?: string }> = ({ chi
 );
 
 const PrimaryButton: React.FC<{ onClick: () => void; children: React.ReactNode; className?: string }> = ({ onClick, children, className }) => (
-  <button type="button" onClick={onClick} className={`group inline-flex items-center gap-2 rounded-full bg-accent hover:bg-accent-hover text-white text-sm font-medium px-6 py-3 transition-all hover:shadow-elevated hover:-translate-y-0.5 ${className ?? ''}`}>
+  <button type="button" onClick={onClick} className={`group inline-flex items-center gap-2 rounded-lg bg-sage-700 hover:bg-sage-800 text-white text-sm px-5 py-2.5 transition-all hover:shadow-elevated hover:-translate-y-0.5 ${className ?? ''}`}>
     {children}<ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
   </button>
 );
 
 const IconCircle: React.FC<{ icon: React.ElementType; size?: 'md' | 'lg' }> = ({ icon: Icon, size = 'lg' }) => (
-  <div className={`${size === 'lg' ? 'w-16 h-16' : 'w-12 h-12'} rounded-full bg-white flex items-center justify-center text-sage-700 shrink-0 shadow-subtle transition-transform duration-500 group-hover:-translate-y-1 group-hover:bg-sage-700 group-hover:text-white`}>
+  <div className={`${size === 'lg' ? 'w-16 h-16' : 'w-12 h-12'} rounded-full bg-sage-100 border border-sage-200 flex items-center justify-center text-sage-800 shrink-0 transition-transform duration-500 group-hover:-translate-y-1 group-hover:bg-sage-200`}>
     <Icon className={size === 'lg' ? 'w-6 h-6' : 'w-5 h-5'} strokeWidth={1.6} aria-hidden="true" />
   </div>
 );
@@ -123,20 +121,20 @@ const PipelineShowcase: React.FC = () => {
   const { ref: cardRef, onMouseMove: tilt, reset: untilt } = useCardTilt();
   return (
     <div className="landing-showcase-wrap">
-    <div ref={cardRef} className="landing-showcase rounded-[1.75rem] bg-white p-5 sm:p-6 text-sage-800" onMouseEnter={() => setPaused(true)} onMouseMove={tilt} onMouseLeave={() => { setPaused(false); untilt(); }}>
+    <div ref={cardRef} className="landing-showcase rounded-2xl bg-white p-5 sm:p-6 text-sage-800" onMouseEnter={() => setPaused(true)} onMouseMove={tilt} onMouseLeave={() => { setPaused(false); untilt(); }}>
       <div className="flex items-center justify-between gap-3 pb-4 border-b border-sage-200">
         <div>
           <p className="text-[10px] uppercase tracking-[0.18em] text-sage-500">How a paper moves through FacultyLens</p>
-          <p className="text-base font-medium leading-tight mt-0.5">Upload once. Every stage explains itself.</p>
+          <p className="font-serif text-lg leading-tight mt-0.5">Upload once. Every stage explains itself.</p>
         </div>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-sage-700 px-2.5 py-1 text-[10px] text-white shrink-0"><span className="landing-pulse-dot w-1.5 h-1.5 rounded-full bg-accent" />{paused ? 'Paused' : 'Live walkthrough'}</span>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-sage-100 border border-sage-200 px-2.5 py-1 text-[10px] text-sage-700"><span className="landing-pulse-dot w-1.5 h-1.5 rounded-full bg-sage-600" />{paused ? 'Paused' : 'Live walkthrough'}</span>
       </div>
 
       {/* rail */}
       <ol className="relative mt-5 grid grid-cols-6 gap-1" aria-label="Pipeline stages">
         <div className="absolute left-[8%] right-[8%] top-5 h-px bg-sage-200" aria-hidden="true" />
         <div className="absolute left-[8%] top-5 h-px bg-sage-600 transition-all duration-700 ease-out" style={{ width: `${(active / (PIPELINE.length - 1)) * 84}%` }} aria-hidden="true" />
-        <span className="landing-pipeline-pulse absolute top-5 -mt-1.5 w-3 h-3 rounded-full bg-accent shadow-[0_0_0_6px_rgba(90,103,216,0.18)] transition-all duration-700 ease-out" style={{ left: `calc(8% + ${(active / (PIPELINE.length - 1)) * 84}% - 6px)` }} aria-hidden="true" />
+        <span className="landing-pipeline-pulse absolute top-5 -mt-1.5 w-3 h-3 rounded-full bg-sage-600 shadow-[0_0_0_6px_rgba(74,93,69,0.15)] transition-all duration-700 ease-out" style={{ left: `calc(8% + ${(active / (PIPELINE.length - 1)) * 84}% - 6px)` }} aria-hidden="true" />
         {PIPELINE.map((p, i) => {
           const done = i < active;
           const on = i === active;
@@ -153,18 +151,18 @@ const PipelineShowcase: React.FC = () => {
       </ol>
 
       {/* active stage */}
-      <div key={stage.title} className="landing-stage mt-5 rounded-2xl bg-sage-100 p-4 min-h-[7.5rem]" aria-live="polite">
+      <div key={stage.title} className="landing-stage mt-5 rounded-xl border border-sage-200 bg-sage-50 p-4 min-h-[7.5rem]" aria-live="polite">
         <div className="flex items-center gap-2">
-          <span className="text-xl font-semibold tabular-nums text-accent leading-none">{String(active + 1).padStart(2, '0')}</span>
+          <span className="font-serif text-2xl text-sage-300 leading-none">{String(active + 1).padStart(2, '0')}</span>
           <h3 className="text-sm font-semibold">{stage.title}</h3>
         </div>
         <p className="mt-1.5 text-sm text-sage-600 leading-relaxed">{stage.text}</p>
         <ul className="mt-3 flex flex-wrap gap-1.5">
-          {stage.tags.map((t, k) => <li key={t} className="landing-word rounded-full bg-white px-2.5 py-0.5 text-[10px] text-sage-700" style={{ animationDelay: `${120 + k * 90}ms` }}>{t}</li>)}
+          {stage.tags.map((t, k) => <li key={t} className="landing-word rounded-full border border-sage-200 bg-white px-2.5 py-0.5 text-[10px] text-sage-700" style={{ animationDelay: `${120 + k * 90}ms` }}>{t}</li>)}
         </ul>
       </div>
 
-      <div className="mt-4 flex items-center justify-between text-[10px] text-sage-500">
+      <div className="mt-4 flex items-center justify-between text-[10px] text-sage-400">
         <span>Click a stage or hover to pause</span>
         <span>AI assists · Faculty decides</span>
       </div>
@@ -208,46 +206,46 @@ const TraceabilityMap: React.FC = () => {
   const lit = new Set([link.from, link.to]);
   const { ref: cardRef, onMouseMove: tilt, reset: untilt } = useCardTilt();
   return (
-    <div className="landing-showcase-wrap max-w-md mx-auto lg:mx-0 lg:ml-auto">
-    <div ref={cardRef} className="landing-showcase rounded-[1.5rem] bg-white p-4 text-sage-800" onMouseEnter={() => setPaused(true)} onMouseMove={tilt} onMouseLeave={() => { setPaused(false); untilt(); }}>
-      <div className="flex items-center justify-between gap-3 pb-3 border-b border-sage-200">
+    <div className="landing-showcase-wrap">
+    <div ref={cardRef} className="landing-showcase rounded-2xl bg-sage-50 p-5 sm:p-6 text-sage-800" onMouseEnter={() => setPaused(true)} onMouseMove={tilt} onMouseLeave={() => { setPaused(false); untilt(); }}>
+      <div className="flex items-center justify-between gap-3">
         <div>
           <p className="text-[10px] uppercase tracking-[0.18em] text-sage-500">Traceability map</p>
-          <p className="text-sm font-medium leading-tight mt-0.5">Every record knows what it is connected to.</p>
+          <p className="font-serif text-lg leading-tight mt-0.5">Every record knows what it is connected to.</p>
         </div>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-sage-700 px-2.5 py-1 text-[10px] text-white shrink-0"><span className="landing-pulse-dot w-1.5 h-1.5 rounded-full bg-accent" />{paused ? 'Paused' : 'Walking links'}</span>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-white border border-sage-200 px-2.5 py-1 text-[10px] text-sage-700"><span className="landing-pulse-dot w-1.5 h-1.5 rounded-full bg-sage-600" />{paused ? 'Paused' : 'Walking links'}</span>
       </div>
 
-      <div className="relative mt-3 aspect-[4/3] sm:aspect-[3/2]">
+      <div className="relative mt-4 aspect-[4/3] sm:aspect-[16/10]">
         <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 w-full h-full" aria-hidden="true">
           {TRACE_LINKS.map((l, i) => {
             const a = node(l.from);
             const b = node(l.to);
             const on = i === active;
-            return <line key={`${l.from}-${l.to}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={on ? '#1E6F5C' : '#A9CFC3'} strokeWidth={on ? 0.9 : 0.5} strokeDasharray={on ? undefined : '1.5 1.5'} vectorEffect="non-scaling-stroke" className="landing-trace-line transition-all duration-500" style={{ animationDelay: `${i * 120}ms` }} />;
+            return <line key={`${l.from}-${l.to}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={on ? '#4A5D45' : '#C3CBB9'} strokeWidth={on ? 0.9 : 0.5} strokeDasharray={on ? undefined : '1.5 1.5'} vectorEffect="non-scaling-stroke" className="landing-trace-line transition-all duration-500" style={{ animationDelay: `${i * 120}ms` }} />;
           })}
-          <circle r="1.3" fill="#5A67D8" className="landing-trace-dot" key={active} style={{ offsetPath: `path('M ${node(link.from).x} ${node(link.from).y} L ${node(link.to).x} ${node(link.to).y}')` }} />
+          <circle r="1.3" fill="#4A5D45" className="landing-trace-dot" key={active} style={{ offsetPath: `path('M ${node(link.from).x} ${node(link.from).y} L ${node(link.to).x} ${node(link.to).y}')` }} />
         </svg>
         {TRACE_NODES.map((n) => {
           const on = lit.has(n.id);
           return (
             <button key={n.id} type="button" onClick={() => setActive(TRACE_LINKS.findIndex((l) => l.from === n.id || l.to === n.id))} aria-label={`${n.label}: ${n.sub}`}
-              className={`absolute -translate-x-1/2 -translate-y-1/2 flex items-center gap-1.5 rounded-full pl-1 pr-2.5 py-0.5 text-left transition-all duration-500 ${on ? 'bg-sage-700 text-white shadow-elevated scale-105' : 'bg-sage-100 text-sage-700 hover:bg-white hover:shadow-card'}`}
+              className={`absolute -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 rounded-full border pl-1.5 pr-3 py-1 text-left transition-all duration-500 ${on ? 'bg-sage-700 border-sage-700 text-white shadow-elevated scale-105' : 'bg-white border-sage-200 text-sage-700 hover:border-sage-400'}`}
               style={{ left: `${n.x}%`, top: `${n.y}%` }}>
-              <span className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${on ? 'bg-white/15' : 'bg-white'}`}><n.icon className="w-3 h-3" strokeWidth={1.8} aria-hidden="true" /></span>
-              <span className="text-[10px] font-medium whitespace-nowrap">{n.label}</span>
+              <span className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${on ? 'bg-white/15' : 'bg-sage-100'}`}><n.icon className="w-3.5 h-3.5" strokeWidth={1.8} aria-hidden="true" /></span>
+              <span className="text-[11px] font-medium whitespace-nowrap">{n.label}</span>
             </button>
           );
         })}
       </div>
 
-      <div key={active} className="landing-stage mt-3 rounded-xl bg-sage-100 p-2.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-xs" aria-live="polite">
+      <div key={active} className="landing-stage mt-4 rounded-xl border border-sage-200 bg-white p-3.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm" aria-live="polite">
         <span className="font-semibold">{node(link.from).label}</span>
         <span className="text-sage-500 italic">{link.label}</span>
         <span className="font-semibold">{node(link.to).label}</span>
-        <span className="basis-full text-[10px] text-sage-500">{node(link.from).sub} → {node(link.to).sub}</span>
+        <span className="basis-full text-[11px] text-sage-500">{node(link.from).sub} → {node(link.to).sub}</span>
       </div>
-      <p className="mt-2 text-[10px] text-sage-500 text-right">Click a record or hover to pause · nothing here is a fabricated result</p>
+      <p className="mt-3 text-[10px] text-sage-400 text-right">Click a record or hover to pause · nothing here is a fabricated result</p>
     </div>
     </div>
   );
@@ -281,7 +279,7 @@ export const Home: React.FC = () => {
         <Leaf className="landing-float-slow absolute -right-16 -bottom-10 w-72 h-72 text-sage-200/40 pointer-events-none" aria-hidden="true" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative">
           <div className="lg:col-span-5 space-y-6 text-center lg:text-left">
-            <Reveal><Eyebrow className="inline-flex items-center gap-2"><span className="landing-pulse-dot w-1.5 h-1.5 rounded-full bg-accent" />AI-Powered Assessment Intelligence</Eyebrow></Reveal>
+            <Reveal><Eyebrow className="inline-flex items-center gap-2"><span className="landing-pulse-dot w-1.5 h-1.5 rounded-full bg-sage-500" />AI-Powered Assessment Intelligence</Eyebrow></Reveal>
             <Reveal delay={100}>
               <h1 className="font-serif text-4xl sm:text-5xl lg:text-[3.4rem] leading-[1.08] tracking-tight">
                 <TypewriterCycle lines={HERO_LINES} textClassName="landing-sheen" />
@@ -296,12 +294,12 @@ export const Home: React.FC = () => {
             <Reveal delay={300}>
               <div className="flex flex-wrap justify-center lg:justify-start gap-3 pt-1">
                 <PrimaryButton onClick={go('/register')}>Start Analyzing</PrimaryButton>
-                <button type="button" onClick={scrollTo('features')} className="inline-flex items-center rounded-full border border-sage-800 bg-transparent hover:bg-sage-800 hover:text-white text-sage-800 text-sm font-medium px-6 py-3 transition-colors">Explore FacultyLens</button>
+                <button type="button" onClick={scrollTo('features')} className="inline-flex items-center rounded-lg border border-sage-300 bg-white hover:bg-sage-100 text-sage-800 text-sm px-5 py-2.5 transition-colors">Explore FacultyLens</button>
               </div>
             </Reveal>
             <Reveal delay={400}>
               <ul className="flex flex-wrap justify-center lg:justify-start gap-x-5 gap-y-2 pt-2 text-xs text-sage-500">
-                {['No automatic changes', 'Explainable scores', 'Immutable history'].map((t) => <li key={t} className="inline-flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-accent" aria-hidden="true" />{t}</li>)}
+                {['No automatic changes', 'Explainable scores', 'Immutable history'].map((t) => <li key={t} className="inline-flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-sage-600" aria-hidden="true" />{t}</li>)}
               </ul>
             </Reveal>
           </div>
@@ -315,7 +313,7 @@ export const Home: React.FC = () => {
           <Reveal><Eyebrow className="text-center md:text-left">Who it’s for</Eyebrow></Reveal>
           <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {AUDIENCE.map((a, i) => (
-              <Reveal key={a.title} delay={i * 90} className="group flex gap-4 rounded-[1.5rem] bg-sage-100 p-5 hover:bg-white hover:shadow-card transition-all duration-300">
+              <Reveal key={a.title} delay={i * 90} className="group flex gap-4 rounded-xl border border-sage-200 bg-sage-50 p-5 hover:bg-white hover:shadow-card transition-all duration-300">
                 <IconCircle icon={a.icon} size="md" />
                 <div>
                   <h3 className="text-sm font-semibold">{a.title}</h3>
@@ -340,7 +338,7 @@ export const Home: React.FC = () => {
                   <h3 className="mt-4 text-sm font-semibold">{p.title}</h3>
                   <p className="mt-1 text-xs text-sage-500 leading-relaxed">{p.desc}</p>
                 </Reveal>
-                {i < PROCESS.length - 1 && <li aria-hidden="true" className="hidden md:flex items-center justify-center pt-6 text-accent"><ArrowRight className="w-4 h-4" /></li>}
+                {i < PROCESS.length - 1 && <li aria-hidden="true" className="hidden md:flex items-center justify-center pt-6 text-sage-300"><ArrowRight className="w-4 h-4" /></li>}
               </React.Fragment>
             ))}
           </ol>
@@ -351,13 +349,15 @@ export const Home: React.FC = () => {
       <section id="features" className="bg-sage-50 border-y border-sage-200/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 text-center">
           <Reveal><Eyebrow>AI-Powered Assessment Intelligence</Eyebrow><Heading className="mt-3">Everything you need, in one place.</Heading></Reveal>
-          <Reveal delay={120}><Lede className="mt-4 max-w-2xl mx-auto">Twelve connected modules share one course model, so a question analysed today is the same question that appears in tomorrow’s blueprint check, next week’s grading and next semester’s version comparison.</Lede></Reveal>
+          <Reveal delay={120}><Lede className="mt-4 max-w-2xl mx-auto">Ten connected modules share one course model, so a question analysed today is the same question that appears in tomorrow’s blueprint check, next week’s grading and next semester’s version comparison.</Lede></Reveal>
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-left">
             {FEATURES.map((f, i) => (
-              <Reveal as="article" key={f.title} delay={(i % 3) * 100} className={`group rounded-[1.5rem] bg-sage-100 p-6 hover:bg-white hover:shadow-elevated hover:-translate-y-1 transition-all duration-300 ${i === FEATURES.length - 1 && FEATURES.length % 3 === 1 ? 'lg:col-start-2' : ''}`}>
-                <div className="w-11 h-11 rounded-2xl bg-sage-700 text-white flex items-center justify-center transition-colors group-hover:bg-accent"><f.icon className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" /></div>
-                <h3 className="mt-4 text-sm font-semibold">{f.title}</h3>
-                <p className="mt-1.5 text-xs text-sage-500 leading-relaxed">{f.desc}</p>
+              <Reveal as="article" key={f.title} delay={(i % 3) * 100} className={`group rounded-xl border border-sage-200 bg-white p-6 hover:shadow-elevated hover:-translate-y-1 transition-all duration-300 ${f.wide ? 'md:col-span-2 lg:col-span-3 md:flex md:items-center md:gap-6 bg-gradient-to-r from-white to-sage-100/60' : ''}`}>
+                <div className="w-10 h-10 shrink-0 rounded-lg bg-sage-100 flex items-center justify-center transition-colors group-hover:bg-sage-700 group-hover:text-white"><f.icon className="w-5 h-5" strokeWidth={1.6} aria-hidden="true" /></div>
+                <div>
+                  <h3 className={`text-sm font-semibold ${f.wide ? 'mt-4 md:mt-0' : 'mt-4'}`}>{f.title}</h3>
+                  <p className={`mt-1.5 text-xs text-sage-500 leading-relaxed ${f.wide ? 'max-w-3xl' : ''}`}>{f.desc}</p>
+                </div>
               </Reveal>
             ))}
           </div>
@@ -375,7 +375,7 @@ export const Home: React.FC = () => {
             </Reveal>
             <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-4">
               {PRINCIPLES.map((p, i) => (
-                <Reveal key={p.title} delay={i * 120} className="group rounded-[1.5rem] bg-sage-100 p-6 space-y-3">
+                <Reveal key={p.title} delay={i * 120} className="rounded-xl border border-sage-200 bg-sage-50 p-6 space-y-3">
                   <IconCircle icon={p.icon} size="md" />
                   <h3 className="text-sm font-semibold">{p.title}</h3>
                   <p className="text-xs text-sage-500 leading-relaxed">{p.text}</p>
@@ -387,25 +387,25 @@ export const Home: React.FC = () => {
       </section>
 
       {/* Lifecycle */}
-      <section className="bg-sage-700 text-white relative overflow-hidden">
+      <section className="bg-sage-800 text-white relative overflow-hidden">
         <Leaf className="landing-float-slow absolute -right-10 -top-10 w-80 h-80 text-white/5 pointer-events-none" aria-hidden="true" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 relative">
           <Reveal className="max-w-2xl">
-            <p className="text-[11px] uppercase tracking-[0.18em] text-accent">The full lifecycle</p>
+            <p className="text-[11px] uppercase tracking-[0.18em] text-sage-300">The full lifecycle</p>
             <h2 className="mt-3 font-serif text-3xl sm:text-4xl lg:text-[2.75rem] leading-[1.1] tracking-tight">
               <Typewriter text="From the first blueprint to the final version, nothing is lost." />
             </h2>
-            <p className="mt-4 text-sm sm:text-base text-white/80 leading-relaxed">Assessment quality is not a single check. It is a cycle that runs every semester. FacultyLens follows the whole loop and preserves each step as evidence.</p>
+            <p className="mt-4 text-sm sm:text-base text-sage-300 leading-relaxed">Assessment quality is not a single check. It is a cycle that runs every semester. FacultyLens follows the whole loop and preserves each step as evidence.</p>
           </Reveal>
           <ol className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {LIFECYCLE.map((l, i) => (
-              <Reveal as="li" key={l.title} delay={i * 90} className="rounded-[1.5rem] bg-white/10 p-5 hover:bg-white/15 transition-colors">
+              <Reveal as="li" key={l.title} delay={i * 90} className="rounded-xl border border-white/10 bg-white/5 p-5 hover:bg-white/10 transition-colors">
                 <div className="flex items-center gap-3">
-                  <span className="font-serif text-2xl text-accent w-8">{String(i + 1).padStart(2, '0')}</span>
-                  <l.icon className="w-5 h-5 text-white" strokeWidth={1.6} aria-hidden="true" />
+                  <span className="font-serif text-2xl text-sage-300 w-8">{String(i + 1).padStart(2, '0')}</span>
+                  <l.icon className="w-5 h-5 text-sage-200" strokeWidth={1.6} aria-hidden="true" />
                   <h3 className="text-sm font-semibold">{l.title}</h3>
                 </div>
-                <p className="mt-3 text-xs text-white/80 leading-relaxed">{l.text}</p>
+                <p className="mt-3 text-xs text-sage-300 leading-relaxed">{l.text}</p>
               </Reveal>
             ))}
           </ol>
@@ -415,18 +415,12 @@ export const Home: React.FC = () => {
       {/* Big picture */}
       <section id="about" className="bg-white border-b border-sage-200/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <Reveal className="space-y-5 text-center lg:text-left">
+          <Reveal className="space-y-5">
             <Eyebrow>The Big Picture</Eyebrow>
-            <Heading className="[text-wrap:balance]">From Questions to Learning Outcomes</Heading>
-            <Lede className="mx-auto lg:mx-0 max-w-xl lg:max-w-md text-base sm:text-lg lg:text-base leading-[1.7] [text-wrap:balance]">FacultyLens connects your assessments to learning outcomes, identifies gaps, and gives you the insights you need to improve student success.</Lede>
-            <blockquote className="mx-auto lg:mx-0 max-w-xl lg:max-w-md text-left border-l-2 border-accent pl-4 sm:pl-5 py-1">
-              <p className="text-sm sm:text-base lg:text-sm text-sage-500 leading-[1.7]">
-                A low class average tells you <span className="font-medium text-sage-700">something</span> went wrong. Tracing that average back to the two questions on transactions, the outcome they were meant to test and the topic the syllabus barely covered tells you <span className="font-medium text-sage-700">what to change</span>.
-              </p>
-            </blockquote>
-            <div className="pt-1">
-              <PrimaryButton onClick={go('/register')}>Learn More</PrimaryButton>
-            </div>
+            <Heading>From Questions to Learning Outcomes</Heading>
+            <Lede className="max-w-md">FacultyLens connects your assessments to learning outcomes, identifies gaps, and gives you the insights you need to improve student success.</Lede>
+            <Lede className="max-w-md">A low class average tells you something went wrong. Tracing that average back to the two questions on transactions, the outcome they were meant to test and the topic the syllabus barely covered tells you what to change.</Lede>
+            <PrimaryButton onClick={go('/register')}>Learn More</PrimaryButton>
           </Reveal>
           <Reveal delay={150}><TraceabilityMap /></Reveal>
         </div>
@@ -438,8 +432,8 @@ export const Home: React.FC = () => {
           <Reveal className="text-center"><Eyebrow>From the faculty room</Eyebrow><Heading className="mt-3">Written for the way faculty actually work.</Heading><Lede className="mt-4 max-w-2xl mx-auto">Illustrative scenarios drawn from the situations FacultyLens was designed around.</Lede></Reveal>
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4">
             {VOICES.map((v, i) => (
-              <Reveal key={v.role} delay={i * 120} className="rounded-[1.5rem] bg-sage-100 p-6 flex flex-col gap-4 hover:bg-white hover:-translate-y-1 hover:shadow-elevated transition-all duration-300">
-                <Quote className="w-6 h-6 text-accent" aria-hidden="true" />
+              <Reveal key={v.role} delay={i * 120} className="rounded-xl border border-sage-200 bg-white p-6 flex flex-col gap-4 hover:-translate-y-1 hover:shadow-elevated transition-all duration-300">
+                <Quote className="w-6 h-6 text-sage-300" aria-hidden="true" />
                 <p className="font-serif text-lg leading-snug text-sage-800">“{v.text}”</p>
                 <p className="mt-auto text-xs text-sage-500">{v.role}</p>
               </Reveal>
@@ -468,14 +462,14 @@ export const Home: React.FC = () => {
       <section id="pricing" className="bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
           <Reveal>
-            <div className="relative overflow-hidden rounded-[2rem] bg-sage-700 text-white px-6 sm:px-10 py-10 flex flex-col md:flex-row md:items-center gap-8">
-              <Leaf className="landing-float absolute -left-4 -bottom-6 w-32 h-32 text-white/10" aria-hidden="true" />
+            <div className="relative overflow-hidden rounded-2xl bg-sage-100 border border-sage-200 px-6 sm:px-10 py-10 flex flex-col md:flex-row md:items-center gap-8">
+              <Leaf className="landing-float absolute -left-4 -bottom-6 w-32 h-32 text-sage-300/60" aria-hidden="true" />
               <div className="hidden md:block w-24 shrink-0" />
               <div className="flex-1 space-y-2 relative">
-                <Eyebrow className="!text-accent">Built for Academic Excellence</Eyebrow>
-                <h2 className="font-serif text-2xl sm:text-3xl tracking-tight">AI assists. <span className="text-accent">Faculty decides.</span></h2>
-                <p className="text-sm text-white/85 max-w-xl">Upload one assessment and see its quality, alignment and similarity picture in minutes — no automatic changes, no lock-in, every decision left to you.</p>
-                <p className="text-xs text-white/70 flex flex-wrap gap-x-4"><span>Explainable</span><span>·</span><span>Private</span><span>·</span><span>Auditable</span></p>
+                <Eyebrow>Built for Academic Excellence</Eyebrow>
+                <h2 className="font-serif text-2xl sm:text-3xl tracking-tight">AI assists. <span className="landing-sheen">Faculty decides.</span></h2>
+                <p className="text-sm text-sage-600 max-w-xl">Upload one assessment and see its quality, alignment and similarity picture in minutes — no automatic changes, no lock-in, every decision left to you.</p>
+                <p className="text-xs text-sage-500 flex flex-wrap gap-x-4"><span>Explainable</span><span>·</span><span>Private</span><span>·</span><span>Auditable</span></p>
               </div>
               <PrimaryButton onClick={go('/register')} className="self-start md:self-center relative">Get Started</PrimaryButton>
             </div>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { Menu, Sparkles, ChevronRight } from 'lucide-react';
 import { Sidebar, NAV_SECTIONS } from './Sidebar';
-import { NotificationBell } from '@/components/notifications/NotificationBell';
+import { NotificationBell } from '@/components/collaboration/CollaborationActivity';
 import { PageTransition } from '@/components/common/PageTransition';
 import { aiService } from '@/services/aiService';
 
@@ -21,7 +21,6 @@ const TITLES: Record<string, { title: string; subtitle: string }> = {
   collaboration: { title: 'Collaboration', subtitle: 'Invitations, roles and shared courses' },
   submissions: { title: 'Submissions', subtitle: 'Student answers, rubrics and grading' },
   feedback: { title: 'Feedback', subtitle: 'Tell us what helped and what did not' },
-  notifications: { title: 'Notifications', subtitle: 'What changed across your courses — informational only, decisions stay with you' },
   settings: { title: 'Settings', subtitle: 'Profile, department and security' },
 };
 
@@ -58,7 +57,7 @@ export const DashboardLayout: React.FC = () => {
             </button>
             <div className="min-w-0">
               <nav aria-label="Breadcrumb" className="hidden sm:flex items-center gap-1 text-[11px] text-sage-500">
-                <Link to="/" className="hover:text-sage-800">FacultyLens</Link>
+                <Link to="/dashboard" className="hover:text-sage-800">FacultyLens</Link>
                 {sectionTitle && <><ChevronRight className="w-3 h-3" aria-hidden="true" /><span>{sectionTitle}</span></>}
               </nav>
               <h1 className="font-serif text-lg sm:text-xl leading-tight tracking-tight text-sage-800 truncate">{title}</h1>

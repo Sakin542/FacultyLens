@@ -56,8 +56,6 @@ class AuthController extends Controller
         ];
 
         if (! Auth::attempt($credentials, $request->boolean('remember', false))) {
-            $this->recordFailedLogin($credentials['email']);
-
             return response()->json([
                 'status' => 'error',
                 'message' => 'Invalid email or password',
@@ -68,7 +66,6 @@ class AuthController extends Controller
             $request->session()->regenerate();
         }
         $user = Auth::user();
-        \Illuminate\Support\Facades\Cache::forget($this->failedLoginKey($credentials['email']));
 
         return response()->json([
             'status' => 'success',
@@ -177,15 +174,6 @@ class AuthController extends Controller
         }
         app(\App\Services\AuditLogService::class)->log('PASSWORD_CHANGED', $user, $user->id, null, $user);
 
-        // STEP 47: account-safety notice (mandatory SECURITY category; no secrets or technical detail in the payload)
-        event(new \App\Events\SecurityAlertRaised(
-            $user,
-            'Your password was changed',
-            'The password for your FacultyLens account was changed just now. If you did not make this change, reset your password and contact your administrator.',
-            ['event' => 'PASSWORD_CHANGED'],
-            'SECURITY_ALERT:user:' . $user->id . ':password_changed:' . now()->timestamp,
-        ));
-
         return response()->json([
             'status' => 'success',
             'message' => 'Password updated successfully.',
@@ -208,45 +196,6 @@ class AuthController extends Controller
             'status' => 'success',
             'message' => 'Logout successful',
         ]);
-    }
-
-    // ------------------------------------------------------------ STEP 47: security notifications
-
-    protected function failedLoginKey(string $email): string
-    {
-        return 'auth:failed-logins:' . sha1(strtolower($email));
-    }
-
-    /**
-     * Counts failed attempts per account within a rolling window; once the threshold is reached the account owner
-     * receives one SECURITY_ALERT per window. The response to the caller is identical whether or not the account exists.
-     */
-    protected function recordFailedLogin(string $email): void
-    {
-        try {
-            $threshold = max(1, (int) config('notifications.security.failed_login_threshold', 5));
-            $window = max(1, (int) config('notifications.security.failed_login_window_minutes', 15));
-            $key = $this->failedLoginKey($email);
-            $cache = \Illuminate\Support\Facades\Cache::store();
-            $cache->add($key, 0, now()->addMinutes($window));
-            $attempts = (int) $cache->increment($key);
-            if ($attempts !== $threshold) {
-                return;
-            }
-            $user = \App\Models\User::whereRaw('LOWER(email) = ?', [strtolower($email)])->first();
-            if (!$user) {
-                return;
-            }
-            event(new \App\Events\SecurityAlertRaised(
-                $user,
-                'Multiple failed sign-in attempts',
-                "There were {$attempts} failed sign-in attempts on your FacultyLens account in the last {$window} minutes. If this was not you, change your password.",
-                ['event' => 'FAILED_LOGIN_ATTEMPTS', 'attempts' => $attempts, 'window_minutes' => $window],
-                'SECURITY_ALERT:user:' . $user->id . ':failed_logins:' . now()->format('YmdH'),
-            ));
-        } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\Log::warning('Failed-login tracking unavailable: ' . $e->getMessage());
-        }
     }
 }
 

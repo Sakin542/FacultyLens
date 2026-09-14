@@ -157,7 +157,6 @@ class QuestionGenerationService
                     'error_message' => 'Insufficient source material: the authorized course documents do not cover the requested topic. No questions were drafted.',
                     'warnings' => array_values(array_unique(array_merge($request->warnings ?? [], $response['warnings'] ?? []))) ?: null,
                 ]);
-                event(new \App\Events\QuestionGenerationFailed($request));
 
                 return;
             }
@@ -189,9 +188,6 @@ class QuestionGenerationService
                 'generated_count' => count($drafts), 'generation_method' => $response['generation_method'] ?? null,
                 'model' => $response['model'], 'prompt_version' => $response['prompt_version'],
             ], $request->user);
-
-            // STEP 47: drafts ready for faculty review (drafts ≠ approved questions)
-            event(new \App\Events\QuestionGenerationCompleted($request));
         } catch (Exception $e) {
             Log::warning("QuestionGenerationService: request {$request->id} failed: {$e->getMessage()}");
             app(AiSafetyService::class)->recordServiceFailure($request, $request->id, 'generate_questions', $e->getMessage(), $request->course_id);
@@ -199,7 +195,6 @@ class QuestionGenerationService
                 'generation_status' => QuestionGenerationRequest::STATUS_FAILED,
                 'error_message' => 'The question generator could not produce drafts. Please try again.',
             ]);
-            event(new \App\Events\QuestionGenerationFailed($request));
             throw $e;
         }
     }
