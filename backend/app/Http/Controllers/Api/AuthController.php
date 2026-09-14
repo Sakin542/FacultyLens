@@ -35,13 +35,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Registration successful',
-            'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'department' => $user->department,
-                'designation' => $user->designation,
-            ],
+            'user' => $user->profilePayload(),
         ], 201);
     }
 
@@ -73,13 +67,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Login successful',
-            'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'department' => $user->department,
-                'designation' => $user->designation,
-            ],
+            'user' => $user->profilePayload(),
         ]);
     }
 
@@ -92,14 +80,7 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'role' => $user->role ?? 'FACULTY',
-                'department' => $user->department,
-                'designation' => $user->designation,
-            ],
+            'user' => $user->profilePayload(),
         ]);
     }
 
@@ -132,14 +113,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Profile updated successfully.',
-            'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'role' => $user->role ?? 'FACULTY',
-                'department' => $user->department,
-                'designation' => $user->designation,
-            ],
+            'user' => $user->profilePayload(),
         ]);
     }
 

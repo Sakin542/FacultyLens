@@ -37,7 +37,20 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'profile_picture_path',
     ];
+
+    /**
+     * The profile picture is exposed only as an authenticated API URL, never as a storage path.
+     *
+     * @var list<string>
+     */
+    protected $appends = [
+        'profile_picture_url',
+    ];
+
+    /** Columns needed to build a lightweight user reference (id, name, avatar) in nested payloads. */
+    public const REF_COLUMNS = 'id,name,profile_picture_path,profile_picture_updated_at';
 
     /**
      * Get the attributes that should be cast.
@@ -49,6 +62,57 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'profile_picture_updated_at' => 'datetime',
+        ];
+    }
+
+    public function hasProfilePicture(): bool
+    {
+        return !empty($this->getAttribute('profile_picture_path'));
+    }
+
+    /**
+     * Relative, authenticated avatar URL with a version token for cache-busting; null when no picture is set.
+     */
+    public function getProfilePictureUrlAttribute(): ?string
+    {
+        if (!$this->hasProfilePicture()) {
+            return null;
+        }
+        $version = $this->profile_picture_updated_at?->timestamp ?? $this->updated_at?->timestamp ?? 0;
+
+        return "/api/users/{$this->id}/profile-picture?v={$version}";
+    }
+
+    /**
+     * Safe account payload returned by auth/profile endpoints (never credentials or storage paths).
+     *
+     * @return array<string, mixed>
+     */
+    public function profilePayload(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'role' => $this->role ?? 'FACULTY',
+            'department' => $this->department,
+            'designation' => $this->designation,
+            'profile_picture_url' => $this->profile_picture_url,
+        ];
+    }
+
+    /**
+     * Minimal reference used when embedding a user in another resource (comments, collaborators).
+     *
+     * @return array{id: int, name: string, profile_picture_url: ?string}
+     */
+    public function refPayload(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'profile_picture_url' => $this->profile_picture_url,
         ];
     }
 

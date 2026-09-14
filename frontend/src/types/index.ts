@@ -8,6 +8,8 @@ export interface User {
   department: string;
   designation: string;
   role?: UserRole;
+  /** Authenticated, versioned avatar URL (relative to the backend); null when no picture is set. */
+  profile_picture_url?: string | null;
   avatarUrl?: string;
   createdAt?: string;
 }

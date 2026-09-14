@@ -23,7 +23,7 @@ export const ROLE_DESCRIPTIONS: Record<AssignableRole, string> = {
   VIEWER: 'View authorized resources and activity only.',
 };
 
-export interface UserRef { id: number; name: string; email?: string | null; department?: string | null }
+export interface UserRef { id: number; name: string; email?: string | null; department?: string | null; profile_picture_url?: string | null }
 
 export interface Collaborator {
   id: number;

@@ -22,6 +22,19 @@ The SPA and API share a first-party session cookie; there are no bearer tokens i
 | POST | `/auth/change-password` | session (throttle:auth) | `current_password, password, password_confirmation` (min 6, different) | 200 | 422 |
 | POST | `/auth/logout` | session | — | 200 | 401 |
 
+`{user}` = `{id, name, email, role, department, designation, profile_picture_url}` — never the password hash, tokens or storage paths. `profile_picture_url` is `null` or a versioned, authenticated URL (`/api/users/{id}/profile-picture?v=…`).
+
+### Profile picture (private storage; see `docs/PROFILE_PICTURE_SYSTEM.md`)
+
+| Method | Endpoint | Auth | Body / notes | Success | Errors |
+|---|---|---|---|---|---|
+| GET | `/profile` | session | alias of `GET /auth/user` | 200 `{user}` | 401 |
+| PUT/PATCH | `/profile` | session | alias of `PATCH /auth/user` | 200 `{user}` | 422 |
+| POST | `/profile/picture` | session (throttle:profile-picture 10/hour) | `multipart/form-data`, field `profile_picture`: JPG/PNG/WEBP, ≤ 5 MB, 100–5000 px; normalised to 512×512 WEBP. Subject is always the session user. | 200 `{message, user}` | 422 invalid image, 429, 503 processing/storage unavailable (old picture kept) |
+| DELETE | `/profile/picture` | session (throttle:profile-picture) | idempotent | 200 `{message, user}` | 401 |
+| GET | `/profile/picture` | session | streams own image (`image/webp`, `Cache-Control: private`, `nosniff`) | 200 | 404 none |
+| GET | `/users/{user}/profile-picture` | session + `UserPolicy@viewProfilePicture` (self, admin, or shared course) | streams another faculty member's image | 200 | 403, 404 |
+
 Common status codes across the API: `401` unauthenticated · `403` not authorized (course role matrix / policy) · `404` missing · `409` state conflict (e.g. finalized version, duplicate analysis) · `419` CSRF/session expired · `422` validation · `429` rate limited · `503` dependency unavailable (AI service).
 
 ## Authorization model

@@ -77,7 +77,7 @@ class CollaborationCommentController extends Controller
         if (!$request->user()->can('view', $comment->course)) {
             return $this->forbidden('You do not have access to this discussion.');
         }
-        $comment->load(['user:id,name', 'resolver:id,name', 'replies.user:id,name']);
+        $comment->load(['user:' . \App\Models\User::REF_COLUMNS, 'resolver:id,name', 'replies.user:' . \App\Models\User::REF_COLUMNS]);
 
         return response()->json(['status' => 'success', 'message' => 'Comment retrieved.', 'data' => $this->service->payload($comment)]);
     }

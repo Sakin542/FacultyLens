@@ -8,6 +8,7 @@ import { academicAnalyticsService } from '@/services/academicAnalyticsService';
 import { ApiError } from '@/services/api';
 import { AnalyticsOverview, AssessmentRow, AttentionArea, AttentionSeverity, QualityRating } from '@/types/analytics';
 import { CollaborationSummaryCard } from '@/components/collaboration/CollaborationActivity';
+import { ProfilePicture } from '@/components/profile/ProfilePicture';
 import { Reveal } from '@/components/landing/Motion';
 
 /* ------------------------------------------------------------------ helpers */
@@ -64,7 +65,7 @@ const Kpi: React.FC<{ label: string; value: string; note?: string; icon: React.E
 );
 
 const QuickAction: React.FC<{ icon: React.ElementType; label: string; to: string; primary?: boolean }> = ({ icon: Icon, label, to, primary }) => (
-  <Link to={to} className={`inline-flex items-center gap-2 rounded-lg text-sm px-4 py-2 transition-all hover:-translate-y-0.5 ${primary ? 'bg-sage-700 text-white hover:bg-sage-800 hover:shadow-elevated' : 'border border-sage-300 bg-white text-sage-800 hover:bg-sage-100'}`}>
+  <Link to={to} className={`inline-flex items-center gap-2 whitespace-nowrap rounded-lg text-sm px-4 py-2 transition-all hover:-translate-y-0.5 ${primary ? 'bg-sage-700 text-white hover:bg-sage-800 hover:shadow-elevated' : 'border border-sage-300 bg-white text-sage-800 hover:bg-sage-100'}`}>
     <Icon className="w-4 h-4" strokeWidth={1.8} aria-hidden="true" />{label}
   </Link>
 );
@@ -177,14 +178,20 @@ export const Dashboard: React.FC = () => {
         <section className="relative overflow-hidden rounded-2xl border border-sage-200 bg-white p-5 sm:p-6">
           <div className="absolute -right-10 -top-12 w-48 h-48 rounded-full bg-sage-100 blur-2xl pointer-events-none" aria-hidden="true" />
           <div className="relative flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
-            <div className="space-y-1.5 min-w-0">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-sage-500">{greeting}</p>
-              <h2 className="font-serif text-2xl sm:text-3xl leading-tight tracking-tight text-sage-800 truncate">Welcome back, {firstName}.</h2>
-              <p className="text-sm text-sage-500 max-w-xl">
-                {data && hasCourses
-                  ? <>You have <strong className="text-sage-800">{fmt(k?.assessments.value)}</strong> assessment{k?.assessments.value === 1 ? '' : 's'} across <strong className="text-sage-800">{fmt(k?.courses.value)}</strong> course{k?.courses.value === 1 ? '' : 's'}{(k?.open_gaps.value ?? 0) > 0 && <> and <strong className="text-sage-800">{k?.open_gaps.value}</strong> open learning gap{k?.open_gaps.value === 1 ? '' : 's'}</>}. {user?.department ? `${user.department}.` : ''}</>
-                  : 'Create a course and upload an assessment to see quality, alignment and similarity insights here.'}
-              </p>
+            <div className="flex items-start gap-4 min-w-0">
+              <Link to="/settings" className="shrink-0 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sage-700" aria-label="Open profile settings" data-testid="dashboard-avatar-link">
+                <ProfilePicture src={user?.profile_picture_url} name={displayName} size="xl" tone="dark" decorative className="ring-4 ring-sage-100" />
+              </Link>
+              <div className="space-y-1.5 min-w-0">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-sage-500">{greeting}</p>
+                <h2 className="font-serif text-2xl sm:text-3xl leading-tight tracking-tight text-sage-800 truncate">Welcome back, {firstName}.</h2>
+                <p className="text-xs text-sage-500 truncate"><span className="font-medium text-sage-700">{displayName}</span>{user?.designation ? ` · ${user.designation}` : ''}</p>
+                {data && hasCourses && (
+                  <p className="text-sm text-sage-500 max-w-xl">
+                    You have <strong className="text-sage-800">{fmt(k?.assessments.value)}</strong> assessment{k?.assessments.value === 1 ? '' : 's'} across <strong className="text-sage-800">{fmt(k?.courses.value)}</strong> course{k?.courses.value === 1 ? '' : 's'}{(k?.open_gaps.value ?? 0) > 0 && <> and <strong className="text-sage-800">{k?.open_gaps.value}</strong> open learning gap{k?.open_gaps.value === 1 ? '' : 's'}</>}. {user?.department ? `${user.department}.` : ''}
+                  </p>
+                )}
+              </div>
             </div>
             <div className="flex flex-wrap gap-2 shrink-0">
               <QuickAction icon={Plus} label="New course" to="/courses" />
@@ -203,14 +210,14 @@ export const Dashboard: React.FC = () => {
       )}
 
       {loading ? (
-        <div role="status" className="grid grid-cols-2 lg:grid-cols-4 gap-4" aria-label="Loading dashboard">
+        <div role="status" className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4" aria-label="Loading dashboard">
           {Array.from({ length: 8 }).map((_, i) => <div key={i} className="h-28 rounded-xl border border-sage-200 bg-white animate-pulse" />)}
           <p className="col-span-full flex items-center gap-2 text-xs text-sage-500"><Loader2 className="w-3.5 h-3.5 animate-spin" aria-hidden="true" />Loading your dashboard…</p>
         </div>
       ) : data && (
         <>
           {/* KPIs */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             <Kpi label="Courses" value={fmt(k?.courses.value)} note={k?.courses.basis} icon={BookOpen} to="/courses" />
             <Kpi label="Assessments" value={fmt(k?.assessments.value)} note={k?.assessments.basis} icon={FileCheck2} to="/assessments" delay={60} />
             <Kpi label="Questions" value={fmt(k?.questions.value)} note={k?.questions.basis} icon={HelpCircle} to="/question-bank" delay={120} />
@@ -334,8 +341,6 @@ export const Dashboard: React.FC = () => {
           )}
 
           <Reveal><CollaborationSummaryCard className="border-sage-200" /></Reveal>
-
-          <p className="text-[11px] text-sage-400 text-right">{data.meta.disclaimer}{data.meta.generated_at ? ` · Generated ${new Date(data.meta.generated_at).toLocaleString()}` : ''}</p>
         </>
       )}
     </div>

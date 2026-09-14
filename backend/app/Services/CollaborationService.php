@@ -29,10 +29,10 @@ class CollaborationService
 
     public function overview(User $user, Course $course): array
     {
-        $course->loadMissing('user:id,name,email');
+        $course->loadMissing('user:' . User::REF_COLUMNS . ',email');
         $members = $course->collaborators()
             ->whereIn('status', [CourseCollaborator::STATUS_ACTIVE, CourseCollaborator::STATUS_PENDING])
-            ->with(['user:id,name,email,department', 'inviter:id,name'])
+            ->with(['user:' . User::REF_COLUMNS . ',email,department', 'inviter:id,name'])
             ->orderByRaw("CASE status WHEN 'ACTIVE' THEN 0 ELSE 1 END")->orderBy('id')
             ->get();
         $pending = $course->collaborationInvitations()
@@ -44,7 +44,7 @@ class CollaborationService
 
         return [
             'course' => ['id' => $course->id, 'course_code' => $course->course_code, 'course_name' => $course->course_name],
-            'owner' => $course->user ? ['id' => $course->user->id, 'name' => $course->user->name, 'email' => $canManage ? $course->user->email : null] : null,
+            'owner' => $course->user ? $course->user->refPayload() + ['email' => $canManage ? $course->user->email : null] : null,
             'current_user' => ['id' => $user->id, 'role' => $this->access->roleFor($user, $course)],
             'permissions' => $this->access->permissions($user, $course),
             'collaborators' => $members->map(fn (CourseCollaborator $c) => $this->memberPayload($c, $canManage))->values()->all(),
@@ -379,7 +379,7 @@ class CollaborationService
     {
         return [
             'id' => $c->id,
-            'user' => $c->user ? ['id' => $c->user->id, 'name' => $c->user->name, 'email' => $showEmail ? $c->user->email : null, 'department' => $c->user->department ?? null] : null,
+            'user' => $c->user ? $c->user->refPayload() + ['email' => $showEmail ? $c->user->email : null, 'department' => $c->user->department ?? null] : null,
             'role' => $c->role,
             'status' => $c->status,
             'invited_by' => $c->inviter ? ['id' => $c->inviter->id, 'name' => $c->inviter->name] : null,

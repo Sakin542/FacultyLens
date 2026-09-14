@@ -2,19 +2,23 @@ FROM php:8.2-cli-alpine
 
 WORKDIR /var/www/html
 
-# Install system dependencies and PHP extensions
+# Install system dependencies and PHP extensions (GD with JPEG/WEBP + exif are required for profile pictures)
 RUN apk add --no-cache \
     curl \
     git \
     unzip \
     libzip-dev \
     libpng-dev \
+    libjpeg-turbo-dev \
+    libwebp-dev \
+    freetype-dev \
     libxml2-dev \
     oniguruma-dev \
     mariadb-connector-c \
     mariadb-client \
     bash \
-    && docker-php-ext-install pdo_mysql mbstring bcmath xml zip
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install pdo_mysql mbstring bcmath xml zip gd exif
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer

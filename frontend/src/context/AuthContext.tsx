@@ -11,6 +11,8 @@ interface AuthContextType {
   register: (data: RegisterPayload) => Promise<User>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<User | null>;
+  /** Replace the in-memory user after a profile/avatar change (no refetch, no reload). */
+  updateUser: (user: User) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -115,6 +117,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const updateUser = useCallback((next: User) => {
+    setUser((prev) => normalizeUser({ ...(prev ?? {}), ...next } as User));
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -125,6 +131,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         register,
         logout,
         refreshUser,
+        updateUser,
       }}
     >
       {children}

@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\AssessmentController;
 use App\Http\Controllers\Api\AssessmentQuestionPaperController;
 use App\Http\Controllers\Api\AssessmentReportController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ProfilePictureController;
 use App\Http\Controllers\Api\CoPoMappingController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\CourseMaterialController;
@@ -62,6 +63,19 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->patch('/users/me', [AuthController::class, 'updateProfile']);
+
+/**
+ * Faculty profile picture (private storage; the target account is always the session user for mutations)
+ */
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/profile', [AuthController::class, 'user']);
+    Route::put('/profile', [AuthController::class, 'updateProfile']);
+    Route::patch('/profile', [AuthController::class, 'updateProfile']);
+    Route::get('/profile/picture', [ProfilePictureController::class, 'show']);
+    Route::post('/profile/picture', [ProfilePictureController::class, 'store'])->middleware('throttle:profile-picture');
+    Route::delete('/profile/picture', [ProfilePictureController::class, 'destroy'])->middleware('throttle:profile-picture');
+    Route::get('/users/{user}/profile-picture', [ProfilePictureController::class, 'showUser'])->whereNumber('user');
+});
 
 /**
  * Protected Faculty, Course & Assessment Management Endpoints

@@ -47,6 +47,16 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(25)->by($request->user()?->id ?: $request->ip());
         });
 
+        // Profile picture changes (upload/replace/remove) per user per hour
+        RateLimiter::for('profile-picture', function (Request $request) {
+            return Limit::perHour(max(1, (int) config('profile_picture.rate_limit_per_hour', 10)))
+                ->by('profile-picture:' . ($request->user()?->id ?: $request->ip()))
+                ->response(fn () => response()->json([
+                    'status' => 'error',
+                    'message' => 'You have changed your profile picture too many times. Please try again later.',
+                ], 429));
+        });
+
         // STEP 32: Academic chat messages (configurable via CHAT_RATE_LIMIT)
         RateLimiter::for('academic-chat', function (Request $request) {
             return Limit::perMinute((int) config('academic_chat.rate_limit_per_minute', 30))

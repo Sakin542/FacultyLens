@@ -45,7 +45,7 @@ class CollaborationCommentService
     public function list(User $user, Course $course, array $filters, int $perPage = 20)
     {
         $query = CollaborationComment::where('course_id', $course->id)->whereNull('parent_id')
-            ->with(['user:id,name', 'resolver:id,name', 'replies.user:id,name'])
+            ->with(['user:' . User::REF_COLUMNS, 'resolver:id,name', 'replies.user:' . User::REF_COLUMNS])
             ->orderByDesc('id');
 
         if (!empty($filters['commentable_type']) && !empty($filters['commentable_id'])) {
@@ -80,7 +80,7 @@ class CollaborationCommentService
             ->where('commentable_type', $target['type'])->where('commentable_id', $target['model']->getKey())
             ->where('parent_id', $parent?->id)->where('body', $body)->where('created_at', '>=', now()->subSeconds(10))->first();
         if ($dupe) {
-            return $dupe->load(['user:id,name', 'replies.user:id,name']);
+            return $dupe->load(['user:' . User::REF_COLUMNS, 'replies.user:' . User::REF_COLUMNS]);
         }
 
         $comment = DB::transaction(fn () => CollaborationComment::create([
@@ -101,7 +101,7 @@ class CollaborationCommentService
 
         $this->notifyParticipants($user, $course, $comment, $parent, $mentions, $target['type']);
 
-        return $comment->load(['user:id,name', 'replies.user:id,name']);
+        return $comment->load(['user:' . User::REF_COLUMNS, 'replies.user:' . User::REF_COLUMNS]);
     }
 
     public function update(User $user, CollaborationComment $comment, string $body): CollaborationComment
@@ -119,7 +119,7 @@ class CollaborationCommentService
         $comment->update(['body' => $body, 'edited_at' => now()]);
         $this->audit->log('COMMENT_UPDATED', $comment, $comment->id, ['course_id' => $comment->course_id, 'previous_length' => mb_strlen($comment->getOriginal('body') ?? '')], $user);
 
-        return $comment->fresh(['user:id,name', 'replies.user:id,name']);
+        return $comment->fresh(['user:' . User::REF_COLUMNS, 'replies.user:' . User::REF_COLUMNS]);
     }
 
     /**
@@ -144,7 +144,7 @@ class CollaborationCommentService
         $comment->update(['status' => CollaborationComment::STATUS_RESOLVED, 'resolved_by' => $user->id, 'resolved_at' => now()]);
         $this->audit->log('COMMENT_RESOLVED', $comment, $comment->id, ['course_id' => $comment->course_id], $user);
 
-        return $comment->fresh(['user:id,name', 'resolver:id,name', 'replies.user:id,name']);
+        return $comment->fresh(['user:' . User::REF_COLUMNS, 'resolver:id,name', 'replies.user:' . User::REF_COLUMNS]);
     }
 
     public function reopen(User $user, CollaborationComment $comment): CollaborationComment
@@ -153,7 +153,7 @@ class CollaborationCommentService
         $comment->update(['status' => CollaborationComment::STATUS_ACTIVE, 'resolved_by' => null, 'resolved_at' => null]);
         $this->audit->log('COMMENT_REOPENED', $comment, $comment->id, ['course_id' => $comment->course_id], $user);
 
-        return $comment->fresh(['user:id,name', 'resolver:id,name', 'replies.user:id,name']);
+        return $comment->fresh(['user:' . User::REF_COLUMNS, 'resolver:id,name', 'replies.user:' . User::REF_COLUMNS]);
     }
 
     public function payload(CollaborationComment $c, bool $withReplies = true): array
@@ -167,7 +167,7 @@ class CollaborationCommentService
             'body' => $c->status === CollaborationComment::STATUS_DELETED ? '[deleted]' : $c->body,
             'mentions' => $c->mentions ?? [],
             'status' => $c->status,
-            'author' => $c->user ? ['id' => $c->user->id, 'name' => $c->user->name] : null,
+            'author' => $c->user ? $c->user->refPayload() : null,
             'resolved_by' => $c->relationLoaded('resolver') && $c->resolver ? ['id' => $c->resolver->id, 'name' => $c->resolver->name] : null,
             'resolved_at' => $c->resolved_at?->toIso8601String(),
             'edited_at' => $c->edited_at?->toIso8601String(),
