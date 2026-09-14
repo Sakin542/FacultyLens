@@ -8,7 +8,6 @@ import { academicAnalyticsService } from '@/services/academicAnalyticsService';
 import { ApiError } from '@/services/api';
 import { AnalyticsOverview, AssessmentRow, AttentionArea, AttentionSeverity, QualityRating } from '@/types/analytics';
 import { CollaborationSummaryCard } from '@/components/collaboration/CollaborationActivity';
-import { ProfilePicture } from '@/components/profile/ProfilePicture';
 import { Reveal } from '@/components/landing/Motion';
 
 /* ------------------------------------------------------------------ helpers */
@@ -179,10 +178,7 @@ export const Dashboard: React.FC = () => {
         <section className="relative overflow-hidden rounded-2xl border border-sage-200 bg-white p-5 sm:p-6">
           <div className="absolute -right-10 -top-12 w-48 h-48 rounded-full bg-sage-100 blur-2xl pointer-events-none" aria-hidden="true" />
           <div className="relative flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
-            <div className="flex items-start gap-4 min-w-0">
-              <Link to="/settings" className="shrink-0 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sage-700" aria-label="Open profile settings" data-testid="dashboard-avatar-link">
-                <ProfilePicture src={user?.profile_picture_url} name={displayName} size="xl" tone="dark" decorative className="ring-4 ring-sage-100" />
-              </Link>
+            <div className="min-w-0">
               <div className="space-y-1.5 min-w-0">
                 <p className="text-[11px] uppercase tracking-[0.18em] text-sage-500">{greeting}</p>
                 <h2 className="font-serif text-2xl sm:text-3xl leading-tight tracking-tight text-sage-800 break-words sm:truncate">Welcome back, {firstName}.</h2>

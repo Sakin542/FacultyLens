@@ -62,9 +62,9 @@ test.describe('Profile picture system', () => {
     await expectImageLoaded(page, headerAvatar(page), id);
     const firstSrc = await sidebarAvatar(page).locator('img').getAttribute('src');
 
-    // Navigate around — avatar persists
+    // Navigate around — avatar persists (dashboard shows it in the header only)
     await page.goto('/dashboard');
-    await expectImageLoaded(page, page.getByTestId('dashboard-avatar-link').getByTestId('profile-picture'), id);
+    await expectImageLoaded(page, headerAvatar(page), id);
     await page.goto('/courses');
     await expectImageLoaded(page, sidebarAvatar(page), id);
     await expectNoCrash(page);
