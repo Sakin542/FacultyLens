@@ -102,12 +102,12 @@ export const DatasetManager: React.FC<DatasetManagerProps> = ({ datasets, select
     <Card data-testid="dataset-manager" className="p-4 space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="text-sm font-semibold text-sage-800 dark:text-white">Evaluation datasets</h3>
-        <div className="flex items-center gap-2">
+        <div className="grid grid-cols-[1fr_auto] items-center gap-2 w-full sm:flex sm:w-auto">
           <label htmlFor="dataset-task-filter" className="sr-only">Filter datasets by task</label>
-          <select id="dataset-task-filter" value={taskFilter} onChange={(e) => onTaskFilter(e.target.value as EvaluationTask | '')} className="rounded-md border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-2 py-1 text-sm">
+          <select id="dataset-task-filter" value={taskFilter} onChange={(e) => onTaskFilter(e.target.value as EvaluationTask | '')} className="w-full sm:w-auto min-w-0 h-9 sm:h-auto rounded-md border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-2 py-1 text-sm">
             <option value="">All tasks</option>{EVALUATION_TASKS.map((t) => <option key={t} value={t}>{TASK_LABELS[t]}</option>)}
           </select>
-          <Button size="sm" onClick={() => setOpen((o) => !o)} aria-expanded={open}>{open ? 'Close' : 'New dataset'}</Button>
+          <Button size="sm" className="h-9 sm:h-auto justify-center" onClick={() => setOpen((o) => !o)} aria-expanded={open}>{open ? 'Close' : 'New dataset'}</Button>
         </div>
       </div>
 
@@ -187,9 +187,9 @@ export const EvaluationRunHistory: React.FC<HistoryProps> = ({ runs, selectedId,
   <Card data-testid="evaluation-run-history" className="p-4 space-y-3">
     <div className="flex flex-wrap items-center justify-between gap-2">
       <h3 className="text-sm font-semibold text-sage-800 dark:text-white">Evaluation history</h3>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 w-full sm:w-auto">
         <label htmlFor="run-task-filter" className="sr-only">Filter runs by task</label>
-        <select id="run-task-filter" value={taskFilter} onChange={(e) => onTaskFilter(e.target.value as EvaluationTask | '')} className="rounded-md border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-2 py-1 text-sm">
+        <select id="run-task-filter" value={taskFilter} onChange={(e) => onTaskFilter(e.target.value as EvaluationTask | '')} className="w-full sm:w-auto min-w-0 h-9 sm:h-auto rounded-md border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-2 py-1 text-sm">
           <option value="">All tasks</option>{EVALUATION_TASKS.map((t) => <option key={t} value={t}>{TASK_LABELS[t]}</option>)}
         </select>
       </div>
