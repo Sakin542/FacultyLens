@@ -170,6 +170,18 @@ class NotificationService
             'actor_id' => $payload['actor_id'] ?? null,
         ], isset($payload['actor_id']) ? User::find($payload['actor_id']) : null);
 
+        // Real-time broadcast: deliver to the user's private channel
+        // Wrapped in try/catch so a WebSocket / broadcast error never fails the database persistence or academic operation
+        try {
+            broadcast(new \App\Events\NotificationCreated($notification));
+        } catch (Throwable $e) {
+            Log::warning('NotificationService: real-time broadcast failed', [
+                'notification_id' => $notification->id,
+                'user_id' => $notification->user_id,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
         return $notification;
     }
 

@@ -13,7 +13,8 @@ use Tests\TestCase;
 
 /**
  * Sender configuration, Mailable rendering (HTML + plain text) for every template, brand layout, masking.
- * No test here talks to Gmail; the single live SMTP check is opt-in via EMAIL_LIVE_TESTING=true.
+ * No other test here talks to Gmail; the single live SMTP check runs only when backend/.env holds real SMTP
+ * credentials (MAIL_MAILER=smtp + MAIL_PASSWORD) and can be forced with EMAIL_LIVE_TESTING=true|false.
  */
 class EmailConfigurationTest extends TestCase
 {
@@ -209,17 +210,23 @@ class EmailConfigurationTest extends TestCase
     }
 
     /**
-     * Opt-in live SMTP check. Sends ONE message through the real configured transport in backend/.env.
-     * Run manually: EMAIL_LIVE_TESTING=true EMAIL_LIVE_RECIPIENT=you@example.com php artisan test --filter=live_smtp
+     * Live SMTP check. Sends ONE message through the real transport configured in backend/.env.
+     * Runs automatically when that file has MAIL_MAILER=smtp and a MAIL_PASSWORD; EMAIL_LIVE_TESTING=true forces it,
+     * EMAIL_LIVE_TESTING=false skips it. EMAIL_LIVE_RECIPIENT overrides the recipient (default: MAIL_USERNAME).
      */
     public function test_live_smtp_delivery_when_explicitly_enabled(): void
     {
-        if (!filter_var(getenv('EMAIL_LIVE_TESTING') ?: 'false', FILTER_VALIDATE_BOOLEAN)) {
-            $this->markTestSkipped('EMAIL_LIVE_TESTING is not enabled; live Gmail delivery is only tested manually.');
-        }
         $envFile = base_path('.env');
+        $env = is_file($envFile) ? \Dotenv\Dotenv::parse((string) file_get_contents($envFile)) : [];
+        $flag = getenv('EMAIL_LIVE_TESTING');
+        $hasCredentials = ($env['MAIL_MAILER'] ?? '') === 'smtp' && !empty($env['MAIL_PASSWORD']) && !empty($env['MAIL_USERNAME']);
+        $enabled = $flag === false || $flag === '' ? $hasCredentials : filter_var($flag, FILTER_VALIDATE_BOOLEAN);
+        if (!$enabled) {
+            $this->markTestSkipped($flag === false || $flag === ''
+                ? 'backend/.env has no live SMTP credentials (MAIL_MAILER=smtp + MAIL_USERNAME + MAIL_PASSWORD); set EMAIL_LIVE_TESTING=true to force.'
+                : 'EMAIL_LIVE_TESTING=false; live SMTP delivery skipped on request.');
+        }
         $this->assertFileExists($envFile);
-        $env = \Dotenv\Dotenv::parse((string) file_get_contents($envFile));
         $recipient = getenv('EMAIL_LIVE_RECIPIENT') ?: ($env['MAIL_USERNAME'] ?? null);
         $this->assertNotEmpty($recipient, 'EMAIL_LIVE_RECIPIENT or MAIL_USERNAME must be set');
         $this->assertNotEmpty($env['MAIL_PASSWORD'] ?? null, 'MAIL_PASSWORD must be set in backend/.env for the live test');

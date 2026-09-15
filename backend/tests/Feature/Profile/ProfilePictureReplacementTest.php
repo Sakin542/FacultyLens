@@ -110,11 +110,15 @@ class ProfilePictureReplacementTest extends ProfilePictureTestCase
 
     public function test_processing_unavailable_is_a_503_when_strict_processing_is_required(): void
     {
-        if ($this->gdAvailable()) {
-            $this->markTestSkipped('Only meaningful on a PHP build without GD.');
-        }
         $user = User::factory()->create();
         config(['profile_picture.require_processing' => true]);
+        // Simulate a PHP build without GD so this path is exercised regardless of the host's extensions.
+        $this->app->instance(ProfileImageProcessor::class, new class extends ProfileImageProcessor {
+            public function canNormalize(): bool
+            {
+                return false;
+            }
+        });
 
         $this->upload($user, 'valid.png')
             ->assertStatus(503)

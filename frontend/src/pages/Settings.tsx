@@ -164,11 +164,11 @@ export const Settings: React.FC = () => {
     setSigningOut(true);
     try {
       await logout();
+      navigate('/login', { replace: true });
     } finally {
       setSigningOut(false);
       setSignOutOpen(false);
     }
-    navigate('/login', { replace: true });
   };
 
   return (

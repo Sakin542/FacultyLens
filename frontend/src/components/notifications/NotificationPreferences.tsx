@@ -1,9 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { AlertCircle, Bell, CheckCircle2, Lock, Mail, RefreshCw } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { Button } from '@/components/common/Button';
 import { notificationService } from '@/services/notificationService';
 import { ApiError } from '@/services/api';
+import { AuthContext } from '@/context/AuthContext';
 import type { NotificationCategory, NotificationPreference } from '@/types/notification';
 import { NOTIFICATION_CATEGORIES, CATEGORY_LABELS } from '@/types/notification';
 import { CategoryIcon } from './notificationUi';
@@ -42,6 +43,7 @@ const emailLocked = (p: NotificationPreference) => Boolean(p.email_mandatory) ||
  * effective matrix from the server.
  */
 export const NotificationPreferences: React.FC<{ className?: string }> = ({ className }) => {
+  const auth = useContext(AuthContext);
   const [prefs, setPrefs] = useState<NotificationPreference[] | null>(null);
   const [emailAvailable, setEmailAvailable] = useState(true);
   const [draft, setDraft] = useState<Draft>({});
@@ -51,6 +53,7 @@ export const NotificationPreferences: React.FC<{ className?: string }> = ({ clas
   const [saved, setSaved] = useState(false);
 
   const load = async () => {
+    if (auth && !auth.isAuthenticated) return;
     setLoading(true);
     setError(null);
     try {
@@ -65,7 +68,10 @@ export const NotificationPreferences: React.FC<{ className?: string }> = ({ clas
     }
   };
 
-  useEffect(() => { void load(); }, []);
+  useEffect(() => {
+    if (auth && !auth.isAuthenticated) return;
+    void load();
+  }, [auth?.isAuthenticated]);
 
   const grouped = useMemo(() => {
     const map = new Map<NotificationCategory, NotificationPreference[]>();
