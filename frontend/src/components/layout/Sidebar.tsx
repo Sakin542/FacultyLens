@@ -62,12 +62,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
     setSigningOut(true);
     try {
       await logout();
+      navigate('/login', { replace: true });
     } finally {
       setSigningOut(false);
       setConfirmOpen(false);
+      onCloseMobile?.();
     }
-    onCloseMobile?.();
-    navigate('/login', { replace: true });
   };
 
   const displayName = user?.name || user?.fullName || 'Faculty Member';

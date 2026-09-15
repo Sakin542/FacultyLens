@@ -1,17 +1,18 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { notificationService } from '@/services/notificationService';
 import { ApiError } from '@/services/api';
+import { NotificationContext } from '@/context/NotificationContext';
 import type { Notification, NotificationFilter, NotificationPagination } from '@/types/notification';
+import type { ConnectionStatus } from '@/services/echo';
 
 /**
- * STEP 47: notification state for the bell, dropdown and the notification center.
+ * STEP 48: Real-time notification hook with centralized state synchronization.
  *
- * - The backend is the source of truth: unread count always comes from /notifications/unread-count (or the
- *   `meta.unread_count` returned by list / mutation calls), never from counting client-side rows.
- * - Broadcasting is not configured, so we poll at the server-suggested interval (default 45 s), pause while the
- *   tab is hidden, and refresh immediately when it becomes visible again.
- * - In-flight de-duplication: a refresh requested while one is running is coalesced.
- * - Every hook instance listens to a window event so a mutation in the dropdown updates the page and vice versa.
+ * - When used within a NotificationProvider, shares reactive state (unreadCount, notifications, connected)
+ *   across the Bell, Badge, Dropdown, Toast, and Notifications page.
+ * - Live updates occur automatically via Laravel Echo (Reverb) over private user channels without page reload.
+ * - When used outside NotificationProvider (e.g. isolated component unit tests), gracefully falls back to local
+ *   state, polling, and window event synchronization.
  */
 
 export const NOTIFICATIONS_CHANGED_EVENT = 'facultylens:notifications-changed';
@@ -39,15 +40,18 @@ export interface UseNotificationsResult {
   meta: NotificationPagination | null;
   loading: boolean;
   error: string | null;
+  connected?: ConnectionStatus;
   refresh: () => Promise<void>;
   refreshUnreadCount: () => Promise<void>;
   markAsRead: (id: string) => Promise<void>;
   markAllAsRead: () => Promise<void>;
   dismiss: (id: string) => Promise<void>;
   remove: (id: string) => Promise<void>;
+  addNotification?: (n: Notification) => void;
 }
 
-const errorMessage = (e: unknown) => (e instanceof ApiError || e instanceof Error) && e.message ? e.message : 'Unable to load notifications.';
+const errorMessage = (e: unknown) =>
+  (e instanceof ApiError || e instanceof Error) && e.message ? e.message : 'Unable to load notifications.';
 
 const broadcast = (unreadCount?: number) => {
   if (typeof window === 'undefined') return;
@@ -55,150 +59,251 @@ const broadcast = (unreadCount?: number) => {
 };
 
 export function useNotifications(options: UseNotificationsOptions = {}): UseNotificationsResult {
-  const { filter = 'all', page = 1, perPage = 20, poll = true, pollList = false, pollIntervalMs, loadList = true, enabled = true } = options;
+  const context = useContext(NotificationContext);
 
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [meta, setMeta] = useState<NotificationPagination | null>(null);
-  const [loading, setLoading] = useState<boolean>(loadList);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    filter = 'all',
+    page = 1,
+    perPage = 20,
+    poll = true,
+    pollList = false,
+    pollIntervalMs,
+    loadList = true,
+    enabled = true,
+  } = options;
+
+  // Local fallback state (used if outside NotificationProvider, or for custom filtered/paginated lists)
+  const [localNotifications, setLocalNotifications] = useState<Notification[]>([]);
+  const [localUnreadCount, setLocalUnreadCount] = useState<number>(0);
+  const [localMeta, setLocalMeta] = useState<NotificationPagination | null>(null);
+  const [localLoading, setLocalLoading] = useState<boolean>(loadList);
+  const [localError, setLocalError] = useState<string | null>(null);
   const [serverInterval, setServerInterval] = useState<number | null>(null);
 
   const alive = useRef(true);
   const listInFlight = useRef<{ key: string; promise: Promise<void> } | null>(null);
   const listSeq = useRef(0);
   const countInFlight = useRef<Promise<void> | null>(null);
-  // Skip the self-emitted change event (we already applied the result locally).
   const suppressNextEvent = useRef(false);
 
+  // Determine whether this call can directly use context notifications (default inbox page 1)
+  const isDefaultInbox = filter === 'all' && page === 1;
+
+  // Stable context callback references
+  const contextRefresh = context?.refresh;
+  const contextRefreshUnread = context?.refreshUnreadCount;
+  const contextMarkAsRead = context?.markAsRead;
+  const contextMarkAllAsRead = context?.markAllAsRead;
+  const contextDismiss = context?.dismiss;
+  const contextRemove = context?.remove;
+  const contextAddNotification = context?.addNotification;
+
   const refresh = useCallback((): Promise<void> => {
+    if (contextRefreshUnread && isDefaultInbox && !loadList) {
+      return contextRefreshUnread();
+    }
+    if (contextRefresh && isDefaultInbox) {
+      return contextRefresh({ page, perPage, filter });
+    }
+
     const key = `${filter}|${page}|${perPage}`;
-    // Coalesce only identical requests; a changed filter/page must always fetch, and stale responses are dropped.
     if (listInFlight.current?.key === key) return listInFlight.current.promise;
     const seq = ++listSeq.current;
     const run = (async () => {
-      setLoading(true);
+      setLocalLoading(true);
       try {
         const res = await notificationService.getNotifications({ page, perPage, filter });
         if (!alive.current || seq !== listSeq.current) return;
-        setNotifications(res.data ?? []);
-        setMeta(res.meta ?? null);
-        if (typeof res.meta?.unread_count === 'number') setUnreadCount(res.meta.unread_count);
+        setLocalNotifications(res.data ?? []);
+        setLocalMeta(res.meta ?? null);
+        if (typeof res.meta?.unread_count === 'number') setLocalUnreadCount(res.meta.unread_count);
         if (typeof res.meta?.poll_interval_seconds === 'number') setServerInterval(res.meta.poll_interval_seconds * 1000);
-        setError(null);
+        setLocalError(null);
       } catch (e) {
-        if (alive.current && seq === listSeq.current) setError(errorMessage(e));
+        if (alive.current && seq === listSeq.current) setLocalError(errorMessage(e));
       } finally {
-        if (alive.current && seq === listSeq.current) setLoading(false);
+        if (alive.current && seq === listSeq.current) setLocalLoading(false);
         if (listInFlight.current?.key === key) listInFlight.current = null;
       }
     })();
     listInFlight.current = { key, promise: run };
     return run;
-  }, [filter, page, perPage]);
+  }, [contextRefresh, contextRefreshUnread, isDefaultInbox, loadList, filter, page, perPage]);
 
   const refreshUnreadCount = useCallback((): Promise<void> => {
+    if (contextRefreshUnread) {
+      return contextRefreshUnread();
+    }
     if (countInFlight.current) return countInFlight.current;
     const run = (async () => {
       try {
         const res = await notificationService.getUnreadCount();
         if (!alive.current) return;
-        setUnreadCount(res.data?.unread_count ?? 0);
+        setLocalUnreadCount(res.data?.unread_count ?? 0);
         if (typeof res.data?.poll_interval_seconds === 'number') setServerInterval(res.data.poll_interval_seconds * 1000);
-        if (!loadList) setError(null);
+        if (!loadList) setLocalError(null);
       } catch (e) {
-        // A failed poll must not clear a previously good count; surface the error only when there is no list to show it.
-        if (alive.current && !loadList) setError(errorMessage(e));
+        if (alive.current && !loadList) setLocalError(errorMessage(e));
       } finally {
         countInFlight.current = null;
       }
     })();
     countInFlight.current = run;
     return run;
-  }, [loadList]);
+  }, [contextRefreshUnread, loadList]);
 
   const applyMeta = useCallback((metaUnread?: number) => {
-    if (typeof metaUnread === 'number') setUnreadCount(metaUnread);
+    if (typeof metaUnread === 'number') setLocalUnreadCount(metaUnread);
     suppressNextEvent.current = true;
     broadcast(metaUnread);
   }, []);
 
-  const markAsRead = useCallback(async (id: string) => {
-    const now = new Date().toISOString();
-    setNotifications((list) => list.map((n) => (n.id === id && !n.read_at ? { ...n, read_at: now } : n)));
-    try {
-      const res = await notificationService.markAsRead(id);
-      applyMeta(res.meta?.unread_count);
-    } catch (e) {
-      setError(errorMessage(e));
-      void refresh();
-      throw e;
-    }
-  }, [applyMeta, refresh]);
+  const markAsRead = useCallback(
+    async (id: string) => {
+      if (contextMarkAsRead) {
+        await contextMarkAsRead(id);
+        if (!isDefaultInbox) {
+          setLocalNotifications((list) =>
+            list.map((n) => (n.id === id && !n.read_at ? { ...n, read_at: new Date().toISOString() } : n)),
+          );
+        }
+        return;
+      }
+      const now = new Date().toISOString();
+      setLocalNotifications((list) => list.map((n) => (n.id === id && !n.read_at ? { ...n, read_at: now } : n)));
+      try {
+        const res = await notificationService.markAsRead(id);
+        applyMeta(res.meta?.unread_count);
+      } catch (e) {
+        setLocalError(errorMessage(e));
+        void refresh();
+        throw e;
+      }
+    },
+    [contextMarkAsRead, isDefaultInbox, applyMeta, refresh],
+  );
 
   const markAllAsRead = useCallback(async () => {
+    if (contextMarkAllAsRead) {
+      await contextMarkAllAsRead();
+      if (!isDefaultInbox) {
+        const now = new Date().toISOString();
+        setLocalNotifications((list) => list.map((n) => (n.read_at ? n : { ...n, read_at: now })));
+      }
+      return;
+    }
     const now = new Date().toISOString();
-    setNotifications((list) => list.map((n) => (n.read_at ? n : { ...n, read_at: now })));
+    setLocalNotifications((list) => list.map((n) => (n.read_at ? n : { ...n, read_at: now })));
     try {
       const res = await notificationService.markAllAsRead();
       applyMeta(res.meta?.unread_count ?? 0);
     } catch (e) {
-      setError(errorMessage(e));
+      setLocalError(errorMessage(e));
       void refresh();
       throw e;
     }
-  }, [applyMeta, refresh]);
+  }, [contextMarkAllAsRead, isDefaultInbox, applyMeta, refresh]);
 
-  const dismiss = useCallback(async (id: string) => {
-    setNotifications((list) => list.filter((n) => n.id !== id));
-    try {
-      const res = await notificationService.dismissNotification(id);
-      applyMeta(res.meta?.unread_count);
-    } catch (e) {
-      setError(errorMessage(e));
-      void refresh();
-      throw e;
-    }
-  }, [applyMeta, refresh]);
+  const dismiss = useCallback(
+    async (id: string) => {
+      if (contextDismiss) {
+        await contextDismiss(id);
+        if (!isDefaultInbox) {
+          setLocalNotifications((list) => list.filter((n) => n.id !== id));
+        }
+        return;
+      }
+      setLocalNotifications((list) => list.filter((n) => n.id !== id));
+      try {
+        const res = await notificationService.dismissNotification(id);
+        applyMeta(res.meta?.unread_count);
+      } catch (e) {
+        setLocalError(errorMessage(e));
+        void refresh();
+        throw e;
+      }
+    },
+    [contextDismiss, isDefaultInbox, applyMeta, refresh],
+  );
 
-  const remove = useCallback(async (id: string) => {
-    setNotifications((list) => list.filter((n) => n.id !== id));
-    try {
-      const res = await notificationService.deleteNotification(id);
-      applyMeta(res.meta?.unread_count);
-    } catch (e) {
-      setError(errorMessage(e));
-      void refresh();
-      throw e;
-    }
-  }, [applyMeta, refresh]);
+  const remove = useCallback(
+    async (id: string) => {
+      if (contextRemove) {
+        await contextRemove(id);
+        if (!isDefaultInbox) {
+          setLocalNotifications((list) => list.filter((n) => n.id !== id));
+        }
+        return;
+      }
+      setLocalNotifications((list) => list.filter((n) => n.id !== id));
+      try {
+        const res = await notificationService.deleteNotification(id);
+        applyMeta(res.meta?.unread_count);
+      } catch (e) {
+        setLocalError(errorMessage(e));
+        void refresh();
+        throw e;
+      }
+    },
+    [contextRemove, isDefaultInbox, applyMeta, refresh],
+  );
+
+  const addNotification = useCallback(
+    (n: Notification) => {
+      if (contextAddNotification) {
+        contextAddNotification(n);
+        return;
+      }
+      setLocalNotifications((prev) => {
+        if (prev.some((item) => item.id === n.id)) return prev;
+        if (!n.read_at) setLocalUnreadCount((c) => c + 1);
+        return [n, ...prev];
+      });
+      broadcast();
+    },
+    [contextAddNotification],
+  );
 
   // Initial load
   useEffect(() => {
     alive.current = true;
     if (!enabled) return () => { alive.current = false; };
-    if (loadList) void refresh(); else void refreshUnreadCount();
+    if (Boolean(context) && !loadList) {
+      // In centralized context mode, NotificationProvider already owns and fetches unreadCount on mount
+      return () => { alive.current = false; };
+    }
+    if (loadList) {
+      void refresh();
+    } else {
+      void refreshUnreadCount();
+    }
     return () => { alive.current = false; };
-  }, [refresh, refreshUnreadCount, loadList, enabled]);
+  }, [enabled, Boolean(context), loadList, refresh, refreshUnreadCount]);
 
-  // Cross-instance sync
+  // Cross-instance window sync (for standalone mode)
   useEffect(() => {
-    if (!enabled || typeof window === 'undefined') return;
+    if (!enabled || typeof window === 'undefined' || context) return;
     const onChange = (e: Event) => {
-      if (suppressNextEvent.current) { suppressNextEvent.current = false; return; }
+      if (suppressNextEvent.current) {
+        suppressNextEvent.current = false;
+        return;
+      }
       const detail = (e as CustomEvent<{ unreadCount?: number }>).detail;
       const hasCount = typeof detail?.unreadCount === 'number';
-      if (hasCount) setUnreadCount(detail.unreadCount as number);
-      // The count in the event came from the server response; only lists need a re-fetch.
-      if (loadList) void refresh(); else if (!hasCount) void refreshUnreadCount();
+      if (hasCount) setLocalUnreadCount(detail.unreadCount as number);
+      if (loadList) void refresh();
+      else if (!hasCount) void refreshUnreadCount();
     };
     window.addEventListener(NOTIFICATIONS_CHANGED_EVENT, onChange);
     return () => window.removeEventListener(NOTIFICATIONS_CHANGED_EVENT, onChange);
-  }, [enabled, loadList, refresh, refreshUnreadCount]);
+  }, [enabled, context, loadList, refresh, refreshUnreadCount]);
 
-  // Polling (paused while hidden; immediate refresh on return)
+  // Polling fallback when realtime is disconnected or when standalone
   useEffect(() => {
     if (!enabled || !poll || typeof window === 'undefined') return;
+    // When connected via Reverb, polling is paused to reduce server load
+    if (context?.connected === 'connected') return;
+
     const interval = Math.max(MIN_POLL_MS, pollIntervalMs ?? serverInterval ?? DEFAULT_POLL_MS);
     const tick = () => {
       if (typeof document !== 'undefined' && document.hidden) return;
@@ -206,13 +311,47 @@ export function useNotifications(options: UseNotificationsOptions = {}): UseNoti
       if (pollList) void refresh();
     };
     const timer = window.setInterval(tick, interval);
-    const onVisibility = () => { if (typeof document !== 'undefined' && !document.hidden) tick(); };
+    const onVisibility = () => {
+      if (typeof document !== 'undefined' && !document.hidden) tick();
+    };
     document.addEventListener('visibilitychange', onVisibility);
     return () => {
       window.clearInterval(timer);
       document.removeEventListener('visibilitychange', onVisibility);
     };
-  }, [enabled, poll, pollList, pollIntervalMs, serverInterval, refresh, refreshUnreadCount]);
+  }, [enabled, poll, pollList, pollIntervalMs, serverInterval, context?.connected, refresh, refreshUnreadCount]);
 
-  return { notifications, unreadCount, meta, loading, error, refresh, refreshUnreadCount, markAsRead, markAllAsRead, dismiss, remove };
+  if (context && isDefaultInbox) {
+    return {
+      notifications: context.notifications,
+      unreadCount: context.unreadCount,
+      meta: context.meta,
+      loading: context.loading,
+      error: context.error,
+      connected: context.connected,
+      refresh,
+      refreshUnreadCount,
+      markAsRead,
+      markAllAsRead,
+      dismiss,
+      remove,
+      addNotification,
+    };
+  }
+
+  return {
+    notifications: localNotifications,
+    unreadCount: context ? context.unreadCount : localUnreadCount,
+    meta: localMeta,
+    loading: localLoading,
+    error: localError,
+    connected: context?.connected ?? 'disconnected',
+    refresh,
+    refreshUnreadCount,
+    markAsRead,
+    markAllAsRead,
+    dismiss,
+    remove,
+    addNotification,
+  };
 }

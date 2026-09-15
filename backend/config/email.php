@@ -15,7 +15,7 @@ return [
     'enabled' => (bool) env('EMAIL_ENABLED', true),
 
     /** Public frontend origin used to build every link inside an e-mail (never taken from a request). */
-    'frontend_url' => env('FRONTEND_URL', 'http://localhost:5173'),
+    'frontend_url' => env('FRONTEND_URL', 'http://localhost:3000'),
 
     'brand' => [
         'name' => 'FacultyLens',
@@ -57,6 +57,9 @@ return [
     'never_email_types' => [
         'ASSESSMENT_VERSION_RESTORED',
         'COLLABORATION_ROLE_CHANGED',
+        // The invitation e-mail with the single-use accept link is sent by CollaborationService
+        // (App\Notifications\CollaborationNotification); e-mailing the in-app notification too would duplicate it.
+        'COLLABORATION_INVITATION',
     ],
 
     /**

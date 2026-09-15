@@ -108,12 +108,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = async (): Promise<void> => {
+    setUser(null);
     try {
-      await authService.logout();
+      await Promise.race([
+        authService.logout(),
+        new Promise((resolve) => setTimeout(resolve, 1500)),
+      ]);
     } catch (err) {
       console.warn('Logout API error:', err);
-    } finally {
-      setUser(null);
     }
   };
 

@@ -33,3 +33,5 @@ dist-ssr
 # Playwright
 playwright-report/
 test-results/
+# STEP 47 faculty UAT walkthrough artefacts (screenshots + observations)
+uat-results/

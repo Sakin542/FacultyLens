@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   RecommendationFeedbackItem,
@@ -15,6 +15,7 @@ import { FeedbackSummaryCards } from '@/components/feedback/FeedbackSummaryCards
 import { FeedbackHistoryTable } from '@/components/feedback/FeedbackHistoryTable';
 import { ImprovementSignalsView } from '@/components/feedback/ImprovementSignalsView';
 import { Button } from '@/components/common/Button';
+import { AuthContext } from '@/context/AuthContext';
 import {
   MessageSquare,
   Sparkles,
@@ -24,6 +25,8 @@ import {
 } from 'lucide-react';
 
 export const Feedback: React.FC = () => {
+  const auth = useContext(AuthContext);
+  const isAuthenticated = auth ? auth.isAuthenticated : true;
   const [searchParams] = useSearchParams();
 
   // Active sub-tab: 'history' or 'signals'
@@ -65,6 +68,7 @@ export const Feedback: React.FC = () => {
 
   // Fetch courses list
   useEffect(() => {
+    if (!isAuthenticated) return;
     const fetchCourses = async () => {
       try {
         const res = await courseService.getAll();
@@ -74,10 +78,11 @@ export const Feedback: React.FC = () => {
       }
     };
     fetchCourses();
-  }, []);
+  }, [isAuthenticated]);
 
   // Fetch Summary Metrics
   const fetchSummary = useCallback(async () => {
+    if (!isAuthenticated) return;
     try {
       setIsSummaryLoading(true);
       const res = await feedbackService.getFeedbackSummary(
@@ -89,10 +94,11 @@ export const Feedback: React.FC = () => {
     } finally {
       setIsSummaryLoading(false);
     }
-  }, [selectedCourseId]);
+  }, [isAuthenticated, selectedCourseId]);
 
   // Fetch Feedback History
   const fetchHistory = useCallback(async () => {
+    if (!isAuthenticated) return;
     try {
       setIsHistoryLoading(true);
       setError(null);
@@ -119,10 +125,11 @@ export const Feedback: React.FC = () => {
     } finally {
       setIsHistoryLoading(false);
     }
-  }, [selectedCourseId, decisionFilter, ratingFilter, searchQuery, page]);
+  }, [isAuthenticated, selectedCourseId, decisionFilter, ratingFilter, searchQuery, page]);
 
   // Fetch Improvement Signals
   const fetchSignals = useCallback(async () => {
+    if (!isAuthenticated) return;
     try {
       setIsSignalsLoading(true);
       const res = await feedbackService.getImprovementSignals();
@@ -133,22 +140,25 @@ export const Feedback: React.FC = () => {
     } finally {
       setIsSignalsLoading(false);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   // Initial and reactive loads
   useEffect(() => {
+    if (!isAuthenticated) return;
     fetchSummary();
-  }, [fetchSummary]);
+  }, [isAuthenticated, fetchSummary]);
 
   useEffect(() => {
+    if (!isAuthenticated) return;
     fetchHistory();
-  }, [fetchHistory]);
+  }, [isAuthenticated, fetchHistory]);
 
   useEffect(() => {
+    if (!isAuthenticated) return;
     if (activeTab === 'signals') {
       fetchSignals();
     }
-  }, [activeTab, fetchSignals]);
+  }, [isAuthenticated, activeTab, fetchSignals]);
 
   const handleRefresh = () => {
     fetchSummary();
