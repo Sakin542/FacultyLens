@@ -85,6 +85,10 @@ class IntegrityCheckCommand extends Command
             'co_po_mappings_without_lo' => ['CO/PO mappings without a learning outcome', 'medium', $orphans('co_po_mappings', 'learning_outcome_id', 'learning_outcomes')],
             'co_po_mappings_without_po' => ['CO/PO mappings without a program outcome', 'medium', $orphans('co_po_mappings', 'program_outcome_id', 'program_outcomes')],
             'documents_without_course' => ['Documents without a course', 'medium', $orphans('document_processings', 'course_id', 'courses')],
+            'document_chunks_without_document' => ['Document chunks without a parent document', 'high', $orphans('document_chunks', 'document_processing_id', 'document_processings')],
+            'ai_evaluation_examples_without_dataset' => ['AI evaluation examples without a dataset', 'high', $orphans('ai_evaluation_examples', 'dataset_id', 'ai_evaluation_datasets')],
+            'rubric_criteria_marks_mismatch' => ['Rubrics whose criteria marks do not sum to question marks', 'medium', fn () => DB::table('rubrics')->join('questions', 'questions.id', '=', 'rubrics.question_id')->whereExists(fn ($q) => $q->select(DB::raw(1))->from('rubric_criteria')->whereColumn('rubric_criteria.rubric_id', 'rubrics.id'))->whereRaw('ABS(questions.marks - (SELECT COALESCE(SUM(max_marks), 0) FROM rubric_criteria c WHERE c.rubric_id = rubrics.id)) > 0.01')->count()],
+            'duplicate_course_codes_per_user' => ['Duplicate active course codes per faculty user', 'medium', fn () => DB::table('courses')->where('status', 'active')->select('user_id', 'course_code')->groupBy('user_id', 'course_code')->havingRaw('COUNT(*) > 1')->get()->count()],
             'collaborators_without_user' => ['Course collaborators without a user', 'medium', $orphans('course_collaborators', 'user_id', 'users')],
         ];
 
@@ -92,6 +96,8 @@ class IntegrityCheckCommand extends Command
         return array_filter($checks, function ($c, $key) {
             $table = match (true) {
                 str_starts_with($key, 'documents') => 'document_processings',
+                str_starts_with($key, 'document_chunks') => 'document_chunks',
+                str_starts_with($key, 'ai_evaluation_examples') => 'ai_evaluation_examples',
                 str_starts_with($key, 'collaborators') => 'course_collaborators',
                 str_starts_with($key, 'co_po') => 'co_po_mappings',
                 str_starts_with($key, 'reports') || str_starts_with($key, 'completed_reports') => 'institutional_reports',

@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -182,10 +183,25 @@ class AuthController extends Controller
     }
 
     /**
-     * Log the faculty member out and invalidate session
+     * Log the faculty member out and invalidate session, tokens, and cookies
      */
     public function logout(Request $request): JsonResponse
     {
+        $user = $request->user('sanctum') ?? $request->user('web');
+        if ($user) {
+            if (method_exists($user, 'tokens')) {
+                $user->tokens()->delete();
+            }
+            $user->setRememberToken(null);
+            $user->saveQuietly();
+        }
+
+        try {
+            Auth::guard('sanctum')->forgetUser();
+        } catch (\Throwable) {
+            // Guard may not be initialized
+        }
+
         Auth::guard('web')->logout();
 
         if ($request->hasSession()) {
@@ -193,10 +209,25 @@ class AuthController extends Controller
             $request->session()->regenerateToken();
         }
 
-        return response()->json([
+        Auth::forgetGuards();
+        $request->setUserResolver(static fn () => null);
+
+        $sessionCookieName = (string) config('session.cookie');
+        $recallerName = Auth::guard('web')->getRecallerName();
+
+        $response = response()->json([
             'status' => 'success',
             'message' => 'Logout successful',
         ]);
+
+        if ($sessionCookieName !== '') {
+            $response->withCookie(Cookie::forget($sessionCookieName));
+        }
+        if ($recallerName !== '') {
+            $response->withCookie(Cookie::forget($recallerName));
+        }
+
+        return $response;
     }
 
     // ------------------------------------------------------------ STEP 47: security notifications

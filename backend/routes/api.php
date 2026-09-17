@@ -65,12 +65,14 @@ Route::prefix('auth')->group(function () {
         Route::post('/reset-password', [PasswordResetController::class, 'reset']);
     });
 
+    // Logout endpoint (safe to call whether or not session is still fully valid)
+    Route::post('/logout', [AuthController::class, 'logout']);
+
     // Protected auth routes
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user', [AuthController::class, 'user']);
         Route::patch('/user', [AuthController::class, 'updateProfile']);
         Route::post('/change-password', [AuthController::class, 'changePassword'])->middleware('throttle:auth');
-        Route::post('/logout', [AuthController::class, 'logout']);
     });
 });
 

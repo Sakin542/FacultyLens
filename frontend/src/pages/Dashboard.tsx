@@ -141,20 +141,26 @@ export const Dashboard: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async (fresh = false) => {
+    if (!user) return;
     fresh ? setRefreshing(true) : setLoading(true);
     setError(null);
     try {
       const res = await academicAnalyticsService.getOverview(undefined, fresh);
       setData(res.data);
     } catch (e) {
+      if (!user) return;
       setError(errorMessage(e));
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, []);
+  }, [user]);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    if (user) {
+      void load();
+    }
+  }, [load, user]);
 
   const displayName = user?.name || user?.fullName || 'Faculty Member';
   // "Dr. Grace Hopper" → "Grace" (never greet with a bare honorific such as "Dr.")

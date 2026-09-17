@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState, useCallback } fr
 import { User } from '@/types';
 import { authService, LoginPayload, RegisterPayload } from '@/services/authService';
 import { SESSION_EXPIRED_EVENT } from '@/services/api';
+import { disconnectRealtime } from '@/services/echo';
 
 interface AuthContextType {
   user: User | null;
@@ -108,14 +109,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = async (): Promise<void> => {
-    setUser(null);
+    disconnectRealtime();
     try {
       await Promise.race([
         authService.logout(),
-        new Promise((resolve) => setTimeout(resolve, 1500)),
+        new Promise((resolve) => setTimeout(resolve, 5000)),
       ]);
     } catch (err) {
       console.warn('Logout API error:', err);
+    } finally {
+      authService.resetSessionProbe();
+      setUser(null);
     }
   };
 

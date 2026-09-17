@@ -146,11 +146,23 @@ export const authService = {
   },
 
   /**
+   * Reset session probe promise so subsequent calls perform a fresh probe
+   */
+  resetSessionProbe: (): void => {
+    sessionProbe = null;
+  },
+
+  /**
    * Invalidate session and log faculty member out
    */
   logout: async (): Promise<AuthResponse> => {
-    return apiClient<AuthResponse>('/auth/logout', {
-      method: 'POST',
-    });
+    sessionProbe = null;
+    try {
+      return await apiClient<AuthResponse>('/auth/logout', {
+        method: 'POST',
+      });
+    } finally {
+      sessionProbe = null;
+    }
   },
 };
