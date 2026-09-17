@@ -89,6 +89,17 @@ function cleanChannel(echo: Echo<'reverb'>, chName: string): void {
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const connector = (echo as any).connector;
+    const pusher = connector?.pusher;
+    const isSocketOpen = pusher?.connection?.state === 'connected';
+
+    if (isSocketOpen) {
+      try {
+        echo.leave(chName);
+      } catch {
+        // Socket or channel already left
+      }
+    }
+
     const ch = connector?.channels?.[chName] || connector?.channels?.[`private-${chName}`];
     if (ch) {
       ch.subscribed = false;
@@ -169,8 +180,11 @@ export function subscribeToUserNotifications(
 
     return () => {
       try {
-        channel.stopListening('.NotificationCreated');
-        channel.stopListening('NotificationCreated');
+        const isSocketOpen = pusher?.connection?.state === 'connected';
+        if (isSocketOpen) {
+          channel.stopListening('.NotificationCreated');
+          channel.stopListening('NotificationCreated');
+        }
         cleanChannel(echo, channelName);
       } catch {
         // Socket may already be closed/closing
@@ -193,8 +207,6 @@ export function subscribeToUserNotifications(
 
   return () => {
     try {
-      channel.stopListening('.NotificationCreated');
-      channel.stopListening('NotificationCreated');
       cleanChannel(echo, channelName);
     } catch {
       // Ignore
@@ -212,6 +224,7 @@ export function disconnectRealtime(): void {
   if (!echoInstance) return;
   try {
     const connector = (echoInstance as any).connector;
+    const pusher = connector?.pusher;
     if (connector?.channels) {
       Object.keys(connector.channels).forEach((key) => {
         try {
@@ -226,7 +239,11 @@ export function disconnectRealtime(): void {
       });
       connector.channels = {};
     }
-    echoInstance.disconnect();
+    if (pusher && typeof pusher.disconnect === 'function') {
+      pusher.disconnect();
+    } else {
+      echoInstance.disconnect();
+    }
   } catch {
     // Teardown errors are non-critical during logout
   } finally {

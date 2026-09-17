@@ -62,7 +62,11 @@ class DatabaseIntegrityTest extends TestCase
 
     public function test_foreign_key_constraints_are_enforced_by_the_database(): void
     {
-        $this->assertSame(1, (int) DB::selectOne('PRAGMA foreign_keys')->foreign_keys, 'Tests must run with foreign keys ON to be meaningful');
+        if (DB::getDriverName() === 'sqlite') {
+            $this->assertSame(1, (int) DB::selectOne('PRAGMA foreign_keys')->foreign_keys, 'Tests must run with foreign keys ON to be meaningful');
+        } else {
+            $this->assertSame(1, (int) (DB::selectOne('SELECT @@FOREIGN_KEY_CHECKS as fk')->fk ?? 0));
+        }
 
         foreach ([
             'questions' => ['assessment_id' => 999999, 'question_number' => 1, 'question_text' => 'x', 'question_type' => 'mcq', 'marks' => 1, 'difficulty_level' => 'easy', 'cognitive_level' => 'Remember', 'created_at' => now(), 'updated_at' => now()],

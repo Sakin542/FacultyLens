@@ -164,6 +164,45 @@ class AuthTest extends TestCase
             ->assertJson(['status' => 'success', 'message' => 'Logout successful']);
     }
 
+    public function test_logout_completely_invalidates_session_and_probe_returns_unauthenticated(): void
+    {
+        $password = 'Secret123!';
+        $user = User::factory()->create([
+            'email' => 'logout.test@aust.edu',
+            'password' => Hash::make($password),
+        ]);
+
+        $loginResponse = $this->postJson('/api/auth/login', [
+            'email' => 'logout.test@aust.edu',
+            'password' => $password,
+        ]);
+        $loginResponse->assertStatus(200);
+
+        // Probe shows authenticated
+        $probeBefore = $this->getJson('/api/auth/session');
+        $probeBefore->assertStatus(200)
+            ->assertJsonPath('authenticated', true);
+
+        // Logout
+        $logoutResponse = $this->postJson('/api/auth/logout');
+        $logoutResponse->assertStatus(200)
+            ->assertJson(['status' => 'success', 'message' => 'Logout successful']);
+
+        // Probe immediately after shows unauthenticated (simulating instant refresh on login page)
+        $probeAfter = $this->getJson('/api/auth/session');
+        $probeAfter->assertStatus(200)
+            ->assertJsonPath('authenticated', false)
+            ->assertJsonPath('user', null);
+    }
+
+    public function test_unauthenticated_user_can_call_logout_idempotently(): void
+    {
+        $response = $this->postJson('/api/auth/logout');
+
+        $response->assertStatus(200)
+            ->assertJson(['status' => 'success', 'message' => 'Logout successful']);
+    }
+
     public function test_profile_update_changes_name_department_designation_but_never_email(): void
     {
         $user = User::factory()->create(['email' => 'fixed@aust.edu', 'name' => 'Old Name', 'department' => 'CSE', 'designation' => 'Lecturer']);

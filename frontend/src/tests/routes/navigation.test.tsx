@@ -74,4 +74,34 @@ describe('Routing and Navigation Security', () => {
 
     expect(screen.getByText(/404/i)).toBeInTheDocument();
   });
+
+  it('keeps unauthenticated user on /login upon initial mount/refresh and never auto-redirects to /dashboard', () => {
+    const mockContext = createMockAuthContext({ isAuthenticated: false, loading: false, user: null });
+
+    render(
+      <AuthContext.Provider value={mockContext}>
+        <MemoryRouter initialEntries={['/login']}>
+          <AppRoutes />
+        </MemoryRouter>
+      </AuthContext.Provider>
+    );
+
+    expect(screen.getByRole('heading', { name: /sign in/i })).toBeInTheDocument();
+    expect(screen.queryByText(/academic overview/i)).not.toBeInTheDocument();
+  });
+
+  it('keeps unauthenticated user on /register upon initial mount/refresh and never auto-redirects to /dashboard', () => {
+    const mockContext = createMockAuthContext({ isAuthenticated: false, loading: false, user: null });
+
+    render(
+      <AuthContext.Provider value={mockContext}>
+        <MemoryRouter initialEntries={['/register']}>
+          <AppRoutes />
+        </MemoryRouter>
+      </AuthContext.Provider>
+    );
+
+    expect(screen.getByRole('heading', { name: /create faculty account/i })).toBeInTheDocument();
+    expect(screen.queryByText(/academic overview/i)).not.toBeInTheDocument();
+  });
 });

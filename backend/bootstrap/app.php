@@ -19,6 +19,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->throttleApi();
         $middleware->append(\App\Http\Middleware\SecurityHeadersMiddleware::class);
         $middleware->api(prepend: [\App\Http\Middleware\RequestLoggingMiddleware::class]);
+        $middleware->validateCsrfTokens(except: [
+            'api/auth/logout',
+        ]);
         $middleware->trustProxies(at: env('TRUSTED_PROXIES', '*') === '*' ? '*' : array_map('trim', explode(',', (string) env('TRUSTED_PROXIES'))));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
