@@ -151,7 +151,13 @@ Every important AI result carries a **"Why?"** button that shows the evidence, m
 
 <sub>Screenshots use synthetic test data from the faculty acceptance-test walkthrough.</sub>
 
----
+* Invitations
+* Collaboration
+* Comments
+* Mentions
+* Reviews
+* Shared workflows
+* RBAC
 
 ## How it works
 
@@ -382,7 +388,10 @@ See [docs/assessment-versioning.md](docs/assessment-versioning.md).
 
 </details>
 
----
+```bash
+cd backend
+composer install
+```
 
 ## Getting started
 
@@ -562,7 +571,24 @@ FacultyLens is a personal project built and maintained by [Sakin542](https://git
 
 ## License
 
-This project is developed as an academic AI system for educational and demonstration purposes.
+```bash
+git add .
+git commit -m "Add your feature"
+git push origin feature/your-feature-name
+```
+
+Before opening a pull request:
+
+* Run backend tests
+* Run frontend tests
+* Run AI tests
+* Check TypeScript errors
+* Check PHP errors
+* Check Python errors
+* Verify environment variables
+* Verify Docker services
+* Review security
+* Review academic safety
 
 ---
 
