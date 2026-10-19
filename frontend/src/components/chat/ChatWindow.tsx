@@ -15,11 +15,74 @@ import { useExplanationModal } from '@/hooks/useExplanationModal';
  * STEP 46: evidence state (grounded / insufficient / conflicting) and injection notices are explicit.
  */
 
-export const ChatMessage: React.FC<{ message: ChatMessageType }> = ({ message }) => {
+/**
+ * Minimal, injection-safe Markdown: `**bold**` and `#` heading lines become React elements; everything else
+ * stays plain text. No string is ever parsed as HTML.
+ */
+export const renderChatText = (text: string): React.ReactNode =>
+  text.split('\n').map((line, li, lines) => {
+    const heading = /^\s{0,3}#{1,6}\s+(.*)$/.exec(line);
+    const body = heading ? heading[1] : line;
+    const parts = body.split(/(\*\*[^*\n]+\*\*)/g).map((part, pi) =>
+      /^\*\*[^*\n]+\*\*$/.test(part) ? <strong key={pi}>{part.slice(2, -2)}</strong> : part
+    );
+    return (
+      <React.Fragment key={li}>
+        {heading ? <strong>{parts}</strong> : parts}
+        {li < lines.length - 1 && '\n'}
+      </React.Fragment>
+    );
+  });
+
+export interface ChatMessageProps {
+  message: ChatMessageType;
+  isStreaming?: boolean;
+  onStreamingDone?: () => void;
+}
+
+export const ChatMessage: React.FC<ChatMessageProps> = ({ message, isStreaming = false, onStreamingDone }) => {
   const isUser = message.role === 'USER';
   const { explain, modal } = useExplanationModal();
   const evidence = chatEvidenceState(message.evidence_status, message.grounded);
   const conflicts = message.conflicting_evidence ?? [];
+
+  const [displayedText, setDisplayedText] = useState(() => (isStreaming ? '' : message.content));
+  const [activeStreaming, setActiveStreaming] = useState(isStreaming);
+
+  useEffect(() => {
+    if (!isStreaming) {
+      setDisplayedText(message.content);
+      setActiveStreaming(false);
+      return;
+    }
+
+    setActiveStreaming(true);
+    let wordIndex = 0;
+    const words = message.content.split(' ');
+
+    const interval = setInterval(() => {
+      wordIndex += 2;
+      if (wordIndex >= words.length) {
+        setDisplayedText(message.content);
+        setActiveStreaming(false);
+        clearInterval(interval);
+        onStreamingDone?.();
+      } else {
+        setDisplayedText(words.slice(0, wordIndex).join(' '));
+      }
+    }, 25);
+
+    return () => clearInterval(interval);
+  }, [isStreaming, message.content, onStreamingDone]);
+
+  const handleSkipStream = () => {
+    if (activeStreaming) {
+      setDisplayedText(message.content);
+      setActiveStreaming(false);
+      onStreamingDone?.();
+    }
+  };
+
   return (
     <div data-testid={`chat-message-${message.role.toLowerCase()}`} className={cn('flex gap-3', isUser ? 'flex-row-reverse' : 'flex-row')}>
       <div
@@ -32,17 +95,21 @@ export const ChatMessage: React.FC<{ message: ChatMessageType }> = ({ message })
       </div>
       <div className={cn('max-w-[85%] space-y-2', isUser ? 'items-end' : 'items-start')}>
         <div
+          onClick={handleSkipStream}
           className={cn(
-            'rounded-2xl px-4 py-2.5 text-sm whitespace-pre-wrap break-words',
+            'rounded-2xl px-4 py-2.5 text-sm whitespace-pre-wrap break-words transition-all',
             isUser
               ? 'bg-sage-700 dark:bg-white text-white dark:text-sage-800 rounded-tr-sm'
-              : 'bg-sage-100 dark:bg-[#1F1F1F] text-sage-800 dark:text-white border border-sage-200 dark:border-[#2A2A2A] rounded-tl-sm'
+              : 'bg-sage-100 dark:bg-[#1F1F1F] text-sage-800 dark:text-white border border-sage-200 dark:border-[#2A2A2A] rounded-tl-sm',
+            activeStreaming && 'cursor-pointer hover:border-sage-400'
           )}
+          title={activeStreaming ? 'Click to show full answer immediately' : undefined}
         >
-          {message.content}
+          {isUser ? displayedText : renderChatText(displayedText)}
+          {activeStreaming && <span className="inline-block w-1.5 h-3.5 ml-1 bg-sage-500 animate-pulse" />}
         </div>
         {!isUser && (
-          <div className="flex flex-wrap items-center gap-2 text-xs text-sage-500">
+          <div className="flex flex-wrap items-center gap-2 text-xs text-sage-500 animate-fade-in">
             <AiSafetyState state={evidence} data-testid={evidence === 'GROUNDED' ? 'grounded-badge' : evidence === 'CONFLICTING_EVIDENCE' ? 'ai-safety-conflicting_evidence' : 'ungrounded-badge'}>
               {evidence === 'INSUFFICIENT_EVIDENCE' ? 'No supporting evidence found' : undefined}
             </AiSafetyState>
@@ -141,13 +208,23 @@ export interface ChatWindowProps {
   disclaimer?: string | null;
   emptyTitle?: string;
   emptyDescription?: string;
+  streamingMessageId?: number | null;
+  onStreamingDone?: () => void;
 }
 
-export const ChatWindow: React.FC<ChatWindowProps> = ({ messages, loading, disclaimer, emptyTitle, emptyDescription }) => {
+export const ChatWindow: React.FC<ChatWindowProps> = ({
+  messages,
+  loading,
+  disclaimer,
+  emptyTitle,
+  emptyDescription,
+  streamingMessageId,
+  onStreamingDone,
+}) => {
   const bottomRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     bottomRef.current?.scrollIntoView?.({ behavior: 'smooth' });
-  }, [messages.length, loading]);
+  }, [messages.length, loading, streamingMessageId]);
 
   return (
     <div data-testid="chat-window" className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -156,7 +233,14 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ messages, loading, discl
       ) : (
         <>
           <GroundingDisclaimer text={disclaimer ?? undefined} />
-          {messages.map((m) => <ChatMessage key={m.id} message={m} />)}
+          {messages.map((m) => (
+            <ChatMessage
+              key={m.id}
+              message={m}
+              isStreaming={m.id === streamingMessageId}
+              onStreamingDone={onStreamingDone}
+            />
+          ))}
         </>
       )}
       {loading && <ChatLoading />}

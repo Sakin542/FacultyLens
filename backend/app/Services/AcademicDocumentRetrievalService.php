@@ -142,6 +142,7 @@ class AcademicDocumentRetrievalService
             return ['chunks' => [], 'candidates' => $candidates->count(), 'embedding_model' => $model, 'threshold' => $minScore];
         }
 
+        $allScored = [];
         $scored = [];
         foreach ($candidates as $chunk) {
             $vector = $chunk->embeddingVector();
@@ -149,10 +150,23 @@ class AcademicDocumentRetrievalService
                 continue;
             }
             $score = self::cosine($queryVector, $vector);
-            if ($score < $minScore) {
-                continue;
+            $allScored[] = [$score, $chunk];
+            if ($score >= $minScore) {
+                $scored[] = [$score, $chunk];
             }
-            $scored[] = [$score, $chunk];
+        }
+
+        // Adaptive fallback: if no chunks meet minScore, but the query is in a specific document scope
+        // or has overview/summary intent, check if the best candidate has a non-negligible similarity (>= 0.08).
+        if (empty($scored) && !empty($allScored)) {
+            usort($allScored, fn ($a, $b) => $b[0] <=> $a[0] ?: $a[1]->id <=> $b[1]->id);
+            $topScore = $allScored[0][0];
+            $isOverviewQuery = (bool) preg_match('/\b(summary|summarize|summery|overview|outline|chapter|chapters|slide|slides|topic|topics|content|contents|about|covered|concept|concepts|syllabus|material|presentation)\b/i', $query);
+            $isDocScope = $session->scope_type === AcademicChatSession::SCOPE_DOCUMENT;
+
+            if ($topScore >= 0.08 && ($isDocScope || $isOverviewQuery || $topScore >= ($minScore * 0.5))) {
+                $scored = array_slice($allScored, 0, min($topK, 3));
+            }
         }
 
         usort($scored, fn ($a, $b) => $b[0] <=> $a[0] ?: $a[1]->id <=> $b[1]->id);

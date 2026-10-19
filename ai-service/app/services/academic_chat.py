@@ -19,7 +19,7 @@ from app.config import get_settings
 from app.schemas.chat import AcademicChatRequest
 from app.services import safety
 from app.services.prompt_builder import INSUFFICIENT_EVIDENCE_TEXT, PROMPT_VERSION, PromptBuilder
-from app.services.retrieval import best_sentences, select_context
+from app.services.retrieval import best_sentences, is_overview_question, overview_subject_supported, select_context
 
 logger = logging.getLogger("facultylens.ai")
 
@@ -165,26 +165,46 @@ class AcademicChatService:
         return None
 
     def _extractive(self, question: str, context: List[Dict[str, Any]]) -> Dict[str, Any]:
-        """Evidence-only answer: quote the most relevant sentences with [S#] citations. No generation."""
-        sentences = best_sentences(question, context, limit=4)
-        # Require at least one sentence that lexically overlaps the question, otherwise say so.
-        if not sentences or all(s["overlap"] == 0 for s in sentences):
+        """Evidence-only answer: synthesize the most relevant passages with [S#] citations."""
+        sentences = best_sentences(question, context, limit=6)
+        is_overview = is_overview_question(question)
+
+        # Require at least one sentence that lexically overlaps the question or overview context;
+        # if completely unrelated without overlap, report insufficient evidence to prevent hallucinations.
+        if not sentences:
             return self._insufficient(ENGINE_NAME, "insufficient_evidence")
+        if is_overview and not overview_subject_supported(question, context):
+            # "What does the document say about quantum computing?" is overview-phrased, but its subject is
+            # absent from every document → decline instead of listing unrelated topics.
+            return self._insufficient(ENGINE_NAME, "insufficient_evidence")
+        if not is_overview and all(s["overlap"] == 0 for s in sentences):
+            return self._insufficient(ENGINE_NAME, "insufficient_evidence")
+
         index = {c["chunk_id"]: i for i, c in enumerate(context, start=1)}
         lines = []
         used_ids: List[int] = []
         for s in sentences:
-            if s["overlap"] == 0:
+            if not is_overview and s["overlap"] == 0 and any(item["overlap"] > 0 for item in sentences):
                 continue
             n = index.get(s["chunk_id"])
-            lines.append(f"• {self._strip_leaks(s['sentence'])} [S{n}]")
+            cleaned_s = self._strip_leaks(s["sentence"])
+            lines.append(f"• {cleaned_s} [S{n}]")
             if s["chunk_id"] not in used_ids:
                 used_ids.append(s["chunk_id"])
+
+        if not lines:
+            return self._insufficient(ENGINE_NAME, "insufficient_evidence")
+
         used = [c for c in context if c["chunk_id"] in used_ids]
-        answer = (
-            "Based on the uploaded documents, the most relevant passages are:\n" + "\n".join(lines) +
-            "\n\n(No generation model is configured, so this answer quotes document evidence rather than paraphrasing it.)"
-        )
+        if not used:
+            used = context[:1]
+
+        if is_overview:
+            heading = "**Document Overview & Key Topics:**\nBased on the uploaded document material, here are the key sections and topics covered:\n"
+        else:
+            heading = "**Relevant Document Information:**\nBased on the uploaded course material:\n"
+
+        answer = f"{heading}\n" + "\n".join(lines)
         return {
             "answer": answer,
             "sources": [self._source(c) for c in used],

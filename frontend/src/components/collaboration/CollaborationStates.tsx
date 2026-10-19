@@ -12,8 +12,8 @@ export const CollaboratorRoleBadge: React.FC<{ role: CollaborationRole | null | 
   const variant = role === 'OWNER' ? 'Good' : role === 'EDITOR' ? 'Analyzed' : role === 'REVIEWER' ? 'Attention' : 'neutral';
   const Icon = role === 'OWNER' ? Crown : role === 'EDITOR' ? PenLine : role === 'REVIEWER' ? Search : Eye;
   return (
-    <Badge variant={variant} className={cn('inline-flex items-center gap-1', className)} data-testid="role-badge">
-      <Icon className="w-3 h-3" /> {ROLE_LABELS[role]}
+    <Badge variant={variant} className={className} data-testid="role-badge">
+      <Icon className="w-3 h-3 shrink-0" aria-hidden="true" />{ROLE_LABELS[role]}
     </Badge>
   );
 };

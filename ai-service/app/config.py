@@ -89,7 +89,7 @@ class Settings(BaseSettings):
     hf_generation_model: Optional[str] = None       # e.g. google/flan-t5-base
     hf_generation_max_new_tokens: int = 256
     chat_top_k: int = 5
-    chat_min_relevance_score: float = 0.35          # cosine on MiniLM; engineering threshold
+    chat_min_relevance_score: float = 0.15          # cosine on MiniLM; engineering threshold
     chat_max_context_chars: int = 6000
     chat_max_history_messages: int = 10
     chat_max_question_length: int = 5000

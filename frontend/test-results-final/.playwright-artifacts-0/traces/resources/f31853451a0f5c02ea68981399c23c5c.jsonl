@@ -1,0 +1,5 @@
+{"type":"receive","time":1791232658673.3438,"opcode":1,"data":"{\"event\":\"pusher:connection_established\",\"data\":\"{\\\"socket_id\\\":\\\"829031600.104821173\\\",\\\"activity_timeout\\\":30}\"}"}
+{"type":"send","time":1791232659470.7869,"opcode":1,"data":"{\"event\":\"pusher:subscribe\",\"data\":{\"auth\":\"facultylens_key:05e151fd1ecb67c78bd036a62ca9342b4328b52f6602c9ce2c308bd0da341dbe\",\"channel\":\"private-users.208.notifications\"}}"}
+{"type":"receive","time":1791232659472.242,"opcode":1,"data":"{\"event\":\"pusher_internal:subscription_succeeded\",\"data\":\"{}\",\"channel\":\"private-users.208.notifications\"}"}
+{"type":"send","time":1791232689473.6538,"opcode":1,"data":"{\"event\":\"pusher:ping\",\"data\":{}}"}
+{"type":"receive","time":1791232689474.6208,"opcode":1,"data":"{\"event\":\"pusher:pong\"}"}

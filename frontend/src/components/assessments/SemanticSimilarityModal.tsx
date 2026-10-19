@@ -35,7 +35,7 @@ export const SemanticSimilarityModal: React.FC<SemanticSimilarityModalProps> = (
   onSimilarityCompleted,
 }) => {
   const [previousQuestions, setPreviousQuestions] = useState<PreviousQuestion[]>([]);
-  const [isLoadingBank, setIsLoadingBank] = useState(false);
+  const [isLoadingBank, setIsLoadingBank] = useState(true); // true until the first fetch, so the bank never flashes as "0"
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [similarityResult, setSimilarityResult] = useState<SimilarityAnalysisResult | null>(null);
@@ -69,7 +69,7 @@ export const SemanticSimilarityModal: React.FC<SemanticSimilarityModalProps> = (
 
     const fetchQuestionBank = async () => {
       const courseId = assessment.course_id || assessment.courseId || assessment.course?.id;
-      if (!courseId) return;
+      if (!courseId) { setIsLoadingBank(false); return; }
 
       try {
         setIsLoadingBank(true);
@@ -195,7 +195,7 @@ export const SemanticSimilarityModal: React.FC<SemanticSimilarityModalProps> = (
             <div className="flex items-center gap-4 text-xs text-sage-600">
               <div className="flex items-center gap-1.5 font-medium">
                 <Archive className="w-4 h-4 text-sage-800" />
-                <span><strong>{bankQuestionsCount}</strong> Historical Questions in Bank</span>
+                <span>{isLoadingBank ? 'Loading question bank…' : <><strong>{bankQuestionsCount}</strong> Historical Questions in Bank</>}</span>
               </div>
               <div className="flex items-center gap-1.5 font-medium">
                 <HelpCircle className="w-4 h-4 text-sage-800" />

@@ -36,6 +36,7 @@ const SubmissionDetails  = lazy(() => import('@/pages/SubmissionDetails').then(m
 const AcademicChat       = lazy(() => import('@/pages/AcademicChat').then(m => ({ default: m.AcademicChat })));
 const QuestionGenerator  = lazy(() => import('@/pages/QuestionGenerator').then(m => ({ default: m.QuestionGenerator })));
 const CourseCollaboration = lazy(() => import('@/pages/CourseCollaboration').then(m => ({ default: m.CourseCollaboration })));
+const CollaborationHub   = lazy(() => import('@/pages/CollaborationHub').then(m => ({ default: m.CollaborationHub })));
 const PendingInvitations = lazy(() => import('@/pages/Invitations').then(m => ({ default: m.PendingInvitations })));
 const InvitationLanding  = lazy(() => import('@/pages/Invitations').then(m => ({ default: m.InvitationLanding })));
 const AiEvaluation       = lazy(() => import('@/pages/AiEvaluation').then(m => ({ default: m.AiEvaluation })));
@@ -102,6 +103,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="/assessments/:assessmentId/versions/:versionId" element={<AssessmentVersionDetail />} />
             <Route path="/assessments/:assessmentId/versions/:versionId/compare" element={<AssessmentVersionCompare />} />
             <Route path="/courses/:courseId/collaboration" element={<CourseCollaboration />} />
+            <Route path="/collaboration" element={<CollaborationHub />} />
             <Route path="/collaboration/invitations" element={<PendingInvitations />} />
             <Route path="/courses/:courseId/question-bank" element={<QuestionBank />} />
             <Route path="/question-bank" element={<QuestionBank />} />

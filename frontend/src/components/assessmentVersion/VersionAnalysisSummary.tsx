@@ -15,7 +15,7 @@ export const VersionAnalysisSummary: React.FC<{ analysis: VersionAnalysis | null
         <Badge variant={statusVariant(analysis?.status ?? 'NONE')} dot>{analysis?.status === 'NONE' || !analysis ? 'No analysis' : analysis.status === 'STALE' ? 'Stale' : 'Current'}</Badge>
       </div>
       {!latest ? (
-        <p className="text-sm text-sage-500">No completed analysis is recorded for this version. <Link to={`/assessments/${assessmentId}/analysis`} className="underline underline-offset-2">Run an analysis</Link> to attach STEP 13 metrics to the current state.</p>
+        <p className="text-sm text-sage-500">No completed analysis is recorded for this version. <Link to={`/assessments/${assessmentId}/analysis`} className="underline underline-offset-2">Run an analysis</Link> to attach quality metrics to the current state.</p>
       ) : (
         <>
           {analysis?.status === 'STALE' && <p className="text-xs text-[#92400E]">The version content changed after this analysis ran (analysis v{latest.analysis_version}). Re-run the analysis to refresh; historical results are kept.</p>}

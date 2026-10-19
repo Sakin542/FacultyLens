@@ -261,6 +261,12 @@ class SemanticSimilarityTest extends TestCase
             'previous_question_id' => $this->pq1->id,
             'similarity_status' => 'POTENTIAL_DUPLICATE',
         ]);
+
+        // The analysis page labels matches by question number ("Q1"), not by database id.
+        $matches = collect($this->actingAs($this->user, 'sanctum')->getJson("/api/ai/assessments/{$this->assessment->id}/analysis")
+            ->assertOk()->json('data.similarity_matches'));
+        $dup = $matches->firstWhere('similarity_status', 'POTENTIAL_DUPLICATE');
+        $this->assertSame($this->q1->question_number, $dup['current_question_number']);
     }
 }
 

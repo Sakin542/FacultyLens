@@ -83,7 +83,7 @@ export const Badge: React.FC<BadgeProps> = ({
           aria-hidden="true"
         />
       )}
-      <span>{children}</span>
+      <span className="inline-flex items-center gap-1">{children}</span>
     </span>
   );
 };

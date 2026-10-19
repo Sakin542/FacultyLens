@@ -12,8 +12,8 @@ import { formatMetric, metricLabel, statusText, statusVariant } from './Evaluati
 
 /** STEP 35: dataset management, validation, run history and run comparison. */
 
-const SOURCES: DatasetSource[] = ['FACULTY_VALIDATED', 'SYNTHETIC', 'IMPORTED', 'PRODUCTION_SAMPLE'];
-const SPLITS: DatasetSplit[] = ['ALL', 'TRAIN', 'VALIDATION', 'TEST'];
+const SOURCES: DatasetSource[] = ['FACULTY_VALIDATED', 'EXPERT_VALIDATED', 'INSTITUTIONAL_DATA', 'CURATED_DATASET'];
+const SPLITS: DatasetSplit[] = ['TEST', 'VALIDATION', 'TRAIN'];
 
 const EXAMPLE_HINTS: Record<EvaluationTask, string> = {
   QUESTION_CLASSIFICATION: '[{"input_data":{"question":"Explain normalization."},"expected_output":{"expected_type":"DESCRIPTIVE"}}]',

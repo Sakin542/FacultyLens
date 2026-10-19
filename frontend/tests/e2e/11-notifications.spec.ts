@@ -27,6 +27,24 @@ async function waitForNotification(api: Api, type: string, timeoutMs = 60_000): 
   throw new Error(`Notification ${type} did not arrive within ${timeoutMs}ms`);
 }
 
+const MAILPIT_URL = process.env.E2E_MAILPIT_URL || 'http://127.0.0.1:8025';
+
+/** Reads the secret invitation token from the invitation e-mail captured by Mailpit. */
+async function invitationTokenFromMail(page: Page, recipient: string, timeoutMs = 60_000): Promise<string | undefined> {
+  const started = Date.now();
+  while (Date.now() - started < timeoutMs) {
+    const res = await page.request.get(`${MAILPIT_URL}/api/v1/search?query=${encodeURIComponent(`to:${recipient}`)}`);
+    const msg = res.ok() ? ((await res.json()).messages ?? [])[0] : undefined;
+    if (msg) {
+      const detail = await (await page.request.get(`${MAILPIT_URL}/api/v1/message/${msg.ID}`)).json();
+      const m = `${detail.Text ?? ''} ${detail.HTML ?? ''}`.match(/collaboration\/invitations\/([A-Za-z0-9]{20,})/);
+      if (m) return m[1];
+    }
+    await page.waitForTimeout(1500);
+  }
+  return undefined;
+}
+
 test.describe('STEP 47: notification system', () => {
   test('E2E 1 — AI analysis completion produces a notification that opens the analysis page', async ({ page }) => {
     test.setTimeout(300_000);
@@ -106,7 +124,11 @@ test.describe('STEP 47: notification system', () => {
     expect(inv.message).toContain('Notification Systems');
     expect(inv.action_url).toBe('/collaboration/invitations');
     expect(inv.expires_at).not.toBeNull();
-    expect(JSON.stringify(inv)).not.toContain(invite.data.accept_url.split('/').pop());
+    // The API only echoes accept_url when mail delivery is off; with Mailpit the token is read from the invitation e-mail.
+    // With a real SMTP relay the token is unobservable here; the leak check is then covered by the backend feature tests.
+    const token = invite.data.accept_url?.split('/').pop() ?? await invitationTokenFromMail(pageA, b.email, 15_000);
+    if (token) expect(JSON.stringify(inv)).not.toContain(token);
+    else test.info().annotations.push({ type: 'note', description: 'Invite token not observable (MAIL_MAILER is a real SMTP relay); token-leak check skipped here.' });
 
     // B sees it in the UI and follows it to the pending-invitations page, then accepts
     await pageB.goto('/dashboard');
@@ -251,7 +273,7 @@ test.describe('STEP 47: notification system', () => {
     // Preferences: toggle → save → persisted
     await page.getByTestId('view-preferences').click();
     await expect(page.getByTestId('notification-preferences')).toBeVisible();
-    const cb = page.getByLabel('Report ready');
+    const cb = page.getByLabel('Report ready', { exact: true }); // in-app switch; the e-mail switch is "Email: Report ready"
     await expect(cb).toBeChecked();
     await cb.uncheck();
     const saved = page.waitForResponse((r) => r.url().endsWith('/api/notification-preferences') && r.request().method() === 'PUT');
@@ -260,7 +282,7 @@ test.describe('STEP 47: notification system', () => {
     await expect(page.getByText('Preferences saved.')).toBeVisible();
     const prefs = await api.call('GET', '/notification-preferences');
     expect((prefs.data.preferences as any[]).find((p) => p.notification_type === 'REPORT_GENERATED').in_app_enabled).toBe(false);
-    await expect(page.getByLabel('Security alert')).toBeDisabled();
+    await expect(page.getByLabel('Security alert', { exact: true })).toBeDisabled(); // in-app switch (e-mail ones are separate)
     const prefScan = await new AxeBuilder({ page }).include('[data-testid="notifications-page"]').analyze();
     expect(prefScan.violations.filter((v) => ['critical', 'serious'].includes(v.impact ?? '')), JSON.stringify(prefScan.violations, null, 2)).toEqual([]);
 

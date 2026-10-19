@@ -1,0 +1,1 @@
+{"status":"success","message":"Pending invitations retrieved.","data":[{"id":17,"course":{"id":142,"course_code":"CSE-946078","course_name":"Artificial Intelligence"},"invited_email":null,"invited_by":{"id":220,"name":"Dr. E2E Faculty"},"role":"VIEWER","status":"PENDING","message":null,"expires_at":"2026-10-12T20:42:44+00:00","created_at":"2026-10-05T20:42:44+00:00"}]}

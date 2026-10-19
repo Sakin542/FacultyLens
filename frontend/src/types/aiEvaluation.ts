@@ -26,8 +26,9 @@ export type DatasetStatus = 'DRAFT' | 'READY' | 'RUNNING' | 'COMPLETED' | 'ARCHI
 export type RunStatus = 'PENDING' | 'RUNNING' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
 export type GateStatus = 'PASSED' | 'PASSED_WITH_WARNINGS' | 'FAILED';
 export type OverallStatus = 'NOT_EVALUATED' | 'EVALUATING' | GateStatus;
-export type DatasetSource = 'FACULTY_VALIDATED' | 'SYNTHETIC' | 'IMPORTED' | 'PRODUCTION_SAMPLE';
-export type DatasetSplit = 'ALL' | 'TRAIN' | 'VALIDATION' | 'TEST';
+// Must match backend config/ai_evaluation.php `sources` / `splits` (the API rejects anything else).
+export type DatasetSource = 'FACULTY_VALIDATED' | 'EXPERT_VALIDATED' | 'INSTITUTIONAL_DATA' | 'CURATED_DATASET';
+export type DatasetSplit = 'TRAIN' | 'VALIDATION' | 'TEST';
 export type SizeCategory = 'VERY_LIMITED' | 'LIMITED' | 'MODERATE' | 'LARGE';
 
 export interface ModelInfo {

@@ -24,6 +24,19 @@ const TITLES: Record<string, { title: string; subtitle?: string }> = {
   feedback: { title: 'Feedback' },
   notifications: { title: 'Notifications' },
   settings: { title: 'Settings' },
+  documents: { title: 'Document Details' },
+};
+
+const NESTED_TITLES: Record<string, { title: string; subtitle?: string }> = {
+  chat: { title: 'Document Chat' },
+  'question-generator': { title: 'Question Generator' },
+  'question-bank': { title: 'Question Bank' },
+  'co-po-mapping': { title: 'CO / PO Mapping' },
+  collaboration: { title: 'Collaboration' },
+  blueprint: { title: 'Assessment Blueprint' },
+  versions: { title: 'Assessment Versions' },
+  submissions: { title: 'Submissions' },
+  report: { title: 'Assessment Report' },
 };
 
 export const DashboardLayout: React.FC = () => {
@@ -32,8 +45,11 @@ export const DashboardLayout: React.FC = () => {
   const { user } = useAuth();
   const displayName = user?.name || user?.fullName || 'Faculty Member';
 
-  const segment = location.pathname.split('/').filter(Boolean)[0] ?? 'dashboard';
-  const { title, subtitle } = TITLES[segment] ?? { title: 'FacultyLens' };
+  const segments = location.pathname.split('/').filter(Boolean);
+  const segment = segments[0] ?? 'dashboard';
+  // Nested course tools (e.g. /courses/:id/chat) take the tool's title, not "Courses"
+  const nested = segments.length > 2 ? NESTED_TITLES[segments[segments.length - 1]] : undefined;
+  const { title, subtitle } = nested ?? TITLES[segment] ?? { title: 'FacultyLens' };
 
   useEffect(() => { document.title = `${title} · FacultyLens`; }, [title]);
 

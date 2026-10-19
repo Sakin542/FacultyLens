@@ -306,18 +306,58 @@ class CollaborationService
     public function summary(User $user): array
     {
         $shared = CourseCollaborator::where('user_id', $user->id)->where('status', CourseCollaborator::STATUS_ACTIVE)
-            ->with('course:id,course_code,course_name')->get();
+            ->with(['course:id,user_id,course_code,course_name,semester,academic_year', 'course.user:id,name'])->get()
+            ->filter(fn ($c) => $c->course !== null);
         $courseIds = $this->access->accessibleCourseIds($user);
-        $unresolved = $courseIds ? \App\Models\CollaborationComment::whereIn('course_id', $courseIds)->whereNull('parent_id')
-            ->where('status', \App\Models\CollaborationComment::STATUS_ACTIVE)->count() : 0;
+        $openThreads = $courseIds
+            ? \App\Models\CollaborationComment::whereIn('course_id', $courseIds)->whereNull('parent_id')
+                ->where('status', \App\Models\CollaborationComment::STATUS_ACTIVE)
+                ->selectRaw('course_id, COUNT(*) as n')->groupBy('course_id')->pluck('n', 'course_id')
+            : collect();
         $pending = $this->pendingFor($user);
+
+        // Courses the user owns, with their team size, outstanding invitations and open discussions.
+        $owned = Course::where('user_id', $user->id)
+            ->withCount([
+                'collaborators as active_collaborators_count' => fn ($q) => $q->where('status', CourseCollaborator::STATUS_ACTIVE),
+            ])
+            ->orderBy('course_code')
+            ->get(['id', 'user_id', 'course_code', 'course_name', 'semester', 'academic_year']);
+        $sentPending = CourseCollaborationInvitation::query()
+            ->whereIn('course_id', $owned->pluck('id'))
+            ->where('status', CourseCollaborationInvitation::STATUS_PENDING)
+            ->where('expires_at', '>', now())
+            ->with(['course:id,course_code,course_name', 'inviter:id,name'])
+            ->orderByDesc('id')->get();
+        $pendingByCourse = $sentPending->countBy('course_id');
 
         return [
             'shared_courses_count' => $shared->count(),
-            'shared_courses' => $shared->map(fn ($c) => ['id' => $c->course?->id, 'course_code' => $c->course?->course_code, 'course_name' => $c->course?->course_name, 'role' => $c->role])->values()->all(),
+            'shared_courses' => $shared->map(fn ($c) => [
+                'id' => $c->course->id,
+                'course_code' => $c->course->course_code,
+                'course_name' => $c->course->course_name,
+                'semester' => $c->course->semester,
+                'academic_year' => $c->course->academic_year,
+                'role' => $c->role,
+                'owner' => $c->course->user ? ['id' => $c->course->user->id, 'name' => $c->course->user->name] : null,
+                'joined_at' => $c->accepted_at?->toIso8601String(),
+                'open_discussions_count' => (int) ($openThreads[$c->course->id] ?? 0),
+            ])->values()->all(),
+            'owned_courses' => $owned->map(fn (Course $c) => [
+                'id' => $c->id,
+                'course_code' => $c->course_code,
+                'course_name' => $c->course_name,
+                'semester' => $c->semester,
+                'academic_year' => $c->academic_year,
+                'collaborators_count' => (int) $c->active_collaborators_count,
+                'pending_invitations_count' => (int) ($pendingByCourse[$c->id] ?? 0),
+                'open_discussions_count' => (int) ($openThreads[$c->id] ?? 0),
+            ])->values()->all(),
+            'sent_invitations' => $sentPending->map(fn ($i) => $this->invitationPayload($i))->values()->all(),
             'pending_invitations_count' => count($pending),
             'pending_invitations' => $pending,
-            'unresolved_discussions_count' => $unresolved,
+            'unresolved_discussions_count' => (int) $openThreads->sum(),
             'unread_notifications_count' => $user->unreadNotifications()->count(),
         ];
     }

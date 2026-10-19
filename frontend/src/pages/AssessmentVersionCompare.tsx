@@ -48,7 +48,7 @@ export const AssessmentVersionCompare: React.FC = () => {
   return (
     <div className="space-y-5" data-testid="assessment-version-compare-page">
       <VersionHeader assessment={list ? { id: list.assessment.id, title: list.assessment.title, type: list.assessment.type } : null} title="Compare Versions"
-        subtitle="Changed, added and removed questions, marks, CO/Bloom/difficulty, blueprint distributions and STEP 13 analysis metrics are detected deterministically — no AI is involved." />
+        subtitle="Changed, added and removed questions, marks, CO/Bloom/difficulty, blueprint distributions and quality-analysis metrics are detected deterministically — no AI is involved." />
       <div className="flex flex-wrap items-end gap-2" data-testid="compare-controls">
         <label className="text-xs font-medium uppercase tracking-wider text-sage-700 dark:text-sage-300">From
           <select aria-label="From version" value={versionId ?? ''} onChange={(e) => navigate(`/assessments/${assessmentId}/versions/${e.target.value}/compare${withId ? `?with=${withId}` : ''}`)} className="mt-1 block rounded-lg border border-sage-200 bg-white dark:bg-sage-700 px-3 py-2 text-sm font-normal normal-case tracking-normal">

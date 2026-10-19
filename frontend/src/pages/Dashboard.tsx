@@ -81,7 +81,7 @@ const DistributionBar: React.FC<{ rows: { label: string; pct: number | null; tar
         {rows.map((r, i) => (
           <li key={r.label} className="flex items-center justify-between gap-2 rounded-lg border border-sage-200 bg-sage-50 px-2.5 py-1.5">
             <span className="flex items-center gap-1.5 min-w-0"><span className={`w-2 h-2 rounded-full ${shades[i % shades.length]}`} aria-hidden="true" /><span className="truncate">{r.label}</span></span>
-            <span className="tabular-nums font-semibold">{fmt(r.pct, 'percent')}{r.target !== undefined && <span className="text-sage-400 font-normal"> / {r.target}%</span>}</span>
+            <span className="tabular-nums font-semibold">{fmt(r.pct, 'percent')}{r.target !== undefined && <span className="text-sage-600 font-normal"> / {r.target}%</span>}</span>
           </li>
         ))}
       </ul>

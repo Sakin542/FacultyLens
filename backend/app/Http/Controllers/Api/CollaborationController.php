@@ -247,7 +247,9 @@ class CollaborationController extends Controller
             'COLLABORATION_DECLINED' => "{$actor} declined a collaboration invitation.",
             'COLLABORATOR_ROLE_CHANGED' => "{$actor} changed a collaborator's role from " . ucfirst(strtolower($m['from'] ?? '?')) . ' to ' . ucfirst(strtolower($m['to'] ?? '?')) . '.',
             'COLLABORATOR_REMOVED' => "{$actor} removed a collaborator.",
-            'COMMENT_CREATED' => "{$actor} commented on " . str_replace('_', ' ', $m['commentable_type'] ?? 'a resource') . (isset($m['commentable_id']) ? " #{$m['commentable_id']}" : '') . '.',
+            'COMMENT_CREATED' => ($m['commentable_type'] ?? null) === 'course'
+                ? (isset($m['parent_id']) ? "{$actor} replied in the course discussion." : "{$actor} started a course discussion.")
+                : "{$actor} commented on " . str_replace('_', ' ', $m['commentable_type'] ?? 'a resource') . (isset($m['commentable_id']) ? " #{$m['commentable_id']}" : '') . '.',
             'COMMENT_UPDATED' => "{$actor} edited a comment.",
             'COMMENT_RESOLVED' => "{$actor} resolved a discussion.",
             'COMMENT_REOPENED' => "{$actor} reopened a discussion.",

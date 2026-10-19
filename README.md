@@ -1,243 +1,252 @@
-#  FacultyLens
+<div align="center">
 
-> **AI-Powered Academic Decision Support for University Faculty**
+<img src="docs/images/logo.png" alt="FacultyLens logo" width="110" />
 
-FacultyLens is an AI-powered academic assistant designed to help university faculty members **understand, analyze, evaluate, and improve their academic work**.
+# FacultyLens
 
-Instead of simply generating academic content, FacultyLens uses AI to provide **intelligent analysis, comparisons, explanations, and actionable recommendations** that help faculty make better academic decisions.
+<h3>AI-powered academic decision support for university faculty</h3>
 
-> **FacultyLens doesn't replace faculty expertise. It gives faculty a clearer lens through which to make better decisions.**
+<p><b>Analyze assessments · Align them with learning outcomes · Detect repeated questions · Chat with your course documents</b></p>
+
+<p>
+  <img src="https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white" alt="Laravel 12" />
+  <img src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black" alt="React 18" />
+  <img src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white" alt="TypeScript 5" />
+  <img src="https://img.shields.io/badge/FastAPI-Python%203.11-009688?logo=fastapi&logoColor=white" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/Hugging%20Face-MiniLM-FFD21E?logo=huggingface&logoColor=black" alt="Hugging Face" />
+  <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white" alt="MySQL 8" />
+  <img src="https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white" alt="Docker Compose" />
+</p>
+
+<p>
+  <a href="#key-features">Features</a> ·
+  <a href="#see-it-in-action">Screenshots</a> ·
+  <a href="#how-it-works">How it works</a> ·
+  <a href="#getting-started">Getting started</a> ·
+  <a href="#testing">Testing</a> ·
+  <a href="#documentation">Docs</a>
+</p>
+
+> **FacultyLens doesn't replace faculty expertise. It gives faculty a clearer lens for better decisions.**
+> AI assists. Faculty decides.
+
+</div>
 
 ---
 
-##  Problem Statement
+## The problem
 
-University faculty members handle many responsibilities beyond classroom teaching.
+Faculty spend hours on work that sits outside the classroom: designing syllabi, aligning content with learning outcomes, writing exam questions, checking coverage and difficulty, and making sure questions aren't repeated from previous years.
 
-They may need to:
-
-* Design courses and syllabi
-* Align course content with learning outcomes
-* Prepare examination questions
-* Check assessment coverage
-* Detect repeated or similar questions
-* Evaluate question diversity and difficulty
-* Maintain assessment quality
-* Review academic documents
-* Improve academic processes
-
-These tasks require significant time, attention, and academic expertise.
-
-FacultyLens addresses this challenge by using AI to **analyze academic materials and provide meaningful insights**.
-
----
-
-#  What is FacultyLens?
-
-FacultyLens acts as an **AI-powered academic decision-support system**.
-
-A faculty member provides academic materials:
+Most AI tools answer this with *more generated content*. FacultyLens takes a different path: it **analyzes** what faculty already have, **explains** what it finds, and **recommends** improvements, while every final decision stays with the faculty member.
 
 ```text
-Syllabus
-   +
-Learning Outcomes
-   +
-Question Paper
-   +
-Previous Questions
-```
-
-FacultyLens intelligently processes these materials and produces:
-
-```text
-AI Analysis
-     ↓
-Academic Insights
-     ↓
-Potential Issues
-     ↓
-Recommendations
-```
-
-The faculty member then reviews the results and makes the final decision.
-
----
-
-#  Core MVP
-
-The initial version of FacultyLens focuses on **AI-powered assessment quality analysis**.
-
-Faculty members can upload:
-
-* Course syllabus
-* Learning outcomes
-* Current examination paper
-* Previous examination papers
-* Question bank
-
-FacultyLens analyzes the materials and provides:
-
-* Topic coverage
-* Learning-outcome alignment
-* Question similarity
-* Difficulty distribution
-* Cognitive-level distribution
-* Assessment quality insights
-* AI-generated recommendations
-
----
-
-#   Key Features
-
-##  1. Syllabus Analysis
-
-FacultyLens analyzes course syllabi to identify:
-
-* Major course topics
-* Learning objectives
-* Topic distribution
-* Potential content gaps
-* Overlapping topics
-* Course structure
-
----
-
-##  2. Learning Outcome Alignment
-
-FacultyLens connects:
-
-```text
-Learning Outcomes
-        ↓
-Course Topics
-        ↓
-Assessment Questions
-```
-
-The AI determines whether the examination adequately evaluates the intended learning outcomes.
-
-### Example
-
-```text
-Learning Outcome:
-Students will be able to analyze database
-normalization problems.
-
-Assessment Analysis:
-
-Question 1 → Remember
-Question 2 → Understand
-Question 3 → Analyze
-
-AI Insight:
-⚠ Analytical skills receive limited assessment.
-
-Recommendation:
-Consider adding more scenario-based questions.
+Typical AI tools:   Generate → Generate → Generate
+FacultyLens:        Understand → Analyze → Compare → Evaluate → Explain → Recommend
 ```
 
 ---
 
-##  3. Question Paper Analysis
+## Key features
 
-FacultyLens evaluates examination questions based on:
+<table>
+<tr>
+<td width="50%" valign="top">
 
-* Topic coverage
-* Learning-outcome coverage
-* Question diversity
-* Difficulty
-* Cognitive level
-* Marks distribution
-* Question similarity
-* Repetition risk
+### Assessment quality analysis
+
+An overall quality score with six dimensions: topic coverage, learning-outcome coverage, difficulty balance, cognitive diversity, question diversity and marks distribution.
+
+</td>
+<td width="50%" valign="top">
+
+### Learning-outcome alignment
+
+Semantic mapping of every question to course learning outcomes (CLOs) and CO/PO mapping, with strong, weak and not-aligned bands.
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+
+### Similar-question detection
+
+Compares new questions against previous papers and the question bank: potential duplicate, highly similar, conceptually similar or unique.
+
+</td>
+<td valign="top">
+
+### Bloom's taxonomy & difficulty
+
+Classifies question type, difficulty and cognitive level (Remember → Create) and compares the distribution with your target profile.
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+
+### Chat with your documents
+
+Ask questions about your syllabi, lecture slides and papers. Answers are grounded in your documents, with source citations. Rename and export chats.
+
+</td>
+<td valign="top">
+
+### Constrained question generator
+
+Draft questions under explicit constraints (CO, topic, type, difficulty, Bloom, marks). Drafts are never published until you approve them.
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+
+### Blueprints & versioning
+
+Plan an assessment before writing it, validate questions against the blueprint, and keep immutable versions with side-by-side comparison.
+
+</td>
+<td valign="top">
+
+### Rubrics & AI grading assistance
+
+Generate rubric drafts, get AI grading *suggestions* with criterion-level evidence, and always record the faculty member's own final mark.
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+
+### Analytics & institutional reports
+
+Course and assessment analytics, student performance and learning gaps, plus PDF / CSV / XLSX reports that never expose student identities.
+
+</td>
+<td valign="top">
+
+### Collaboration & notifications
+
+Invite colleagues as Editor, Reviewer or Viewer, discuss any resource, and get real-time in-app and e-mail notifications.
+
+</td>
+</tr>
+</table>
+
+Every important AI result carries a **"Why?"** button that shows the evidence, method, confidence (only when one exists) and limitations. You can then accept, reject or override it.
 
 ---
 
-##  4. Similar Question Detection
+## See it in action
 
-FacultyLens compares current questions against previous assessments and question banks.
+<table>
+<tr>
+<td width="50%"><img src="docs/images/assessment-analysis.png" alt="Assessment quality analysis with an overall score and six dimensions" /><p align="center"><b>Assessment quality analysis</b></p></td>
+<td width="50%"><img src="docs/images/question-generator.png" alt="Constrained question generator form for a Bayesian networks topic" /><p align="center"><b>Constrained question generator</b></p></td>
+</tr>
+<tr>
+<td><img src="docs/images/academic-analytics.png" alt="Academic analytics dashboard with KPIs and areas needing attention" /><p align="center"><b>Academic analytics</b></p></td>
+<td><img src="docs/images/assessment-blueprint.png" alt="Assessment blueprint validation with completeness indicator" /><p align="center"><b>Assessment blueprint</b></p></td>
+</tr>
+</table>
 
-Questions can be categorized as:
+<sub>Screenshots use synthetic test data from the faculty acceptance-test walkthrough.</sub>
 
-```text
-Exact Match
-     ↓
-Highly Similar
-     ↓
-Conceptually Similar
-     ↓
-Unique
+---
+
+## How it works
+
+```mermaid
+flowchart LR
+    A[Faculty uploads<br/>syllabus, CLOs, papers,<br/>lecture slides] --> B[Document processing<br/>extraction · cleaning · indexing]
+    B --> C[AI analysis<br/>coverage · alignment · similarity<br/>difficulty · Bloom level]
+    C --> D[Insights &<br/>recommendations<br/>with evidence]
+    D --> E{Faculty review}
+    E -->|Accept / Override / Reject| F[Faculty decision]
 ```
 
-This helps faculty identify accidental repetition.
+**Human in the loop.** AI produces findings and suggestions. Nothing changes a grade, question, mapping or approval until the faculty member acts on it.
+
+### Example result
+
+| Category | Score |
+| --- | ---: |
+| Topic coverage | 88% |
+| Learning-outcome alignment | 84% |
+| Question diversity | 79% |
+| Difficulty balance | 76% |
+| Repetition risk | 91% |
+| Cognitive diversity | 74% |
+| **Overall quality** | **82 / 100** |
+
+> **Finding:** Question 6 is highly similar to a previous examination question, and Learning Outcome 4 has limited coverage.
+> **Recommendation:** Replace Question 6 with a scenario-based question that assesses the analytical part of Learning Outcome 4.
 
 ---
 
-##  5. Difficulty Analysis
+## Architecture
 
-FacultyLens estimates the difficulty level of questions and provides an overall distribution.
+```mermaid
+flowchart TB
+    UI["React 18 + TypeScript SPA<br/>Vite · Tailwind · :3000"]
+    API["Laravel 12 API<br/>Sanctum · Policies · Jobs · :8080"]
+    AI["FastAPI AI service<br/>Hugging Face MiniLM · :8001"]
+    DB[(" MySQL 8.0")]
+    R[(" Redis<br/>queues · cache")]
+    H["Horizon workers<br/>extraction · embeddings · analysis · reports"]
+    WS["Reverb WebSockets<br/>real-time notifications"]
 
-Example:
-
-```text
-Easy          30%
-Medium        50%
-Hard          20%
+    UI -->|cookie session + CSRF| API
+    UI <-->|live events| WS
+    API --> DB
+    API --> R
+    R --> H
+    H --> AI
+    API -->|X-AI-Service-Key| AI
+    H --> DB
 ```
 
-This helps faculty determine whether an assessment has an appropriate difficulty balance.
+| Layer | Technology |
+| --- | --- |
+| **Frontend** | React 18, TypeScript 5, Vite 6, Tailwind CSS 3, React Router 6, Lucide icons, Laravel Echo + Pusher JS |
+| **Backend** | Laravel 12 (PHP 8.2+), Sanctum cookie auth, Horizon, Reverb, MySQL 8.0, Redis 7 |
+| **Documents** | Poppler `pdftotext` for PDFs (correct word spacing and math symbols), Smalot PDF Parser fallback, PHPWord for DOCX |
+| **AI service** | Python 3.11, FastAPI, Pydantic v2, `sentence-transformers/all-MiniLM-L6-v2` (384-dim embeddings), optional generation model |
+| **Testing** | PHPUnit, Vitest + Testing Library, Pytest, Playwright + axe accessibility checks |
+| **Infrastructure** | Docker Compose (dev) and a hardened production compose with nginx, php-fpm and a private AI service |
 
----
-
-##  6. Cognitive-Level Analysis
-
-Questions can be analyzed according to cognitive complexity:
-
-| Level      | Description           |
-| ---------- | --------------------- |
-| Remember   | Recall information    |
-| Understand | Explain concepts      |
-| Apply      | Apply knowledge       |
-| Analyze    | Analyze situations    |
-| Evaluate   | Make judgments        |
-| Create     | Develop new solutions |
-
-Example:
+<details>
+<summary><b>Project structure</b></summary>
 
 ```text
-Remember       20%
-Understand     25%
-Apply          30%
-Analyze        15%
-Evaluate       10%
-Create          0%
+FacultyLens/
+├── frontend/                 React SPA
+│   ├── src/{components,pages,services,hooks,context,types}
+│   └── tests/e2e/            Playwright journeys and faculty UAT walkthroughs
+├── backend/                  Laravel API
+│   ├── app/{Http/Controllers/Api,Models,Services,Jobs,Policies}
+│   ├── routes/api.php
+│   ├── database/migrations
+│   └── tests/{Feature,Unit}  PHPUnit suite (in-memory SQLite) + e2e shell journeys
+├── ai-service/               FastAPI + Hugging Face
+│   ├── app/{api,schemas,services}
+│   ├── datasets/             evaluation and safety benchmarks
+│   └── tests/
+├── docs/                     design notes, validation and test reports
+├── scripts/                  backup, restore, test and evaluation helpers
+├── docker-compose.yml        development stack
+└── docker-compose.prod.yml   production stack
 ```
 
-Faculty can use this information to determine whether an examination appropriately measures higher-order thinking.
+</details>
 
 ---
 
-#  7. Explainable AI Recommendations
+## Feature deep dives
 
-FacultyLens doesn't only say that a problem exists.
+<details>
+<summary><b>AI chat with academic documents (RAG)</b></summary>
 
-It explains **why** the problem was identified and suggests possible improvements.
-
-### Example
-
-> **Finding:** A large portion of the examination focuses on basic database concepts.
-
-> **Recommendation:** Consider increasing questions related to SQL optimization and transaction management to improve assessment coverage.
-
-This makes FacultyLens a **decision-support tool rather than a simple content generator**.
-
----
-
-#  8. AI Chat with Academic Documents (RAG)
-
-Faculty can ask natural-language questions about their own uploaded syllabi, lecture notes, and
-question papers and receive **document-grounded answers with source citations**.
+Faculty ask natural-language questions about their own syllabi, lecture notes and question papers, and get **document-grounded answers with source citations**.
 
 ```text
 React chat UI ──► Laravel (auth + retrieval) ──► FastAPI (grounded answer) ──► Laravel (persist) ──► UI
@@ -249,893 +258,318 @@ React chat UI ──► Laravel (auth + retrieval) ──► FastAPI (grounded a
                         │  4. send ONLY authorized chunks  │
 ```
 
-**Indexing.** When a document finishes text extraction, `GenerateDocumentEmbeddingsJob` splits it into
-overlapping word-based chunks (`CHAT_CHUNK_SIZE` / `CHAT_CHUNK_OVERLAP`), embeds them with MiniLM via
-`POST /api/v1/embeddings/batch`, and stores them in `document_chunks` (packed float32 BLOBs — MySQL 8.0
-has no vector type, so cosine similarity runs application-side). A content hash prevents re-embedding
-unchanged documents. Indexing state is tracked per document: `NOT_INDEXED → INDEXING → INDEXED | FAILED`
-(`STALE` after reprocessing).
+- **Indexing.** When text extraction finishes, `GenerateDocumentEmbeddingsJob` splits the document into overlapping word-based chunks (`CHAT_CHUNK_SIZE` / `CHAT_CHUNK_OVERLAP`), embeds them with MiniLM via `POST /api/v1/embeddings/batch`, and stores them in `document_chunks` as packed float32 BLOBs. MySQL 8.0 has no vector type, so cosine similarity runs in the application. A content hash prevents re-embedding unchanged documents. Indexing state: `NOT_INDEXED → INDEXING → INDEXED | FAILED` (`STALE` after reprocessing).
+- **Two models, two jobs.** `HF_MODEL_NAME` (MiniLM) only ranks chunks. Answer text comes from `HF_GENERATION_MODEL` (for example `google/flan-t5-base`). If none is set, a deterministic **extractive engine** answers from the most relevant lines. It understands slide decks: bullet lists under a matching heading, wrapped formulas, and probability expressions written in different notations.
+- **Slide-friendly extraction.** PDFs are extracted with `pdftotext` and Symbol-font glyphs are mapped to real Unicode, so formulas such as `P(a ∧ ¬j ∧ m)` survive.
+- **Grounding & safety.**
+  - Retrieval is restricted to documents the user may access *before* similarity is computed. Scopes are `COURSE`, `DOCUMENT` and `ASSESSMENT`.
+  - Document text is passed to the model as **untrusted data**, and instructions found inside documents are ignored.
+  - If nothing clears `CHAT_MIN_RELEVANCE_SCORE`, the assistant replies *"I couldn't find enough information about that in the documents available to this chat."*
+  - Sources list real metadata only (document name, page, section when known), never fabricated pages or file paths.
+  - Every answer carries a disclaimer. `CHAT_RATE_LIMIT` (30/min) throttles messages, and sessions are audit-logged.
+  - A failed AI call saves nothing, so the question can simply be retried.
+- **Endpoints.** `GET|POST /api/academic-chat/sessions`, `GET|PATCH|DELETE /api/academic-chat/sessions/{id}`, `GET /api/academic-chat/sessions/{id}/export?format=markdown|json`, `POST /api/academic-chat/sessions/{id}/messages`. The UI is at `/academic-chat` and `/courses/:courseId/chat`.
+- **Limitations.** Scanned PDFs without a text layer are not indexed. Page numbers exist for PDFs only. Similarity thresholds are engineering defaults, not correctness guarantees. Always verify answers against the cited source.
 
-**Two models, two jobs.** `HF_MODEL_NAME` (MiniLM) is an *embedding* model and only ranks chunks. Answer
-text comes from a separate `HF_GENERATION_MODEL` (e.g. `google/flan-t5-base`). If unset, a deterministic
-**extractive engine** quotes the most relevant retrieved sentences — still grounded, still cited.
+</details>
 
-**Grounding & safety.**
-- Retrieval is restricted to documents the user owns *before* similarity is computed; cross-user and
-  cross-course chunks can never become candidates. Scopes: `COURSE`, `DOCUMENT`, `ASSESSMENT`.
-- Document text is passed to the model as **untrusted data**; instructions found inside documents are ignored.
-- If no chunk clears `CHAT_MIN_RELEVANCE_SCORE`, the assistant replies
-  *"I couldn't find enough information about that in the documents available to this chat."* without calling the generator.
-- Sources list only real metadata (document name, page, section when known) — never fabricated pages or file paths.
-- Every answer carries a disclaimer; `CHAT_RATE_LIMIT` (30/min) throttles messages; sessions/messages are audit-logged.
-- A failed AI call persists nothing — the user's question is not saved and can be retried.
+<details>
+<summary><b>Constrained question generator</b></summary>
 
-**Endpoints.** `GET|POST /api/academic-chat/sessions`, `GET|DELETE /api/academic-chat/sessions/{id}`,
-`POST /api/academic-chat/sessions/{id}/messages`. UI at `/academic-chat` and `/courses/:courseId/chat`.
-
-**Limitations.** Retrieval quality depends on extraction quality (scanned PDFs without text are not indexed);
-page numbers are available for PDFs only; similarity thresholds are engineering defaults, not correctness
-guarantees; small generation models may still paraphrase imprecisely — always verify against the source.
-
----
-
-#  9. Constrained Question Generator
-
-Faculty generate **draft** assessment questions under explicit academic constraints — never random AI questions,
-never auto-published.
+Faculty generate **draft** questions under explicit academic constraints. They are never random and never auto-published.
 
 ```text
 Constraints (course · CO · PO · topic · type · difficulty · Bloom · marks · count · document scope)
         ↓
-STEP 32 retrieval → relevant document passages          existing questions (assessment, question bank, previous papers)
-        ↓                                                          ↓
-Hugging Face generation model (HF_GENERATION_MODEL) — or constraint-driven template engine when none is configured
+Document retrieval → relevant passages        Existing questions (assessment, question bank, previous papers)
+        ↓                                                ↓
+Generation model (HF_GENERATION_MODEL) — or a constraint-driven template engine when none is configured
         ↓
-Validation per draft: STEP 10 type/difficulty/Bloom · STEP 11 CO alignment (≥0.70 strong / ≥0.50 weak) ·
-                      STEP 12 similarity (≥0.85 potential duplicate / ≥0.70 highly similar) · topic · marks
+Validation per draft: type/difficulty/Bloom · CO alignment (≥0.70 strong / ≥0.50 weak)
+                      · similarity (≥0.85 potential duplicate / ≥0.70 highly similar) · topic · marks
         ↓
-Faculty review: Edit (original preserved, versioned) · Approve · Reject · Regenerate (with feedback, limited)
+Faculty review: Edit (original preserved, versioned) · Approve · Reject · Regenerate (with feedback)
         ↓
-[Add to Assessment] — only for APPROVED drafts, only on explicit confirmation → official `questions` row
+[Add to Assessment] — only for APPROVED drafts, only on explicit confirmation
 ```
 
-- **Modes.** Standalone drafts for a course, or drafts for a specific assessment (existing questions are supplied
-  as "do not reproduce" context; requested marks are checked against the remaining allocation and *warned*, never
-  auto-adjusted). Optional **blueprint** (e.g. 2 easy/Remember + 1 hard/Evaluate) with distribution feedback.
-- **Validation is advisory.** Requested vs AI-estimated values are shown side by side (`PASSED`,
-  `PASSED_WITH_WARNINGS`, `FAILED`); similarity is a retrieval metric, not proof of duplication; warnings are never hidden.
-- **Models.** `HF_MODEL_NAME` (MiniLM) is used only for embeddings (alignment/similarity). Drafting uses
-  `HF_GENERATION_MODEL`; with none configured, a deterministic template engine drafts from the topic, CO and
-  retrieved sentences (reported as `facultylens-constrained-question-template-engine`). Model + prompt versions are stored.
-- **Security.** Course/assessment/CO/PO/document ownership is verified server-side before any generation; retrieved
-  document text and existing questions are passed to the model as untrusted data; `QUESTION_GENERATION_RATE_LIMIT`
-  (10/min) throttles requests; all steps are audit-logged (`QUESTION_GENERATION_REQUESTED` … `QUESTION_ADDED_TO_ASSESSMENT`).
-- **Boundaries.** The generator never grades, never modifies existing questions/marks/CO-PO mappings, never creates
-  rubrics (use STEP 25 after approval) and never claims academic correctness.
+- **Modes.** Standalone drafts for a course, or drafts for a specific assessment. Existing questions are supplied as "do not reproduce" context, and requested marks are checked against the remaining allocation and *warned about*, never auto-adjusted.
+- **Validation is advisory.** Requested and AI-estimated values are shown side by side (`PASSED`, `PASSED_WITH_WARNINGS`, `FAILED`). Warnings are never hidden.
+- **Security.** Course, assessment, CO/PO and document ownership is verified server-side. Retrieved text is untrusted. `QUESTION_GENERATION_RATE_LIMIT` (10/min) throttles requests, and every step is audit-logged.
+- **Boundaries.** The generator never grades, never modifies existing questions, marks or mappings, and never claims academic correctness.
+- **Endpoints.** `GET|POST /api/question-generation`, `GET /api/question-generation/{id}[/questions]`, `POST /api/question-generation/{id}/regenerate`, `PUT /api/generated-questions/{id}`, `POST /api/generated-questions/{id}/{approve|reject|regenerate|add-to-assessment}`. The UI is at `/question-generator` and `/courses/:courseId/question-generator`.
 
-**Endpoints.** `GET|POST /api/question-generation`, `GET /api/question-generation/{id}[/questions]`,
-`POST /api/question-generation/{id}/regenerate`, `PUT /api/generated-questions/{id}`,
-`POST /api/generated-questions/{id}/{approve|reject|regenerate|add-to-assessment}`.
-UI at `/question-generator` and `/courses/:courseId/question-generator`.
+</details>
 
----
+<details>
+<summary><b>Explainability & transparency</b></summary>
 
-#  10. Faculty Collaboration
+Every important AI result has a **"Why?"** panel with progressive disclosure:
 
-FacultyLens supports **controlled** faculty collaboration — not an open shared workspace.
+1. **What** FacultyLens produced and **why**, as one evidence-based sentence (never hidden reasoning).
+2. **Evidence**: the wording that fired a rule, the actual similarity score (`0.82 / 1.00`, never a probability), threshold bands, LO text, rubric criteria and retrieved passages.
+3. **Method & model**: `RULE_BASED`, `EMBEDDING_BASED`, `HYBRID`, `GENERATIVE` or `HUMAN_CONFIRMED`, with engine, prompt and embedding versions.
+4. **Confidence**, only when the method produces one. Otherwise it reads "Not available".
+5. **Limitations** per component.
+6. **Faculty decision**: Accept, Reject, Mark as reviewed or **Override** with a reason. The AI value is kept for reference and every decision is audited.
 
-```text
-Faculty → Course → Course Collaboration → Collaborators → Roles → Shared academic resources
-```
+See [docs/AI_EXPLAINABILITY.md](docs/AI_EXPLAINABILITY.md).
 
-- **Course-level membership.** `courses.user_id` stays the single OWNER; additional members live in `course_collaborators`
-  with roles **EDITOR / REVIEWER / VIEWER**. A faculty member never gains access to a course they were not invited to.
-- **Permission matrix** (`config/collaboration.php`) is the single source of truth, enforced server-side through
-  `CourseAccessService` and every policy. Editors edit content/assessments/questions and approve recommendations, generated
-  questions and rubrics; Reviewers view and comment; Viewers only view. Only the Owner manages collaborators or deletes.
-  **Student answers, grades and grading feedback are visible to Owner/Editor only.**
-- **Invitations** are single-use, expire (`COLLABORATION_INVITATION_EXPIRES_DAYS`), are stored as SHA-256 hashes, and expose
-  only course code/name, inviter and role until accepted. Delivered by mail + in-app notification (queued).
-- **Discussion** threads (`collaboration_comments`) on courses, assessments, questions, analysis reports, recommendations,
-  generated questions, rubrics and documents: replies, edit-own, resolve/reopen, member-only @mentions, soft delete.
-  Comments never modify AI results or official content; decisions still go through the normal approval actions.
-- **Activity feed** reuses the audit log (`audit_logs.course_id`), paginated per course; grading events are hidden from
-  Reviewers/Viewers. **Version-aware editing**: stale edits of assessments (`expected_updated_at`) and generated
-  questions (`expected_version`) return `409` instead of overwriting a colleague's change.
-- **Protection.** Rate limits (`COLLABORATION_INVITE_RATE_LIMIT`/hour, `COLLABORATION_COMMENT_RATE_LIMIT`/min), duplicate-
-  invitation and duplicate-comment guards, owner cannot be removed or demoted, all actions audited
-  (`COLLABORATOR_INVITED`, `COLLABORATION_ACCEPTED`, `COLLABORATOR_ROLE_CHANGED`, `COMMENT_CREATED`, …).
+</details>
 
-> Collaboration provides controlled faculty review and discussion. AI-generated findings and recommendations remain
-> assistive and do not become institutional decisions automatically.
+<details>
+<summary><b>Assessment blueprints</b></summary>
 
-**Endpoints.** `GET /api/courses/{course}/collaboration`, `GET /api/courses/{course}/collaborators`,
-`POST /api/courses/{course}/collaborators/invite`, `PATCH|DELETE /api/courses/{course}/collaborators/{user}[/role]`,
-`GET /api/collaboration/invitations[/{token}]`, `POST /api/collaboration/invitations/{token}/{accept|decline}`,
-`GET|POST /api/courses/{course}/comments`, `PUT|DELETE /api/comments/{id}`, `POST /api/comments/{id}/{resolve|reopen}`,
-`GET /api/courses/{course}/collaboration/activity`, `GET /api/collaboration/summary`, `GET /api/notifications`.
+Open `/assessments/:assessmentId/blueprint` to plan sections (for example *Section A: MCQ 10 × 1 = 10*), difficulty, Bloom, CO, PO and topic targets, and cross-dimension plan rows (*CO2 · Analyze · Medium · Problem solving · 2 × 5*).
 
-### Notification system (STEP 47)
+- Deterministic validation reports `VALID`, `VALID_WITH_WARNINGS` or `INVALID`, with CO × difficulty and CO × Bloom matrices.
+- **Blueprint Completeness** is a planning indicator, not an assessment-quality score.
+- Finalized blueprints are immutable (edits create a new version), feed the question generator, and are compared with the actual question set (`MATCH` / `CLOSE` / `MISMATCH`).
+- The blueprint never publishes the assessment or changes questions automatically.
 
-Every important FacultyLens event (AI analysis, recommendations, rubric/question drafts, assessment versions, collaboration, reviews, AI grading, performance/learning gaps, reports, faculty feedback, security) produces an **informational** in-app notification: `event → listener → NotificationService → queued StoreNotificationJob → notifications table → /api/notifications → 🔔 bell / /notifications`. Recipients are derived from the collaboration role matrix, payloads carry identifiers only, duplicates are impossible (`unique(user_id, dedupe_key)`), and a notification never approves, finalizes or grades anything. Routes: `GET /api/notifications`, `GET /api/notifications/unread-count`, `POST /api/notifications/{id}/read|dismiss`, `POST /api/notifications/read-all`, `DELETE /api/notifications/{id}`, `GET|PUT /api/notification-preferences`, `PATCH /api/notification-preferences/{type}`. See `docs/NOTIFICATION_SYSTEM.md`, `docs/NOTIFICATION_EVENT_MATRIX.md`, `docs/NOTIFICATION_VALIDATION_REPORT.md`.
-UI at `/courses/:courseId/collaboration`, `/collaboration/invitations`, `/collaboration/invitations/:token`.
+See [docs/assessment-blueprint.md](docs/assessment-blueprint.md).
 
----
+</details>
 
-#  FacultyLens Workflow
+<details>
+<summary><b>Assessment versioning</b></summary>
 
-```text
-┌─────────────────────┐
-│ Faculty uploads     │
-│ academic materials  │
-└──────────┬──────────┘
-           ↓
-┌─────────────────────┐
-│ Document Processing │
-└──────────┬──────────┘
-           ↓
-┌─────────────────────┐
-│ AI Analysis         │
-│                     │
-│ • Coverage          │
-│ • Alignment         │
-│ • Similarity        │
-│ • Difficulty        │
-│ • Cognitive Level   │
-└──────────┬──────────┘
-           ↓
-┌─────────────────────┐
-│ Academic Insights   │
-└──────────┬──────────┘
-           ↓
-┌─────────────────────┐
-│ Recommendations     │
-└──────────┬──────────┘
-           ↓
-┌─────────────────────┐
-│ Faculty Decision    │
-└─────────────────────┘
-```
+Open `/assessments/:assessmentId/versions` to create **v1.0**, a snapshot of the current questions, blueprint and approved rubrics, and follow `DRAFT → IN_REVIEW → APPROVED → FINALIZED`.
+
+- Version numbers (`v1.0`, `v1.1`, `v2.0`) are generated server-side and never reused.
+- Finalized, approved and student-referenced versions are immutable. The action is always **Create new version** or **Restore as new version**.
+- Comparison is deterministic and reports `MODIFIED` / `ADDED` / `REMOVED` / `UNCHANGED`, marks, CO/Bloom/difficulty changes and quality-metric differences.
+- Analyses, reports, analytics and student submissions record the exact `assessment_version_id`.
+
+See [docs/assessment-versioning.md](docs/assessment-versioning.md).
+
+</details>
+
+<details>
+<summary><b>Faculty collaboration & notifications</b></summary>
+
+- **Collaboration hub** (`/collaboration`, the sidebar's Collaboration link). In one place you can:
+  - accept or decline invitations sent to you;
+  - see each of your courses with its team size, pending invitations and open discussions;
+  - invite a colleague to any of your courses;
+  - open the courses shared with you, with their owner and your role;
+  - revoke invitations you sent.
+- **How it works end to end:**
+  1. The owner invites a colleague by e-mail as Editor, Reviewer or Viewer.
+  2. The colleague accepts from their hub or from the e-mailed link.
+  3. The course appears in their Courses list marked "Shared · role", with only the actions that role allows.
+  4. Discussions, @mentions and the activity feed keep everyone up to date.
+  5. The owner can change a role or remove a member at any time, and access ends immediately.
+- **Course-level membership.** The course creator is the single OWNER. Collaborators have the role **EDITOR**, **REVIEWER** or **VIEWER**, and nobody gains access to a course they weren't invited to.
+- **Permission matrix** (`config/collaboration.php`) is enforced server-side through `CourseAccessService` and every policy. Student answers, grades and grading feedback are visible to Owner and Editor only.
+- **Invitations** are single-use, expire, are stored as SHA-256 hashes, and arrive by e-mail and in-app notification.
+- **Discussion threads** on courses, assessments, questions, reports, recommendations, rubrics and documents support replies, resolve/reopen and @mentions. Comments never change AI results or official content.
+- **Version-aware editing.** Stale edits return `409` instead of overwriting a colleague's change.
+- **Notifications.** Every important event creates an informational notification (`event → listener → queued job → notification bell`), delivered in real time over Reverb. Notifications never approve, finalize or grade anything. See [docs/NOTIFICATION_SYSTEM.md](docs/NOTIFICATION_SYSTEM.md).
+
+</details>
+
+<details>
+<summary><b>Analytics, AI evaluation & institutional reports</b></summary>
+
+- **Academic analytics** (`/analytics`) aggregates real records (analysis reports, finalized grades, performance runs, CO/PO runs, evaluation runs, audit log) for the courses you can access. Metrics without data show **N/A**, never fabricated zeroes. See [docs/academic-analytics.md](docs/academic-analytics.md).
+- **AI evaluation** (`/ai-evaluation`) shows accuracy, macro/weighted F1, confusion matrices, similarity precision/recall, grading MAE/RMSE, RAG groundedness and refusal results, and regression gates. Every number comes from a persisted evaluation run. See [docs/ai-evaluation.md](docs/ai-evaluation.md) and [docs/AI_ACCURACY_EVALUATION_REPORT.md](docs/AI_ACCURACY_EVALUATION_REPORT.md).
+- **Institutional reports** (`/reports`) follow `Preview → Validate access → Generate → Export → Download → Audit` in PDF, CSV or XLSX.
+  - Scope is decided by the server from the course role matrix, never by the client.
+  - Student reports are aggregates of finalized grades only. No names, identifiers or individual answers are exported.
+  - Files live on private storage and expire after `REPORTS_EXPIRATION_DAYS` (default 7).
+  - See [docs/institutional-reporting.md](docs/institutional-reporting.md).
+
+</details>
 
 ---
 
-#  System Architecture
+## Getting started
 
-```text
-                     Faculty
-                        │
-                        ▼
-              ┌──────────────────┐
-              │ FacultyLens Web  │
-              │    Interface     │
-              └────────┬─────────┘
-                       │
-                       ▼
-              ┌──────────────────┐
-              │    Backend API   │
-              └────────┬─────────┘
-                       │
-          ┌────────────┼────────────┐
-          ▼            ▼            ▼
-    ┌──────────┐ ┌───────────┐ ┌──────────┐
-    │ Document │ │ AI / NLP  │ │ Database │
-    │ Processor│ │  Engine   │ │          │
-    └──────────┘ └─────┬─────┘ └──────────┘
-                       │
-                       ▼
-              ┌──────────────────┐
-              │ Academic Analysis│
-              └────────┬─────────┘
-                       │
-                       ▼
-              ┌──────────────────┐
-              │ Insights &       │
-              │ Recommendations  │
-              └──────────────────┘
-```
+### Prerequisites
 
----
+- Docker Desktop with Docker Compose
+- Node.js 20+ and npm, for the frontend dev server
+- *(Optional, for running without Docker)* PHP 8.2+, Composer, Python 3.11+
 
-#  Technology Stack & Architecture
-
-### Application Architecture
-
-```text
-React Frontend (Port 5173)
-       ↓
-Laravel Backend (Port 8080)
-       ↓ HTTP / JSON
-Python FastAPI AI Service (Port 8001)
-       ↓
-Hugging Face NLP Models (all-MiniLM-L6-v2)
-       ↓
-NLP Processing Pipeline (Segmentation, Questions, Embeddings)
-       ↓
-Structured JSON Result
-       ↓
-Laravel Backend
-       ↓
-React Frontend
-```
-
-### Frontend
-
-* React 18 + TypeScript
-* Vite
-* Tailwind CSS + Lucide Icons
-* Axios + TanStack Query
-
-### Backend
-
-* Laravel 12 (PHP 8.2+)
-* Laravel Sanctum (Token Authentication)
-* MySQL 8.0
-* Smalot PDF Parser & PHPWord
-
-### AI Layer (Hugging Face Microservice)
-
-* Python 3.11+
-* FastAPI & Uvicorn
-* Pydantic v2
-* Hugging Face `transformers`, `sentence-transformers`, `torch`
-* Model: `sentence-transformers/all-MiniLM-L6-v2` (CPU-optimized, 384 dimensions)
-* NLP Pipeline: Text cleaning, paragraph/sentence splitting, question detection, semantic embedding generation
-* **Question Analysis (STEP 10)**:
-  * Structural & NLP Question Classification (MCQ, True/False, Short Answer, Descriptive, Problem Solving, Conceptual, Analytical)
-  * Semantic Topic Matching (Cosine similarity against course syllabus topics)
-  * Difficulty Balance Analysis (Easy, Medium, Hard baseline estimation)
-  * Bloom's Revised Taxonomy Cognitive Analysis (Remember, Understand, Apply, Analyze, Evaluate, Create)
-  * Single & Batch Question Evaluation with Database Persistence (`ai_*` columns)
-
-### Infrastructure
-
-* Docker & Docker Compose
-* Multi-container setup (`frontend`, `facultylens-app`, `facultylens-mysql`, `facultylens-phpmyadmin`, `facultylens-ai-service`)
-
----
-
-#  Project Structure
-
-```text
-FacultyLens/
-│
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── services/
-│   │   ├── hooks/
-│   │   └── types/
-│   └── package.json
-│
-├── backend/
-│   ├── app/
-│   │   ├── Http/Controllers/Api/
-│   │   ├── Models/
-│   │   └── Services/
-│   │       ├── AiService.php
-│   │       ├── DocumentTextCleaner.php
-│   │       └── DocumentTextExtractor.php
-│   ├── routes/api.php
-│   ├── database/
-│   └── composer.json
-│
-├── ai-service/
-│   ├── app/
-│   │   ├── main.py
-│   │   ├── config.py
-│   │   ├── api/routes.py
-│   │   ├── schemas/analysis.py
-│   │   ├── services/
-│   │   │   ├── huggingface_service.py
-│   │   │   ├── nlp_pipeline.py
-│   │   │   ├── text_cleaner.py
-│   │   │   └── analyzer.py
-│   │   └── utils/text_utils.py
-│   ├── tests/
-│   ├── requirements.txt
-│   ├── Dockerfile
-│   └── README.md
-│
-├── docker-compose.yml
-└── README.md
-```
-
----
-
-#  Example FacultyLens Result
-
-## Assessment Quality Score
-
-```text
-        82 / 100
-```
-
-| Category                   | Score |
-| -------------------------- | ----: |
-| Topic Coverage             |   88% |
-| Learning Outcome Alignment |   84% |
-| Question Diversity         |   79% |
-| Difficulty Balance         |   76% |
-| Repetition Risk            |   91% |
-| Cognitive Diversity        |   74% |
-
-### AI Findings
-
- **Strong:** Most major course topics are represented.
-
- **Attention:** The assessment contains a high concentration of medium-difficulty questions.
-
- **Attention:** Learning Outcome 4 has limited assessment coverage.
-
- **Potential Issue:** Question 6 is highly similar to a previous examination question.
-
-### Recommendation
-
-> Consider replacing Question 6 with a scenario-based question that evaluates the analytical component of Learning Outcome 4.
-
----
-
-#  Why FacultyLens?
-
-Traditional AI academic tools often focus on:
-
-```text
-Generate
-   ↓
-Generate
-   ↓
-Generate
-```
-
-FacultyLens focuses on:
-
-```text
-Understand
-    ↓
-Analyze
-    ↓
-Compare
-    ↓
-Evaluate
-    ↓
-Explain
-    ↓
-Recommend
-```
-
-The goal is to help faculty **make better decisions**, not simply generate more content.
-
----
-
-#  Human-in-the-Loop
-
-FacultyLens is designed around human expertise.
-
-```text
-AI Analysis
-     ↓
-AI Recommendation
-     ↓
-Faculty Review
-     ↓
-Faculty Decision
-```
-
-AI provides suggestions.
-
-**The faculty member remains responsible for the final academic decision.**
-
----
-
-#  Privacy & Academic Integrity
-
-FacultyLens should protect academic materials through:
-
-* Secure authentication
-* Role-based access
-* Controlled document storage
-* Secure API communication
-* Minimal data retention
-* Protection of examination materials
-* Controlled access to previous assessments
-
-AI-generated results should be considered **recommendations**, not authoritative academic decisions.
-
----
-
-## AI Evaluation & Model Performance
-
-FacultyLens evaluates its AI capabilities using
-faculty-validated evaluation datasets and task-specific
-metrics.
-
-Evaluated areas include:
-
-- Question classification
-- Difficulty classification
-- Bloom classification
-- Learning-outcome alignment
-- Semantic similarity
-- Rubric generation
-- AI grading assistance
-- Answer-rubric alignment
-- Document-grounded chat
-- Constrained question generation
-
-Evaluation results are used for monitoring and analysis.
-They do not automatically retrain, change, or deploy AI models.
-
-The dashboard at `/ai-evaluation` shows classification metrics (accuracy, macro/weighted F1, confusion matrix, per-class metrics),
-similarity precision/recall at the production thresholds plus an evaluation-only threshold sweep, grading MAE/RMSE/agreement rates,
-RAG groundedness/citation/refusal/prompt-injection results, question-generation constraint satisfaction, quality gates, regression
-detection, run comparison, example-level error analysis and PDF/CSV/JSON export. Every number comes from a persisted evaluation run;
-tasks without a run show **Not evaluated yet**. See [docs/ai-evaluation.md](docs/ai-evaluation.md). Measured accuracy of every AI
-component on the STEP 44 benchmark (with confidence intervals, error analysis and regression gates) is in
-[docs/AI_ACCURACY_EVALUATION_REPORT.md](docs/AI_ACCURACY_EVALUATION_REPORT.md); run it with `bash scripts/run-ai-evaluation.sh`.
-
----
-
-## AI Explainability & Transparency
-
-> **AI assists. Faculty decides.**
-
-Every important AI result — question type, difficulty, Bloom level, topic, LO alignment, CO/PO mapping, semantic similarity,
-assessment quality, recommendations, rubrics, generated questions, document-chat answers and AI grading suggestions — carries a
-**“Why?”** affordance. Opening it shows, with progressive disclosure:
-
-1. **What** FacultyLens produced and **why** (one evidence-based sentence — never hidden reasoning or chain-of-thought)
-2. **Evidence** — literal question wording that fired a rule, the actual similarity score (`0.82 / 1.00`, never a probability),
-   threshold bands, LO text, rubric criteria, retrieved passages with page/section or “Source location unavailable”
-3. **Method & model** — `RULE_BASED`, `EMBEDDING_BASED`, `HYBRID`, `GENERATIVE` or `HUMAN_CONFIRMED`, engine/prompt/embedding
-   versions, the analysis version, and the STEP 35/44 evaluation status
-4. **Confidence** — shown only when the method produces one, otherwise “Not available” (never fabricated)
-5. **Limitations** — per component
-6. **Faculty decision** — Accept, Reject, Mark as reviewed, or **Override** (with a reason). Overrides change only faculty-controlled
-   fields; the AI value is kept for reference. Every decision is audited (`AI_RESULT_*`, `AI_EXPLANATION_VIEWED`, …).
-
-Deterministic calculations are explained deterministically from stored results; any free text is validated against the structured
-facts and replaced by a deterministic fallback if it contradicts them. See [docs/AI_EXPLAINABILITY.md](docs/AI_EXPLAINABILITY.md) and
-[docs/AI_EXPLAINABILITY_VALIDATION_REPORT.md](docs/AI_EXPLAINABILITY_VALIDATION_REPORT.md); live E2E:
-`bash backend/tests/e2e_ai_explainability.sh`.
-
----
-
-## Academic Analytics Dashboard
-
-FacultyLens provides unified academic analytics covering:
-
-- Assessment quality
-- Difficulty distribution
-- Cognitive/Bloom distribution
-- Learning-outcome coverage
-- Program-outcome coverage
-- Student performance
-- Learning gaps
-- Question similarity
-- Rubric activity
-- AI grading assistance
-- Inter-grader consistency
-- AI evaluation
-- Recommendations
-- Faculty collaboration
-- Historical assessment trends
-
-The dashboard at `/analytics` aggregates real records from the existing FacultyLens tables (analysis reports, finalized
-grades, STEP 30 performance runs, STEP 31 CO/PO runs, STEP 35 evaluation runs, audit log) for the courses the signed-in
-faculty member may access. Filters (course, assessment, semester, academic year, type, date range) apply to every section;
-metrics without underlying data show **N/A** or an explicit empty state, never fabricated zeroes. Analytics are evidence and
-signals for faculty review — they never change assessments, grades, mappings, rubrics or AI models. See
-[docs/academic-analytics.md](docs/academic-analytics.md).
-
----
-
-## Assessment Blueprint
-
-FacultyLens allows faculty to define and validate assessment
-blueprints before selecting or generating questions.
-
-Blueprints support:
-
-- question structure
-- marks
-- difficulty
-- Bloom/cognitive levels
-- learning outcomes
-- program outcomes
-- topics
-- question types
-- assessment sections
-- question-set compliance
-- versioning
-- validation
-
-Open `/assessments/:assessmentId/blueprint` to plan sections (e.g. Section A: MCQ 10 × 1 = 10), difficulty / Bloom / CO / PO / topic
-targets and cross-dimension plan rows (CO2 · Analyze · Medium · Problem solving · 2 × 5). Deterministic validation reports
-`VALID`, `VALID_WITH_WARNINGS` or `INVALID` with evidence-based warnings, a CO × difficulty / CO × Bloom matrix and a
-**Blueprint Completeness** planning indicator (not an assessment-quality score). Finalized blueprints are immutable (edits
-create a new version), feed the STEP 33 generator (drafts stay drafts until approved) and are compared with the actual
-question set (`MATCH` / `CLOSE` / `MISMATCH` with `BLUEPRINT_PERCENTAGE_TOLERANCE`). The blueprint never publishes the
-assessment or changes questions automatically. See [docs/assessment-blueprint.md](docs/assessment-blueprint.md).
-
----
-
-## Assessment Versioning
-
-FacultyLens preserves assessment history through immutable
-assessment versions.
-
-Versioning supports:
-
-- draft revisions
-- question snapshots
-- blueprint snapshots
-- version comparison
-- approval/finalization
-- restore-as-new-version
-- historical analysis
-- student submission protection
-- audit history
-
-Open `/assessments/:assessmentId/versions` to create **v1.0** (a snapshot of the current questions, STEP 37 blueprint and
-approved STEP 25 rubrics), edit drafts, and follow `DRAFT → IN_REVIEW → APPROVED → FINALIZED`. Version numbers and labels
-(`v1.0`, `v1.1`, `v2.0`) are generated server-side and never reused. Finalized, approved and student-referenced versions are
-immutable: the primary action is always **Create new version** or **Restore as new version** (restoring `v3.0` while `v5.0` is
-current produces `v6.0` with `based_on_version_id = v3`). Comparison is deterministic — questions are matched by
-`original_question_id`, then by number — and reports `MODIFIED` / `ADDED` / `REMOVED` / `UNCHANGED`, marks and CO/Bloom/
-difficulty changes, blueprint distribution deltas in percentage points and STEP 13 metric differences. Analyses (STEP 19),
-reports (STEP 18), analytics (STEP 36) and new student submissions/answers (STEP 26) record the exact
-`assessment_version_id`; an analysis becomes `STALE` when a draft changes after it ran. Finalization runs deterministic
-validation (marks, metadata, CO/PO mappings, blueprint compliance) and never fixes problems automatically. See
-[docs/assessment-versioning.md](docs/assessment-versioning.md).
-
----
-
-## Institutional Export & Reporting
-
-FacultyLens provides authorized academic reporting and
-institutional export capabilities.
-
-Supported formats:
-
-- PDF
-- CSV
-- XLSX
-
-Reports include:
-
-- Assessment quality
-- Assessment blueprint
-- Version history
-- CO/PO coverage
-- Student performance
-- Learning gaps
-- Rubrics
-- Grading
-- Inter-grader consistency
-- AI evaluation
-- Academic analytics
-- Institutional summaries
-
-Open `/reports` for **My Reports** and `/reports/create` for the builder: choose a report type, a scope, the applicable
-filters and a format, **Preview** the data (record count, metadata, summary, first rows of every table), then **Generate**
-and **Download**. Every report follows `Preview → Validate access → Generate → Export → Download → Audit`.
-
-- **Report permissions** — the server decides scope from the STEP 34 course matrix and `User::role`; client scope claims
-  are never trusted. Faculty may report on their own and shared courses (`FACULTY`, `COURSE`, `ASSESSMENT`,
-  `ASSESSMENT_VERSION`); `DEPARTMENT` and `INSTITUTION` scopes and the Institutional Summary are limited to the roles in
-  `config/institutional_reports.php` (`ADMIN` by default). Student-data reports (performance, gaps, grading, inter-grader)
-  additionally require `view_student_data` on every course in scope.
-- **Privacy controls** — student reports are aggregates from finalized faculty grades only (average, median, min, max,
-  counts, distributions); no student names, identifiers, e-mails or individual answers are exported, and PDFs/CSVs carry a
-  privacy footer. Insufficient data is labelled `INSUFFICIENT_DATA`, never converted into a gap claim; PO sections read
-  “not configured” instead of fabricating values; AI metrics read “Not evaluated” instead of zero.
-- **Version traceability** — a report generated for `v3.0` stores `assessment_version_id = v3` and its exact filter
-  snapshot; it is built from the version’s question snapshot and the analysis of that content, and is never reinterpreted
-  with a later version. Generated files are immutable; regenerating produces a new report.
-- **Report expiration** — files live on the private disk and are streamed only through `GET /api/reports/{id}/download`
-  after a policy check; they expire after `REPORTS_EXPIRATION_DAYS` (default 7). `php artisan reports:purge-expired`
-  (scheduled daily) removes expired files while keeping the report record and the audit trail (`REPORT_PREVIEWED`,
-  `REPORT_REQUESTED`, `REPORT_GENERATION_*`, `REPORT_DOWNLOADED`, `REPORT_DELETED`). Department/institution scopes and
-  datasets above `REPORTS_ASYNC_THRESHOLD` records are generated on the queue (`GenerateInstitutionalReportJob`).
-
-Reports are evidence artifacts — they never change grades, assessments, CO/PO mappings or approvals, rank faculty, or make
-accreditation claims. See [docs/institutional-reporting.md](docs/institutional-reporting.md).
-
----
-
-#  MVP Scope
-
-The core FacultyLens workflow is:
-
-```text
-Upload Materials
-       ↓
-AI Processing
-       ↓
-Assessment Analysis
-       ↓
-Coverage Analysis
-       ↓
-Learning Outcome Alignment
-       ↓
-Similarity Detection
-       ↓
-Difficulty Analysis
-       ↓
-AI Recommendations
-```
-
-The MVP intentionally focuses on **one useful academic journey** rather than attempting to build an entire university management platform.
-
----
-
-#  Future Scope
-
-FacultyLens can be extended with:
-
-* AI-assisted syllabus design
-* Course mapping
-* Question paper generation
-* Rubric generation
-* AI-assisted grading
-* Grading consistency analysis
-* Research-paper summarization
-* Literature discovery
-* Faculty workload assistance
-* Academic document comparison
-* Course quality tracking
-* Historical assessment analytics
-* Collaborative faculty review
-
----
-
-#  Expected Impact
-
-FacultyLens can help faculty members:
-
-*  Save time reviewing academic materials
-*  Identify assessment gaps
-*  Improve course alignment
-*  Detect repeated questions
-*  Create better-balanced assessments
-*  Make evidence-informed decisions
-*  Focus more time on teaching and research
-
----
-
-#  Getting Started
-
-## Clone the Repository
+### Quick start with Docker (recommended)
 
 ```bash
-git clone <your-repository-url>
+git clone https://github.com/Sakin542/FacultyLens.git
 cd FacultyLens
+
+cp backend/.env.example backend/.env          # dev values; DB_PASSWORD=root123 matches docker-compose.yml
+docker compose up -d --build                   # API, MySQL, Redis, Horizon, Reverb, AI service, Mailpit, phpMyAdmin
+docker compose exec app php artisan key:generate
+docker compose exec app php artisan migrate --seed   # synthetic data: faculty@example.com / password123
+
+cd frontend
+cp .env.example .env
+npm install
+npm run dev                                    # http://localhost:3000
 ```
 
-## Quick start with Docker (recommended for development)
+Check that everything is up:
 
 ```bash
-cp backend/.env.example backend/.env          # dev values; DB_PASSWORD=root123 matches docker-compose.yml
-docker compose up -d --build                   # app :8080, mysql :3307, ai-service :8001, phpmyadmin :8081, redis :6379, horizon, mailpit :8025
-docker compose exec app php artisan key:generate
-docker compose exec app php artisan migrate --seed   # synthetic DevelopmentSeeder (faculty@example.com / password123)
-cd frontend && npm install && npm run dev      # http://localhost:5173 (proxies to :8080)
+curl http://127.0.0.1:8080/api/health          # {"status":"ok", ...}
+curl http://127.0.0.1:8080/api/health/ready    # database, cache, storage, queue, ai_service all "ok"
 ```
 
-Verify: `curl http://127.0.0.1:8080/api/health` and `http://127.0.0.1:8080/api/health/ready` → `ok` / `ready`.
+### Local services
 
-## Start the Backend (without Docker)
+| Service | URL |
+| --- | --- |
+| Web app | <http://localhost:3000> |
+| Laravel API | <http://127.0.0.1:8080/api> |
+| AI service | <http://127.0.0.1:8001/health> |
+| Mailpit (dev e-mail inbox) | <http://localhost:8025> |
+| phpMyAdmin | <http://localhost:8081> |
+| MySQL | `127.0.0.1:3307` |
+| Reverb WebSockets | `localhost:8085` |
+
+<details>
+<summary><b>Running without Docker</b></summary>
+
+#### Backend
 
 ```bash
 cd backend
 cp .env.example .env
 composer install && php artisan key:generate && php artisan migrate --seed
 php artisan serve --host=127.0.0.1 --port=8080
-php artisan queue:work --queue=emails,default   # second terminal: async AI jobs, reports, e-mail (or `php artisan horizon` on Linux/macOS)
+php artisan queue:work --queue=emails,default   # second terminal (or `php artisan horizon` on Linux/macOS)
 ```
 
----
-
-## Start the AI Service
+#### AI service
 
 ```bash
 cd ai-service
-
 python -m venv venv
-```
-
-### Windows
-
-```bash
-venv\Scripts\activate
-```
-
-### Linux / macOS
-
-```bash
-source venv/bin/activate
-```
-
-Install dependencies:
-
-```bash
+venv\Scripts\activate            # Windows
+source venv/bin/activate         # Linux / macOS
 pip install -r requirements.txt
-```
-
-Run the AI service:
-
-```bash
-cp .env.example .env            # HF_MODEL_NAME, optional HF_TOKEN, AI_SERVICE_API_KEY (must match backend)
+cp .env.example .env             # HF_MODEL_NAME, optional HF_TOKEN, AI_SERVICE_API_KEY (must match backend)
 uvicorn app.main:app --host 0.0.0.0 --port 8001
 ```
 
-The Hugging Face model is loaded once at startup; `GET /health` is liveness, `GET /ready` returns 503 until the model is initialised.
+The model loads once at startup. `GET /health` is liveness, and `GET /ready` returns 503 until the model is ready.
 
----
-
-## Start the Frontend
+#### Frontend
 
 ```bash
 cd frontend
-cp .env.example .env            # VITE_API_BASE_URL=http://127.0.0.1:8080/api (development only)
+cp .env.example .env             # VITE_API_BASE_URL=http://127.0.0.1:8080/api
 npm install
 npm run dev
 ```
 
----
+</details>
 
-# Environment Variables
+<details>
+<summary><b>Environment variables</b></summary>
 
 | File | Purpose |
-|---|---|
-| `backend/.env.example` / `backend/.env.production.example` | Laravel (APP_KEY, DB, Redis, AI_SERVICE_URL + AI_SERVICE_API_KEY, CORS_ALLOWED_ORIGINS, SANCTUM_STATEFUL_DOMAINS, SESSION_*, REPORTS_*) |
-| `frontend/.env.example` / `frontend/.env.production.example` | `VITE_API_BASE_URL` only — everything in `VITE_*` ships to the browser, never put secrets here |
-| `ai-service/.env.example` / `ai-service/.env.production.example` | FastAPI (DEBUG, HF_MODEL_NAME, HF_TOKEN, AI_SERVICE_API_KEY, chat/generation limits) |
-| `.env.prod.example` | compose-level values for `docker-compose.prod.yml` (DB/Redis passwords, image tag, TLS dir) |
+| --- | --- |
+| `backend/.env.example` / `.env.production.example` | Laravel: APP_KEY, DB, Redis, `AI_SERVICE_URL` + `AI_SERVICE_API_KEY`, CORS, Sanctum, session, reports |
+| `frontend/.env.example` / `.env.production.example` | `VITE_*` values only. Everything here ships to the browser, so never put secrets in it |
+| `ai-service/.env.example` / `.env.production.example` | FastAPI: `HF_MODEL_NAME`, `HF_TOKEN`, `AI_SERVICE_API_KEY`, chat and generation limits |
+| `.env.prod.example` | Values for `docker-compose.prod.yml` (DB/Redis passwords, image tag, TLS directory) |
 
-`.env` and `.env.*` are git-ignored; only `*.example` templates are committed. Development URLs (`127.0.0.1:8080`, `localhost:5173`, `:8001`, MySQL `3307`, phpMyAdmin `8081`) are development values only.
+`.env` files are git-ignored. Only the `*.example` templates are committed.
 
-# Queue & Scheduler
+</details>
 
-Development and production: Redis queues supervised by Laravel Horizon (`horizon` service) + `schedule:work`. E-mail (Gmail SMTP, queued, preference-aware) is documented in `docs/EMAIL_SYSTEM.md`; password reset in `docs/PASSWORD_RESET_FLOW.md`.
-(`reports:purge-expired` daily); Laravel Horizon is an optional add-on (see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md#9-queue)).
-Jobs: document extraction/embeddings, assessment analysis, question generation, AI grading assistance, performance analysis,
-AI evaluation, institutional reports — all with bounded retries and safe failure states.
+---
 
-# Testing
+## Testing
 
 ```bash
-cd backend && php artisan test                 # PHPUnit feature suite (sqlite)
-cd frontend && npm test && npm run build       # Vitest + production build (tsc strict)
+cd backend && php artisan test                 # PHPUnit feature + unit suite (in-memory SQLite only)
+cd frontend && npm test && npm run build       # Vitest + strict TypeScript production build
 cd ai-service && pytest -q && ruff check .     # FastAPI tests + lint
-bash backend/tests/e2e_all.sh                  # every end-to-end journey against the Docker stack (real AI)
-bash backend/tests/e2e_golden_path.sh          # Golden Path: login → … → reports, one script, real AI
 cd frontend && npm run test:e2e                # Playwright browser journeys + axe accessibility (Docker stack up)
+bash backend/tests/e2e_all.sh                  # every end-to-end journey against the Docker stack (real AI)
 scripts/test-all.sh [--e2e] [--golden]         # aggregated regression run (also scripts/test-all.ps1)
-scripts/clean-start-test.sh                    # clean Docker start on an isolated project/ports
-php artisan facultylens:integrity-check        # read-only academic data consistency report
-scripts/perf-smoke.sh <email> <password>       # latency snapshot of key endpoints
 ```
 
-The most recent validation run is recorded in [docs/E2E_VALIDATION_REPORT.md](docs/E2E_VALIDATION_REPORT.md).
+> **Run the PHPUnit suite from the host, not inside the Docker app container.** The suite now refuses to start unless it is connected to the in-memory SQLite database, so it can never touch the development MySQL data.
 
-Dependency audits: `composer audit`, `npm audit`, `pip-audit`. Current results are recorded in
-[docs/PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md).
-
-# Production Deployment
-
-`docker-compose.prod.yml` runs **nginx** (TLS, static React, security headers, rate limits) → **php-fpm app** → **MySQL**,
-**Redis**, **worker**, **scheduler**, and a private **ai-service** (no published ports, `X-AI-Service-Key`). Images are
-production-oriented (`backend/Dockerfile.prod` without dev dependencies, `frontend/Dockerfile` multi-stage build; no
-`artisan serve`, `npm run dev` or `uvicorn --reload`). Release flow, smoke tests, rollback, backup/restore
-(`scripts/backup.sh`, `scripts/restore.sh`), DR parameters, retention and monitoring are documented in
-[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
-
-# Security
-
-- Sanctum cookie sessions (HttpOnly, `Secure` in production, SameSite=lax), CSRF on every mutation, explicit CORS origins (no wildcard with credentials).
-- Authorization is server-side only: STEP 34 course role matrix (`OWNER/EDITOR/REVIEWER/VIEWER`) + `FACULTY/ADMIN` roles; every resource id is re-checked (IDOR sweep test).
-- Private storage for documents and reports, streamed through authenticated endpoints; no public storage URLs.
-- Security headers (CSP, HSTS, nosniff, frame-ancestors, Referrer-Policy, Permissions-Policy), request ids and structured request logs without bodies/tokens.
-- Rate limits on auth, uploads, AI analysis, chat, generation, collaboration and report generation.
-- Internal AI authentication (`AI_SERVICE_API_KEY`), AI timeouts, safe error messages (no stack traces), document text treated as untrusted context.
-- Student privacy: institutional reports and analytics are aggregates; AI never assigns or changes grades, approvals or mappings.
-
-# Backup
-
-`scripts/backup.sh` (MySQL dump + private storage + manifest) and `scripts/restore.sh` (verified restore into a scratch
-database with count and orphan checks; `--target-db … --yes` for a real restore). Run daily, copy off-host. Details and
-tested results: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md#6-backup--restore).
-
-# API
-
-See [docs/API.md](docs/API.md) — authentication, authorization model, endpoints, validation rules and error codes for
-courses, assessments, blueprints, versions, analysis, rubrics, submissions, grading, performance, analytics and reports.
-
-# Troubleshooting
-
-See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md#11-troubleshooting) (419 on login, CORS, AI unavailable, stuck reports,
-stale frontend chunks, cached config).
+Validation results live in [docs/E2E_VALIDATION_REPORT.md](docs/E2E_VALIDATION_REPORT.md), [docs/FACULTY_UAT_REPORT.md](docs/FACULTY_UAT_REPORT.md) and [docs/PRODUCTION_READINESS.md](docs/PRODUCTION_READINESS.md).
 
 ---
 
-#  System Demonstration
+## Security & privacy
 
-A typical FacultyLens demonstration:
-
-```text
-1. Faculty opens FacultyLens
-              ↓
-2. Uploads syllabus
-              ↓
-3. Uploads learning outcomes
-              ↓
-4. Uploads current question paper
-              ↓
-5. Uploads previous questions
-              ↓
-6. Clicks "Analyze Assessment"
-              ↓
-7. AI processes the materials
-              ↓
-8. FacultyLens generates analysis
-              ↓
-9. Dashboard displays insights
-              ↓
-10. Faculty reviews recommendations
-```
-
-This demonstrates the complete journey:
-
-> **Problem → Input → AI → Analysis → Useful Result → Faculty Decision**
+- **Sessions.** Sanctum cookie sessions (HttpOnly, `Secure` in production, SameSite=lax), CSRF on every change, and explicit CORS origins.
+- **Authorization** happens server-side only, using the course role matrix (`OWNER / EDITOR / REVIEWER / VIEWER`) plus `FACULTY / ADMIN` roles. Every resource id is re-checked.
+- **Private storage** for documents and reports, streamed through authenticated endpoints only.
+- **Security headers** (CSP, HSTS, nosniff, frame-ancestors, Referrer-Policy) and structured request logs without bodies or tokens.
+- **Rate limits** on auth, uploads, AI analysis, chat, generation, collaboration, search and reports.
+- **AI safety.** An internal service key, timeouts, safe error messages, and document text always treated as untrusted context.
+- **Student privacy.** Reports and analytics are aggregates, and AI never assigns or changes grades, approvals or mappings.
 
 ---
 
-#  Project Goal
+## Production & operations
 
-> **FacultyLens aims to make academic work easier, smarter, and more evidence-driven by giving university faculty an intelligent lens for understanding and improving their academic processes.**
-
----
-
-##  Team
-
-**Project Name:** FacultyLens
-
-**Domain:** AI for Academic Life
-
-**Institution:** Ahsanullah University of Science and Technology (AUST)
-
-**Team Name:** `<YOUR TEAM NAME>`
+- **Production stack.** `docker-compose.prod.yml` runs **nginx** (TLS, static React, security headers) → **php-fpm** → MySQL, Redis, worker, scheduler, and a private **AI service** with no published ports.
+- **Backup & restore.** `scripts/backup.sh` (MySQL dump + private storage + manifest) and `scripts/restore.sh` (verified restore into a scratch database first).
+- **Guide.** Release flow, smoke tests, rollback and monitoring are in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
 ---
 
-##  License
+## Documentation
+
+| Topic | Document |
+| --- | --- |
+| API reference | [docs/API.md](docs/API.md) |
+| Deployment & troubleshooting | [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) |
+| AI evaluation & accuracy | [docs/ai-evaluation.md](docs/ai-evaluation.md) · [docs/AI_ACCURACY_EVALUATION_REPORT.md](docs/AI_ACCURACY_EVALUATION_REPORT.md) |
+| AI safety | [docs/AI_SAFETY_TESTING.md](docs/AI_SAFETY_TESTING.md) · [docs/AI_HALLUCINATION_POLICY.md](docs/AI_HALLUCINATION_POLICY.md) · [docs/AI_PROMPT_INJECTION_DEFENSE.md](docs/AI_PROMPT_INJECTION_DEFENSE.md) |
+| Explainability | [docs/AI_EXPLAINABILITY.md](docs/AI_EXPLAINABILITY.md) |
+| Analytics & reporting | [docs/academic-analytics.md](docs/academic-analytics.md) · [docs/institutional-reporting.md](docs/institutional-reporting.md) |
+| Blueprints & versioning | [docs/assessment-blueprint.md](docs/assessment-blueprint.md) · [docs/assessment-versioning.md](docs/assessment-versioning.md) |
+| Notifications & e-mail | [docs/NOTIFICATION_SYSTEM.md](docs/NOTIFICATION_SYSTEM.md) · [docs/REALTIME_NOTIFICATION_SYSTEM.md](docs/REALTIME_NOTIFICATION_SYSTEM.md) · [docs/EMAIL_SYSTEM.md](docs/EMAIL_SYSTEM.md) |
+| Testing & quality | [docs/FACULTY_UAT_REPORT.md](docs/FACULTY_UAT_REPORT.md) · [docs/REGRESSION_TEST_MATRIX.md](docs/REGRESSION_TEST_MATRIX.md) · [docs/DATA_QUALITY_INTEGRITY_REPORT.md](docs/DATA_QUALITY_INTEGRITY_REPORT.md) |
+
+---
+
+## Roadmap
+
+- [x] Assessment quality analysis, LO alignment, similarity, difficulty and Bloom analysis
+- [x] Document chat (RAG) with citations, rename and export
+- [x] Constrained question generator, rubrics and AI grading assistance
+- [x] Blueprints, versioning, collaboration, analytics and institutional reports
+- [x] Real-time notifications and e-mail
+- [] AI-assisted syllabus design and course mapping
+- [] Research-paper summarization and literature discovery
+- [] Faculty workload assistance
+- [] Course quality tracking across semesters
+
+---
+
+## Author
+
+FacultyLens is a personal project built and maintained by [Sakin542](https://github.com/Sakin542).
+
+| | |
+| --- | --- |
+| **Project** | FacultyLens |
+| **Domain** | AI for Academic Life |
+| **Institution** | Ahsanullah University of Science and Technology (AUST) |
+| **Repository** | [github.com/Sakin542/FacultyLens](https://github.com/Sakin542/FacultyLens) |
+
+## License
 
 This project is developed as an academic AI system for educational and demonstration purposes.
 
 ---
 
-#  FacultyLens
+<div align="center">
 
-```text
-              FACULTY
-                 │
-                 ▼
-          ┌─────────────┐
-          │ FacultyLens │
-          └──────┬──────┘
-                 │
-       ┌─────────┼─────────┐
-       ▼         ▼         ▼
-    Analyze   Compare   Evaluate
-       │         │         │
-       └─────────┼─────────┘
-                 ▼
-            Recommend
-                 │
-                 ▼
-        Better Decisions
-```
+**FacultyLens** · *See academic work through a smarter lens.*
 
-> **See academic work through a smarter lens.**
+AI assists · Faculty decides
+
+</div>

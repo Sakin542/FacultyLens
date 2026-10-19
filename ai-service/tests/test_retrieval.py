@@ -53,3 +53,66 @@ def test_best_sentences_prefers_overlap_with_question():
     assert picked[0]["sentence"].startswith("Normalization reduces")
     assert picked[0]["overlap"] >= 1
     assert all(p["chunk_id"] == 1 for p in picked if p["overlap"] > 0)
+
+
+# ---- Slide decks (lecture PDFs): no sentence punctuation, wrapped lines, footers, headings with list items ----
+
+_SLIDE_JOINT = (
+    "B. Inference using Full Joint-Probability Distribution\n"
+    "3. P(a|b) = P(a ∧ b) / P(b), where P(b) > 0.\n"
+    "P(cavity | toothache) = P(cavity ∧ toothache) / P(toothache) =\n"
+    "(0.108+0.012) / (0.108+0.012+0.016+0.064) = 0.12/0.2 = 0.6\n"
+    "05-Sep-26\n"
+    "3\n"
+)
+_SLIDE_SPEC = (
+    "B. Specification of a Bayesian Network\n"
+    "1. A BN is a data structure represented by a directed acyclic graph.\n"
+    "2. A node represents a random variable.\n"
+    "3. An arrow (arc) represents a ‘parent-child’ relationship.\n"
+    "4. A node Xi is assigned a conditional probability table (CPT) that quantifies\n"
+    "the effect of the parents on the node.\n"
+    "12-Sep-26\n"
+)
+_SLIDE_BURGLARY = (
+    "C. Another example of Bayesian Networks\n"
+    "✓ P(B | a ∧ j ∧ m) = ⟨ P(b | a ∧ j ∧ m), P(¬b | a ∧ j ∧ m) ⟩ = ⟨ 37% , 63% ⟩\n"
+)
+
+
+def _slides():
+    return [
+        {"chunk_id": 1, "similarity_score": 0.4, "content": _SLIDE_JOINT},
+        {"chunk_id": 2, "similarity_score": 0.4, "content": _SLIDE_SPEC},
+        {"chunk_id": 3, "similarity_score": 0.4, "content": _SLIDE_BURGLARY},
+    ]
+
+
+def test_slide_wrapped_formula_is_kept_whole_and_footers_dropped():
+    picked = best_sentences("What is P(cavity | toothache)?", _slides(), limit=4)
+    text = " ".join(p["sentence"] for p in picked)
+    assert any("P(cavity | toothache) = P(cavity ∧ toothache)" in p["sentence"] and "= 0.6" in p["sentence"] for p in picked)
+    assert "05-Sep-26" not in text
+
+
+def test_slide_heading_pulls_in_the_list_items_under_it():
+    picked = best_sentences("What is the specification of a Bayesian network?", _slides(), limit=6)
+    sentences = [p["sentence"] for p in picked]
+    assert any("directed acyclic graph" in s for s in sentences)
+    assert any("random variable" in s for s in sentences)
+    assert all(p["chunk_id"] == 2 for p in picked if "directed acyclic graph" in p["sentence"])
+
+
+def test_probability_expression_matches_across_notation():
+    # Question writes "a, j, m"; the slide writes "a ∧ j ∧ m" and shares no other words with the question.
+    picked = best_sentences("What is P(B | a, j, m)?", _slides(), limit=3)
+    assert any("37%" in p["sentence"] and p["chunk_id"] == 3 for p in picked)
+
+
+def test_overview_question_with_absent_subject_is_not_supported():
+    from app.services.retrieval import overview_subject_supported
+
+    chunks = [{"chunk_id": 1, "content": "Database normalization reduces redundancy."}]
+    assert overview_subject_supported("Summarize the slides", chunks)
+    assert overview_subject_supported("What does the document say about normalization?", chunks)
+    assert not overview_subject_supported("What does the document say about quantum computing?", chunks)

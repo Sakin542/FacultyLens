@@ -160,7 +160,18 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
               onDragOver={(e) => e.preventDefault()}
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
-              className={`relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-6 text-center cursor-pointer transition-colors ${
+              role="button"
+              tabIndex={isSubmitting ? -1 : 0}
+              aria-label={file ? `Selected file ${file.name}. Press Enter to choose a different file` : 'Choose a PDF, DOCX or TXT file to upload'}
+              aria-disabled={isSubmitting || undefined}
+              onKeyDown={(e) => {
+                if (isSubmitting) return;
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  fileInputRef.current?.click();
+                }
+              }}
+              className={`relative focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-6 text-center cursor-pointer transition-colors ${
                 file
                   ? 'border-indigo-500 bg-indigo-50/40 dark:bg-indigo-950/20 dark:border-indigo-500/60'
                   : 'border-slate-300 hover:border-indigo-400 bg-slate-50/50 hover:bg-indigo-50/20 dark:border-slate-600 dark:bg-slate-900/30'

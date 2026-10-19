@@ -133,7 +133,17 @@ export const CollaborationComments: React.FC<CollaborationCommentsProps> = ({ co
       <p className="text-[11px] text-sage-400">Discussion never changes the AI result or the official content; decisions are made through the normal approval actions.</p>
       {error && <CollaborationError message={error} onRetry={load} />}
       {loading ? <CollaborationLoading label="Loading discussion…" /> : visible.length === 0 ? (
-        <CollaborationEmptyState title="No discussion yet" description={canComment ? 'Start a discussion about this academic resource.' : 'There is no discussion on this resource yet.'} icon={<MessageSquare className="w-6 h-6" />} className="py-6" />
+        resolvedCount > 0 ? (
+          <CollaborationEmptyState
+            title="All discussions are resolved"
+            description={`${resolvedCount} resolved thread${resolvedCount === 1 ? ' is' : 's are'} hidden.${canComment ? ' Start a new discussion below, or show the resolved ones.' : ''}`}
+            icon={<MessageSquare className="w-6 h-6" />}
+            className="py-6"
+            action={showResolvedToggle ? <button type="button" className="text-xs underline text-sage-600" onClick={() => setShowResolved(true)} data-testid="show-resolved">Show resolved</button> : undefined}
+          />
+        ) : (
+          <CollaborationEmptyState title="No discussion yet" description={canComment ? 'Start a discussion about this academic resource.' : 'There is no discussion on this resource yet.'} icon={<MessageSquare className="w-6 h-6" />} className="py-6" />
+        )
       ) : (
         <div className="space-y-2">
           {visible.map((c) => (

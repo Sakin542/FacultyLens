@@ -1,0 +1,845 @@
+{
+  "generated_at": "2026-10-05T20:18:12.314Z",
+  "observations": [
+    {
+      "scenario": "S01",
+      "check": "wrong password shows a plain-language error and stays on /login",
+      "status": "PASS",
+      "screenshot": "S01-login-error.png"
+    },
+    {
+      "scenario": "S01",
+      "check": "faculty signs in through the form and reaches the dashboard",
+      "status": "PASS",
+      "screenshot": "S01-dashboard.png"
+    },
+    {
+      "scenario": "S01",
+      "check": "session belongs to the FACULTY role (no admin scopes)",
+      "status": "PASS",
+      "note": "role=FACULTY"
+    },
+    {
+      "scenario": "S01",
+      "check": "navigation exposes the faculty workspace (Courses, Assessments, Analysis, Analytics, Reports, Feedback, Settings)",
+      "status": "PASS"
+    },
+    {
+      "scenario": "S01",
+      "check": "dashboard for a new account shows an empty/zero state instead of another user's data",
+      "status": "PASS",
+      "note": "panels visible: none of the expected panel headings; empty-state wording present=false"
+    },
+    {
+      "scenario": "A11Y",
+      "check": "axe /dashboard",
+      "status": "FAIL",
+      "note": "1 violation type(s); serious/critical: color-contrast×10"
+    },
+    {
+      "scenario": "S02",
+      "check": "faculty creates a course from Courses → Add Course",
+      "status": "PASS",
+      "note": "course id 113",
+      "screenshot": "S02-course-list.png"
+    },
+    {
+      "scenario": "S02",
+      "check": "course is owned by the signed-in faculty",
+      "status": "PASS"
+    },
+    {
+      "scenario": "S02",
+      "check": "empty course form is rejected inline (no request sent)",
+      "status": "PASS",
+      "note": "NOTE: Escape does not close the course dialog",
+      "screenshot": "S02-course-validation.png"
+    },
+    {
+      "scenario": "A11Y",
+      "check": "axe /courses",
+      "status": "FAIL",
+      "note": "3 violation type(s); serious/critical: button-name×1, color-contrast×1, select-name×2"
+    },
+    {
+      "scenario": "S03",
+      "check": "faculty adds three learning outcomes from the course page",
+      "status": "PASS",
+      "screenshot": "S03-learning-outcomes.png"
+    },
+    {
+      "scenario": "S03",
+      "check": "faculty edits an outcome and the change persists",
+      "status": "PASS",
+      "screenshot": "S03-lo-edited.png"
+    },
+    {
+      "scenario": "S03",
+      "check": "outcome form fields have programmatic labels (accessibility)",
+      "status": "PASS"
+    },
+    {
+      "scenario": "A11Y",
+      "check": "axe /courses/:id",
+      "status": "PASS",
+      "note": "0 violation type(s); serious/critical: none"
+    },
+    {
+      "scenario": "AI-1",
+      "check": "faculty uploads lecture PDF \"T6.1.pdf\" from the course page",
+      "status": "FAIL",
+      "note": "ENOENT: no such file or directory, stat 'C:\\Users\\Sakin\\Downloads\\T6.1.pdf'"
+    },
+    {
+      "scenario": "AI-1",
+      "check": "faculty uploads lecture PDF \"T6.1 Demo.pdf\" from the course page",
+      "status": "FAIL",
+      "note": "ENOENT: no such file or directory, stat 'C:\\Users\\Sakin\\Downloads\\T6.1 Demo.pdf'"
+    },
+    {
+      "scenario": "AI-1",
+      "check": "faculty uploads lecture PDF \"T6.2.pdf\" from the course page",
+      "status": "FAIL",
+      "note": "ENOENT: no such file or directory, stat 'C:\\Users\\Sakin\\Downloads\\T6.2.pdf'"
+    },
+    {
+      "scenario": "AI-1",
+      "check": "faculty uploads lecture PDF \"T6.3.pdf\" from the course page",
+      "status": "FAIL",
+      "note": "ENOENT: no such file or directory, stat 'C:\\Users\\Sakin\\Downloads\\T6.3.pdf'"
+    },
+    {
+      "scenario": "AI-1",
+      "check": "faculty uploads lecture PDF \"T6.3 Demo.pdf\" from the course page",
+      "status": "FAIL",
+      "note": "ENOENT: no such file or directory, stat 'C:\\Users\\Sakin\\Downloads\\T6.3 Demo.pdf'"
+    },
+    {
+      "scenario": "AI-1",
+      "check": "faculty uploads lecture PDF \"T6.4.pdf\" from the course page",
+      "status": "FAIL",
+      "note": "ENOENT: no such file or directory, stat 'C:\\Users\\Sakin\\Downloads\\T6.4.pdf'"
+    },
+    {
+      "scenario": "AI-1",
+      "check": "all six PDFs reach Completed extraction and INDEXED for chat",
+      "status": "FAIL",
+      "note": "T6.1.pdf: undefined/undefined/? chunks; T6.1 Demo.pdf: undefined/undefined/? chunks; T6.2.pdf: undefined/undefined/? chunks; T6.3.pdf: undefined/undefined/? chunks; T6.3 Demo.pdf: undefined/undefined/? chunks; T6.4.pdf: undefined/undefined/? chunks  \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m",
+      "screenshot": "AI-1-course-with-pdfs-FAIL.png"
+    },
+    {
+      "scenario": "AI-1",
+      "check": "extracted text keeps the logic symbols and numbers from the slides",
+      "status": "FAIL",
+      "note": "Cannot read properties of undefined (reading 'id')",
+      "screenshot": "AI-1-document-T6.4-FAIL.png"
+    },
+    {
+      "scenario": "AI-2",
+      "check": "faculty starts a whole-course chat from the course page",
+      "status": "FAIL",
+      "note": "\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed  Locator: getByText(/6\\/6 indexed/)",
+      "screenshot": "AI-2-chat-started-FAIL.png"
+    },
+    {
+      "scenario": "AI-2",
+      "check": "P(cavity | toothache) from the full joint distribution is answered as 0.6 with a T6.1 source",
+      "status": "FAIL",
+      "note": "locator.fill: Timeout 20000ms exceeded. Call log: \u001b[2m  - waiting for locator('textarea').first()\u001b[22m",
+      "screenshot": "AI-2-chat-joint-FAIL.png"
+    },
+    {
+      "scenario": "AI-2",
+      "check": "Bayesian network specification is answered from T6.3 (DAG, nodes, arcs, CPT)",
+      "status": "FAIL",
+      "note": "locator.fill: Timeout 20000ms exceeded. Call log: \u001b[2m  - waiting for locator('textarea').first()\u001b[22m",
+      "screenshot": "AI-2-chat-bn-spec-FAIL.png"
+    },
+    {
+      "scenario": "AI-2",
+      "check": "burglary network posterior P(B | a, j, m) is answered as 37% / 63% from T6.4",
+      "status": "FAIL",
+      "note": "locator.fill: Timeout 20000ms exceeded. Call log: \u001b[2m  - waiting for locator('textarea').first()\u001b[22m",
+      "screenshot": "AI-2-chat-burglary-FAIL.png"
+    },
+    {
+      "scenario": "AI-2",
+      "check": "Bayes rule + decision theory question pulls from T6.1/T6.2",
+      "status": "FAIL",
+      "note": "locator.fill: Timeout 20000ms exceeded. Call log: \u001b[2m  - waiting for locator('textarea').first()\u001b[22m",
+      "screenshot": "AI-2-chat-bayes-FAIL.png"
+    },
+    {
+      "scenario": "AI-2",
+      "check": "an off-topic question is refused as not supported by the documents",
+      "status": "FAIL",
+      "note": "locator.fill: Timeout 20000ms exceeded. Call log: \u001b[2m  - waiting for locator('textarea').first()\u001b[22m",
+      "screenshot": "AI-2-chat-offtopic-FAIL.png"
+    },
+    {
+      "scenario": "AI-2",
+      "check": "faculty renames the chat and exports the transcript",
+      "status": "FAIL",
+      "note": "locator.click: Timeout 20000ms exceeded. Call log: \u001b[2m  - waiting for getByTestId('chat-rename')\u001b[22m",
+      "screenshot": "AI-2-chat-renamed-FAIL.png"
+    },
+    {
+      "scenario": "AI-2",
+      "check": "single-document chat on T6.2.pdf only cites T6.2.pdf",
+      "status": "FAIL",
+      "note": "Cannot read properties of undefined (reading 'id')",
+      "screenshot": "AI-2-chat-single-doc-FAIL.png"
+    },
+    {
+      "scenario": "S04",
+      "check": "faculty creates a midterm from Assessments → Create Assessment",
+      "status": "PASS",
+      "note": "assessment id 34",
+      "screenshot": "S04-assessment-list.png"
+    },
+    {
+      "scenario": "S04",
+      "check": "assessment detail page shows configuration and next-step links",
+      "status": "PASS",
+      "note": "NOTE: empty state points to \"Question Bank\" (archive of previous questions), no direct \"Add question\" affordance",
+      "screenshot": "S04-assessment-detail-empty.png"
+    },
+    {
+      "scenario": "A11Y",
+      "check": "axe /assessments/:id (empty)",
+      "status": "FAIL",
+      "note": "1 violation type(s); serious/critical: color-contrast×2"
+    },
+    {
+      "scenario": "S04",
+      "check": "in-app links on the assessment page (Blueprint / Versions / sidebar) render the target page without a reload",
+      "status": "PASS",
+      "note": "Blueprint rendered after click; url=/assessments/34/blueprint"
+    },
+    {
+      "scenario": "S05",
+      "check": "there is no manual add-question form; questions enter through AI generation + faculty approval",
+      "status": "PASS",
+      "note": "Design: official questions come only from Generate Questions → approve → add to assessment"
+    },
+    {
+      "scenario": "S11",
+      "check": "faculty sets constraints and generates drafts (Generate Questions link from the assessment)",
+      "status": "PASS",
+      "note": "in-app navigation rendered. drafts=3; disclaimer wording present=true",
+      "screenshot": "S11-drafts.png"
+    },
+    {
+      "scenario": "S11",
+      "check": "each draft shows constraint validation (type/difficulty/Bloom/LO) that faculty can inspect",
+      "status": "PASS",
+      "note": "validation panels=3, with warnings=2, similarity warnings=0"
+    },
+    {
+      "scenario": "S11",
+      "check": "faculty edits a draft before approval and the edit is kept (versioned)",
+      "status": "PASS",
+      "screenshot": "S11-draft-edited.png"
+    },
+    {
+      "scenario": "S11",
+      "check": "faculty approves drafts and adds them to the assessment (drafts stay drafts until approved)",
+      "status": "PASS",
+      "note": "official questions=3",
+      "screenshot": "S11-approved-added.png"
+    },
+    {
+      "scenario": "S11",
+      "check": "faculty can reject a draft with a reason (second small batch)",
+      "status": "PASS",
+      "note": "rejected draft never entered the assessment (rejected drafts are hidden behind \"Show N rejected\")",
+      "screenshot": "S11-rejected.png"
+    },
+    {
+      "scenario": "A11Y",
+      "check": "axe /question-generator",
+      "status": "FAIL",
+      "note": "1 violation type(s); serious/critical: color-contrast×46"
+    },
+    {
+      "scenario": "S05",
+      "check": "assessment page lists each question with text, marks, difficulty; LO and faculty Bloom level visible?",
+      "status": "PASS",
+      "screenshot": "S05-question-list.png"
+    },
+    {
+      "scenario": "A11Y",
+      "check": "axe /assessments/:id (questions)",
+      "status": "FAIL",
+      "note": "1 violation type(s); serious/critical: color-contrast×2"
+    },
+    {
+      "scenario": "S06",
+      "check": "faculty uploads a syllabus (TXT) and sees it processed to Completed with extracted content",
+      "status": "PASS",
+      "note": "list badge reads \"Extracted\", detail page reads \"COMPLETED\" (UAT-011)",
+      "screenshot": "S06-document-details.png"
+    },
+    {
+      "scenario": "A11Y",
+      "check": "axe /documents/:id",
+      "status": "PASS",
+      "note": "0 violation type(s); serious/critical: none"
+    },
+    {
+      "scenario": "S06",
+      "check": "unsupported file type is rejected before upload with a clear message",
+      "status": "PASS",
+      "screenshot": "S06-invalid-type.png"
+    },
+    {
+      "scenario": "S06",
+      "check": "oversized file (11 MB) is rejected with a clear message",
+      "status": "PASS",
+      "screenshot": "S06-oversized.png"
+    },
+    {
+      "scenario": "S06",
+      "check": "a corrupt PDF ends in Failed with an error the faculty can read and a Reprocess action",
+      "status": "PASS",
+      "note": "status Failed + Reprocess Extraction visible in list",
+      "screenshot": "S06-corrupt-failed.png"
+    },
+    {
+      "scenario": "S06",
+      "check": "the upload drop-zone is keyboard operable (not a div-only click target)",
+      "status": "PASS"
+    },
+    {
+      "scenario": "S07",
+      "check": "faculty runs the unified AI analysis from the Analysis page and sees all result sections",
+      "status": "PASS",
+      "screenshot": "S07-analysis-results.png"
+    },
+    {
+      "scenario": "S07",
+      "check": "results are labelled in faculty language (Excellent/Good/Needs Review…) and no raw JSON is shown by default",
+      "status": "PASS",
+      "note": "visible <pre> blocks=0"
+    },
+    {
+      "scenario": "S07",
+      "check": "analysis page states that AI output is decision support, not a decision",
+      "status": "PASS"
+    },
+    {
+      "scenario": "A11Y",
+      "check": "axe /assessments/:id/analysis",
+      "status": "FAIL",
+      "note": "1 violation type(s); serious/critical: color-contrast×2"
+    },
+    {
+      "scenario": "S08",
+      "check": "faculty opens \"Why?\" on an AI Bloom classification and sees result, reason, confidence, limitations",
+      "status": "PASS",
+      "note": "focus moved into dialog=false; confidence=\"Not available\"",
+      "screenshot": "S08-explanation.png"
+    },
+    {
+      "scenario": "S08",
+      "check": "evidence and method are available on demand (progressive disclosure, keyboard operable)",
+      "status": "PASS",
+      "note": "method=FacultyLens deterministic rules (RULE_BASED)",
+      "screenshot": "S08-evidence.png"
+    },
+    {
+      "scenario": "S08",
+      "check": "faculty can override the AI Bloom level; the AI value stays visible for reference",
+      "status": "PASS",
+      "screenshot": "S08-overridden.png"
+    },
+    {
+      "scenario": "S08",
+      "check": "\"How is the score calculated?\" explains the overall quality score in plain terms",
+      "status": "PASS",
+      "screenshot": "S08-score-explained.png"
+    },
+    {
+      "scenario": "S09",
+      "check": "faculty opens a recommendation, inspects evidence and records an Accept decision with a rating/reason",
+      "status": "PASS",
+      "note": "NOTE: evidence is rendered as raw JSON in a <pre> block",
+      "screenshot": "S09-accepted.png"
+    },
+    {
+      "scenario": "S09",
+      "check": "faculty can also Review (with note) and Dismiss a recommendation; decisions never change questions",
+      "status": "PASS",
+      "screenshot": "S09-reviewed.png"
+    },
+    {
+      "scenario": "S10",
+      "check": "faculty generates an AI rubric draft for Q1, edits it, saves and approves it",
+      "status": "PASS",
+      "screenshot": "S10-rubric-approved.png"
+    },
+    {
+      "scenario": "S12",
+      "check": "faculty creates a blueprint, configures targets and saves/validates it",
+      "status": "PASS",
+      "note": "validation panel shown=true; status text: Validated",
+      "screenshot": "S12-blueprint-saved.png"
+    },
+    {
+      "scenario": "S12",
+      "check": "faculty reads validation warnings/recommendations and finalizes the blueprint",
+      "status": "PASS",
+      "note": "warnings shown",
+      "screenshot": "S12-blueprint-finalized.png"
+    },
+    {
+      "scenario": "S12",
+      "check": "blueprint page uses faculty language (no internal STEP numbers or developer jargon)",
+      "status": "PASS"
+    },
+    {
+      "scenario": "S12",
+      "check": "\"Compare with questions\" tells faculty how the real paper deviates from the blueprint",
+      "status": "PASS",
+      "screenshot": "S12-blueprint-compare.png"
+    },
+    {
+      "scenario": "A11Y",
+      "check": "axe /assessments/:id/blueprint",
+      "status": "FAIL",
+      "note": "2 violation type(s); serious/critical: color-contrast×5, definition-list×2"
+    },
+    {
+      "scenario": "S13",
+      "check": "faculty snapshots v1.0 and finalizes it; the UI states it is immutable",
+      "status": "PASS",
+      "screenshot": "S13-version-finalized.png"
+    },
+    {
+      "scenario": "S13",
+      "check": "faculty creates a new version from the finalized one, edits the draft and compares",
+      "status": "PASS",
+      "screenshot": "S13-version-compare.png"
+    },
+    {
+      "scenario": "S13",
+      "check": "the old finalized version is unchanged after the new draft was edited",
+      "status": "PASS",
+      "note": "v1 title=\"Midterm Examination\" status=FINALIZED; v2 id=5"
+    },
+    {
+      "scenario": "A11Y",
+      "check": "axe /assessments/:id/versions/:v/compare",
+      "status": "FAIL",
+      "note": "1 violation type(s); serious/critical: color-contrast×9"
+    },
+    {
+      "scenario": "S14",
+      "check": "faculty records a student submission and enters answers for every question through the UI",
+      "status": "PASS",
+      "screenshot": "S14-answers-recorded.png"
+    },
+    {
+      "scenario": "S14",
+      "check": "status workflow is explicit (Submitted → Under review) and marks read \"Not graded\" before faculty acts",
+      "status": "PASS",
+      "screenshot": "S14-under-review.png"
+    },
+    {
+      "scenario": "A11Y",
+      "check": "axe /submissions/:id",
+      "status": "PASS",
+      "note": "0 violation type(s); serious/critical: none"
+    },
+    {
+      "scenario": "S15",
+      "check": "AI grading is only offered where an approved rubric exists, with a decision-support disclaimer",
+      "status": "PASS",
+      "screenshot": "S15-grading-entry.png"
+    },
+    {
+      "scenario": "S15",
+      "check": "faculty requests an AI suggestion; the mark stays \"Not graded\" until the faculty decides",
+      "status": "PASS",
+      "note": "suggested=0.5 / 10; criterion rows=5",
+      "screenshot": "S15-ai-suggestion.png"
+    },
+    {
+      "scenario": "S15",
+      "check": "faculty overrides the suggestion with their own final mark and it is recorded as the faculty decision",
+      "status": "PASS",
+      "note": "faculty decision label=\"Faculty modified the AI suggestion\"",
+      "screenshot": "S15-faculty-final.png"
+    },
+    {
+      "scenario": "S15",
+      "check": "remaining answers are graded manually; marks above the maximum are refused client-side",
+      "status": "PASS",
+      "screenshot": "S15-graded.png"
+    },
+    {
+      "scenario": "S15",
+      "check": "grading page never claims automatic grading",
+      "status": "PASS"
+    },
+    {
+      "scenario": "S16",
+      "check": "[fixture] five more graded submissions are created through the same API the UI uses",
+      "status": "PASS",
+      "note": "6 graded submissions in total"
+    },
+    {
+      "scenario": "S16",
+      "check": "faculty runs Student Performance analysis and sees averages, LO/topic analysis and learning gaps",
+      "status": "PASS",
+      "note": "sections LO=true topic=true gaps=true; avg=69.17%",
+      "screenshot": "S16-performance.png"
+    },
+    {
+      "scenario": "S17",
+      "check": "analytics KPIs match the data the faculty just created",
+      "status": "PASS",
+      "screenshot": "S17-analytics.png"
+    },
+    {
+      "scenario": "S17",
+      "check": "course filter narrows the analytics and charts carry text alternatives",
+      "status": "PASS",
+      "note": "charts/graphics=43, svg without label=19; sections present: Difficulty Distribution, Cognitive Level, Learning Outcome Coverage, Student Performance, Learning Gaps, Grading",
+      "screenshot": "S17-analytics-filtered.png"
+    },
+    {
+      "scenario": "A11Y",
+      "check": "axe /analytics",
+      "status": "FAIL",
+      "note": "1 violation type(s); serious/critical: color-contrast×62"
+    },
+    {
+      "scenario": "S18",
+      "check": "faculty configures, previews, generates and downloads a ASSESSMENT_QUALITY report as PDF",
+      "status": "PASS",
+      "note": "report 7, 882180 bytes, no student identifier leaked",
+      "screenshot": "S18-report-PDF.png"
+    },
+    {
+      "scenario": "S18",
+      "check": "faculty configures, previews, generates and downloads a QUESTION_ANALYSIS report as CSV",
+      "status": "PASS",
+      "note": "report 8, 1490 bytes, no student identifier leaked",
+      "screenshot": "S18-report-CSV.png"
+    },
+    {
+      "scenario": "S18",
+      "check": "faculty configures, previews, generates and downloads a STUDENT_PERFORMANCE report as XLSX",
+      "status": "PASS",
+      "note": "report 9, 18477 bytes, no student identifier leaked",
+      "screenshot": "S18-report-XLSX.png"
+    },
+    {
+      "scenario": "S18",
+      "check": "report history lists the generated reports",
+      "status": "PASS",
+      "screenshot": "S18-report-history.png"
+    },
+    {
+      "scenario": "A11Y",
+      "check": "axe /reports",
+      "status": "FAIL",
+      "note": "1 violation type(s); serious/critical: color-contrast×5"
+    },
+    {
+      "scenario": "S19",
+      "check": "Feedback page lists the faculty decisions (accepted / reviewed) with filters",
+      "status": "PASS",
+      "screenshot": "S19-feedback.png"
+    },
+    {
+      "scenario": "S19",
+      "check": "faculty records an Accept-with-comment decision on an AI difficulty result via the explanation panel",
+      "status": "PASS",
+      "screenshot": "S19-review-accepted.png"
+    },
+    {
+      "scenario": "A11Y",
+      "check": "axe /feedback",
+      "status": "FAIL",
+      "note": "1 violation type(s); serious/critical: color-contrast×2"
+    },
+    {
+      "scenario": "SUP",
+      "check": "Notifications centre shows workflow events (analysis completed, version finalized …)",
+      "status": "PASS",
+      "note": "unread text: n/a",
+      "screenshot": "SUP-notifications.png"
+    },
+    {
+      "scenario": "SUP",
+      "check": "Settings page exposes profile, password and notification preferences",
+      "status": "PASS",
+      "screenshot": "SUP-settings.png"
+    },
+    {
+      "scenario": "A11Y",
+      "check": "axe /settings",
+      "status": "PASS",
+      "note": "0 violation type(s); serious/critical: none"
+    },
+    {
+      "scenario": "A11Y",
+      "check": "keyboard-only: Tab reaches \"Add Course\" from the page top and Enter opens the dialog; Escape closes it",
+      "status": "FAIL",
+      "note": "Escape does not close the Add Course dialog (focus moved into dialog=false, role=dialog count=0, focus style=\"solid 3px shadow\")",
+      "screenshot": "A11Y-keyboard-FAIL.png"
+    },
+    {
+      "scenario": "A11Y",
+      "check": "status indicators carry text (not colour only) on the submissions list",
+      "status": "PASS"
+    },
+    {
+      "scenario": "A11Y",
+      "check": "responsive: dashboard and assessment pages are usable at 390×844 (mobile)",
+      "status": "FAIL",
+      "note": "horizontal overflow px  \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m"
+    },
+    {
+      "scenario": "S01",
+      "check": "another faculty member cannot open this course/assessment/submission (UI shows a safe error, API 403/404)",
+      "status": "FAIL",
+      "note": "\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed  Locator: getByText(/Unable to load course|not found|not authorized|permission|forbidden/i).first()"
+    },
+    {
+      "scenario": "S20",
+      "check": "faculty signs out via the sidebar confirmation; protected routes redirect to /login afterwards",
+      "status": "PASS",
+      "screenshot": "S20-logged-out.png"
+    },
+    {
+      "scenario": "A11Y",
+      "check": "axe /login",
+      "status": "PASS",
+      "note": "0 violation type(s); serious/critical: none"
+    }
+  ],
+  "a11y": [
+    {
+      "page": "/dashboard",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 10,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "targets": [
+            ".shadow-subtle.hover\\:border-sage-300[href$=\"courses\"] > .items-start.gap-2.justify-between > .sm\\:text-\\[11px\\].tracking-\\[0\\.08em\\].sm\\:tracking-\\[0\\.14em\\]",
+            ".shadow-subtle.hover\\:border-sage-300[href$=\"assessments\"] > .items-start.gap-2.justify-between > .sm\\:text-\\[11px\\].tracking-\\[0\\.08em\\].sm\\:tracking-\\[0\\.14em\\]",
+            ".shadow-subtle.hover\\:border-sage-300[href$=\"question-bank\"] > .items-start.gap-2.justify-between > .sm\\:text-\\[11px\\].tracking-\\[0\\.08em\\].sm\\:tracking-\\[0\\.14em\\]"
+          ]
+        }
+      ]
+    },
+    {
+      "page": "/courses",
+      "violations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "nodes": 1,
+          "help": "Buttons must have discernible text",
+          "targets": [
+            ".p-1"
+          ]
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 1,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "targets": [
+            ".bg-red-50 > span"
+          ]
+        },
+        {
+          "id": "select-name",
+          "impact": "critical",
+          "nodes": 2,
+          "help": "Select element must have an accessible name",
+          "targets": [
+            "div:nth-child(2) > select",
+            ".sm\\:grid-cols-2.grid-cols-1.grid:nth-child(3) > div:nth-child(1) > select"
+          ]
+        }
+      ]
+    },
+    {
+      "page": "/courses/:id",
+      "violations": []
+    },
+    {
+      "page": "/assessments/:id (empty)",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 2,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "targets": [
+            "section > .text-sage-400.text-\\[11px\\]",
+            ".justify-between > .text-sage-400.text-\\[11px\\]"
+          ]
+        }
+      ]
+    },
+    {
+      "page": "/question-generator",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 46,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "targets": [
+            ".md\\:grid-cols-2.grid-cols-1.grid:nth-child(2) > label:nth-child(2) > .mb-1.block.dark\\:text-sage-400",
+            ".md\\:col-span-2:nth-child(1) > .mb-1.block.dark\\:text-sage-400",
+            "div[data-testid=\"generation-constraints\"] > label:nth-child(2) > .mb-1.block.dark\\:text-sage-400"
+          ]
+        }
+      ]
+    },
+    {
+      "page": "/assessments/:id (questions)",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 2,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "targets": [
+            "section > .text-sage-400.text-\\[11px\\]",
+            ".justify-between > .text-sage-400.text-\\[11px\\]"
+          ]
+        }
+      ]
+    },
+    {
+      "page": "/documents/:id",
+      "violations": []
+    },
+    {
+      "page": "/assessments/:id/analysis",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 2,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "targets": [
+            "section > .text-sage-400",
+            ".justify-between.flex.items-center > .text-sage-400.text-\\[11px\\]"
+          ]
+        }
+      ]
+    },
+    {
+      "page": "/assessments/:id/blueprint",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 5,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "targets": [
+            ".dark\\:bg-\\[\\#161616\\].py-3.px-4:nth-child(6) > .text-sage-400.text-\\[10px\\]",
+            ".py-1.border-sage-100.px-2:nth-child(1) > .text-sage-400.text-\\[10px\\]",
+            ".py-1.border-sage-100.px-2:nth-child(4) > .text-sage-400.text-\\[10px\\]"
+          ]
+        },
+        {
+          "id": "definition-list",
+          "impact": "serious",
+          "nodes": 2,
+          "help": "<dl> elements must only directly contain properly-ordered <dt> and <dd> groups, <script>, <template> or <div> elements",
+          "targets": [
+            ".xl\\:grid-cols-6",
+            "div[data-testid=\"blueprint-validation\"] > dl"
+          ]
+        }
+      ]
+    },
+    {
+      "page": "/assessments/:id/versions/:v/compare",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 9,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "targets": [
+            ".py-1.hover\\:bg-sage-100[role=\"tab\"]:nth-child(2)",
+            ".py-1.hover\\:bg-sage-100[role=\"tab\"]:nth-child(3)",
+            ".py-1.hover\\:bg-sage-100[role=\"tab\"]:nth-child(4)"
+          ]
+        }
+      ]
+    },
+    {
+      "page": "/submissions/:id",
+      "violations": []
+    },
+    {
+      "page": "/analytics",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 62,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "targets": [
+            "p[data-testid=\"freshness\"]",
+            "label[for=\":r0:-course\"]",
+            "label[for=\":r0:-assessment\"]"
+          ]
+        }
+      ]
+    },
+    {
+      "page": "/reports",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 5,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "targets": [
+            ".font-normal",
+            "label",
+            "tr[data-testid=\"report-row-9\"] > .max-w-\\[18rem\\].text-sage-700 > .text-sage-400.text-\\[11px\\]"
+          ]
+        }
+      ]
+    },
+    {
+      "page": "/feedback",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 2,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "targets": [
+            "section > .text-sage-400.text-\\[11px\\]",
+            ".justify-between > .text-sage-400.text-\\[11px\\]"
+          ]
+        }
+      ]
+    },
+    {
+      "page": "/settings",
+      "violations": []
+    },
+    {
+      "page": "/login",
+      "violations": []
+    }
+  ]
+}

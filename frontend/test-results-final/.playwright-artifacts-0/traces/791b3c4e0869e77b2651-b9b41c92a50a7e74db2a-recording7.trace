@@ -1,0 +1,1 @@
+{"version":9,"type":"context-options","origin":"library","browserName":"","playwrightVersion":"1.63.0","options":{},"platform":"win32","wallTime":1791232515901,"monotonicTime":52423.339,"sdkLanguage":"javascript","title":"01-auth.spec.ts:50 › Journey 1: authentication › registration validation errors are shown inline (no request is sent with an invalid form)"}

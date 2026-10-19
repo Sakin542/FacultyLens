@@ -121,7 +121,7 @@ const PercentTable: React.FC<{ testId: string; title: string; keys: readonly str
         <div role="group" aria-label={`${title} input mode`} className="flex gap-1 text-xs">{(['percentage', 'count'] as const).map((m) => <button key={m} type="button" aria-pressed={mode === m} onClick={() => onMode(m)} className={`px-2 py-0.5 rounded border ${mode === m ? 'bg-sage-700 text-white border-sage-700 dark:bg-white dark:text-black' : 'border-sage-200 dark:border-[#2A2A2A]'}`}>{m === 'percentage' ? '%' : 'Count'}</button>)}</div>
         <Button type="button" size="sm" variant="ghost" onClick={() => onChange([])}>Clear</Button></div>
       <div className="overflow-x-auto"><table className="w-full text-sm"><caption className="sr-only">{title} targets</caption>
-        <thead><tr className="text-left text-xs text-sage-500"><th className="py-1">Level</th><th className="py-1">{mode === 'percentage' ? 'Target %' : 'Target count'}</th>{targets && <th className="py-1">STEP 13 target</th>}<th className="py-1">Derived</th></tr></thead>
+        <thead><tr className="text-left text-xs text-sage-500"><th className="py-1">Level</th><th className="py-1">{mode === 'percentage' ? 'Target %' : 'Target count'}</th>{targets && <th className="py-1">Quality target</th>}<th className="py-1">Derived</th></tr></thead>
         <tbody>{keys.map((k) => {
           const r = get(k);
           const derivedCount = total > 0 && r?.target_percentage !== null && r?.target_percentage !== undefined ? Math.round((r.target_percentage / 100) * total * 10) / 10 : null;
@@ -232,7 +232,7 @@ export const BlueprintQuestionPlan: React.FC<{ value: BlueprintInput; onChange: 
   const upd = (i: number, patch: Partial<BlueprintInput['items'][number]>) => set(items.map((x, j) => (j === i ? { ...x, ...patch } : x)));
   return (
     <Card data-testid="blueprint-question-plan" className="p-4 space-y-2">
-      <div className="flex flex-wrap items-center justify-between gap-2"><div><h3 className="text-sm font-semibold text-sage-800 dark:text-white">Cross-dimension question plan</h3><p className="text-xs text-sage-500">Rows like “CO2 / Analyze / Medium / Problem solving — 2 × 5 marks” drive the CO × difficulty and CO × Bloom matrices and the STEP 33 hand-off.</p></div>
+      <div className="flex flex-wrap items-center justify-between gap-2"><div><h3 className="text-sm font-semibold text-sage-800 dark:text-white">Cross-dimension question plan</h3><p className="text-xs text-sage-500">Rows like “CO2 / Analyze / Medium / Problem solving — 2 × 5 marks” drive the CO × difficulty and CO × Bloom matrices and the Question Generator hand-off.</p></div>
         <Button type="button" size="sm" variant="outline" onClick={() => set([...items, { section_order: value.sections[0]?.section_order ?? null, topic: null, learning_outcome_id: outcomes[0]?.id ?? null, program_outcome_id: null, question_type: value.sections[0]?.question_type ?? 'descriptive', difficulty_level: 'medium', cognitive_level: 'Apply', question_count: 1, marks_each: value.sections[0]?.marks_per_question ?? 1 }])}><Plus className="w-3.5 h-3.5 mr-1" aria-hidden="true" />Add row</Button></div>
       {items.length > 0 && (
         <div className="overflow-x-auto">

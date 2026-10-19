@@ -1,0 +1,1 @@
+{"status":"success","message":"Filter options retrieved.","data":{"courses":[{"id":138,"code":"CSE-731291","name":"Artificial Intelligence","semester":"Fall","academic_year":"2026"}],"assessments":[{"id":50,"course_id":138,"title":"Midterm Examination","type":"midterm","date":"2026-10-15"}],"semesters":["Fall"],"academic_years":["2026"],"assessment_types":["midterm"]}}

@@ -97,7 +97,7 @@ export const AssessmentQualityModal: React.FC<AssessmentQualityModalProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-lg font-bold text-sage-800">Assessment Quality Engine</h2>
-                <Badge variant="neutral" className="text-[10px]">STEP 13</Badge>
+                <Badge variant="neutral" className="text-[10px]">Quality analysis</Badge>
               </div>
               <p className="text-xs text-sage-500">
                 {assessment.title} • {assessment.courseCode || assessment.course?.course_code || 'Course'}

@@ -6,11 +6,16 @@ services:
     container_name: facultylens-app
     restart: unless-stopped
     working_dir: /var/www/html
+    # --no-reload is required for `artisan serve` to honour PHP_CLI_SERVER_WORKERS (restart the container after .env edits)
+    command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000", "--no-reload"]
     volumes:
       - ./backend:/var/www/html
     ports:
       - 8080:8000
     environment:
+      # `php artisan serve` handles ONE request at a time by default; the SPA fires several API calls per page,
+      # so they queued for seconds (dashboard/analytics/performance stuck on "Loading…"). Serve them in parallel.
+      - PHP_CLI_SERVER_WORKERS=6
       - APP_ENV=local
       - APP_DEBUG=true
       - DB_CONNECTION=mysql
@@ -233,7 +238,7 @@ services:
       - HF_GENERATION_MODEL=
       - HF_GENERATION_MAX_NEW_TOKENS=256
       - CHAT_TOP_K=5
-      - CHAT_MIN_RELEVANCE_SCORE=0.35
+      - CHAT_MIN_RELEVANCE_SCORE=0.15
       - CHAT_MAX_CONTEXT_CHARS=6000
       - CHAT_MAX_HISTORY_MESSAGES=10
       # STEP 33 question generator (uses HF_GENERATION_MODEL; template engine fallback)

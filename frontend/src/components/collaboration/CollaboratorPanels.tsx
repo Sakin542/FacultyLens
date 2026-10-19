@@ -92,14 +92,33 @@ export const InvitationCard: React.FC<{ invitation: Invitation; onAccept?: () =>
   </div>
 );
 
-export const InviteCollaboratorModal: React.FC<{ onSubmit: (data: { email: string; role: AssignableRole; message?: string }) => Promise<void> | void; onClose: () => void; submitting?: boolean; error?: string | null }> = ({ onSubmit, onClose, submitting, error }) => {
+export interface InviteCourseOption { id: number; label: string }
+
+export const InviteCollaboratorModal: React.FC<{
+  onSubmit: (data: { email: string; role: AssignableRole; message?: string; courseId?: number }) => Promise<void> | void;
+  onClose: () => void;
+  submitting?: boolean;
+  error?: string | null;
+  /** When given (collaboration hub), the faculty member first picks which of their courses to share. */
+  courseOptions?: InviteCourseOption[];
+  defaultCourseId?: number;
+}> = ({ onSubmit, onClose, submitting, error, courseOptions, defaultCourseId }) => {
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<AssignableRole>('REVIEWER');
   const [message, setMessage] = useState('');
-  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  const [courseId, setCourseId] = useState<number | undefined>(defaultCourseId ?? courseOptions?.[0]?.id);
+  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) && (!courseOptions || courseId !== undefined);
   return (
     <Modal title="Invite faculty" onClose={onClose} testId="invite-modal">
-      <form noValidate className="space-y-3" onSubmit={(e) => { e.preventDefault(); if (valid) void onSubmit({ email: email.trim(), role, message: message.trim() || undefined }); }}>
+      <form noValidate className="space-y-3" onSubmit={(e) => { e.preventDefault(); if (valid) void onSubmit({ email: email.trim(), role, message: message.trim() || undefined, courseId }); }}>
+        {courseOptions && (
+          <label className="block text-xs font-medium text-sage-600 dark:text-sage-400">
+            Course
+            <select aria-label="Course" data-testid="invite-course" className={`${selectClass} mt-1`} value={courseId ?? ''} onChange={(e) => setCourseId(Number(e.target.value))}>
+              {courseOptions.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
+            </select>
+          </label>
+        )}
         <label className="block text-xs font-medium text-sage-600 dark:text-sage-400">Faculty email<Input aria-label="Faculty email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="colleague@university.edu" className="mt-1" /></label>
         <RoleSelect value={role} onChange={setRole} />
         <label className="block text-xs font-medium text-sage-600 dark:text-sage-400">Message (optional)

@@ -36,6 +36,7 @@ use App\Http\Controllers\Api\PreviousQuestionController;
 use App\Http\Controllers\Api\RecommendationFeedbackController;
 use App\Http\Controllers\Api\RubricAlignmentController;
 use App\Http\Controllers\Api\RubricController;
+use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\StudentAnswerController;
 use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\StudentSubmissionController;
@@ -96,6 +97,9 @@ Route::middleware('auth:sanctum')->group(function () {
  */
 Route::middleware('auth:sanctum')->group(function () {
     // Course CRUD
+    // Global search across accessible records
+    Route::get('/search', SearchController::class)->middleware('throttle:60,1');
+
     Route::apiResource('courses', CourseController::class);
 
     // Learning Outcomes
@@ -277,6 +281,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/sessions', [AcademicChatController::class, 'index']);
         Route::post('/sessions', [AcademicChatController::class, 'store']);
         Route::get('/sessions/{session}', [AcademicChatController::class, 'show']);
+        Route::patch('/sessions/{session}', [AcademicChatController::class, 'update']);
+        Route::get('/sessions/{session}/export', [AcademicChatController::class, 'export']);
         Route::delete('/sessions/{session}', [AcademicChatController::class, 'destroy']);
         Route::post('/sessions/{session}/messages', [AcademicChatController::class, 'sendMessage'])->middleware('throttle:academic-chat');
     });

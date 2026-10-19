@@ -91,6 +91,8 @@ export const AiEvaluation: React.FC = () => {
       if (res.data.status === 'PENDING' || res.data.status === 'RUNNING') {
         pollRef.current = window.setTimeout(() => void openRun(run), POLL_MS);
       } else {
+        // The run finished, so the "Evaluation queued." notice from starting it is stale.
+        setNotice((n) => (n && /queued|started/i.test(n) ? null : n));
         setErrorFilter('');
         if (res.data.status === 'COMPLETED') void loadErrors(res.data.id, '', 1, false);
         void loadRuns(runTask); void loadOverview(); void loadDatasets(datasetTask);

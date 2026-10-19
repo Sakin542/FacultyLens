@@ -106,6 +106,112 @@ class AcademicChatController extends Controller
     }
 
     /**
+     * PATCH /api/academic-chat/sessions/{session}
+     * Rename or archive/reactivate a session.
+     */
+    public function update(Request $request, AcademicChatSession $session): JsonResponse
+    {
+        if ($session->user_id !== $request->user()->id) {
+            return response()->json(['status' => 'error', 'message' => 'Unauthorized access to chat session.'], 403);
+        }
+
+        $validated = $request->validate([
+            'title' => ['sometimes', 'required', 'string', 'max:255'],
+            'status' => ['sometimes', 'required', Rule::in(['ACTIVE', 'ARCHIVED'])],
+        ]);
+
+        if ($validated === []) {
+            return response()->json(['status' => 'error', 'message' => 'Nothing to update. Provide title or status.'], 422);
+        }
+
+        if (isset($validated['title'])) {
+            $validated['title'] = trim(strip_tags($validated['title']));
+        }
+
+        $session->update($validated);
+        $session->load(['course:id,course_name,course_code', 'document:id,original_file_name,document_type', 'assessment:id,title']);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Chat session updated.',
+            'data' => $this->sessionPayload($session),
+        ]);
+    }
+
+    /**
+     * GET /api/academic-chat/sessions/{session}/export?format=markdown|json
+     * Download the full transcript with cited sources.
+     */
+    public function export(Request $request, AcademicChatSession $session)
+    {
+        if ($session->user_id !== $request->user()->id) {
+            return response()->json(['status' => 'error', 'message' => 'Unauthorized access to chat session.'], 403);
+        }
+
+        $format = $request->validate(['format' => ['nullable', Rule::in(['markdown', 'json'])]])['format'] ?? 'markdown';
+
+        $session->load([
+            'course:id,course_name,course_code',
+            'document:id,original_file_name,document_type',
+            'assessment:id,title',
+            'messages.sources',
+        ]);
+
+        $this->audit->log('ACADEMIC_CHAT_EXPORTED', $session, $session->id, ['format' => $format], $request->user());
+
+        $slug = \Illuminate\Support\Str::slug($session->title ?: 'chat-session') ?: 'chat-session';
+        $filename = "chat-{$session->id}-{$slug}";
+
+        if ($format === 'json') {
+            $body = json_encode($this->sessionPayload($session) + [
+                'messages' => $session->messages->map(fn ($m) => $this->messagePayload($m))->values(),
+                'exported_at' => now()->toIso8601String(),
+            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+            return response($body, 200, [
+                'Content-Type' => 'application/json; charset=UTF-8',
+                'Content-Disposition' => "attachment; filename=\"{$filename}.json\"",
+            ]);
+        }
+
+        $lines = ['# '.($session->title ?: 'Academic chat session'), ''];
+        $lines[] = '- Scope: '.$session->scope_type;
+        if ($session->course) {
+            $lines[] = "- Course: {$session->course->course_code} {$session->course->course_name}";
+        }
+        if ($session->document) {
+            $lines[] = "- Document: {$session->document->original_file_name}";
+        }
+        if ($session->assessment) {
+            $lines[] = "- Assessment: {$session->assessment->title}";
+        }
+        $lines[] = '- Exported: '.now()->toIso8601String();
+        $lines[] = '';
+
+        foreach ($session->messages as $message) {
+            $who = $message->role === AcademicChatMessage::ROLE_USER ? 'You' : 'Assistant';
+            $lines[] = "## {$who} ({$message->created_at?->toDateTimeString()})";
+            $lines[] = '';
+            $lines[] = $message->content;
+            $lines[] = '';
+            if ($message->sources->isNotEmpty()) {
+                $lines[] = '**Sources**';
+                $lines[] = '';
+                foreach ($message->sources as $source) {
+                    $page = $source->page_number ? ", p. {$source->page_number}" : '';
+                    $lines[] = "{$source->source_order}. {$source->document_name}{$page}";
+                }
+                $lines[] = '';
+            }
+        }
+
+        return response(implode("\n", $lines), 200, [
+            'Content-Type' => 'text/markdown; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$filename}.md\"",
+        ]);
+    }
+
+    /**
      * DELETE /api/academic-chat/sessions/{session}
      */
     public function destroy(Request $request, AcademicChatSession $session): JsonResponse

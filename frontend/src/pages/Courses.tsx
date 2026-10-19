@@ -215,6 +215,11 @@ export const Courses: React.FC = () => {
             const cloCount = course.learning_outcomes_count ?? course.learningOutcomesCount ?? (course.learning_outcomes ? course.learning_outcomes.length : 0);
             const matCount = course.materials_count ?? (course.materials ? course.materials.length : 0);
             const assessCount = course.assessments_count ?? course.assessmentCount ?? (course.assessments ? course.assessments.length : 0);
+            // The server tags every course with the caller's role; shared courses only offer what that role allows.
+            const role = course.current_role ?? 'OWNER';
+            const isShared = role !== 'OWNER';
+            const canEdit = role === 'OWNER' || role === 'EDITOR';
+            const canDelete = role === 'OWNER';
 
             return (
               <Card
@@ -225,9 +230,16 @@ export const Courses: React.FC = () => {
                 <div className="space-y-4">
                   <div className="flex items-start justify-between">
                     <div>
-                      <Badge variant="outline" className="font-mono font-bold text-xs bg-sage-100 dark:bg-[#2C2C2E]">
-                        {code}
-                      </Badge>
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <Badge variant="outline" className="font-mono font-bold text-xs bg-sage-100 dark:bg-[#2C2C2E]">
+                          {code}
+                        </Badge>
+                        {isShared && (
+                          <Badge variant="neutral" className="text-[10px]" data-testid="shared-course-badge" title="A colleague shared this course with you">
+                            Shared · {role.charAt(0) + role.slice(1).toLowerCase()}
+                          </Badge>
+                        )}
+                      </div>
                       <h3 className="text-base font-bold text-sage-800 dark:text-white mt-2 leading-snug line-clamp-2">
                         {title}
                       </h3>
@@ -277,22 +289,28 @@ export const Courses: React.FC = () => {
                   >
                     View Details
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    leftIcon={<Edit className="w-3.5 h-3.5" />}
-                    onClick={() => setEditingCourse(course)}
-                    title="Edit course"
-                  />
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/30"
-                    leftIcon={deletingCourseId === course.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
-                    onClick={() => handleDeleteCourse(course)}
-                    disabled={deletingCourseId === course.id}
-                    title="Delete course"
-                  />
+                  {canEdit && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      leftIcon={<Edit className="w-3.5 h-3.5" />}
+                      onClick={() => setEditingCourse(course)}
+                      title="Edit course"
+                      aria-label={`Edit ${code ?? 'course'}`}
+                    />
+                  )}
+                  {canDelete && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/30"
+                      leftIcon={deletingCourseId === course.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                      onClick={() => handleDeleteCourse(course)}
+                      disabled={deletingCourseId === course.id}
+                      title="Delete course"
+                      aria-label={`Delete ${code ?? 'course'}`}
+                    />
+                  )}
                 </div>
               </Card>
             );

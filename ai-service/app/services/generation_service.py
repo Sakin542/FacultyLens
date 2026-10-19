@@ -18,6 +18,8 @@ logger = logging.getLogger("facultylens.ai")
 class GenerationService:
     _instance: Optional["GenerationService"] = None
     _pipeline: Any = None
+    _model: Any = None
+    _tokenizer: Any = None
     _task: Optional[str] = None
     _model_name: Optional[str] = None
     _is_loaded: bool = False
@@ -56,15 +58,22 @@ class GenerationService:
     def load_model(self) -> bool:
         if not self.is_configured:
             return False
-        if self._is_loaded and self._pipeline is not None:
+        if self._is_loaded and (self._pipeline is not None or self._model is not None):
             return True
         settings = get_settings()
         try:
-            from transformers import AutoConfig, pipeline
+            from transformers import AutoConfig, AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
 
             config = AutoConfig.from_pretrained(self._model_name, token=settings.hf_token or None)
-            self._task = "text2text-generation" if getattr(config, "is_encoder_decoder", False) else "text-generation"
-            self._pipeline = pipeline(self._task, model=self._model_name, device=-1, token=settings.hf_token or None)
+            is_seq2seq = getattr(config, "is_encoder_decoder", False)
+            if is_seq2seq:
+                self._tokenizer = AutoTokenizer.from_pretrained(self._model_name, token=settings.hf_token or None)
+                self._model = AutoModelForSeq2SeqLM.from_pretrained(self._model_name, token=settings.hf_token or None)
+                self._task = "seq2seq"
+            else:
+                self._task = "text-generation"
+                self._pipeline = pipeline("text-generation", model=self._model_name, device=-1, token=settings.hf_token or None)
+
             self._is_loaded = True
             self._load_error = None
             logger.info(f"Generation model '{self._model_name}' loaded ({self._task}).")
@@ -81,13 +90,17 @@ class GenerationService:
             return None
         settings = get_settings()
         try:
-            kwargs = {"max_new_tokens": max_new_tokens or settings.hf_generation_max_new_tokens, "do_sample": False}
-            if self._task == "text-generation":
-                kwargs["return_full_text"] = False
-            outputs = self._pipeline(prompt, **kwargs)
-            if outputs and isinstance(outputs, list):
-                text = str(outputs[0].get("generated_text", "")).strip()
+            tokens = max_new_tokens or settings.hf_generation_max_new_tokens
+            if self._task == "seq2seq" and self._model is not None and self._tokenizer is not None:
+                inputs = self._tokenizer(prompt, return_tensors="pt", truncation=True, max_length=1024)
+                outputs = self._model.generate(**inputs, max_new_tokens=tokens, do_sample=False)
+                text = self._tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
                 return text or None
+            elif self._pipeline is not None:
+                kwargs = {"max_new_tokens": tokens, "do_sample": False, "return_full_text": False}
+                outputs = self._pipeline(prompt, **kwargs)
+                if outputs and isinstance(outputs, list):
+                    return str(outputs[0].get("generated_text", "")).strip() or None
             return None
         except Exception as e:
             logger.warning(f"Generation model inference failed: {type(e).__name__}")
