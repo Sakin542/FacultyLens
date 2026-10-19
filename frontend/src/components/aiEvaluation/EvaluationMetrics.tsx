@@ -83,7 +83,7 @@ export const ClassificationMetrics: React.FC<{ metrics: EvaluationMetrics }> = (
 export const AlignmentMetrics: React.FC<{ metrics: EvaluationMetrics }> = ({ metrics }) => {
   const lo = metrics.task === 'LO_ALIGNMENT';
   return (
-    <Section testId="alignment-metrics" title={lo ? 'Learning-outcome alignment' : 'Answer–rubric alignment'} description={lo ? 'MiniLM embeddings + cosine similarity at the production STEP 11 thresholds compared with faculty-validated labels.' : 'Criterion-level agreement with faculty-reviewed alignment statuses (positive = aligned).'}>
+    <Section testId="alignment-metrics" title={lo ? 'Learning-outcome alignment' : 'Answer–rubric alignment'} description={lo ? 'MiniLM embeddings + cosine similarity at the production alignment thresholds compared with faculty-validated labels.' : 'Criterion-level agreement with faculty-reviewed alignment statuses (positive = aligned).'}>
       <ScalarGrid scalars={metrics.scalars} keys={lo
         ? ['macro_f1', 'accuracy', 'strong_precision', 'strong_recall', 'strong_f1', 'weak_precision', 'weak_recall', 'weak_f1', 'not_aligned_precision', 'not_aligned_recall', 'not_aligned_f1']
         : ['criterion_f1', 'criterion_precision', 'criterion_recall', 'overall_agreement', 'false_positive_alignments', 'false_negative_alignments', 'criteria_compared']} />
@@ -212,9 +212,18 @@ const summarize = (v: unknown): string => {
   if (v === null || v === undefined) return '—';
   if (typeof v === 'string') return v.length > 160 ? `${v.slice(0, 160)}…` : v;
   if (typeof v === 'number' || typeof v === 'boolean') return String(v);
-  const s = JSON.stringify(v);
+  let s: string;
+  if (!Array.isArray(v) && typeof v === 'object') {
+    // Show what a faculty member needs ("EASY", "score: 0.82"), not raw JSON; empty and internal fields are dropped.
+    const entries = Object.entries(v as Record<string, unknown>).filter(([k, x]) => x !== null && x !== undefined && x !== '' && !HIDDEN_FIELDS.has(k));
+    const scalar = (x: unknown) => (typeof x === 'object' ? JSON.stringify(x) : String(x));
+    s = entries.length === 0 ? '—' : entries.length === 1 && typeof entries[0][1] !== 'object' ? scalar(entries[0][1]) : entries.map(([k, x]) => `${k.replace(/_/g, ' ')}: ${scalar(x)}`).join(' · ');
+  } else {
+    s = JSON.stringify(v);
+  }
   return s.length > 160 ? `${s.slice(0, 160)}…` : s;
 };
+const HIDDEN_FIELDS = new Set(['method']);
 
 export const ErrorAnalysis: React.FC<{ items: ErrorAnalysisItem[]; breakdown: Record<string, number>; total: number; loading?: boolean; filter: string; onFilter: (t: string) => void; onLoadMore?: () => void; hasMore?: boolean }> = ({ items, breakdown, total, loading, filter, onFilter, onLoadMore, hasMore }) => (
   <Section testId="error-analysis" title="Error analysis" description={`${total} example-level result${total === 1 ? '' : 's'} (errors only). Inputs are truncated; student answers are never exported by default.`}>

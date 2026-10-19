@@ -43,7 +43,7 @@ export const BlueprintWarnings: React.FC<{ warnings: BlueprintWarning[] }> = ({ 
 
 export const BlueprintRecommendations: React.FC<{ recommendations: BlueprintRecommendation[] }> = ({ recommendations }) => (
   recommendations.length === 0 ? null : (
-    <Section testId="blueprint-recommendations" title="Recommendations" subtitle="Cautious planning suggestions for faculty review (STEP 14 categories).">
+    <Section testId="blueprint-recommendations" title="Recommendations" subtitle="Cautious planning suggestions for faculty review (recommendation categories).">
       <ul className="space-y-2">{recommendations.map((r, i) => <li key={i} className="text-sm"><Badge variant="neutral" size="sm">{humanize(r.category)}</Badge> <span className="font-medium">{r.title}</span><p className="text-xs text-sage-500">{r.message}</p></li>)}</ul>
     </Section>
   )

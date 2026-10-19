@@ -13,6 +13,7 @@ import { LearningOutcomeModal } from '@/components/courses/LearningOutcomeModal'
 import { MaterialUploadModal } from '@/components/courses/MaterialUploadModal';
 import { DocumentUploadModal } from '@/components/documents/DocumentUploadModal';
 import { DocumentList } from '@/components/documents/DocumentList';
+import { ApiError } from '@/services/api';
 import {
   ArrowLeft,
   Edit,
@@ -46,6 +47,7 @@ export const CourseDetails: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingDocs, setIsLoadingDocs] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [noAccess, setNoAccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // Modal states
@@ -70,6 +72,7 @@ export const CourseDetails: React.FC = () => {
     try {
       setIsLoading(true);
       setError(null);
+      setNoAccess(false);
       const res = await courseService.getById(id);
       setCourse(res.data);
       setLearningOutcomes(res.data.learning_outcomes || res.data.learningOutcomes || []);
@@ -86,7 +89,10 @@ export const CourseDetails: React.FC = () => {
         setIsLoadingDocs(false);
       }
     } catch (err: unknown) {
-      if (err instanceof Error) {
+      if (err instanceof ApiError && (err.status === 403 || err.status === 404)) {
+        setNoAccess(true);
+        setError(null);
+      } else if (err instanceof Error) {
         setError(err.message);
       } else {
         setError('Failed to load course details.');
@@ -251,6 +257,31 @@ export const CourseDetails: React.FC = () => {
       <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
         <Loader2 className="w-8 h-8 animate-spin text-sage-800 dark:text-white" />
         <p className="text-sm text-sage-500">Loading course information...</p>
+      </div>
+    );
+  }
+
+  if (noAccess) {
+    // 403/404: retrying cannot help (not shared with you, access removed, or the course was deleted)
+    return (
+      <div className="space-y-4" data-testid="course-no-access">
+        <Link to="/courses" className="inline-flex items-center gap-2 text-xs font-semibold text-sage-500 hover:text-sage-800 dark:hover:text-white">
+          <ArrowLeft className="w-4 h-4" /> Back to Courses
+        </Link>
+        <div className="p-6 bg-white dark:bg-[#161616] border border-sage-200 dark:border-[#2A2A2A] rounded-xl space-y-3">
+          <div className="flex items-center gap-2 text-sage-800 dark:text-white font-bold">
+            <AlertCircle className="w-5 h-5 text-amber-600" />
+            <span>Course not found or you don't have permission to view it</span>
+          </div>
+          <p className="text-sm text-sage-600 dark:text-sage-300">
+            It may not be shared with you, the owner may have removed your access, or the course was deleted.
+            Ask the course owner to invite you again if you still need it.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Link to="/courses"><Button variant="outline" size="sm">My courses</Button></Link>
+            <Link to="/collaboration"><Button size="sm">Collaboration</Button></Link>
+          </div>
+        </div>
       </div>
     );
   }

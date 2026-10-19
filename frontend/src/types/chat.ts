@@ -55,15 +55,15 @@ export interface ChatMessage {
   role: ChatRole;
   content: string;
   grounded: boolean;
-  generation_method: string | null;
-  generation_model: string | null;
-  embedding_model: string | null;
-  prompt_version: string | null;
-  retrieved_count: number | null;
-  used_count: number | null;
-  disclaimer: string | null;
+  generation_method?: string | null;
+  generation_model?: string | null;
+  embedding_model?: string | null;
+  prompt_version?: string | null;
+  retrieved_count?: number | null;
+  used_count?: number | null;
+  disclaimer?: string | null;
   sources: ChatSource[];
-  created_at: string | null;
+  created_at?: string | null;
   /** STEP 46 safety state (optional for messages persisted before STEP 46). */
   evidence_status?: ChatEvidenceStatus | null;
   conflicting_evidence?: ChatConflictingEvidence[];

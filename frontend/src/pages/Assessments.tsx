@@ -322,7 +322,7 @@ export const Assessments: React.FC = () => {
                         <span className="truncate max-w-[200px]">{paper.file_name}</span>
                       </div>
                     ) : (
-                      <div className="pt-1 text-[11px] text-amber-700 dark:text-amber-400">
+                      <div className="pt-1 text-[11px] text-amber-800 dark:text-amber-400">
                         No question paper attached
                       </div>
                     )}

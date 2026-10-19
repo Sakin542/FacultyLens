@@ -63,7 +63,7 @@ const RATING_ORDER: Array<keyof AssessmentQualityAnalytics['counts']> = ['EXCELL
 export const AssessmentQualityCard: React.FC<{ data: AssessmentQualityAnalytics }> = ({ data }) => (
   <Section testId="assessment-quality" title="Assessment Quality" explanation={data.explanation} subtitle={data.analyzed_assessments ? `${data.analyzed_assessments} analyzed · average ${fmtNum(data.average_score)}` : undefined}>
     {data.analyzed_assessments === 0 ? <SectionEmpty title="No assessment data available." description="Create and analyze an assessment to see academic quality analytics here." /> : (
-      <table className="w-full text-sm"><caption className="sr-only">Assessments by STEP 13 quality rating</caption>
+      <table className="w-full text-sm"><caption className="sr-only">Assessments by quality rating</caption>
         <tbody>{RATING_ORDER.map((r) => <tr key={r} className="border-t border-sage-100 dark:border-[#2A2A2A]"><td className="py-1"><StatusBadge status={r} /></td><td className="py-1 text-right tabular-nums">{data.counts[r] ?? 0}</td></tr>)}</tbody>
       </table>
     )}

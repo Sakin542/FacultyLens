@@ -90,9 +90,36 @@ export interface ActivityItem {
 
 export interface PageMeta { current_page: number; last_page: number; per_page?: number; total: number; can_comment?: boolean; unread_count?: number }
 
+export interface SharedCourse {
+  id: number;
+  course_code: string | null;
+  course_name: string | null;
+  semester?: string | null;
+  academic_year?: string | null;
+  role: CollaborationRole;
+  owner?: { id: number; name: string } | null;
+  joined_at?: string | null;
+  open_discussions_count?: number;
+}
+
+export interface OwnedCourse {
+  id: number;
+  course_code: string | null;
+  course_name: string | null;
+  semester?: string | null;
+  academic_year?: string | null;
+  collaborators_count: number;
+  pending_invitations_count: number;
+  open_discussions_count: number;
+}
+
 export interface CollaborationSummary {
   shared_courses_count: number;
-  shared_courses: { id: number; course_code: string | null; course_name: string | null; role: CollaborationRole }[];
+  shared_courses: SharedCourse[];
+  /** Courses the signed-in faculty member owns (their own teams). */
+  owned_courses?: OwnedCourse[];
+  /** Pending invitations the signed-in faculty member has sent for their own courses. */
+  sent_invitations?: Invitation[];
   pending_invitations_count: number;
   pending_invitations: Invitation[];
   unresolved_discussions_count: number;

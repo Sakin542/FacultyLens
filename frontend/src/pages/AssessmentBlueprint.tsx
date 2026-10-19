@@ -73,7 +73,7 @@ export const AssessmentBlueprintPage: React.FC = () => {
   const finalize = () => bp && window.confirm(`Finalize blueprint v${bp.version}? Finalized blueprints are protected; later edits create a new version.`) && run(async () => { const r = await assessmentBlueprintService.finalizeBlueprint(bp.id); setData(r.data); setNotice(r.message ?? null); });
   const remove = () => bp && window.confirm('Delete this draft blueprint?') && run(async () => { await assessmentBlueprintService.deleteBlueprint(bp.id); await load(); setNotice('Draft blueprint deleted.'); });
   const compare = () => bp && run(async () => { const r = await assessmentBlueprintService.compareWithQuestions(bp.id, canEdit); setComparison(r.data); });
-  const generate = () => bp && window.confirm('Create STEP 33 question-generation requests from this blueprint? Generated questions stay drafts until you approve them.') && run(async () => {
+  const generate = () => bp && window.confirm('Send this blueprint to the Question Generator? Generated questions stay drafts until you approve them.') && run(async () => {
     const r = await assessmentBlueprintService.generateQuestions(bp.id);
     setNotice(`${r.data.requests.length} generation request(s) started. ${r.data.note}`);
     if (bp.course) navigate(`/courses/${bp.course.id}/question-generator?assessment=${bp.assessment_id}${r.data.requests[0] ? `&request=${r.data.requests[0].id}` : ''}`);

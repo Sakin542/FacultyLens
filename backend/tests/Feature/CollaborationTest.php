@@ -398,6 +398,18 @@ class CollaborationTest extends TestCase
         $this->getJson("/api/courses/{$this->course->id}/collaboration/activity")->assertStatus(403);
     }
 
+    public function test_activity_feed_describes_course_discussions_in_words(): void
+    {
+        Sanctum::actingAs($this->owner);
+        $thread = $this->postJson("/api/courses/{$this->course->id}/comments", ['commentable_type' => 'course', 'commentable_id' => $this->course->id, 'body' => 'Shall we revise the midterm?'])->assertStatus(201);
+        $this->postJson("/api/courses/{$this->course->id}/comments", ['commentable_type' => 'course', 'commentable_id' => $this->course->id, 'parent_id' => $thread->json('data.id'), 'body' => 'Yes, next week.'])->assertStatus(201);
+
+        $summaries = collect($this->getJson("/api/courses/{$this->course->id}/collaboration/activity")->assertOk()->json('data'))->pluck('summary');
+        $this->assertContains('Dr. A started a course discussion.', $summaries);
+        $this->assertContains('Dr. A replied in the course discussion.', $summaries);
+        $this->assertFalse($summaries->contains(fn ($s) => str_contains($s, "course #{$this->course->id}")));
+    }
+
     public function test_summary_and_notifications_are_user_scoped(): void
     {
         Sanctum::actingAs($this->editor);

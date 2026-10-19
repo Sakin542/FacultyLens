@@ -1814,10 +1814,12 @@ class AiAnalysisController extends Controller
         });
 
         // Format similarity matches
+        $report->loadMissing(['similarityMatches.currentQuestion:id,question_number', 'similarityMatches.previousQuestion']);
         $similarityMatches = $report->similarityMatches->map(function ($sm) {
             return [
                 'id' => $sm->id,
                 'current_question_id' => $sm->current_question_id,
+                'current_question_number' => $sm->currentQuestion?->question_number,
                 'previous_question_id' => $sm->previous_question_id,
                 'previous_question_text' => $sm->previousQuestion?->question_text,
                 'previous_assessment_title' => $sm->previousQuestion?->source_assessment,

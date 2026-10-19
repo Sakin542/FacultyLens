@@ -43,6 +43,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   const channelRef = useRef<BroadcastChannel | null>(null);
   const isMounted = useRef<boolean>(true);
   const unreadInFlight = useRef<Promise<void> | null>(null);
+  const seenIds = useRef<Set<string>>(new Set());
 
   // Broadcast multi-tab update
   const postTabMessage = useCallback((msg: { type: string; payload?: unknown }) => {
@@ -90,6 +91,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         });
         if (!isMounted.current) return;
         setNotifications(res.data ?? []);
+        (res.data ?? []).forEach((item) => seenIds.current.add(item.id));
         setMeta(res.meta ?? null);
         if (typeof res.meta?.unread_count === 'number') {
           setUnreadCount(res.meta.unread_count);
@@ -110,21 +112,18 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
   const addNotification = useCallback(
     (n: Notification) => {
-      setNotifications((prev) => {
-        // Strict deduplication by ID
-        if (prev.some((item) => item.id === n.id)) {
-          return prev;
-        }
+      // Strict deduplication by ID. Side effects (unread count, toast) must not live inside a state updater:
+      // React may run updaters twice (Strict Mode), which showed duplicate toasts and double-counted unread.
+      if (seenIds.current.has(n.id)) {
+        return;
+      }
+      seenIds.current.add(n.id);
 
-        // Increment unread count if notification is unread
-        if (!n.read_at) {
-          setUnreadCount((c) => c + 1);
-          // Add toast for unread notifications
-          setToasts((t) => [n, ...t.slice(0, 4)]);
-        }
-
-        return [n, ...prev];
-      });
+      setNotifications((prev) => (prev.some((item) => item.id === n.id) ? prev : [n, ...prev]));
+      if (!n.read_at) {
+        setUnreadCount((c) => c + 1);
+        setToasts((t) => (t.some((x) => x.id === n.id) ? t : [n, ...t.slice(0, 4)]));
+      }
 
       // Dispatch window event and multi-tab message
       if (typeof window !== 'undefined') {

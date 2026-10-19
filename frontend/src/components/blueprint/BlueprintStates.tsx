@@ -81,7 +81,7 @@ export const BlueprintActions: React.FC<{
       {canEdit && !finalized && <Button size="sm" onClick={onFinalize} disabled={busy || !canFinalize} title={canFinalize ? 'Finalize this blueprint version' : 'Validate the blueprint (without errors) before finalizing'} leftIcon={<Lock className="w-3.5 h-3.5" aria-hidden="true" />}>Finalize</Button>}
       {canEdit && finalized && <Button size="sm" variant="outline" onClick={onNewVersion} disabled={busy}>Create new version</Button>}
       <Button size="sm" variant="outline" onClick={onCompare} disabled={busy}>Compare with questions</Button>
-      {canGenerate && <Button size="sm" variant="outline" onClick={onGenerate} disabled={busy || !finalized} title={finalized ? 'Create STEP 33 generation requests from this blueprint' : 'Finalize the blueprint first'}>Generate Questions from Blueprint</Button>}
+      {canGenerate && <Button size="sm" variant="outline" onClick={onGenerate} disabled={busy || !finalized} title={finalized ? 'Send this blueprint to the Question Generator' : 'Finalize the blueprint first'}>Generate Questions from Blueprint</Button>}
       {blueprint.course && <Link to={`/courses/${blueprint.course.id}/question-bank`} className="text-xs underline underline-offset-2 ml-1">Select from Question Bank</Link>}
       {canEdit && !finalized && <Button size="sm" variant="ghost" onClick={onDelete} disabled={busy} className="text-red-700">Delete draft</Button>}
     </div>

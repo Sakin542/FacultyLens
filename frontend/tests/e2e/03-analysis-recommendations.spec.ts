@@ -50,7 +50,7 @@ test.describe('Journeys 3–4: AI analysis and recommendations', () => {
     const feedbackResponse = page.waitForResponse((r) => /\/api\/recommendations\/\d+\/feedback$/.test(r.url()) && r.request().method() === 'POST');
     await page.getByRole('button', { name: 'Confirm & Accept' }).click();
     expect((await feedbackResponse).status()).toBe(200);
-    await expect(page.getByText('Accepted').first()).toBeVisible();
+    await expect(page.getByText('Accepted', { exact: true }).filter({ visible: true }).first()).toBeVisible(); // not the hidden <option> in the status filter
 
     const after = await api.call('GET', `/ai/assessments/${assessment.id}/recommendations`);
     const afterList: any[] = after.data?.recommendations ?? after.data ?? [];
@@ -58,7 +58,7 @@ test.describe('Journeys 3–4: AI analysis and recommendations', () => {
 
     // Feedback page lists the decision
     await page.goto('/feedback');
-    await expect(page.getByText(/accepted/i).first()).toBeVisible();
+    await expect(page.getByText(/accepted/i).filter({ visible: true }).first()).toBeVisible();
     await expectNoCrash(page);
 
     // Re-running yields a new analysis version while the faculty decision survives

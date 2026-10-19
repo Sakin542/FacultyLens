@@ -1,0 +1,3 @@
+{"type":"receive","time":1791232581327,"opcode":1,"data":"{\"event\":\"pusher:connection_established\",\"data\":\"{\\\"socket_id\\\":\\\"678353495.665414404\\\",\\\"activity_timeout\\\":30}\"}"}
+{"type":"send","time":1791232582595.8132,"opcode":1,"data":"{\"event\":\"pusher:subscribe\",\"data\":{\"auth\":\"facultylens_key:f14d571479e5f772a33ea8496be62f30ed5633fbc122120488b74f04b1ec1b26\",\"channel\":\"private-users.205.notifications\"}}"}
+{"type":"receive","time":1791232582597.1992,"opcode":1,"data":"{\"event\":\"pusher_internal:subscription_succeeded\",\"data\":\"{}\",\"channel\":\"private-users.205.notifications\"}"}

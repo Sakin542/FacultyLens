@@ -75,12 +75,17 @@ class DocumentTextExtractor
      */
     public function extractPdfPages(string $filePath): array
     {
+        $poppler = $this->extractPdfPagesWithPoppler($filePath);
+        if ($poppler !== null) {
+            return $poppler;
+        }
+
         try {
             $parser = new PdfParser();
             $pdf = $parser->parseFile($filePath);
             $pages = [];
             foreach ($pdf->getPages() as $i => $page) {
-                $pages[$i + 1] = (string) $page->getText();
+                $pages[$i + 1] = $this->cleaner->normalizeSymbolFontGlyphs((string) $page->getText());
             }
 
             return $pages;
@@ -96,16 +101,70 @@ class DocumentTextExtractor
      */
     protected function extractPdf(string $filePath): string
     {
+        $poppler = $this->extractPdfPagesWithPoppler($filePath);
+        if ($poppler !== null) {
+            return implode("\n\n", $poppler);
+        }
+
         try {
             $parser = new PdfParser();
             $pdf = $parser->parseFile($filePath);
-            $text = $pdf->getText();
-
-            return (string) $text;
+            // Raw text is shown to faculty too ("Raw Extracted Text" tab), so Symbol-font glyphs are mapped here as well
+            return $this->cleaner->normalizeSymbolFontGlyphs((string) $pdf->getText());
         } catch (Exception $e) {
             Log::error("PDF Extraction failed for {$filePath}: " . $e->getMessage());
             throw new Exception("Failed to extract text from PDF: " . $e->getMessage());
         }
+    }
+
+    /**
+     * Poppler's pdftotext keeps word spacing and reading order far better than smalot/pdfparser on slide decks
+     * (PowerPoint exports place words individually, which smalot glues together: "ABNprovidesacomplete…").
+     * Used when the binary is installed (backend Dockerfile installs poppler-utils); null → caller falls back.
+     *
+     * @return array<int, string>|null 1-based page number => page text
+     */
+    protected function extractPdfPagesWithPoppler(string $filePath): ?array
+    {
+        $binary = config('documents.pdftotext_binary', 'pdftotext');
+        if (! $binary || ! $this->binaryAvailable($binary)) {
+            return null;
+        }
+
+        try {
+            $process = new \Symfony\Component\Process\Process([$binary, '-enc', 'UTF-8', '-q', $filePath, '-']);
+            $process->setTimeout(60);
+            $process->run();
+            if (! $process->isSuccessful()) {
+                Log::warning("pdftotext failed for {$filePath}; falling back to smalot/pdfparser", ['exit' => $process->getExitCode()]);
+
+                return null;
+            }
+
+            // Pages are separated by form feeds; the output usually ends with one.
+            $pages = explode("\f", rtrim($process->getOutput(), "\f"));
+            $result = [];
+            foreach ($pages as $i => $text) {
+                $result[$i + 1] = $this->cleaner->normalizeSymbolFontGlyphs($text);
+            }
+
+            return trim(implode('', $result)) === '' ? null : $result;
+        } catch (\Throwable $e) {
+            Log::warning("pdftotext unavailable for {$filePath}: {$e->getMessage()}");
+
+            return null;
+        }
+    }
+
+    protected function binaryAvailable(string $binary): bool
+    {
+        static $cache = [];
+        if (! array_key_exists($binary, $cache)) {
+            $finder = new \Symfony\Component\Process\ExecutableFinder();
+            $cache[$binary] = is_file($binary) || $finder->find($binary) !== null;
+        }
+
+        return $cache[$binary];
     }
 
     /**

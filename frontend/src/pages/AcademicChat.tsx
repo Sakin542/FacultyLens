@@ -36,6 +36,7 @@ export const AcademicChat: React.FC = () => {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastQuestion, setLastQuestion] = useState<string | null>(null);
+  const [streamingMessageId, setStreamingMessageId] = useState<number | null>(null);
 
   const disclaimer = useMemo(() => messages.find((m) => m.role === 'ASSISTANT' && m.disclaimer)?.disclaimer ?? null, [messages]);
 
@@ -114,15 +115,39 @@ export const AcademicChat: React.FC = () => {
     setSending(true);
     setError(null);
     setLastQuestion(text);
+
+    // Optimistic user message for immediate real-time feedback
+    const optimisticId = -Date.now();
+    const optimisticUserMessage: ChatMessage = {
+      id: optimisticId,
+      role: 'USER',
+      content: text,
+      grounded: false,
+      sources: [],
+      created_at: new Date().toISOString(),
+    };
+    setMessages((prev) => [...prev, optimisticUserMessage]);
+
     try {
       const res = await academicChatService.sendMessage(active.id, text);
-      const additions = [res.data.user_message, res.data.assistant_message].filter(Boolean) as ChatMessage[];
-      setMessages((prev) => [...prev, ...additions]);
+      const userMsg = res.data.user_message;
+      const assistantMsg = res.data.assistant_message;
+
+      if (assistantMsg?.id) {
+        setStreamingMessageId(assistantMsg.id);
+      }
+
+      setMessages((prev) => {
+        const withoutOptimistic = prev.filter((m) => m.id !== optimisticId);
+        const additions = [userMsg || optimisticUserMessage, assistantMsg].filter(Boolean) as ChatMessage[];
+        return [...withoutOptimistic, ...additions];
+      });
       setActive((prev) => (prev ? { ...prev, ...res.data.session, index: prev.index, messages: [] } : prev));
       setSessions((prev) => prev.map((s) => (s.id === res.data.session.id ? { ...s, ...res.data.session } : s)));
       setLastQuestion(null);
     } catch (e) {
       setError(getChatErrorMessage(e));
+      setMessages((prev) => prev.filter((m) => m.id !== optimisticId));
     } finally {
       setSending(false);
     }
@@ -194,6 +219,8 @@ export const AcademicChat: React.FC = () => {
                 messages={messages}
                 loading={sending || loadingSession}
                 disclaimer={disclaimer}
+                streamingMessageId={streamingMessageId}
+                onStreamingDone={() => setStreamingMessageId(null)}
                 emptyDescription={noIndexed ? 'No indexed documents are available in this scope yet. Upload documents to the course and wait for indexing to finish.' : undefined}
               />
               {noIndexed && active.index && active.index.total > 0 && active.index.indexing > 0 && (

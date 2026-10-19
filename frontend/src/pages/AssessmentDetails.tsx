@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { CollaborationComments } from '@/components/collaboration/CollaborationComments';
@@ -120,13 +120,17 @@ export const AssessmentDetails: React.FC = () => {
     }
   };
 
+  // Only the first load shows the full-page spinner. Later refreshes (after a modal finishes) must keep the page
+  // mounted, otherwise the open modal unmounts and its freshly computed results disappear.
+  const hasLoadedRef = useRef(false);
   const loadAssessment = useCallback(async () => {
     if (!id) return;
     try {
-      setIsLoading(true);
+      if (!hasLoadedRef.current) setIsLoading(true);
       setError(null);
       const res = await assessmentService.getById(id);
       setAssessment(res.data);
+      hasLoadedRef.current = true;
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -139,6 +143,7 @@ export const AssessmentDetails: React.FC = () => {
   }, [id]);
 
   useEffect(() => {
+    hasLoadedRef.current = false; // a different assessment gets the full first-load state again
     loadAssessment();
   }, [loadAssessment]);
 
@@ -619,6 +624,22 @@ export const AssessmentDetails: React.FC = () => {
                       {q.difficulty_level && (
                         <Badge variant="neutral" className="text-[10px] capitalize">
                           {q.difficulty_level}
+                        </Badge>
+                      )}
+                      {/* Faculty-set metadata (always shown; AI badges below only appear after analysis) */}
+                      {q.question_type && (
+                        <Badge variant="neutral" className="text-[10px] capitalize" data-testid="question-type-badge">
+                          {String(q.question_type).replace(/_/g, ' ')}
+                        </Badge>
+                      )}
+                      {q.cognitive_level && (
+                        <Badge variant="neutral" className="text-[10px]" data-testid="question-bloom-badge">
+                          {q.cognitive_level}
+                        </Badge>
+                      )}
+                      {q.learning_outcome?.code && (
+                        <Badge variant="neutral" className="text-[10px] font-mono" data-testid="question-lo-badge" title={q.learning_outcome.description}>
+                          {q.learning_outcome.code}
                         </Badge>
                       )}
                       {q.ai_question_type && (

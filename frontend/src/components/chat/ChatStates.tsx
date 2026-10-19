@@ -21,12 +21,28 @@ export const ChatEmptyState: React.FC<{ title?: string; description?: string; cl
   </div>
 );
 
-export const ChatLoading: React.FC<{ label?: string }> = ({ label = 'Searching your documents…' }) => (
-  <div data-testid="chat-loading" role="status" className="flex items-center gap-2 text-sm text-sage-500 px-4 py-3">
-    <Loader2 className="w-4 h-4 animate-spin" />
-    <span>{label}</span>
-  </div>
-);
+export const ChatLoading: React.FC<{ label?: string }> = ({ label }) => {
+  const [stepIndex, setStepIndex] = React.useState(0);
+  const steps = React.useMemo(
+    () => ['Searching document passages…', 'Analyzing evidence & context…', 'Synthesizing real-time answer…'],
+    []
+  );
+
+  React.useEffect(() => {
+    if (label) return;
+    const interval = setInterval(() => {
+      setStepIndex((prev) => (prev + 1) % steps.length);
+    }, 1200);
+    return () => clearInterval(interval);
+  }, [label, steps.length]);
+
+  return (
+    <div data-testid="chat-loading" role="status" className="flex items-center gap-2 text-sm text-sage-500 px-4 py-3">
+      <Loader2 className="w-4 h-4 animate-spin text-sage-600 dark:text-sage-400" />
+      <span>{label || steps[stepIndex]}</span>
+    </div>
+  );
+};
 
 export function getChatErrorMessage(err: unknown): string {
   if (err instanceof ApiError) {

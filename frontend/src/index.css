@@ -181,6 +181,12 @@
 /* Scrollable but with no visible scrollbar (sidebar nav) */
 .scrollbar-none { scrollbar-width: none; -ms-overflow-style: none; }
 .scrollbar-none::-webkit-scrollbar { display: none; width: 0; height: 0; }
+/* Thin translucent scrollbar for dark/gradient panels (e.g. the sidebar nav), so overflow stays discoverable. */
+.scrollbar-subtle { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.3) transparent; }
+.scrollbar-subtle::-webkit-scrollbar { width: 6px; }
+.scrollbar-subtle::-webkit-scrollbar-track { background: transparent; }
+.scrollbar-subtle::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 9999px; }
+.scrollbar-subtle::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.5); }
 
 /* ------------------------------------------------------------------ Landing page (cream / sage) animations */
 @keyframes landingFadeUp {
@@ -293,7 +299,12 @@ section[id] { scroll-margin-top: 7rem; }
 
 /* Route transitions */
 @keyframes pageEnter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-.page-enter { animation: pageEnter 0.45s var(--ease-out-soft) both; }
+/* fill-mode "backwards", not "both": a retained final transform (even an identity matrix) turns the page wrapper into
+   the containing block for position:fixed, which trapped every modal inside the page instead of the viewport. */
+.page-enter { animation: pageEnter 0.45s var(--ease-out-soft) backwards; }
+/* Full-screen overlays (modal backdrops) must never inherit a parent space-y-* margin, which pushed them 24px down
+   and left the sticky header uncovered. Same specificity as Tailwind's space-y selector, declared after it. */
+.fixed.inset-0:not([hidden]) { margin: 0; }
 
 /* Session verification splash (shown on refresh while Sanctum confirms the session) */
 @keyframes splashLogoIn { from { opacity: 0; transform: scale(0.6); } 60% { transform: scale(1.06); } to { opacity: 1; transform: scale(1); } }

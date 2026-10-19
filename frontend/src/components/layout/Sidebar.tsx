@@ -35,7 +35,7 @@ export const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
     { name: 'AI Evaluation', path: '/ai-evaluation', icon: Gauge, badge: 'AI' },
   ] },
   { title: 'Workspace', items: [
-    { name: 'Collaboration', path: '/collaboration/invitations', icon: Users },
+    { name: 'Collaboration', path: '/collaboration', icon: Users },
     { name: 'Notifications', path: '/notifications', icon: Bell },
     { name: 'Feedback', path: '/feedback', icon: MessageSquare },
     { name: 'Settings', path: '/settings', icon: Settings },
@@ -85,7 +85,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
         )}
       </div>
 
-      <nav className="relative flex-1 py-4 px-3 overflow-y-auto scrollbar-none space-y-5" aria-label="Main">
+      <nav className="relative flex-1 py-4 px-3 overflow-y-auto scrollbar-subtle space-y-5" aria-label="Main">
         {NAV_SECTIONS.map((section) => (
           <div key={section.title}>
             <p className="px-3 pb-1.5 text-[10px] uppercase tracking-[0.18em] text-sage-200/80">{section.title}</p>

@@ -2,7 +2,8 @@ FROM php:8.2-cli-alpine
 
 WORKDIR /var/www/html
 
-# Install system dependencies and PHP extensions (GD with JPEG/WEBP + exif are required for profile pictures)
+# Install system dependencies and PHP extensions (GD with JPEG/WEBP + exif are required for profile pictures;
+# poppler-utils provides pdftotext, which extracts slide-deck PDFs with correct word spacing)
 RUN apk add --no-cache \
     curl \
     git \
@@ -17,6 +18,7 @@ RUN apk add --no-cache \
     mariadb-connector-c \
     mariadb-client \
     bash \
+    poppler-utils \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install pdo_mysql mbstring bcmath xml zip gd exif pcntl
 

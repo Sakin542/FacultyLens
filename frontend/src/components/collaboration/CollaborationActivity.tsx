@@ -70,7 +70,7 @@ export const CollaborationSummaryCard: React.FC<{ className?: string }> = ({ cla
   useEffect(() => { collaborationService.getSummary().then((r) => setSummary(r.data)).catch((e) => setError(getCollaborationErrorMessage(e))); }, []);
   return (
     <section data-testid="collaboration-summary" className={cn('rounded-xl border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] p-5 space-y-3', className)}>
-      <div className="flex items-center justify-between"><h3 className="text-sm font-semibold text-sage-800 dark:text-white flex items-center gap-2"><Users className="w-4 h-4" /> Collaboration</h3><Link to="/collaboration/invitations" className="text-xs underline text-sage-500">Invitations</Link></div>
+      <div className="flex items-center justify-between"><h3 className="text-sm font-semibold text-sage-800 dark:text-white flex items-center gap-2"><Users className="w-4 h-4" /> Collaboration</h3><Link to="/collaboration" className="text-xs underline text-sage-500">Open workspace</Link></div>
       {error && <CollaborationError message={error} />}
       {!summary && !error ? <CollaborationLoading /> : summary && (
         <>

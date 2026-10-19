@@ -64,7 +64,7 @@ export const VersionComparison: React.FC<{ comparison: VersionComparisonData }> 
       </Card>
 
       <Card data-testid="analysis-comparison" className="p-4 space-y-2">
-        <h3 className="text-sm font-semibold text-sage-800 dark:text-white">Analysis (STEP 13 metrics)</h3>
+        <h3 className="text-sm font-semibold text-sage-800 dark:text-white">Analysis (quality metrics)</h3>
         {!c.analysis.available ? <p className="text-sm text-sage-500">{c.analysis.note}</p> : (
           <>
             <div className="overflow-x-auto"><table className="w-full text-xs">

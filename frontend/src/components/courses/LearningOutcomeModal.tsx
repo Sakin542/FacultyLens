@@ -129,10 +129,11 @@ export const LearningOutcomeModal: React.FC<LearningOutcomeModalProps> = ({
               disabled={isSubmitting}
             />
             <div>
-              <label className="block text-xs font-medium uppercase tracking-wider text-sage-700 dark:text-sage-200 mb-1.5">
+              <label htmlFor="lo-cognitive-level" className="block text-xs font-medium uppercase tracking-wider text-sage-700 dark:text-sage-200 mb-1.5">
                 Bloom's Taxonomy Level <span className="text-[#DC2626]">*</span>
               </label>
               <select
+                id="lo-cognitive-level"
                 value={formData.cognitive_level}
                 onChange={(e) =>
                   setFormData({ ...formData, cognitive_level: e.target.value as CognitiveLevel })
@@ -150,10 +151,11 @@ export const LearningOutcomeModal: React.FC<LearningOutcomeModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-medium uppercase tracking-wider text-sage-700 dark:text-sage-200 mb-1.5">
+            <label htmlFor="lo-description" className="block text-xs font-medium uppercase tracking-wider text-sage-700 dark:text-sage-200 mb-1.5">
               Outcome Description <span className="text-[#DC2626]">*</span>
             </label>
             <textarea
+              id="lo-description"
               rows={4}
               placeholder="Clearly describe what students should be able to demonstrate upon completing this course..."
               value={formData.description}

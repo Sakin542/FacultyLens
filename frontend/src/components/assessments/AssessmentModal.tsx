@@ -14,6 +14,10 @@ interface AssessmentModalProps {
   preselectedCourseId?: number | string;
 }
 
+// Stable default: a fresh `[]` per render would re-run the form-reset effect on every render (infinite loop
+// that froze in-app navigation away from the assessment page).
+const NO_COURSES: Course[] = [];
+
 const ASSESSMENT_TYPES: { value: AssessmentType; label: string }[] = [
   { value: 'quiz', label: 'Quiz' },
   { value: 'class_test', label: 'Class Test' },
@@ -35,7 +39,7 @@ export const AssessmentModal: React.FC<AssessmentModalProps> = ({
   onClose,
   onSubmit,
   assessment,
-  courses = [],
+  courses = NO_COURSES,
   preselectedCourseId,
 }) => {
   const [selectedCourseId, setSelectedCourseId] = useState<string | number>(
@@ -55,6 +59,8 @@ export const AssessmentModal: React.FC<AssessmentModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
+    // Only (re)initialise the form when the dialog is shown; a closed dialog must not keep setting state.
+    if (!isOpen) return;
     if (assessment) {
       setSelectedCourseId(assessment.course_id || assessment.courseId || preselectedCourseId || '');
       setFormData({

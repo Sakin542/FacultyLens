@@ -16,7 +16,7 @@ return [
     'top_k' => (int) env('CHAT_TOP_K', 5),
     'candidate_k' => (int) env('CHAT_CANDIDATE_K', 20),
     // Cosine similarity on MiniLM embeddings; an engineering threshold, not a correctness measure.
-    'min_relevance_score' => (float) env('CHAT_MIN_RELEVANCE_SCORE', 0.35),
+    'min_relevance_score' => (float) env('CHAT_MIN_RELEVANCE_SCORE', 0.15),
 
     // Conversation
     'max_history_messages' => (int) env('CHAT_MAX_HISTORY_MESSAGES', 10),

@@ -210,6 +210,9 @@ class CollaborationCommentService
         if ($parent) {
             $participants->push($parent->user_id);
             $participants = $participants->merge($parent->replies()->pluck('user_id'));
+        } else {
+            // A new discussion thread on a course should reach the course owner, even when nobody was @mentioned.
+            $participants->push($course->user_id);
         }
         $participantIds = $participants->map(fn ($id) => (int) $id)->unique()->reject(fn (int $id) => $id === (int) $actor->id)->values()->all();
         $mentionIds = array_values(array_map('intval', $mentions));

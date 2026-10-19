@@ -1,0 +1,1 @@
+{"version":9,"type":"context-options","origin":"library","browserName":"","playwrightVersion":"1.63.0","options":{},"platform":"win32","wallTime":1791232499573,"monotonicTime":36095.409,"sdkLanguage":"javascript","title":"01-auth.spec.ts:33 › Journey 1: authentication › wrong credentials show a friendly message and never a raw error"}
