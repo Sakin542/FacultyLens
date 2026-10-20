@@ -63,7 +63,7 @@ class PaperSummarizer:
         out: Dict[str, str] = {}
         if marks[0][0] > 0:
             out["front"] = text[: marks[0][0]]
-        for i, (start, end, name) in enumerate(marks):
+        for i, (_start, end, name) in enumerate(marks):
             stop = marks[i + 1][0] if i + 1 < len(marks) else len(text)
             key = self._canonical(name)
             out[key] = (out.get(key, "") + "\n" + text[end:stop]).strip()
@@ -98,8 +98,8 @@ class PaperSummarizer:
         front = text[: first.start()] if first and first.start() > 0 else text[:1500]
         abstract_end = SECTION_RE.search(text, first.end()) if first else None
         head = text[: abstract_end.start()] if abstract_end else front
-        lines = [l.strip() for l in front.splitlines() if l.strip()]
-        detected_title = title or next((l for l in lines[:8] if 15 <= len(l) <= 220 and not re.search(r"@|abstract|journal|vol\.|doi|http", l, re.I)), None)
+        lines = [ln.strip() for ln in front.splitlines() if ln.strip()]
+        detected_title = title or next((ln for ln in lines[:8] if 15 <= len(ln) <= 220 and not re.search(r"@|abstract|journal|vol\.|doi|http", ln, re.I)), None)
         authors: List[str] = []
         if detected_title and detected_title in lines:
             idx = lines.index(detected_title)

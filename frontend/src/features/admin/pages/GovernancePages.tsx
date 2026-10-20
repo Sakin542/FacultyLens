@@ -231,6 +231,7 @@ const ProvidersPanel: React.FC<{ p: AiGovernanceData['provider'] }> = ({ p }) =>
                     {!t ? <Pill>Unknown</Pill> : t.ready ? <Pill tone="sage">{t.loaded ? 'Loaded' : 'Ready'}</Pill> : <Pill tone="red">Missing dependency</Pill>}
                   </div>
                   {t && <p className="font-mono text-[11px] text-adm-muted">{t.model}{Object.entries(t.dependencies).filter(([, ok]) => !ok).map(([d]) => ` · needs ${d}`).join('')}</p>}
+                  {t?.online_voice?.state === 'failing' && <p className="text-[11px] text-[#991B1B]" data-testid="online-voice-failing">Online Bangla voice is failing ({t.online_voice.last_error}); the local voice is used until it recovers.</p>}
                   {jobs && <p className="text-[11px] text-adm-muted">30 days: {Object.entries(jobs).map(([s, n]) => `${n} ${s}`).join(' · ')}</p>}
                 </li>
               );

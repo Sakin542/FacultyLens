@@ -17,6 +17,7 @@ import math
 import re
 from typing import Any, Dict, List, Optional, Tuple
 
+from app.services import claim_check
 from app.services.cognitive_analyzer import CognitiveAnalyzer
 
 BLOOM_LEVELS = ["REMEMBER", "UNDERSTAND", "APPLY", "ANALYZE", "EVALUATE", "CREATE"]
@@ -184,6 +185,28 @@ class StudyPackBuilder(_Base):
         return {w[:5] for w in words}
 
     def support(self, question: str, answer: str, sentences: List[str]) -> Optional[str]:
+        """The span of the material that supports this question/answer pair, or None.
+
+        The word rule below decides first. For answers that are full statements (4+ words), the meaning check
+        (claim_check) then rejects an answer a close sentence contradicts, and accepts a correct answer written in other
+        words that the word rule missed. Short answers ("A queue") are left to the word rule: NLI cannot judge fragments.
+        """
+        span = self._word_support(question, answer, sentences)
+        if len(_words(answer)) < 4 or not sentences:
+            return span
+        passages = sentences + [f"{sentences[i]} {sentences[i + 1]}" for i in range(len(sentences) - 1)]
+        claim = claim_check.expand(answer.strip(), claim_check.abbreviations(sentences))
+        judged = claim_check.get_claim_verifier().judge([claim], passages)
+        if not judged:
+            return span
+        j = judged[0]
+        if j.contradiction >= claim_check.CONTRADICTION:
+            return None
+        if span is None and (j.entailment >= claim_check.ENTAILMENT or j.similarity >= claim_check.SIMILARITY):
+            return j.passage
+        return span
+
+    def _word_support(self, question: str, answer: str, sentences: List[str]) -> Optional[str]:
         """The 1–2 sentence span of the material that supports this question/answer pair, or None.
 
         Small models state confident but wrong "facts", often by swapping two concepts that appear in the same lecture

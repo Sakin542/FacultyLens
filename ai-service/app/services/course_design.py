@@ -204,7 +204,7 @@ class SyllabusDrafter:
         links = []
         for i, co in enumerate(outcomes):
             scored = []
-            for j, po in enumerate(pos):
+            for j, _po in enumerate(pos):
                 score = _cosine(vectors[i], vectors[len(co_texts) + j]) if vectors else _jaccard(co_texts[i], po_texts[j])
                 scored.append((score, j))
             scored.sort(reverse=True)
@@ -318,7 +318,7 @@ class LessonPlanner:
                          "description": f"Interactive lecture on {topic.lower()} with two concept checks; link to {main['code']}."}]
             if sessions_per_week >= 2:
                 sessions.append({"title": activity[0], "kind": "activity", "minutes": session_minutes, "description": activity[1]})
-            for extra in range(2, sessions_per_week):
+            for _ in range(2, sessions_per_week):
                 sessions.append({"title": "Tutorial and practice", "kind": "tutorial", "minutes": session_minutes,
                                  "description": f"Practice problems on {topic.lower()} with individual feedback."})
             checks = ["Exit ticket: one-minute summary of the key idea"]

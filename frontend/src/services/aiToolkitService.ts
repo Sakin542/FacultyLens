@@ -15,6 +15,8 @@ export interface ToolkitJob {
   /** 'hosted' when a hosted model (e.g. Gemini) read the file; fallback_reason says why the local model was used */
   provider?: 'local' | 'hosted' | null;
   fallback_reason?: string | null;
+  /** Transcript lines the hosted model corrected (misheard words) */
+  corrected_lines?: number | null;
   duration_seconds: number | null;
   line_count: number | null;
   preview: string | null;
@@ -116,7 +118,8 @@ export const aiToolkitService = {
   translate: (text: string, source: ToolkitLanguage, target: ToolkitLanguage) =>
     apiClient<Envelope<TranslationResult>>('/ai-toolkit/translate', { method: 'POST', body: JSON.stringify({ text, source, target }) }).then((r) => r.data),
   ocr: (file: File) => upload('/ai-toolkit/ocr', file),
-  transcribe: (file: File, language?: ToolkitLanguage) => upload('/ai-toolkit/transcribe', file, language ? { language } : {}),
+  transcribe: (file: File, language?: ToolkitLanguage, terms?: string) =>
+    upload('/ai-toolkit/transcribe', file, { ...(language ? { language } : {}), ...(terms?.trim() ? { terms: terms.trim() } : {}) }),
   job: (id: number) => apiClient<Envelope<ToolkitJobDetail>>(`/ai-toolkit/jobs/${id}`).then((r) => r.data),
   remove: (id: number) => apiClient<{ message: string }>(`/ai-toolkit/jobs/${id}`, { method: 'DELETE' }),
   downloadUrl: (id: number) => `${API_BASE_URL}/ai-toolkit/jobs/${id}/download`,

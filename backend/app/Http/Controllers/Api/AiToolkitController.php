@@ -88,9 +88,11 @@ class AiToolkitController extends Controller
         $request->validate([
             'file' => ['required', 'file', 'mimes:mp3,wav,m4a,ogg,oga,webm,mp4,aac,flac', "max:{$maxKb}"],
             'language' => ['nullable', Rule::in(['en', 'bn'])],
+            'terms' => ['nullable', 'string', 'max:400'],
         ]);
+        $terms = trim((string) $request->input('terms', ''));
 
-        return $this->queue($request, 'transcription', $request->file('file'), $request->input('language'));
+        return $this->queue($request, 'transcription', $request->file('file'), $request->input('language'), $terms !== '' ? ['terms' => $terms] : []);
     }
 
     /** Notes & quiz from pasted material or from a finished transcription (queued: generation takes ~30–60 s on CPU). */
@@ -471,7 +473,8 @@ class AiToolkitController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Deleted.']);
     }
 
-    protected function queue(Request $request, string $tool, UploadedFile $file, ?string $language): JsonResponse
+    /** @param  array<string, mixed>  $options  kept on the job until it runs (e.g. transcription key terms) */
+    protected function queue(Request $request, string $tool, UploadedFile $file, ?string $language, array $options = []): JsonResponse
     {
         if ($error = $this->activeLimitError($request)) {
             return $error;
@@ -487,6 +490,7 @@ class AiToolkitController extends Controller
             'input_path' => $path,
             'input_bytes' => (int) $file->getSize(),
             'language' => $language,
+            'result' => $options ?: null,
         ]);
         $this->audit->log('AI_TOOL_REQUESTED', $job, $job->id, ['tool' => $tool, 'bytes' => $job->input_bytes], $request->user());
         RunAiToolJob::dispatch($job->id);

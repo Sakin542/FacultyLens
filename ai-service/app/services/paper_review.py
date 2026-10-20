@@ -177,7 +177,7 @@ class PaperReviewer:
         for t_idx, topic in enumerate(topics):
             t_words = _stems(topic)
             matched: List[Tuple[int, float]] = []
-            for q_idx, it in enumerate(items):
+            for q_idx, _item in enumerate(items):
                 shared = len(t_words & q_words[q_idx]) / len(t_words) if t_words else 0.0
                 sim = _cosine(t_vecs[t_idx], q_vecs[q_idx]) if q_vecs and t_vecs else None
                 # Meaning match, or a weaker meaning match backed by the topic's own words, or (no model) the words alone

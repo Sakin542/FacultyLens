@@ -19,6 +19,7 @@ from app.config import get_settings
 from app.schemas.chat import AcademicChatRequest
 from app.services import safety
 from app.services.prompt_builder import INSUFFICIENT_EVIDENCE_TEXT, PROMPT_VERSION, PromptBuilder
+from app.services.claim_check import abbreviations, expand, get_claim_verifier, judge_with_llm
 from app.services.feedback_drafter import _stems
 from app.services.retrieval import best_sentences, is_overview_question, overview_subject_supported, select_context
 
@@ -183,12 +184,20 @@ class AcademicChatService:
     CLAIM_MIN_WORDS = 4
 
     @classmethod
-    def unsupported_claims(cls, answer: str, context: List[Dict[str, Any]]) -> List[str]:
-        """Answer sentences whose key words are not mostly found in one passage (1-2 adjacent sentences) of the context.
+    def unsupported_claims(cls, answer: str, context: List[Dict[str, Any]], verifier: Any = None) -> List[str]:
+        """Answer sentences that the documents do not support.
 
-        Compared against single passages, not the whole document, because course documents share vocabulary:
-        an invented sentence can reuse words scattered across a syllabus but not the words of one statement.
+        Word check: a claim's key words must mostly be found in one passage (1-3 adjacent sentences) of the context,
+        not scattered across the documents, because course documents share vocabulary: an invented sentence can reuse
+        words from all over a syllabus but not the words of one statement.
+
+        Meaning check (claim_check): a claim that a close passage contradicts is unsupported even when its words match
+        (one swapped fact, a wrong number); a claim the passages entail, or that is very close in meaning to one, is
+        supported even when it is written in other words. Without the meaning model, the word check alone decides.
+        With the hosted provider selected, a hosted judge's verdict per claim decides instead (more accurate on
+        rewording, numbers and invented details); if it is unavailable, the local checks decide.
         """
+        texts: List[str] = []
         passages: List[set] = []
         for c in context:
             sents = [s.strip() for s in re.split(r"(?<=[.!?;:])\s+|\n+", str(c.get("content") or "")) if s.strip()]
@@ -198,17 +207,35 @@ class AcademicChatService:
             passages.extend(stems[i] | stems[i + 1] | stems[i + 2] for i in range(len(stems) - 2))
             # The whole passage too: a summary of a list ("three outcomes: SQL, schemas, isolation") spans its lines
             passages.append(set().union(*stems) if stems else set())
+            texts.extend(sents)
+            texts.extend(f"{sents[i]} {sents[i + 1]}" for i in range(len(sents) - 1))
         if not passages:
             return []
         text = re.sub(r"\[S\d+\]", " ", answer)
-        out: List[str] = []
+        abbr = abbreviations([str(c.get("content") or "") for c in context])
+        claims: List[tuple] = []  # (sentence as written, sentence with abbreviations spelled out, word check passed)
         for sentence in re.split(r"(?<=[.!?])\s+|\n+", text):
             sentence = sentence.strip(" •*-\t")
-            words = _stems(sentence)
+            full = expand(sentence, abbr)
+            words = _stems(full)
             if len(words) < cls.CLAIM_MIN_WORDS:
                 continue  # headings, short connectives
-            best = max(len(words & p) / len(words) for p in passages)
-            if best < cls.CLAIM_SUPPORT:
+            claims.append((sentence, full, max(len(words & p) / len(words) for p in passages) >= cls.CLAIM_SUPPORT))
+        if not claims:
+            return []
+
+        verdicts = judge_with_llm([full for _, full, _ in claims], [str(c.get("content") or "") for c in context])
+        verifier = verifier if verifier is not None else get_claim_verifier()
+        # The local check is only needed when there is no hosted verdict
+        judgements = verifier.judge([full for _, full, _ in claims], list(dict.fromkeys(texts))[:400]) if texts and verdicts is None else None
+        out: List[str] = []
+        for i, (sentence, _, lexical_ok) in enumerate(claims):
+            if verdicts is not None:
+                if verdicts[i] != "SUPPORTED":
+                    out.append(sentence)
+                continue
+            j = judgements[i] if judgements else None
+            if not (j.supported(lexical_ok) if j is not None else lexical_ok):
                 out.append(sentence)
         return out
 

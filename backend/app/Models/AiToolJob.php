@@ -40,6 +40,7 @@ class AiToolJob extends Model
             'model' => $this->result['model'] ?? null,
             'provider' => $this->result['provider'] ?? null,
             'fallback_reason' => $this->result['fallback_reason'] ?? null,
+            'corrected_lines' => $this->result['corrected_lines'] ?? null,
             'duration_seconds' => $this->result['duration_seconds'] ?? null,
             'line_count' => $this->result['line_count'] ?? null,
             'preview' => $this->result_text ? mb_substr($this->result_text, 0, 240) : null,

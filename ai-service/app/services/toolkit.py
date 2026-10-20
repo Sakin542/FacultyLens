@@ -6,16 +6,23 @@ model fails. Local Hugging Face models load lazily on first use (memory is only 
 - OCR           : microsoft/trocr-base-handwritten. TrOCR reads one text line at a time, so pages are split into
                   lines with a horizontal ink-projection pass first. Output is a draft transcription for a person to
                   check; it is never treated as a student's final answer automatically.
-- Transcription : openai/whisper-large-v3-turbo through the transformers ASR pipeline (30 s chunks, ffmpeg decoding).
+- Transcription : Whisper large-v3-turbo through faster-whisper (8-bit, silence skipped), or the transformers ASR
+                  pipeline (openai/whisper-large-v3-turbo, 30 s chunks) when faster-whisper is unavailable.
 - Translation   : facebook/nllb-200-distilled-600M, or the hosted generation model when the administrator selected
                   the hosted provider (falls back to NLLB if the hosted call fails).
-- Speech        : Kokoro-82M for English (MMS-TTS if Kokoro is unavailable), MMS-TTS for Bangla.
+- Speech        : Kokoro-82M for English; Microsoft's neural Bangla voice (edge-tts, online) for Bangla; MMS-TTS is
+                  the local fallback for both.
 
 Every public method returns plain dicts and raises ToolkitError with a safe, user-facing message on bad input.
 """
 
 import base64
+import difflib
+import hashlib
 import io
+import json
+import os
+import time
 import logging
 import re
 import shutil
@@ -70,9 +77,10 @@ def _whisper_mb(name: str) -> int:
 # ============================================================================================== OCR
 
 OCR_PROMPT = (
-    "Transcribe the handwritten text in this image exactly as written. Keep the original line breaks and the original "
-    "language (English or Bangla). Do not correct spelling or grammar, and do not add explanations, headings or "
-    "formatting. Write [illegible] for any word you cannot read. If the page has no text, reply with exactly: [blank page]"
+    "Transcribe the text in this image (handwritten or printed) exactly as written. Keep the original line breaks, "
+    "question numbers and marks, and the original language (English or Bangla). Do not correct spelling or grammar, "
+    "and do not add explanations, headings or formatting. Write [illegible] for any word you cannot read. If the page "
+    "has no text, reply with exactly: [blank page]"
 )
 
 
@@ -255,20 +263,75 @@ ASR_PROMPT = (
     "summarising, translating or adding notes. Start a new line every 20-40 seconds of speech, at a sentence boundary, "
     "and begin every line with its start time in this recording as [mm:ss]. If nobody speaks, reply with exactly: [no speech]"
 )
+PROOFREAD_PROMPT = (
+    "These lines are an automatic transcript of a university lecture{subject}. Fix ONLY speech-recognition mistakes: "
+    "words that sound alike but are wrong in context (for example \"cue\" for \"queue\", \"there\" for \"their\"), "
+    "misheard technical terms, names and numbers. Do not rephrase, shorten, summarise, translate, add or remove "
+    "content, and do not merge or split lines. Reply with JSON only: {{\"lines\": [...]}} containing exactly {count} "
+    "strings, in the same order.\n\n{lines}"
+)
+PROOFREAD_BATCH = 40
+PROOFREAD_MIN_SIMILARITY = 0.6  # a "corrected" line further from the original than this is a rewrite: keep the original
 TIMESTAMPED_LINE = re.compile(r"^\s*\[?(\d{1,2}):(\d{2})(?::(\d{2}))?\]?\s*[-–:]?\s*(.*)$")
 
 
 class LectureTranscriber:
     _lock = threading.Lock()
     _pipe: Any = None
+    _fast: Any = None
+    _fast_failed: bool = False
+
+    @property
+    def fast_enabled(self) -> bool:
+        return (get_settings().asr_engine.strip().lower() == "faster-whisper" and not LectureTranscriber._fast_failed
+                and _module_available("faster_whisper"))
 
     @property
     def model_name(self) -> str:
-        return get_settings().asr_model
+        s = get_settings()
+        if self.fast_enabled:
+            return f"faster-whisper {s.asr_fast_model} ({s.asr_fast_compute_type})"
+        return s.asr_model
 
     @property
     def loaded(self) -> bool:
-        return self._pipe is not None
+        return self._pipe is not None or self._fast is not None
+
+    @staticmethod
+    def _unload_fast() -> None:
+        LectureTranscriber._fast = None
+
+    def _load_fast(self) -> bool:
+        with self._lock:
+            if LectureTranscriber._fast is not None:
+                return True
+            s = get_settings()
+            try:
+                from faster_whisper import WhisperModel
+
+                LectureTranscriber._fast = WhisperModel(
+                    s.asr_fast_model, device="cpu", compute_type=s.asr_fast_compute_type,
+                    cpu_threads=s.asr_fast_threads or max(1, (os.cpu_count() or 4) // 2),
+                    download_root=os.path.join(s.hf_home or "/app/cache/huggingface", "faster-whisper"))
+                logger.info(f"ASR model faster-whisper '{s.asr_fast_model}' loaded.")
+                return True
+            except Exception as e:  # download or CTranslate2 problems: the transformers pipeline still works
+                LectureTranscriber._fast_failed = True
+                logger.warning(f"faster-whisper unavailable ({type(e).__name__}); using {s.asr_model}")
+                return False
+
+    def _transcribe_fast(self, audio: Any, language: Optional[str], terms: str) -> Optional[Tuple[str, List[Dict[str, Any]]]]:
+        """(text, segments) from faster-whisper, or None when it cannot run (the caller uses the pipeline)."""
+        with model_memory.use("transcription-fast", self._unload_fast, estimate_mb=1200):
+            if not self._load_fast():
+                return None
+            parts, _ = LectureTranscriber._fast.transcribe(
+                audio, language=language if language in ("en", "bn") else None, task="transcribe",
+                beam_size=max(1, get_settings().asr_fast_beam_size), vad_filter=True,
+                # Whisper's "initial prompt": spelling hint that biases it toward the course vocabulary (queue, not cue)
+                initial_prompt=f"Lecture vocabulary: {terms}." if terms else None)
+            segments = [{"start": round(float(p.start), 1), "end": round(float(p.end), 1), "text": p.text.strip()} for p in parts if p.text.strip()]
+        return " ".join(s["text"] for s in segments), segments
 
     def dependencies(self) -> Dict[str, bool]:
         return {"ffmpeg": shutil.which("ffmpeg") is not None}
@@ -287,6 +350,38 @@ class LectureTranscriber:
                                                 token=get_settings().hf_token or None)
             logger.info(f"ASR model '{self.model_name}' loaded.")
 
+    def _transcribe_pipeline(self, audio: Any, language: Optional[str], terms: str) -> Tuple[str, List[Dict[str, Any]]]:
+        kwargs: Dict[str, Any] = {"task": "transcribe"}
+        if language in ("en", "bn"):
+            kwargs["language"] = {"en": "english", "bn": "bengali"}[language]
+        name = get_settings().asr_model
+        with model_memory.use("transcription", self._unload, estimate_mb=_whisper_mb(name)):
+            self._load()
+            if terms and getattr(self._pipe, "tokenizer", None) is not None and hasattr(self._pipe.tokenizer, "get_prompt_ids"):
+                # Whisper's "initial prompt": spelling hint that biases it toward the course vocabulary (queue, not cue)
+                kwargs["prompt_ids"] = self._pipe.tokenizer.get_prompt_ids(f"Lecture vocabulary: {terms}.", return_tensors="pt")
+            result = self._pipe({"raw": audio, "sampling_rate": 16000}, return_timestamps=True, generate_kwargs=kwargs)
+        segments = [
+            {"start": round(float(c["timestamp"][0] or 0), 1), "end": round(float(c["timestamp"][1] or c["timestamp"][0] or 0), 1), "text": str(c["text"]).strip()}
+            for c in (result.get("chunks") or []) if str(c.get("text", "")).strip()
+        ]
+        return str(result.get("text", "")).strip(), segments
+
+    @staticmethod
+    def split_points(audio: Any, rate: int, target_s: int) -> List[int]:
+        """Sample offsets that cut a recording into pieces of about target_s seconds, each cut at the quietest half
+        second within +-25% of the target, so no word is split and each piece's start time is exact."""
+        import numpy as np
+
+        size, window = max(10, target_s) * rate, rate // 2
+        cuts, pos = [0], 0
+        while len(audio) - pos > size * 1.25:
+            lo, hi = pos + int(size * 0.75), min(len(audio) - window, pos + int(size * 1.25))
+            frames = [(float(np.sqrt(np.mean(np.square(audio[i:i + window], dtype=np.float64)))), i) for i in range(lo, hi, window // 2)]
+            pos = min(frames)[1] + window // 2 if frames else pos + size
+            cuts.append(pos)
+        return cuts + [len(audio)]
+
     def display_model(self) -> str:
         use, _ = _hosted_media(llm_chain.audio_models())
         return _chain_label(llm_chain.audio_models(), self.model_name) if use else self.model_name
@@ -303,8 +398,8 @@ class LectureTranscriber:
     @staticmethod
     def _encode_mp3(samples: Any) -> bytes:
         """16 kHz float samples -> 48 kbit/s mono MP3 (a 10-minute piece is about 3.6 MB)."""
-        proc = subprocess.run(
-            ["ffmpeg", "-hide_banner", "-loglevel", "error", "-f", "f32le", "-ar", "16000", "-ac", "1", "-i", "pipe:0",
+        proc = subprocess.run(  # noqa: S603 - fixed ffmpeg arguments, audio on stdin, no shell
+            ["ffmpeg", "-hide_banner", "-loglevel", "error", "-f", "f32le", "-ar", "16000", "-ac", "1", "-i", "pipe:0",  # noqa: S607
              "-c:a", "libmp3lame", "-b:a", "48k", "-f", "mp3", "pipe:1"],
             input=samples.astype("<f4").tobytes(), capture_output=True, timeout=300, check=True,
         )
@@ -335,8 +430,8 @@ class LectureTranscriber:
     def _run_hosted(self, audio: Any, language: Optional[str]) -> Tuple[List[Dict[str, Any]], List[str]]:
         models = llm_chain.audio_models()
         rate = 16000
-        size = max(60, get_settings().asr_hosted_chunk_seconds) * rate
-        pieces = [(start / rate, min(len(audio), start + size) / rate, audio[start:start + size]) for start in range(0, len(audio), size)]
+        cuts = self.split_points(audio, rate, get_settings().asr_hosted_chunk_seconds)
+        pieces = [(a / rate, b / rate, audio[a:b]) for a, b in zip(cuts, cuts[1:])]
         hint = {"en": " (spoken in English)", "bn": " (spoken in Bangla)"}.get(language or "", "")
 
         def piece(item: Tuple[float, float, Any]) -> Tuple[str, List[Dict[str, Any]]]:
@@ -346,7 +441,7 @@ class LectureTranscriber:
             return model, self.parse_segments(text, offset, end)
 
         # Pieces are independent, so a long lecture is sent a few pieces at a time
-        with ThreadPoolExecutor(max_workers=min(4, len(pieces))) as pool:
+        with ThreadPoolExecutor(max_workers=min(6, len(pieces))) as pool:
             results = list(pool.map(piece, pieces))
         used: List[str] = []
         for model, _ in results:
@@ -354,9 +449,53 @@ class LectureTranscriber:
                 used.append(model)
         return [seg for _, segs in results for seg in segs], used
 
-    def run(self, data: bytes, language: Optional[str] = None) -> Dict[str, Any]:
+    @staticmethod
+    def clean_terms(terms: Optional[str]) -> str:
+        """Key terms the speaker uses (course vocabulary), comma-separated, bounded so they stay a hint."""
+        parts = [re.sub(r"\s+", " ", p).strip() for p in re.split(r"[,;\n]", terms or "")]
+        return ", ".join(dict.fromkeys(p for p in parts if p))[:400]
+
+    @staticmethod
+    def proofread(segments: List[Dict[str, Any]], terms: str, generation: Any) -> Tuple[List[Dict[str, Any]], int, Optional[str]]:
+        """Fix misheard words with the hosted text model, line by line. Returns (segments, lines changed, model).
+
+        Only used when the hosted provider is selected; the small local model is not trusted with this. A batch whose
+        reply is not the same number of lines is skipped, and a line rewritten beyond small corrections keeps the
+        original, so the transcript cannot drift from what was said.
+        """
+        if generation is None or provider_context.requested_provider() != "hosted" or not generation.hosted_configured or not segments:
+            return segments, 0, None
+        subject = f" (key terms: {terms})" if terms else ""
+        out = [dict(s) for s in segments]
+        changed, model = 0, None
+        for start in range(0, len(out), PROOFREAD_BATCH):
+            batch = out[start:start + PROOFREAD_BATCH]
+            numbered = "\n".join(json.dumps(s["text"], ensure_ascii=False) for s in batch)
+            text = generation.generate(PROOFREAD_PROMPT.format(subject=subject, count=len(batch), lines=numbered),
+                                       max_new_tokens=min(8000, 120 + sum(len(s["text"]) for s in batch)))
+            used = provider_context.model_used() or ""
+            if not text or not used.startswith("hosted:"):
+                continue  # hosted models failed: keep Whisper's lines rather than the small local model's
+            match = re.search(r"\{.*\}", text, re.S)
+            try:
+                lines = json.loads(match.group(0)).get("lines") if match else None
+            except ValueError:
+                lines = None
+            if not isinstance(lines, list) or len(lines) != len(batch):
+                continue
+            for seg, new in zip(batch, lines):
+                new = re.sub(r"\s+", " ", str(new)).strip()
+                old = seg["text"]
+                if new and new != old and difflib.SequenceMatcher(None, old.lower().split(), new.lower().split()).ratio() >= PROOFREAD_MIN_SIMILARITY:
+                    seg["text"] = new
+                    changed += 1
+            model = used
+        return out, changed, model
+
+    def run(self, data: bytes, language: Optional[str] = None, terms: Optional[str] = None, generation: Any = None) -> Dict[str, Any]:
         if not self.dependencies()["ffmpeg"]:
             raise ToolkitError("Audio decoding (ffmpeg) is not installed in the AI service.")
+        terms = self.clean_terms(terms)
         audio = self._decode(data)
         seconds = len(audio) / 16000
         limit = get_settings().asr_max_seconds
@@ -378,19 +517,19 @@ class LectureTranscriber:
                 fallback = getattr(e, "reason", None) or f"audio could not be prepared for the hosted model ({type(e).__name__})"
                 logger.warning(f"Hosted transcription failed, using {self.model_name}: {fallback}")
 
-        kwargs: Dict[str, Any] = {"task": "transcribe"}
-        if language in ("en", "bn"):
-            kwargs["language"] = {"en": "english", "bn": "bengali"}[language]
-        with model_memory.use("transcription", self._unload, estimate_mb=_whisper_mb(self.model_name)):
-            self._load()
-            result = self._pipe({"raw": audio, "sampling_rate": 16000}, return_timestamps=True, generate_kwargs=kwargs)
-        segments = [
-            {"start": round(float(c["timestamp"][0] or 0), 1), "end": round(float(c["timestamp"][1] or c["timestamp"][0] or 0), 1), "text": str(c["text"]).strip()}
-            for c in (result.get("chunks") or []) if str(c.get("text", "")).strip()
-        ]
+        fast = self._transcribe_fast(audio, language, terms) if self.fast_enabled else None
+        if fast is not None:
+            text, segments = fast
+        else:
+            text, segments = self._transcribe_pipeline(audio, language, terms)
+        segments, corrected, proofread_by = self.proofread(segments, terms, generation)
+        if corrected:
+            text = " ".join(s["text"] for s in segments)
         return {
-            "text": str(result.get("text", "")).strip(),
+            "text": text,
             "segments": segments,
+            "corrected_lines": corrected,
+            "proofread_model": proofread_by,
             "duration_seconds": round(seconds, 1),
             "language": language or "auto",
             "model": self.model_name,
@@ -518,6 +657,10 @@ class Speaker:
     _models: Dict[str, Any] = {}
     _tokenizers: Dict[str, Any] = {}
     _kokoro: Any = None
+    # Health of the online Bangla voice, for the admin status page
+    edge_last_ok: Optional[float] = None
+    edge_last_error: Optional[str] = None
+    edge_last_error_at: Optional[float] = None
 
     @property
     def max_chars(self) -> int:
@@ -526,7 +669,90 @@ class Speaker:
     def model_name(self, language: str) -> str:
         if language == "en" and self.kokoro_enabled:
             return f"{KOKORO_REPO} ({get_settings().tts_kokoro_voice})"
+        if language == "bn" and self.edge_enabled:
+            return f"edge-tts ({get_settings().tts_bangla_voice})"
         return TTS_MODELS[language]
+
+    @property
+    def edge_enabled(self) -> bool:
+        return get_settings().tts_bangla_engine.strip().lower() == "edge" and _module_available("edge_tts") and shutil.which("ffmpeg") is not None
+
+    @staticmethod
+    def _edge_mp3(text: str, voice: str) -> bytes:
+        """Microsoft neural voice through edge-tts (online). Returns MP3 bytes."""
+        import asyncio
+
+        import edge_tts
+
+        async def synth() -> bytes:
+            audio = bytearray()
+            async for chunk in edge_tts.Communicate(text, voice).stream():
+                if chunk.get("type") == "audio":
+                    audio.extend(chunk["data"])
+            return bytes(audio)
+
+        # The speak endpoint runs in a worker thread, so a fresh event loop is safe here
+        return asyncio.run(asyncio.wait_for(synth(), timeout=60))
+
+    @staticmethod
+    def _cache_path(voice: str, text: str) -> Optional[str]:
+        s = get_settings()
+        if s.tts_cache_max_files <= 0:
+            return None
+        folder = os.path.join(s.hf_home or "/app/cache/huggingface", "tts-cache")
+        return os.path.join(folder, hashlib.sha1(f"{voice}\x00{text}".encode("utf-8"), usedforsecurity=False).hexdigest() + ".mp3")
+
+    @staticmethod
+    def _cache_put(path: str, mp3: bytes) -> None:
+        try:
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            with open(path, "wb") as f:
+                f.write(mp3)
+            files = sorted((os.path.join(os.path.dirname(path), n) for n in os.listdir(os.path.dirname(path))), key=os.path.getmtime)
+            for old in files[: max(0, len(files) - get_settings().tts_cache_max_files)]:
+                os.remove(old)
+        except OSError:
+            pass  # a cache problem must never break read-aloud
+
+    def _online_mp3(self, text: str, voice: str) -> bytes:
+        """Cached clip, else the online voice (one retry). Records the voice's health for the status page."""
+        path = self._cache_path(voice, text)
+        if path and os.path.exists(path):
+            os.utime(path)  # recently used: kept longest
+            with open(path, "rb") as f:
+                return f.read()
+        last: Optional[Exception] = None
+        for attempt in range(2):
+            try:
+                mp3 = self._edge_mp3(text, voice)
+                if not mp3:
+                    raise RuntimeError("the online voice returned no audio")
+                Speaker.edge_last_ok = time.time()
+                if path:
+                    self._cache_put(path, mp3)
+                return mp3
+            except Exception as e:
+                last = e
+                if attempt == 0:
+                    time.sleep(1)
+        Speaker.edge_last_error, Speaker.edge_last_error_at = type(last).__name__, time.time()
+        raise last  # type: ignore[misc]
+
+    def online_voice_status(self) -> Optional[Dict[str, Any]]:
+        if not self.edge_enabled:
+            return None
+        failing = Speaker.edge_last_error_at is not None and (Speaker.edge_last_ok is None or Speaker.edge_last_error_at > Speaker.edge_last_ok)
+        return {"voice": get_settings().tts_bangla_voice, "state": "failing" if failing else ("ok" if Speaker.edge_last_ok else "unused"),
+                "last_error": Speaker.edge_last_error if failing else None}
+
+    def _speak_edge(self, text: str) -> Dict[str, Any]:
+        import numpy as np
+
+        mp3 = self._online_mp3(text, get_settings().tts_bangla_voice)
+        rate = 24000
+        pcm = subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-i", "pipe:0", "-f", "f32le", "-ac", "1", "-ar", str(rate), "pipe:1"],  # noqa: S603,S607 - fixed ffmpeg arguments, audio on stdin, no shell
+                             input=mp3, capture_output=True, timeout=120, check=True).stdout
+        return self._wav(np.frombuffer(pcm, dtype="<f4"), rate, self.model_name("bn"))
 
     @property
     def kokoro_enabled(self) -> bool:
@@ -603,6 +829,11 @@ class Speaker:
                 raise
             except Exception as e:  # missing voice download, phonemizer problems: fall back to MMS-TTS
                 logger.warning(f"Kokoro TTS failed ({type(e).__name__}); using {TTS_MODELS['en']}")
+        if language == "bn" and self.edge_enabled:
+            try:
+                return self._speak_edge(text)
+            except Exception as e:  # offline, service change or rate limit: the local voice still works
+                logger.warning(f"Online Bangla voice failed ({type(e).__name__}); using {TTS_MODELS['bn']}")
         return self._speak_mms(text, language)
 
     def _speak_mms(self, text: str, language: str) -> Dict[str, Any]:

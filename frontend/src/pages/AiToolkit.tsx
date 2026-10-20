@@ -97,6 +97,7 @@ const TranslatePanel: React.FC<{ limit: number }> = ({ limit }) => {
 const UploadPanel: React.FC<{ tool: 'ocr' | 'transcribe'; maxMb: number; onQueued: () => void }> = ({ tool, maxMb, onQueued }) => {
   const [file, setFile] = useState<File | null>(null);
   const [language, setLanguage] = useState<'' | ToolkitLanguage>('');
+  const [terms, setTerms] = useState('');
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{ tone: 'ok' | 'error'; text: string } | null>(null);
   const input = useRef<HTMLInputElement>(null);
@@ -109,7 +110,7 @@ const UploadPanel: React.FC<{ tool: 'ocr' | 'transcribe'; maxMb: number; onQueue
     setBusy(true);
     setMessage(null);
     try {
-      const res = isOcr ? await aiToolkitService.ocr(file) : await aiToolkitService.transcribe(file, language || undefined);
+      const res = isOcr ? await aiToolkitService.ocr(file) : await aiToolkitService.transcribe(file, language || undefined, terms);
       setMessage({ tone: 'ok', text: res.message ?? 'Started.' });
       setFile(null);
       if (input.current) input.current.value = '';
@@ -140,6 +141,13 @@ const UploadPanel: React.FC<{ tool: 'ocr' | 'transcribe'; maxMb: number; onQueue
           </select>
         </label>
       )}
+      {!isOcr && (
+        <label className="block text-xs font-medium text-sage-700">Key terms (optional)
+          <input value={terms} onChange={(e) => setTerms(e.target.value)} maxLength={400} placeholder="e.g. queue, BFS, Dijkstra, adjacency list"
+            className="mt-1 block h-9 w-full rounded-lg border border-sage-200 bg-white px-2 text-sm" data-testid="transcribe-terms" />
+          <span className="mt-0.5 block text-[11px] font-normal text-sage-500">Words from the lecture, so they are spelled right (“queue”, not “cue”).</span>
+        </label>
+      )}
       {message && <p role={message.tone === 'error' ? 'alert' : 'status'} className={cn('rounded-lg border px-3 py-2 text-xs', message.tone === 'ok' ? 'border-[#BBF7D0] bg-[#F0FDF4] text-[#166534]' : 'border-[#FECACA] bg-[#FEF2F2] text-[#991B1B]')}>{message.text}</p>}
       <Button type="submit" isLoading={busy} disabled={!file} leftIcon={isOcr ? <PenLine className="w-4 h-4" /> : <AudioLines className="w-4 h-4" />}>
         {isOcr ? 'Read handwriting' : 'Transcribe recording'}
@@ -153,7 +161,7 @@ const JobResult: React.FC<{ job: ToolkitJobDetail; onMakeNotes?: () => void; onA
     <div className="flex flex-wrap items-center justify-between gap-2">
       <div className="min-w-0">
         <p className="truncate text-sm font-semibold text-sage-800">{job.input_filename}</p>
-        <p className="text-[11px] text-sage-500">{job.provider === 'hosted' ? 'Hosted model · ' : ''}<span className="font-mono">{job.model}</span>{job.duration_seconds ? ` · ${fmtTime(job.duration_seconds)} of audio` : ''}{job.line_count !== null ? ` · ${job.line_count} line(s)` : ''}</p>
+        <p className="text-[11px] text-sage-500">{job.provider === 'hosted' ? 'Hosted model · ' : ''}<span className="font-mono">{job.model}</span>{job.duration_seconds ? ` · ${fmtTime(job.duration_seconds)} of audio` : ''}{job.line_count !== null ? ` · ${job.line_count} line(s)` : ''}{job.corrected_lines ? ` · ${job.corrected_lines} misheard word(s) corrected` : ''}</p>
         {job.fallback_reason && <p className="text-[11px] text-sage-500" data-testid="job-fallback">Read with the local model ({job.fallback_reason}).</p>}
       </div>
       <div className="flex flex-wrap items-center gap-1.5">

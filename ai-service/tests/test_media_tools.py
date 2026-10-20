@@ -120,7 +120,7 @@ def audio(monkeypatch):
 
 
 def test_hosted_transcription_sends_pieces_and_puts_times_on_the_recording_clock(monkeypatch, hosted, audio):
-    monkeypatch.setattr(hosted, "asr_hosted_chunk_seconds", 600)
+    monkeypatch.setattr(hosted, "asr_hosted_chunk_seconds", 400)
     monkeypatch.setattr(toolkit.LectureTranscriber, "_load", lambda self: (_ for _ in ()).throw(AssertionError("Whisper must not load")))
 
     answers = iter(["[00:00] Today we cover graphs.\n[00:40] BFS uses a queue.", "[00:10] Questions?"])
@@ -129,7 +129,9 @@ def test_hosted_transcription_sends_pieces_and_puts_times_on_the_recording_clock
     assert r.status_code == 200
     data = r.json()
     assert data["provider"] == "hosted" and data["model"] == "hosted:google/gemini-3.8-flash"
-    assert sorted(audio) == [16000 * 100, 16000 * 600]
+    cuts = toolkit.LectureTranscriber.split_points(np.zeros(16000 * 700, dtype=np.float32), 16000, 400)
+    assert len(cuts) == 3 and 300 * 16000 <= cuts[1] <= 500 * 16000          # one cut, within +-25% of 400 s
+    assert sorted(audio) == sorted([cuts[1], 16000 * 700 - cuts[1]])
     assert len(calls) == 2
     part = calls[0]["messages"][0]["content"][1]
     assert part == {"type": "input_audio", "input_audio": {"data": "bXAzLWJ5dGVz", "format": "mp3"}}
@@ -137,7 +139,20 @@ def test_hosted_transcription_sends_pieces_and_puts_times_on_the_recording_clock
     starts = [s["start"] for s in data["segments"]]
     assert starts == sorted(starts) and data["duration_seconds"] == 700.0
     assert data["segments"][-1]["end"] == 700.0
-    assert any(s["start"] >= 600 for s in data["segments"])  # second piece is offset by 600 s
+    assert data["segments"][-1]["start"] == round(cuts[1] / 16000 + 10, 1)  # second piece starts at the cut
+
+
+def test_pieces_are_cut_at_quiet_moments_near_the_target_length():
+    rate = 16000
+    rng = np.random.default_rng(0)
+    audio = (rng.standard_normal(rate * 200) * 0.3).astype(np.float32)
+    audio[int(rate * 62.0):int(rate * 63.0)] = 0.0    # a pause near the first 60 s mark
+    audio[int(rate * 118.0):int(rate * 119.0)] = 0.0  # and near the second
+    cuts = toolkit.LectureTranscriber.split_points(audio, rate, 60)
+    assert cuts[0] == 0 and cuts[-1] == len(audio)
+    assert 62.0 <= cuts[1] / rate <= 63.0 and 118.0 <= cuts[2] / rate <= 119.0
+    assert all(b - a <= 75 * rate for a, b in zip(cuts, cuts[1:]))
+    assert toolkit.LectureTranscriber.split_points(audio[: rate * 70], rate, 60) == [0, rate * 70]  # short: one piece
 
 
 def test_transcription_falls_back_to_whisper_when_the_audio_model_fails(monkeypatch, hosted, audio):

@@ -224,7 +224,11 @@ export interface FeatureSetting {
   key: string; label: string; description: string; type: 'boolean' | 'string' | 'select'; value: boolean | string; default: boolean | string;
   options?: { value: string; label: string }[] | null;
 }
-export interface ToolkitToolStatus { model: string; loaded: boolean; dependencies: Record<string, boolean>; ready: boolean }
+export interface ToolkitToolStatus {
+  model: string; loaded: boolean; dependencies: Record<string, boolean>; ready: boolean;
+  /** Read aloud only: health of the online Bangla voice (failing = the local voice is being used) */
+  online_voice?: { voice: string; state: 'ok' | 'failing' | 'unused'; last_error: string | null } | null;
+}
 /** Local model memory in the AI service: idle models are unloaded, and the process is kept within the budget */
 export interface ToolkitMemory { process_mb: number; budget_mb: number; idle_unload_seconds: number; loaded: { name: string; idle_seconds: number; in_use: boolean }[] }
 export interface ProviderStatus {

@@ -327,12 +327,17 @@ services:
       - OCR_MODEL=microsoft/trocr-base-handwritten
       - ASR_MODEL=${ASR_MODEL:-openai/whisper-large-v3-turbo}
       - ASR_MAX_SECONDS=5400
+      # faster-whisper (fast, 8-bit) or transformers (the ASR_MODEL pipeline, also the automatic fallback)
+      - ASR_ENGINE=${ASR_ENGINE:-faster-whisper}
       - TRANSLATION_MODEL=facebook/nllb-200-distilled-600M
       # Hosted image/audio models (same OpenRouter key), used when the admin selects "hosted"; local models are the fallback
       - LLM_VISION_MODELS=${LLM_VISION_MODELS-google/gemini-3.8-flash,anthropic/claude-haiku-5.5}
       # Empty = transcription always runs on local Whisper (OpenRouter refuses audio below a $0.50 balance)
       - LLM_AUDIO_MODELS=${LLM_AUDIO_MODELS-}
       - TTS_ENGLISH_ENGINE=${TTS_ENGLISH_ENGINE:-kokoro}
+      # Bangla read-aloud: edge (Microsoft neural voice, online; text is sent to Microsoft) or mms (local)
+      - TTS_BANGLA_ENGINE=${TTS_BANGLA_ENGINE:-edge}
+      - TTS_BANGLA_VOICE=${TTS_BANGLA_VOICE:-bn-BD-NabanitaNeural}
       - ANSWER_SIMILARITY_MODEL=${ANSWER_SIMILARITY_MODEL:-BAAI/bge-m3}
       # Local models unused this long are unloaded; before a model loads, idle ones are unloaded to fit the budget
       - MODEL_IDLE_UNLOAD_SECONDS=${MODEL_IDLE_UNLOAD_SECONDS:-900}

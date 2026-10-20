@@ -1262,12 +1262,12 @@ class AiService
     }
 
     /** Lecture transcription of an audio/video file (local path). */
-    public function transcribe(string $absolutePath, string $filename, ?string $language = null): array
+    public function transcribe(string $absolutePath, string $filename, ?string $language = null, ?string $terms = null): array
     {
-        return $this->toolkitRequest(function ($client) use ($absolutePath, $filename, $language) {
+        return $this->toolkitRequest(function ($client) use ($absolutePath, $filename, $language, $terms) {
             $client = $client->attach('file', fopen($absolutePath, 'r'), $filename);
 
-            return $client->post("{$this->baseUrl}/api/v1/toolkit/transcribe", $language ? ['language' => $language] : []);
+            return $client->post("{$this->baseUrl}/api/v1/toolkit/transcribe", array_filter(['language' => $language, 'terms' => $terms]));
         }, 'transcribing audio', (int) config('services.ai.toolkit_timeout', 1800), true);
     }
 

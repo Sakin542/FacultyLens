@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 230" width="1200" height="230" role="img" aria-labelledby="t d">
+  <title id="t">How FacultyLens works</title>
+  <desc id="d">Typical AI tools generate, generate, generate. FacultyLens understands, analyzes, compares, evaluates, explains and recommends, and the faculty member decides.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#F3F8F6"/>
+      <stop offset="1" stop-color="#E6F2ED"/>
+    </linearGradient>
+    <linearGradient id="track" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7DD3B8"/>
+      <stop offset="1" stop-color="#1E6F5C"/>
+    </linearGradient>
+    <style>
+      .flow { stroke-dasharray: 6 12; animation: flow 1.6s linear infinite; }
+      @keyframes flow { to { stroke-dashoffset: -36; } }
+
+      .node { transform-box: fill-box; transform-origin: center; animation: pulse 6s ease-in-out infinite; }
+      .n2 { animation-delay: .8s; } .n3 { animation-delay: 1.6s; } .n4 { animation-delay: 2.4s; } .n5 { animation-delay: 3.2s; } .n6 { animation-delay: 4s; }
+      @keyframes pulse { 0%,100% { transform: scale(1); } 6% { transform: scale(1.14); } 14% { transform: scale(1); } }
+
+      .halo { transform-box: fill-box; transform-origin: center; opacity: 0; animation: halo 6s ease-out infinite; }
+      .h2 { animation-delay: .8s; } .h3 { animation-delay: 1.6s; } .h4 { animation-delay: 2.4s; } .h5 { animation-delay: 3.2s; } .h6 { animation-delay: 4s; }
+      @keyframes halo { 0% { opacity: .55; transform: scale(1); } 18% { opacity: 0; transform: scale(1.9); } 100% { opacity: 0; } }
+
+      .runner { offset-path: path("M110 128 H1040"); animation: run 6s ease-in-out infinite; }
+      @keyframes run { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+
+      .strike { stroke-dasharray: 270; stroke-dashoffset: 270; animation: strike 6s ease-in-out infinite; }
+      @keyframes strike { 0%,15% { stroke-dashoffset: 270; } 35%,100% { stroke-dashoffset: 0; } }
+
+      .decide { animation: glow 6s ease-in-out infinite; }
+      @keyframes glow { 0%,70% { fill: #1E6F5C; } 80%,92% { fill: #C88A04; } 100% { fill: #1E6F5C; } }
+
+      @media (prefers-reduced-motion: reduce) { * { animation: none !important; } .strike { stroke-dashoffset: 0; } .runner { display: none; } }
+    </style>
+  </defs>
+
+  <rect width="1200" height="230" rx="20" fill="url(#bg)"/>
+
+  <g font-family="'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif">
+    <!-- the usual way -->
+    <text x="60" y="44" font-size="15" font-weight="600" fill="#6B7F79">Typical AI tools</text>
+    <text x="210" y="44" font-size="15" fill="#8A9B96" textLength="250" lengthAdjust="spacingAndGlyphs">Generate  →  Generate  →  Generate</text>
+    <path class="strike" d="M204 39 H466" stroke="#C0392B" stroke-width="2.5" stroke-linecap="round"/>
+
+    <text x="60" y="84" font-size="15" font-weight="700" fill="#1E6F5C">FacultyLens</text>
+
+    <!-- track -->
+    <path d="M110 128 H1040" stroke="#CFE3DB" stroke-width="6" stroke-linecap="round"/>
+    <path class="flow" d="M110 128 H1040" stroke="url(#track)" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <circle class="runner" r="7" fill="#F2C14E" stroke="#FFFFFF" stroke-width="2"/>
+
+    <!-- steps -->
+    <g font-size="15" font-weight="600" text-anchor="middle" fill="#1B2A27">
+      <g><circle class="halo" cx="110" cy="128" r="22" fill="#7DD3B8"/><circle class="node" cx="110" cy="128" r="22" fill="#FFFFFF" stroke="#1E6F5C" stroke-width="3"/><text x="110" y="134" font-size="16">1</text><text x="110" y="182">Understand</text><text x="110" y="202" font-size="12" font-weight="400" fill="#4C6B62">your documents</text></g>
+      <g><circle class="halo h2" cx="296" cy="128" r="22" fill="#7DD3B8"/><circle class="node n2" cx="296" cy="128" r="22" fill="#FFFFFF" stroke="#1E6F5C" stroke-width="3"/><text x="296" y="134" font-size="16">2</text><text x="296" y="182">Analyze</text><text x="296" y="202" font-size="12" font-weight="400" fill="#4C6B62">coverage · Bloom · difficulty</text></g>
+      <g><circle class="halo h3" cx="482" cy="128" r="22" fill="#7DD3B8"/><circle class="node n3" cx="482" cy="128" r="22" fill="#FFFFFF" stroke="#1E6F5C" stroke-width="3"/><text x="482" y="134" font-size="16">3</text><text x="482" y="182">Compare</text><text x="482" y="202" font-size="12" font-weight="400" fill="#4C6B62">past papers · outcomes</text></g>
+      <g><circle class="halo h4" cx="668" cy="128" r="22" fill="#7DD3B8"/><circle class="node n4" cx="668" cy="128" r="22" fill="#FFFFFF" stroke="#1E6F5C" stroke-width="3"/><text x="668" y="134" font-size="16">4</text><text x="668" y="182">Evaluate</text><text x="668" y="202" font-size="12" font-weight="400" fill="#4C6B62">quality score · gaps</text></g>
+      <g><circle class="halo h5" cx="854" cy="128" r="22" fill="#7DD3B8"/><circle class="node n5" cx="854" cy="128" r="22" fill="#FFFFFF" stroke="#1E6F5C" stroke-width="3"/><text x="854" y="134" font-size="16">5</text><text x="854" y="182">Explain</text><text x="854" y="202" font-size="12" font-weight="400" fill="#4C6B62">evidence behind “Why?”</text></g>
+      <g><circle class="halo h6" cx="1040" cy="128" r="22" fill="#7DD3B8"/><circle class="node n6" cx="1040" cy="128" r="22" fill="#FFFFFF" stroke="#1E6F5C" stroke-width="3"/><text x="1040" y="134" font-size="16">6</text><text x="1040" y="182">Recommend</text><text x="1040" y="202" font-size="12" font-weight="400" fill="#4C6B62">concrete improvements</text></g>
+    </g>
+
+    <!-- faculty decides -->
+    <g>
+      <rect class="decide" x="1080" y="58" width="96" height="40" rx="20"/>
+      <text x="1128" y="83" font-size="13" font-weight="700" text-anchor="middle" fill="#FFFFFF">You decide</text>
+      <path d="M1040 106 Q1056 96 1080 86" stroke="#1E6F5C" stroke-width="2" fill="none" stroke-dasharray="3 4"/>
+    </g>
+  </g>
+</svg>

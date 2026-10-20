@@ -98,6 +98,26 @@ class AiToolkitTest extends TestCase
         $this->assertSame([], Storage::disk('local')->allFiles('ai-toolkit'));
     }
 
+    public function test_transcription_key_terms_reach_whisper_and_corrections_are_reported(): void
+    {
+        Http::fake(['*/api/v1/toolkit/transcribe' => Http::response(['status' => 'success', 'text' => 'Breadth-first search uses a queue.',
+            'segments' => [['start' => 0, 'end' => 3.1, 'text' => 'Breadth-first search uses a queue.']], 'model' => 'openai/whisper-large-v3-turbo',
+            'provider' => 'local', 'duration_seconds' => 3.1, 'corrected_lines' => 1, 'proofread_model' => 'hosted:anthropic/claude-opus-5.5'])]);
+        Sanctum::actingAs($this->faculty);
+
+        $id = $this->post('/api/ai-toolkit/transcribe', ['file' => UploadedFile::fake()->create('lecture.mp3', 500, 'audio/mpeg'), 'language' => 'en', 'terms' => ' queue, BFS '], ['Accept' => 'application/json'])
+            ->assertStatus(202)->json('data.id');
+
+        Http::assertSent(fn ($r) => str_ends_with($r->url(), '/api/v1/toolkit/transcribe') && str_contains((string) $r->body(), 'queue, BFS'));
+        $job = AiToolJob::query()->findOrFail($id);
+        $this->assertSame('completed', $job->status);
+        $this->assertSame('queue, BFS', $job->result['terms']);
+        $this->getJson("/api/ai-toolkit/jobs/{$id}")->assertOk()->assertJsonPath('data.corrected_lines', 1);
+
+        $this->post('/api/ai-toolkit/transcribe', ['file' => UploadedFile::fake()->create('l.mp3', 10, 'audio/mpeg'), 'terms' => str_repeat('x', 401)], ['Accept' => 'application/json'])
+            ->assertStatus(422);
+    }
+
     public function test_uploads_are_validated_and_queued_on_the_ai_tools_queue(): void
     {
         Queue::fake();

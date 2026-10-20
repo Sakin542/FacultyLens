@@ -19,6 +19,7 @@ import os
 from typing import Any, List, Optional
 
 from app.config import get_settings
+from app.services import provider_context
 
 logger = logging.getLogger("facultylens.ai")
 
@@ -45,11 +46,30 @@ class TextGenerationService:
             os.environ.setdefault("HF_TOKEN", settings.hf_token)
 
     @property
+    def hosted_only(self) -> bool:
+        """Rubric generation is off for local models but on through the hosted provider for this request."""
+        s = get_settings()
+        return (not s.rubric_generation_enabled and s.rubric_generation_hosted and not self._model_name
+                and provider_context.requested_provider() == "hosted" and self._shared().hosted_configured)
+
+    @property
     def is_configured(self) -> bool:
         if not get_settings().rubric_generation_enabled:
-            return False
+            return self.hosted_only
         # Without a dedicated rubric model, rubric drafting reuses the shared generator (local or hosted)
         return bool(self._model_name) or self._shared().is_configured
+
+    def generate_text(self, prompt: str, max_new_tokens: Optional[int] = None) -> str:
+        """Raw generated text from the shared generator ("" on failure, or when hosted-only and a local model answered)."""
+        if not self.is_configured or self._model_name:
+            return ""
+        hosted_only = self.hosted_only
+        tokens = max_new_tokens or get_settings().rubric_generation_max_new_tokens
+        # Hosted thinking models spend part of max_tokens on reasoning; the prompts ask for short output anyway
+        text = self._shared().generate(prompt, max_new_tokens=max(tokens, 256) if hosted_only else tokens) or ""
+        if hosted_only and not (provider_context.model_used() or "").startswith("hosted:"):
+            return ""  # every hosted model failed and the small local model answered: use the templates instead
+        return text
 
     @staticmethod
     def _shared():
@@ -101,7 +121,7 @@ class TextGenerationService:
         if not self.is_configured:
             return []
         if not self._model_name:
-            text = self._shared().generate(prompt, max_new_tokens=max_new_tokens or get_settings().rubric_generation_max_new_tokens) or ""
+            text = self.generate_text(prompt, max_new_tokens)
             lines = [line.strip(" -•*\t") for line in text.replace(";", "\n").split("\n")]
             return [line for line in lines if line]
         if not self._is_loaded and not self.load_model():

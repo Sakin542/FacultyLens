@@ -34,7 +34,7 @@ def test_short_acronyms_are_topics_and_course_title_is_not():
     assert "Database Management Systems" not in out["topics"]
     labels = [w["topic"] for w in out["weekly_outline"] if w["kind"] == "teaching"]
     assert len(labels) == len(set(labels)), "repeated topics are numbered as parts"
-    assert any(l.endswith("(part 2)") for l in labels)
+    assert any(label.endswith("(part 2)") for label in labels)
 
 
 def test_extract_topics_from_description():

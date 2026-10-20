@@ -1,0 +1,93 @@
+# Runs every test suite on each pull request to main and each push to main.
+# Browser (Playwright) journeys need the full Docker stack with multi-GB models, so they stay a local step:
+#   cd frontend && npm run test:e2e   (see README → Testing)
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend (Laravel)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: mbstring, pdo_sqlite, sqlite3, gd, fileinfo, intl, zip, bcmath
+          coverage: none
+      - uses: ramsey/composer-install@v3
+        with:
+          working-directory: backend
+      # Settings come from the committed .env.testing (APP_ENV=testing); phpunit.xml forces the in-memory SQLite
+      # database and tests/TestCase.php refuses anything else
+      - name: PHPUnit
+        run: php artisan test
+
+  ai-service:
+    name: AI service (FastAPI)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: ai-service
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"   # same as the Docker image
+          cache: pip
+          cache-dependency-path: ai-service/requirements.txt
+      - name: Install dependencies (CPU-only PyTorch)
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt ruff==0.16.7
+      - name: Lint
+        run: ruff check .
+      # 27 tests check real similarity scores with MiniLM (90 MB); every other model is replaced by fakes in the tests
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-minilm-v1
+      - name: Download the embedding model
+        run: python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')"
+      - name: Pytest
+        run: python -m pytest -q -p no:warnings
+
+  frontend:
+    name: Frontend (React)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - name: Vitest
+        run: npm test
+      # `build` runs the strict TypeScript check (tsc) before the Vite production build
+      - name: Type-check and build
+        run: npm run build

@@ -130,7 +130,7 @@ export const QuestionPaperUploadModal: React.FC<QuestionPaperUploadModalProps> =
               type="file"
               ref={fileInputRef}
               onChange={handleFileChange}
-              accept=".pdf,.doc,.docx,.ppt,.pptx,.txt"
+              accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.jpg,.jpeg,.png,.webp"
               className="hidden"
             />
             {file ? (
@@ -152,7 +152,7 @@ export const QuestionPaperUploadModal: React.FC<QuestionPaperUploadModalProps> =
                   Click to choose question paper or drag & drop here
                 </p>
                 <p className="text-[11px] text-sage-500">
-                  PDF, DOC, DOCX, PPT, PPTX, TXT (up to 20MB)
+                  PDF, DOC, DOCX, PPT, PPTX, TXT, or a photo or scan (JPG, PNG, WEBP) · up to 20MB
                 </p>
               </div>
             )}

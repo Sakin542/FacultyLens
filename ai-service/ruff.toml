@@ -15,7 +15,7 @@ ignore = [
 ]
 
 [lint.per-file-ignores]
-"tests/**" = ["S101", "S105", "S106", "S108", "B011", "F841"]
+"tests/**" = ["S101", "S105", "S106", "S108", "S311", "B011", "F841"]
 
 [format]
 quote-style = "double"
