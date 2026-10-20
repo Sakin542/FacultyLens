@@ -99,7 +99,7 @@ class AdminAiGovernanceController extends Controller
         // Live provider/model status from the AI service (booleans and model names only; never keys or URLs)
         try {
             $toolkit = $this->ai->toolkitStatus();
-            $toolkit = ['available' => true, 'generation' => $toolkit['generation'] ?? null, 'tools' => $toolkit['tools'] ?? []];
+            $toolkit = ['available' => true, 'generation' => $toolkit['generation'] ?? null, 'tools' => $toolkit['tools'] ?? [], 'memory' => $toolkit['memory'] ?? null];
         } catch (\Throwable $e) {
             $toolkit = ['available' => false, 'generation' => null, 'tools' => [], 'error' => 'The AI service did not answer the status request.'];
         }

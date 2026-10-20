@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, within, cleanup } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { AiToolkit } from '@/pages/AiToolkit';
 
@@ -35,7 +35,7 @@ const renderPage = () => render(<MemoryRouter><AiToolkit /></MemoryRouter>);
 describe('AI Toolkit page', () => {
   beforeEach(() => { vi.clearAllMocks(); });
 
-  it('translates English to Bangla and shows which model answered', async () => {
+  it('translates English to Bangla without a model or disclaimer line', async () => {
     svc.overview.mockResolvedValue(overview());
     svc.translate.mockResolvedValue({ text: 'শুভ সকাল', model: 'facebook/nllb-200-distilled-600M', provider: 'local', fallback_reason: null });
     renderPage();
@@ -45,7 +45,7 @@ describe('AI Toolkit page', () => {
 
     expect(await screen.findByTestId('translation-output')).toHaveTextContent('শুভ সকাল');
     expect(svc.translate).toHaveBeenCalledWith('Good morning', 'en', 'bn');
-    expect(screen.getByText(/facebook\/nllb-200-distilled-600M/)).toBeInTheDocument();
+    expect(screen.queryByText(/nllb-200-distilled-600M|Machine translation/)).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Listen' })).toBeInTheDocument();
   });
 
@@ -58,7 +58,8 @@ describe('AI Toolkit page', () => {
     fireEvent.change(screen.getByLabelText('বাংলা (Bangla)'), { target: { value: 'শুভ সকাল' } });
     fireEvent.click(screen.getByRole('button', { name: /Translate to English/ }));
     await waitFor(() => expect(svc.translate).toHaveBeenCalledWith('শুভ সকাল', 'bn', 'en'));
-    expect(await screen.findByText(/Hosted model/)).toBeInTheDocument();
+    expect(await screen.findByTestId('translation-output')).toHaveTextContent('Good morning');
+    expect(screen.queryByText(/Hosted model|Machine translation/)).not.toBeInTheDocument();
   });
 
   it('queues a handwriting OCR upload and opens a finished result', async () => {
@@ -77,6 +78,25 @@ describe('AI Toolkit page', () => {
     fireEvent.click(await screen.findByText('script.jpg'));
     expect(await screen.findByTestId('job-result')).toHaveTextContent('Q1 BFS visits level by level');
     expect(screen.getByText('Draft transcription of handwriting.')).toBeInTheDocument();
+  });
+
+  it('says which model read the file and why the local model was used', async () => {
+    svc.overview.mockResolvedValue(overview({ jobs: [jobRow({ id: 8, tool: 'ocr', status: 'completed', input_filename: 'page.jpg', line_count: 1 })] }));
+    svc.job.mockResolvedValueOnce(detail({ id: 8, tool: 'ocr', status: 'completed', input_filename: 'page.jpg', line_count: 1, text: 'x',
+      model: 'hosted:google/gemini-3.8-flash', provider: 'hosted', fallback_reason: null }));
+    renderPage();
+    fireEvent.click(await screen.findByRole('tab', { name: /Handwriting OCR/ }));
+    fireEvent.click(await screen.findByText('page.jpg'));
+    expect(await screen.findByTestId('job-result')).toHaveTextContent('Hosted model · hosted:google/gemini-3.8-flash');
+    expect(screen.queryByTestId('job-fallback')).not.toBeInTheDocument();
+
+    cleanup();
+    svc.job.mockResolvedValueOnce(detail({ id: 8, tool: 'ocr', status: 'completed', input_filename: 'page.jpg', line_count: 1, text: 'x',
+      model: 'microsoft/trocr-base-handwritten', provider: 'local', fallback_reason: 'hosted provider returned HTTP 503' }));
+    renderPage();
+    fireEvent.click(await screen.findByRole('tab', { name: /Handwriting OCR/ }));
+    fireEvent.click(await screen.findByText('page.jpg'));
+    expect(await screen.findByTestId('job-fallback')).toHaveTextContent('Read with the local model (hosted provider returned HTTP 503).');
   });
 
   it('respects tools the administrator turned off', async () => {

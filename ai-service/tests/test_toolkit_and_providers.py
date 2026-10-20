@@ -1,6 +1,7 @@
 """Generation provider switching (local / hosted) and the AI toolkit endpoints, without downloading models."""
 
 import io
+import json
 
 import httpx
 import pytest
@@ -8,7 +9,7 @@ from fastapi.testclient import TestClient
 
 from app.config import get_settings
 from app.main import app
-from app.services import provider_context, toolkit
+from app.services import llm_chain, provider_context, toolkit
 from app.services.generation_service import GenerationService, get_generation_service
 
 client = TestClient(app)
@@ -20,6 +21,7 @@ def hosted_settings(monkeypatch):
     monkeypatch.setattr(s, "llm_hosted_base_url", "https://llm.example/v1")
     monkeypatch.setattr(s, "llm_hosted_api_key", "secret-key-123")
     monkeypatch.setattr(s, "llm_hosted_model", "test/model-8b")
+    monkeypatch.setattr(s, "llm_hosted_fallback_models", "")
     return s
 
 
@@ -30,13 +32,22 @@ def no_local(monkeypatch):
     return gen
 
 
-class _Resp:
-    def __init__(self, status, payload):
-        self.status_code = status
-        self._payload = payload
+@pytest.fixture(autouse=True)
+def _fresh_chains():
+    llm_chain.reset_cache()
+    yield
+    llm_chain.reset_cache()
 
-    def json(self):
-        return self._payload
+
+def _completion(content):
+    return {"id": "c1", "object": "chat.completion", "created": 0, "model": "test/model-8b",
+            "choices": [{"index": 0, "message": {"role": "assistant", "content": content}, "finish_reason": "stop"}]}
+
+
+def mock_llm(monkeypatch, handler):
+    """Route the LangChain/OpenAI SDK HTTP calls to handler(request) -> httpx.Response."""
+    monkeypatch.setattr(llm_chain, "_http_client", lambda: httpx.Client(transport=httpx.MockTransport(handler)))
+    llm_chain.reset_cache()
 
 
 # ------------------------------------------------------------------------------------------- provider selection
@@ -53,24 +64,46 @@ def test_header_selects_provider_and_unknown_values_fall_back_to_local():
 def test_hosted_generation_uses_chat_completions_and_reports_the_model(monkeypatch, hosted_settings, no_local):
     calls = {}
 
-    def fake_post(url, headers, json, timeout):
-        calls.update(url=url, headers=headers, json=json)
-        return _Resp(200, {"choices": [{"message": {"content": "A hosted answer."}}]})
+    def handler(request):
+        calls.update(url=str(request.url), headers=request.headers, json=json.loads(request.content))
+        return httpx.Response(200, json=_completion("A hosted answer."))
 
-    monkeypatch.setattr(httpx, "post", fake_post)
+    mock_llm(monkeypatch, handler)
     provider_context.set_requested_provider("hosted")
     gen = GenerationService()
 
     assert gen.is_configured
     assert gen.generate("Explain BFS.") == "A hosted answer."
     assert calls["url"] == "https://llm.example/v1/chat/completions"
-    assert calls["headers"]["Authorization"] == "Bearer secret-key-123"
+    assert calls["headers"]["authorization"] == "Bearer secret-key-123"
     assert calls["json"]["model"] == "test/model-8b"
+    assert calls["json"]["messages"] == [{"role": "user", "content": "Explain BFS."}]
     assert gen.model_name == "hosted:test/model-8b"
+    assert "reasoning" not in calls["json"]  # not sent unless configured; some providers reject unknown fields
+
+
+def test_hosted_reasoning_switch_is_sent_only_when_configured(monkeypatch, hosted_settings, no_local):
+    sent = []
+    mock_llm(monkeypatch, lambda request: (sent.append(json.loads(request.content)), httpx.Response(200, json=_completion("ok")))[1])
+    provider_context.set_requested_provider("hosted")
+    gen = GenerationService()
+    monkeypatch.setattr(gen, "_model_name", None)
+    monkeypatch.setattr(hosted_settings, "llm_hosted_reasoning", "off")
+    gen.generate("Explain BFS.")
+    monkeypatch.setattr(hosted_settings, "llm_hosted_reasoning", "ON")
+    llm_chain.reset_cache()
+    gen.generate("Explain BFS.")
+    monkeypatch.setattr(hosted_settings, "llm_hosted_reasoning", "low")
+    llm_chain.reset_cache()
+    gen.generate("Explain BFS.")
+    assert sent[0]["reasoning"] == {"enabled": False, "exclude": True}
+    assert sent[1]["reasoning"] == {"enabled": True, "exclude": True}
+    assert sent[2]["reasoning"] == {"effort": "low", "exclude": True}
 
 
 def test_hosted_failure_falls_back_to_local_and_records_why(monkeypatch, hosted_settings):
-    monkeypatch.setattr(httpx, "post", lambda *a, **k: _Resp(503, {}))
+    monkeypatch.setattr(hosted_settings, "llm_hosted_max_retries", 0)
+    mock_llm(monkeypatch, lambda request: httpx.Response(503, json={"error": {"message": "overloaded"}}))
     gen = GenerationService()
     monkeypatch.setattr(gen, "_model_name", "local/tiny")
     monkeypatch.setattr(GenerationService, "_generate_local", lambda self, p, t, completion=False: (provider_context.record_model_used("local/tiny"), "local answer")[1])
@@ -95,9 +128,9 @@ def test_hosted_selected_but_not_configured_uses_local_only(monkeypatch, no_loca
 def test_status_never_exposes_the_api_key_or_url(hosted_settings):
     status = client.get("/api/v1/toolkit/status").json()
     body = str(status)
-    assert status["generation"]["hosted"] == {"configured": True, "model": "test/model-8b"}
+    assert status["generation"]["hosted"] == {"configured": True, "model": "test/model-8b", "fallback_models": []}
     assert "secret-key-123" not in body and "llm.example" not in body
-    assert set(status["tools"]) == {"ocr", "transcription", "translation", "speech", "writing"}
+    assert set(status["tools"]) == {"ocr", "transcription", "translation", "speech", "similarity", "writing"}
 
 
 # ------------------------------------------------------------------------------------------- translation
@@ -110,7 +143,7 @@ def test_translation_validates_languages_and_length():
 
 
 def test_translation_uses_hosted_model_when_selected(monkeypatch, hosted_settings):
-    monkeypatch.setattr(httpx, "post", lambda *a, **k: _Resp(200, {"choices": [{"message": {"content": "শুভ সকাল"}}]}))
+    mock_llm(monkeypatch, lambda request: httpx.Response(200, json=_completion("শুভ সকাল")))
     r = client.post("/api/v1/toolkit/translate", json={"text": "Good morning", "source": "en", "target": "bn"}, headers={"X-AI-Provider": "hosted"})
     assert r.status_code == 200
     assert r.json()["text"] == "শুভ সকাল"

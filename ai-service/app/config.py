@@ -108,16 +108,39 @@ class Settings(BaseSettings):
     llm_hosted_base_url: Optional[str] = None       # e.g. https://router.huggingface.co/v1
     llm_hosted_api_key: Optional[str] = None
     llm_hosted_model: Optional[str] = None          # e.g. meta-llama/Llama-3.1-8B-Instruct
+    llm_hosted_fallback_models: str = ""            # comma-separated, tried in order when the model above fails
     llm_hosted_timeout_seconds: int = 60
+    llm_hosted_max_retries: int = 1                 # LangChain/OpenAI SDK retries on 429/5xx before falling back
+    # OpenRouter-style reasoning control: "low" / "medium" / "high" set the thinking effort (works for every model),
+    # "off" asks for a direct answer (models that must reason reject it), "on" enables it, empty sends nothing (for
+    # providers that reject the field).
+    llm_hosted_reasoning: str = ""
+    # Hosted models for the toolkit's image and audio tools (same base URL and key), tried in order; when all fail,
+    # or the admin selected "local", TrOCR / Whisper run locally instead. Images/recordings are sent to the provider.
+    llm_vision_models: str = "google/gemini-3.8-flash,anthropic/claude-haiku-5.5"
+    llm_audio_models: str = ""                      # e.g. google/gemini-3.8-flash (OpenRouter needs a $0.50+ balance for audio)
+    llm_media_timeout_seconds: int = 300
+    asr_hosted_chunk_seconds: int = 600             # recordings are sent in pieces of this length (in parallel)
 
     # AI toolkit (local Hugging Face models, loaded lazily on first use)
     ocr_model: str = "microsoft/trocr-base-handwritten"
     ocr_max_pages: int = 10
-    asr_model: str = "openai/whisper-base"
+    asr_model: str = "openai/whisper-large-v3-turbo"   # ~1.6 GB; far better than whisper-base, especially for Bangla
     asr_max_seconds: int = 5400
     translation_model: str = "facebook/nllb-200-distilled-600M"
     translation_max_chars: int = 5000
     tts_max_chars: int = 1500
+    # English speech: "kokoro" (hexgrad/Kokoro-82M, natural voice) or "mms" (facebook/mms-tts-eng). Bangla always uses
+    # MMS-TTS; English falls back to MMS when Kokoro is not installed or fails.
+    tts_english_engine: str = "kokoro"
+    tts_kokoro_voice: str = "af_heart"
+    # Local model memory (see model_memory): models unused for this long are unloaded (0 = never), and before a
+    # model loads, idle ones are unloaded until the process fits the budget (0 = no budget). The default leaves room
+    # for the rest of the stack inside Docker Desktop's default ~7.5 GB.
+    model_idle_unload_seconds: int = 900
+    model_memory_budget_mb: int = 5000
+    # Answer similarity / plagiarism check: multilingual embeddings (falls back to hf_model_name if unavailable)
+    answer_similarity_model: str = "BAAI/bge-m3"
 
     model_config = SettingsConfigDict(
         env_file=".env",

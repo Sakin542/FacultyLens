@@ -257,7 +257,7 @@ const ImportDialog: React.FC<{ open: boolean; onClose: () => void; onDone: (mess
       <div className="space-y-4">
         <p className="text-sm text-adm-muted">Columns: <code className="rounded bg-adm-cream px-1">name, email</code> (required), <code className="rounded bg-adm-cream px-1">department, designation, role</code> (optional; role is FACULTY or DEPARTMENT_HEAD). Nothing is written until you confirm; invalid rows are skipped, never forced in.</p>
         <Field label="CSV file (max 512 KB, 500 rows)">
-          {(id) => <input id={id} type="file" accept=".csv,text/csv" onChange={(e) => { const f = e.target.files?.[0]; if (f) void runPreview(f); }} className="block w-full text-sm file:mr-3 file:rounded-lg file:border file:border-adm-line file:bg-adm-surface file:px-3 file:py-1.5 file:text-sm" data-testid="import-file" />}
+          {(id) => <input id={id} type="file" accept=".csv,text/csv" onChange={(e) => { const f = e.target.files?.[0]; if (f) void runPreview(f); }} className="block w-full" data-testid="import-file" />}
         </Field>
         {error && <Notice tone="error">{error}</Notice>}
         {preview && preview.missing_columns.length > 0 && <Notice tone="error">Missing required column(s): {preview.missing_columns.join(', ')}.</Notice>}

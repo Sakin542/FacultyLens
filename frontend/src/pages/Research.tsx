@@ -78,7 +78,7 @@ export const Research: React.FC = () => {
             </div>
             {mode === 'file' ? (
               <label className="block text-xs font-medium text-sage-700">PDF, DOCX or TXT (max 20 MB)
-                <input ref={fileRef} type="file" accept=".pdf,.docx,.txt" onChange={(e) => setFile(e.target.files?.[0] ?? null)} className="mt-1 block w-full text-xs text-sage-700 file:mr-2 file:rounded-md file:border-0 file:bg-sage-100 file:px-3 file:py-1.5 file:text-sage-800" data-testid="paper-file" />
+                <input ref={fileRef} type="file" accept=".pdf,.docx,.txt" onChange={(e) => setFile(e.target.files?.[0] ?? null)} className="mt-1 block w-full" data-testid="paper-file" />
               </label>
             ) : (
               <label className="block text-xs font-medium text-sage-700">Paper text<textarea rows={6} value={text} onChange={(e) => setText(e.target.value)} className="mt-1 w-full rounded-lg border border-sage-200 p-2 text-xs" placeholder="Paste the abstract and body…" data-testid="paper-text" /></label>

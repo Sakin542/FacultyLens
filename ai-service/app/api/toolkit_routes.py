@@ -1,4 +1,5 @@
-"""AI toolkit endpoints: OCR, transcription, translation, speech, study packs, question checks, simplify, Bloom rewrite, feedback drafts, paper review."""
+"""AI toolkit endpoints: OCR, transcription, translation, speech, study packs, question checks, simplify, Bloom rewrite, feedback drafts, paper review,
+answer-similarity embeddings."""
 
 import logging
 from typing import List, Optional
@@ -8,7 +9,8 @@ from fastapi.concurrency import run_in_threadpool
 from pydantic import BaseModel, Field
 
 from app.api.routes import verify_api_key
-from app.services import provider_context
+from app.services import model_memory, provider_context
+from app.services.answer_embedder import get_answer_embedder
 from app.services.feedback_drafter import FeedbackDrafter
 from app.services.paper_review import PaperReviewer
 from app.services.generation_service import GenerationService, get_generation_service
@@ -26,6 +28,10 @@ class TranslateRequest(BaseModel):
     text: str = Field(..., max_length=20000)
     source: str = Field(..., pattern="^(en|bn)$")
     target: str = Field(..., pattern="^(en|bn)$")
+
+
+class AnswerEmbeddingRequest(BaseModel):
+    texts: List[str] = Field(..., min_length=1, max_length=500)
 
 
 class SpeakRequest(BaseModel):
@@ -104,12 +110,21 @@ def toolkit_status(generation: GenerationService = Depends(get_generation_servic
         "ocr": get_ocr(), "transcription": get_transcriber(), "translation": get_translator(),
     }
     speaker = get_speaker()
+    embedder = get_answer_embedder()
+
+    def shown(tool):
+        # OCR and transcription list their hosted models first when the administrator selected the hosted provider
+        return tool.display_model() if hasattr(tool, "display_model") else tool.model_name
+
     return {
         "status": "success",
         "generation": generation.status(),
+        "memory": model_memory.status(),
         "tools": {
-            **{k: {"model": t.model_name, "loaded": t.loaded, "dependencies": t.dependencies(), "ready": all(t.dependencies().values())} for k, t in tools.items()},
-            "speech": {"model": "facebook/mms-tts-eng, facebook/mms-tts-ben", "loaded": bool(speaker.loaded_languages), "dependencies": {}, "ready": True},
+            **{k: {"model": shown(t), "loaded": t.loaded, "dependencies": t.dependencies(), "ready": all(t.dependencies().values())} for k, t in tools.items()},
+            "speech": {"model": f"{speaker.model_name('en')} (English), {speaker.model_name('bn')} (Bangla)", "loaded": bool(speaker.loaded_languages),
+                       "dependencies": {"kokoro": speaker.kokoro_enabled}, "ready": True},
+            "similarity": {"model": embedder.model_name, "loaded": embedder.loaded, "dependencies": {}, "ready": True},
             # Generation-based tools reuse the shared generator; they need no model of their own
             "writing": {"model": generation.model_name or "template / rule engines", "loaded": generation.is_loaded, "dependencies": {}, "ready": True},
         },
@@ -143,6 +158,17 @@ def translate(payload: TranslateRequest, generation: GenerationService = Depends
     except Exception as e:
         raise _fail(e)
     return {"status": "success", "requested_provider": provider_context.requested_provider(), **result}
+
+
+@router.post("/answer-embeddings")
+def answer_embeddings(payload: AnswerEmbeddingRequest):
+    """Embeddings for the answer similarity / plagiarism check (bge-m3, MiniLM if it cannot load). Text is never logged."""
+    try:
+        vectors, model = get_answer_embedder().embed(payload.texts)
+    except Exception as e:
+        logger.error(f"Answer embeddings failed: {type(e).__name__}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to embed the answers.")
+    return {"status": "success", "model": model, "embedding_dimension": len(vectors[0]) if vectors else 0, "vectors": vectors}
 
 
 @router.post("/speak")

@@ -320,11 +320,23 @@ services:
       - LLM_HOSTED_BASE_URL=${LLM_HOSTED_BASE_URL:-}
       - LLM_HOSTED_API_KEY=${LLM_HOSTED_API_KEY:-}
       - LLM_HOSTED_MODEL=${LLM_HOSTED_MODEL:-}
+      - LLM_HOSTED_FALLBACK_MODELS=${LLM_HOSTED_FALLBACK_MODELS:-}
+      - LLM_HOSTED_REASONING=${LLM_HOSTED_REASONING:-}
+      - LLM_HOSTED_MAX_RETRIES=${LLM_HOSTED_MAX_RETRIES:-1}
       # AI toolkit models (downloaded on first use into the ai_models_cache volume)
       - OCR_MODEL=microsoft/trocr-base-handwritten
-      - ASR_MODEL=openai/whisper-base
+      - ASR_MODEL=${ASR_MODEL:-openai/whisper-large-v3-turbo}
       - ASR_MAX_SECONDS=5400
       - TRANSLATION_MODEL=facebook/nllb-200-distilled-600M
+      # Hosted image/audio models (same OpenRouter key), used when the admin selects "hosted"; local models are the fallback
+      - LLM_VISION_MODELS=${LLM_VISION_MODELS-google/gemini-3.8-flash,anthropic/claude-haiku-5.5}
+      # Empty = transcription always runs on local Whisper (OpenRouter refuses audio below a $0.50 balance)
+      - LLM_AUDIO_MODELS=${LLM_AUDIO_MODELS-}
+      - TTS_ENGLISH_ENGINE=${TTS_ENGLISH_ENGINE:-kokoro}
+      - ANSWER_SIMILARITY_MODEL=${ANSWER_SIMILARITY_MODEL:-BAAI/bge-m3}
+      # Local models unused this long are unloaded; before a model loads, idle ones are unloaded to fit the budget
+      - MODEL_IDLE_UNLOAD_SECONDS=${MODEL_IDLE_UNLOAD_SECONDS:-900}
+      - MODEL_MEMORY_BUDGET_MB=${MODEL_MEMORY_BUDGET_MB:-5000}
     volumes:
       - ./ai-service:/app
       - ai_models_cache:/app/cache/huggingface

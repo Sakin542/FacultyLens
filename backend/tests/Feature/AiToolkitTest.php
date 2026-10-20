@@ -290,7 +290,7 @@ class AiToolkitTest extends TestCase
 
     public function test_compare_answers_flags_copied_text_and_ignores_the_quoted_question(): void
     {
-        Http::fake(['*/api/v1/embeddings/batch' => Http::response(['detail' => 'down'], 503)]);
+        Http::fake(['*/api/v1/toolkit/answer-embeddings' => Http::response(['detail' => 'down'], 503), '*/api/v1/embeddings/batch' => Http::response(['detail' => 'down'], 503)]);
         Sanctum::actingAs($this->faculty);
         $copied = 'An index keeps a sorted structure such as a B+ tree so the database jumps to matching rows instead of scanning the entire table.';
         $res = $this->postJson('/api/ai-toolkit/compare-answers', [
@@ -314,6 +314,42 @@ class AiToolkitTest extends TestCase
 
         $this->postJson('/api/ai-toolkit/compare-answers', ['answers' => [['label' => 'A', 'text' => 'x'], ['label' => 'A', 'text' => 'y']]])->assertStatus(422);
         $this->postJson('/api/ai-toolkit/compare-answers', ['answers' => [['text' => 'only one']]])->assertStatus(422);
+    }
+
+    public function test_compare_answers_uses_bge_m3_embeddings_and_falls_back_to_minilm(): void
+    {
+        Sanctum::actingAs($this->faculty);
+        $answers = ['answers' => [
+            ['label' => 'Rahim', 'text' => 'A graph search that visits every neighbour before going one level deeper in the graph.'],
+            ['label' => 'Karim', 'text' => 'গ্রাফের প্রতিটি প্রতিবেশী নোড আগে দেখা হয়, তারপর এক স্তর গভীরে যাওয়া হয় এই অনুসন্ধানে।'],
+            ['label' => 'Nadia', 'text' => 'Indexes reduce disk reads because lookups use logarithmic search over ordered keys instead.'],
+        ]];
+        $vectors = ['vectors' => [[1, 0, 0], [0.98, 0.2, 0], [0, 0, 1]], 'embedding_dimension' => 3];
+
+        Http::fake(['*/api/v1/toolkit/answer-embeddings' => Http::response(['status' => 'success', 'model' => 'BAAI/bge-m3'] + $vectors)]);
+        $data = $this->postJson('/api/ai-toolkit/compare-answers', $answers)->assertOk()->json('data');
+        $this->assertSame('lexical+semantic', $data['method']);
+        $this->assertSame('BAAI/bge-m3', $data['embedding_model']);
+        $this->assertSame(['Rahim', 'Karim'], [$data['pairs'][0]['a'], $data['pairs'][0]['b']]); // same idea across languages ranks first
+        Http::assertSent(fn ($r) => str_ends_with($r->url(), '/api/v1/toolkit/answer-embeddings') && count($r['texts']) === 3);
+    }
+
+    public function test_compare_answers_falls_back_to_minilm_when_the_answer_model_is_missing(): void
+    {
+        Sanctum::actingAs($this->faculty);
+        $answers = ['answers' => [
+            ['label' => 'Rahim', 'text' => 'A graph search that visits every neighbour before going one level deeper in the graph.'],
+            ['label' => 'Karim', 'text' => 'Breadth first search looks at all neighbours first and only then moves one level deeper.'],
+        ]];
+        $vectors = ['vectors' => [[1, 0], [0.9, 0.1]], 'embedding_dimension' => 2];
+        // Older AI service without the endpoint: the shared MiniLM embeddings are used instead
+        Http::fake([
+            '*/api/v1/toolkit/answer-embeddings' => Http::response(['detail' => 'Not Found'], 404),
+            '*/api/v1/embeddings/batch' => Http::response(['status' => 'success', 'model' => 'sentence-transformers/all-MiniLM-L6-v2'] + $vectors),
+        ]);
+        $data = $this->postJson('/api/ai-toolkit/compare-answers', $answers)->assertOk()->json('data');
+        $this->assertSame('lexical+semantic', $data['method']);
+        $this->assertSame('sentence-transformers/all-MiniLM-L6-v2', $data['embedding_model']);
     }
 
     public function test_attach_is_refused_for_other_peoples_submissions(): void
@@ -357,7 +393,9 @@ class AiToolkitTest extends TestCase
         $this->assertSame('select', $flag['type']);
         $this->assertSame(['local', 'hosted'], array_column($flag['options'], 'value'));
 
-        Http::fake(['*/api/v1/toolkit/status' => Http::response(['status' => 'success', 'generation' => ['hosted' => ['configured' => true, 'model' => 'm']], 'tools' => []])]);
-        $this->getJson('/api/admin/ai')->assertOk()->assertJsonPath('data.provider.selected', 'hosted')->assertJsonPath('data.provider.toolkit.available', true);
+        $memory = ['process_mb' => 2100, 'budget_mb' => 5000, 'idle_unload_seconds' => 900, 'loaded' => [['name' => 'transcription', 'idle_seconds' => 40, 'in_use' => false]]];
+        Http::fake(['*/api/v1/toolkit/status' => Http::response(['status' => 'success', 'generation' => ['hosted' => ['configured' => true, 'model' => 'm']], 'tools' => [], 'memory' => $memory])]);
+        $this->getJson('/api/admin/ai')->assertOk()->assertJsonPath('data.provider.selected', 'hosted')->assertJsonPath('data.provider.toolkit.available', true)
+            ->assertJsonPath('data.provider.toolkit.memory', $memory);
     }
 }

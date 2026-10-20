@@ -225,13 +225,16 @@ export interface FeatureSetting {
   options?: { value: string; label: string }[] | null;
 }
 export interface ToolkitToolStatus { model: string; loaded: boolean; dependencies: Record<string, boolean>; ready: boolean }
+/** Local model memory in the AI service: idle models are unloaded, and the process is kept within the budget */
+export interface ToolkitMemory { process_mb: number; budget_mb: number; idle_unload_seconds: number; loaded: { name: string; idle_seconds: number; in_use: boolean }[] }
 export interface ProviderStatus {
   selected: 'local' | 'hosted';
   toolkit: {
     available: boolean;
     error?: string;
-    generation: { local: { configured: boolean; model: string | null; loaded: boolean }; hosted: { configured: boolean; model: string | null } } | null;
-    tools: Partial<Record<'ocr' | 'transcription' | 'translation' | 'speech' | 'writing', ToolkitToolStatus>>;
+    generation: { local: { configured: boolean; model: string | null; loaded: boolean }; hosted: { configured: boolean; model: string | null; fallback_models?: string[] } } | null;
+    tools: Partial<Record<'ocr' | 'transcription' | 'translation' | 'speech' | 'similarity' | 'writing', ToolkitToolStatus>>;
+    memory?: ToolkitMemory | null;
   };
   tool_jobs_30d: Record<string, Record<string, number>>;
 }

@@ -6,7 +6,8 @@ Two providers, chosen per request by the administrator (see provider_context):
 - local  : HF_GENERATION_MODEL loaded in this container. Seq2seq (google/flan-t5-*) and causal instruct models
            (e.g. Qwen/Qwen2.5-0.5B-Instruct) are supported; instruct models get their chat template.
 - hosted : an OpenAI-compatible /chat/completions endpoint (LLM_HOSTED_BASE_URL + LLM_HOSTED_MODEL, key in
-           LLM_HOSTED_API_KEY). If the hosted call fails, the local model is used and the fallback is recorded.
+           LLM_HOSTED_API_KEY), called through LangChain (see llm_chain), with LLM_HOSTED_FALLBACK_MODELS tried in
+           order if it fails. If every hosted model fails, the local model is used and the reason is recorded.
 
 When nothing is available the callers fall back to their extractive/template engines and report that honestly.
 generate() never raises.
@@ -16,10 +17,8 @@ import logging
 import os
 from typing import Any, Optional
 
-import httpx
-
 from app.config import get_settings
-from app.services import provider_context
+from app.services import llm_chain, model_memory, provider_context
 
 logger = logging.getLogger("facultylens.ai")
 
@@ -121,8 +120,18 @@ class GenerationService:
             logger.warning(f"Generation model '{self._model_name}' unavailable: {e}")
             return False
 
+    def _unload(self) -> None:
+        self._pipeline = self._model = self._tokenizer = None
+        self._is_loaded = False
+
     def _generate_local(self, prompt: str, tokens: int, completion: bool = False) -> Optional[str]:
-        if not self.local_configured or (not self._is_loaded and not self.load_model()):
+        if not self.local_configured:
+            return None
+        with model_memory.use("generation", self._unload, estimate_mb=2000):
+            return self._run_local(prompt, tokens, completion)
+
+    def _run_local(self, prompt: str, tokens: int, completion: bool = False) -> Optional[str]:
+        if not self._is_loaded and not self.load_model():
             return None
         try:
             if self._task == "seq2seq" and self._model is not None and self._tokenizer is not None:
@@ -149,29 +158,14 @@ class GenerationService:
     # ------------------------------------------------------------------------------------------- hosted model
 
     def _generate_hosted(self, prompt: str, tokens: int) -> Optional[str]:
-        s = get_settings()
-        url = (s.llm_hosted_base_url or "").rstrip("/") + "/chat/completions"
         try:
-            res = httpx.post(
-                url,
-                headers={"Authorization": f"Bearer {s.llm_hosted_api_key}", "Content-Type": "application/json"},
-                json={"model": s.llm_hosted_model, "messages": [{"role": "user", "content": prompt}], "max_tokens": tokens, "temperature": 0.2},
-                timeout=max(5, s.llm_hosted_timeout_seconds),
-            )
-            if res.status_code >= 400:
-                provider_context.record_fallback(f"hosted provider returned HTTP {res.status_code}")
-                logger.warning(f"Hosted generation returned HTTP {res.status_code}")
-                return None
-            content = (((res.json().get("choices") or [{}])[0].get("message") or {}).get("content") or "").strip()
-            if content:
-                provider_context.record_model_used(f"hosted:{s.llm_hosted_model}")
-                return content
-            provider_context.record_fallback("hosted provider returned an empty answer")
+            model, content = llm_chain.run_hosted(prompt, tokens)
+        except llm_chain.HostedCallError as e:
+            provider_context.record_fallback(e.reason)
+            logger.warning(f"Hosted generation failed: {e.reason}")
             return None
-        except Exception as e:  # network errors, timeouts, malformed JSON
-            provider_context.record_fallback(f"hosted provider unavailable ({type(e).__name__})")
-            logger.warning(f"Hosted generation failed: {type(e).__name__}")
-            return None
+        provider_context.record_model_used(f"hosted:{model}")
+        return content
 
     # ------------------------------------------------------------------------------------------- public API
 
@@ -195,7 +189,7 @@ class GenerationService:
         return {
             "requested_provider": provider_context.requested_provider(),
             "local": {"configured": self.local_configured, "model": self._model_name, "loaded": self._is_loaded, "error": "load_failed" if self._load_error else None},
-            "hosted": {"configured": self.hosted_configured, "model": self.hosted_model_name},
+            "hosted": {"configured": self.hosted_configured, "model": self.hosted_model_name, "fallback_models": llm_chain.model_chain()[1:]},
         }
 
 
