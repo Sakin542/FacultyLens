@@ -46,7 +46,16 @@ class TextGenerationService:
 
     @property
     def is_configured(self) -> bool:
-        return bool(self._model_name) and get_settings().rubric_generation_enabled
+        if not get_settings().rubric_generation_enabled:
+            return False
+        # Without a dedicated rubric model, rubric drafting reuses the shared generator (local or hosted)
+        return bool(self._model_name) or self._shared().is_configured
+
+    @staticmethod
+    def _shared():
+        from app.services.generation_service import get_generation_service
+
+        return get_generation_service()
 
     @property
     def is_loaded(self) -> bool:
@@ -54,7 +63,7 @@ class TextGenerationService:
 
     @property
     def model_name(self) -> Optional[str]:
-        return self._model_name
+        return self._model_name or self._shared().model_name
 
     @property
     def load_error(self) -> Optional[str]:
@@ -91,6 +100,10 @@ class TextGenerationService:
         """Generate text for a prompt and return non-empty lines. Returns [] on failure."""
         if not self.is_configured:
             return []
+        if not self._model_name:
+            text = self._shared().generate(prompt, max_new_tokens=max_new_tokens or get_settings().rubric_generation_max_new_tokens) or ""
+            lines = [line.strip(" -•*\t") for line in text.replace(";", "\n").split("\n")]
+            return [line for line in lines if line]
         if not self._is_loaded and not self.load_model():
             return []
 

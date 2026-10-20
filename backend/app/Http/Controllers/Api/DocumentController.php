@@ -100,6 +100,17 @@ class DocumentController extends Controller
         $mimeType         = $file->getClientMimeType() ?: $file->getMimeType();
         $fileSize         = $file->getSize();
 
+        // Refuse an exact re-upload (same name and identical bytes) to the same course: duplicates add nothing and
+        // make document chat retrieve the same passage several times.
+        if ($existing = $this->findDuplicate($course->id, $originalFileName, (int) $fileSize, (string) $file->getRealPath())) {
+            return response()->json([
+                'status' => 'error',
+                'code' => 'DUPLICATE_DOCUMENT',
+                'message' => "This file is already in this course (uploaded {$existing->created_at?->format('M j, Y')}). Delete that copy first if you want to replace it.",
+                'data' => ['existing_document_id' => $existing->id],
+            ], 409);
+        }
+
         // 3. Store file securely
         $storeDirectory = "documents/user_{$user->id}/course_{$course->id}";
         $storedFilePath = $file->store($storeDirectory, 'local');
@@ -279,6 +290,23 @@ class DocumentController extends Controller
         return response()->json([
             'message' => 'Document deleted successfully.',
         ]);
+    }
+
+    /** An existing document in the course with the same name and byte-identical content, if any. */
+    protected function findDuplicate(int $courseId, string $name, int $size, string $uploadPath): ?DocumentProcessing
+    {
+        if ($uploadPath === '' || !is_file($uploadPath)) {
+            return null;
+        }
+        $candidates = DocumentProcessing::query()->where('course_id', $courseId)->where('original_file_name', $name)->where('file_size', $size)->get();
+        if ($candidates->isEmpty()) {
+            return null;
+        }
+        $hash = hash_file('sha256', $uploadPath);
+
+        return $candidates->first(fn (DocumentProcessing $d) => $d->file_path
+            && Storage::disk('local')->exists($d->file_path)
+            && hash_file('sha256', Storage::disk('local')->path($d->file_path)) === $hash);
     }
 }
 

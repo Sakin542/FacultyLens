@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { CollaborationComments } from '@/components/collaboration/CollaborationComments';
-import { Assessment, QuestionDetail } from '@/types';
+import { Assessment, LearningOutcome, QuestionDetail } from '@/types';
 import { assessmentService, AssessmentPayload } from '@/services/assessmentService';
 import { questionPaperService } from '@/services/questionPaperService';
 import { aiAnalysisService } from '@/services/aiAnalysisService';
@@ -11,6 +11,10 @@ import { Button } from '@/components/common/Button';
 import { Badge } from '@/components/common/Badge';
 import { AssessmentModal } from '@/components/assessments/AssessmentModal';
 import { QuestionPaperUploadModal } from '@/components/assessments/QuestionPaperUploadModal';
+import { QuestionEditorModal } from '@/components/assessments/QuestionEditorModal';
+import { PaperImportModal } from '@/components/assessments/PaperImportModal';
+import { assessmentQuestionService, QuestionInput } from '@/services/assessmentQuestionService';
+import { learningOutcomeService } from '@/services/learningOutcomeService';
 import { QuestionAnalysisModal } from '@/components/assessments/QuestionAnalysisModal';
 import { LearningOutcomeAlignmentModal } from '@/components/assessments/LearningOutcomeAlignmentModal';
 import { SemanticSimilarityModal } from '@/components/assessments/SemanticSimilarityModal';
@@ -46,6 +50,11 @@ import {
   BrainCircuit,
   History,
   ClipboardList,
+  ScanSearch,
+  Tablet,
+  Plus,
+  Pencil,
+  FileInput,
 } from 'lucide-react';
 
 export const AssessmentDetails: React.FC = () => {
@@ -91,6 +100,12 @@ export const AssessmentDetails: React.FC = () => {
   const [isDeletingPaper, setIsDeletingPaper] = useState(false);
   const [isDownloadingPaper, setIsDownloadingPaper] = useState(false);
   const [isRunningFullAnalysis, setIsRunningFullAnalysis] = useState(false);
+
+  // Faculty-authored questions: add / edit / delete, or read them from the uploaded paper
+  const [questionEditor, setQuestionEditor] = useState<{ open: boolean; question: QuestionDetail | null }>({ open: false, question: null });
+  const [isPaperImportOpen, setIsPaperImportOpen] = useState(false);
+  const [outcomes, setOutcomes] = useState<LearningOutcome[]>([]);
+  const [deletingQuestionId, setDeletingQuestionId] = useState<number | string | null>(null);
 
   const showNotification = (msg: string) => {
     setSuccessMessage(msg);
@@ -149,6 +164,14 @@ export const AssessmentDetails: React.FC = () => {
 
   // STEP 45: lazy AI explanations — an override refreshes the faculty-controlled question fields
   const { explain, modal: explanationModal } = useExplanationModal({ onChanged: () => loadAssessment() });
+
+  const courseIdForOutcomes = assessment?.course?.id ?? assessment?.course_id;
+  useEffect(() => {
+    if (!courseIdForOutcomes) return;
+    learningOutcomeService.getByCourse(courseIdForOutcomes)
+      .then((res) => setOutcomes(Array.isArray(res.data) ? res.data : []))
+      .catch(() => setOutcomes([]));
+  }, [courseIdForOutcomes]);
 
   const handleUpdateAssessment = async (_courseId: number | string, data: AssessmentPayload) => {
     if (!id) return;
@@ -268,6 +291,30 @@ export const AssessmentDetails: React.FC = () => {
   const paper = assessment.questionPaper || assessment.question_paper;
   const questions = assessment.questions || [];
   const qCount = assessment.questions_count ?? questions.length;
+  const canEditQuestions = assessment.permissions ? !!assessment.permissions.edit_question : true;
+  const totalMarks = Number(assessment.total_marks ?? assessment.totalMarks ?? 0);
+  const marksSum = questions.reduce((sum, q) => sum + (Number(q.marks ?? q.maxMarks) || 0), 0);
+  const nextQuestionNumber = questions.reduce((max, q) => Math.max(max, Number(q.question_number ?? q.questionNumber ?? 0)), 0) + 1;
+
+  const saveQuestion = async (input: QuestionInput) => {
+    const editing = questionEditor.question;
+    const res = editing ? await assessmentQuestionService.update(editing.id, input) : await assessmentQuestionService.create(assessment.id, input);
+    showNotification(res.message ?? (editing ? 'Question updated.' : 'Question added.'));
+    await loadAssessment();
+  };
+  const deleteQuestion = async (q: QuestionDetail) => {
+    if (!window.confirm(`Delete question ${q.question_number ?? ''}? This cannot be undone.`)) return;
+    setDeletingQuestionId(q.id);
+    try {
+      const res = await assessmentQuestionService.remove(q.id);
+      showNotification(res.message ?? 'Question deleted.');
+      await loadAssessment();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'The question could not be deleted.');
+    } finally {
+      setDeletingQuestionId(null);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -571,6 +618,16 @@ export const AssessmentDetails: React.FC = () => {
             </div>
             {course && (
               <div className="flex flex-wrap gap-2">
+                {canEditQuestions && (
+                  <Button variant="primary" size="sm" leftIcon={<Plus className="w-3.5 h-3.5" />} onClick={() => setQuestionEditor({ open: true, question: null })} data-testid="add-question">
+                    Add question
+                  </Button>
+                )}
+                {canEditQuestions && paper && (
+                  <Button variant="outline" size="sm" leftIcon={<FileInput className="w-3.5 h-3.5" />} onClick={() => setIsPaperImportOpen(true)} data-testid="import-from-paper">
+                    Read questions from paper
+                  </Button>
+                )}
                 <Link to={`/assessments/${assessment?.id ?? ''}/blueprint`} data-testid="blueprint-link">
                   <Button variant="outline" size="sm">
                     Blueprint
@@ -579,6 +636,21 @@ export const AssessmentDetails: React.FC = () => {
                 <Link to={`/assessments/${assessment?.id ?? ''}/versions`} data-testid="versions-link">
                   <Button variant="outline" size="sm">
                     Versions
+                  </Button>
+                </Link>
+                <Link to={`/assessments/${assessment?.id ?? ''}/exam-papers`} data-testid="exam-papers-link">
+                  <Button variant="outline" size="sm" leftIcon={<FileText className="w-3.5 h-3.5" />}>
+                    Exam Paper Builder
+                  </Button>
+                </Link>
+                <Link to={`/assessments/${assessment?.id ?? ''}/grade`} data-testid="mobile-grading-link">
+                  <Button variant="outline" size="sm" leftIcon={<Tablet className="w-3.5 h-3.5" />}>
+                    Quick Grading
+                  </Button>
+                </Link>
+                <Link to={`/assessments/${assessment?.id ?? ''}/integrity`} data-testid="integrity-link">
+                  <Button variant="outline" size="sm" leftIcon={<ScanSearch className="w-3.5 h-3.5" />}>
+                    Item Analysis &amp; Plagiarism
                   </Button>
                 </Link>
                 <Link to={`/courses/${course.id}/question-generator?assessment=${assessment?.id ?? ''}`} data-testid="generate-questions-link">
@@ -595,22 +667,45 @@ export const AssessmentDetails: React.FC = () => {
             )}
           </div>
 
+          {questions.length > 0 && (
+            <p className="text-xs text-sage-600 dark:text-sage-300 tabular-nums" data-testid="question-marks-summary">
+              {questions.length} question{questions.length === 1 ? '' : 's'} · {marksSum} of {totalMarks} marks
+              {totalMarks > 0 && Math.abs(marksSum - totalMarks) > 0.005 && (
+                <span className="ml-1 text-amber-700 dark:text-amber-300">(the questions do not add up to the assessment total)</span>
+              )}
+            </p>
+          )}
+
           {questions.length === 0 ? (
             <Card variant="default" className="p-8 text-center space-y-3">
               <Layers className="w-8 h-8 text-sage-500 mx-auto opacity-50" />
               <div className="space-y-1">
-                <p className="text-sm font-bold text-sage-800 dark:text-white">Question Paper Overview</p>
+                <p className="text-sm font-bold text-sage-800 dark:text-white">No questions yet</p>
                 <p className="text-xs text-sage-500">
-                  Manage course questions in the Question Bank or review assessment history.
+                  {paper
+                    ? 'Read the questions from the uploaded paper and check them, or add them one by one.'
+                    : 'Add the questions one by one, or upload the question paper above and read the questions from it.'}
                 </p>
               </div>
-              {course && (
-                <Link to={`/courses/${course.id}/question-bank`}>
-                  <Button variant="outline" size="sm" leftIcon={<HelpCircle className="w-3.5 h-3.5" />}>
-                    Open Question Bank
+              <div className="flex flex-wrap justify-center gap-2">
+                {canEditQuestions && paper && (
+                  <Button variant="primary" size="sm" leftIcon={<FileInput className="w-3.5 h-3.5" />} onClick={() => setIsPaperImportOpen(true)}>
+                    Read questions from paper
                   </Button>
-                </Link>
-              )}
+                )}
+                {canEditQuestions && (
+                  <Button variant={paper ? 'outline' : 'primary'} size="sm" leftIcon={<Plus className="w-3.5 h-3.5" />} onClick={() => setQuestionEditor({ open: true, question: null })}>
+                    Add first question
+                  </Button>
+                )}
+                {course && (
+                  <Link to={`/courses/${course.id}/question-bank`}>
+                    <Button variant="outline" size="sm" leftIcon={<HelpCircle className="w-3.5 h-3.5" />}>
+                      Open Question Bank
+                    </Button>
+                  </Link>
+                )}
+              </div>
             </Card>
           ) : (
             <div className="space-y-3">
@@ -684,7 +779,20 @@ export const AssessmentDetails: React.FC = () => {
                     {q.question_text || q.text}
                   </p>
 
-                  <div className="flex items-center justify-end">
+                  <div className="flex flex-wrap items-center justify-end gap-2">
+                    {canEditQuestions && (
+                      <>
+                        <Button variant="ghost" size="sm" leftIcon={<Pencil className="w-3.5 h-3.5" />} onClick={() => setQuestionEditor({ open: true, question: q })}
+                          aria-label={`Edit question ${q.question_number || q.questionNumber || idx + 1}`}>
+                          Edit
+                        </Button>
+                        <Button variant="ghost" size="sm" disabled={deletingQuestionId === q.id} onClick={() => { void deleteQuestion(q); }}
+                          leftIcon={deletingQuestionId === q.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                          aria-label={`Delete question ${q.question_number || q.questionNumber || idx + 1}`}>
+                          Delete
+                        </Button>
+                      </>
+                    )}
                     <Button
                       variant="outline"
                       size="sm"
@@ -717,6 +825,22 @@ export const AssessmentDetails: React.FC = () => {
           )}
         </div>
       </div>
+
+      <QuestionEditorModal
+        isOpen={questionEditor.open}
+        question={questionEditor.question}
+        outcomes={outcomes}
+        nextNumber={nextQuestionNumber}
+        onClose={() => setQuestionEditor({ open: false, question: null })}
+        onSave={saveQuestion}
+      />
+      <PaperImportModal
+        isOpen={isPaperImportOpen}
+        assessmentId={assessment.id}
+        totalMarks={totalMarks || null}
+        onClose={() => setIsPaperImportOpen(false)}
+        onImported={(msg) => { showNotification(msg); void loadAssessment(); }}
+      />
 
       {/* Edit Modal */}
       <AssessmentModal

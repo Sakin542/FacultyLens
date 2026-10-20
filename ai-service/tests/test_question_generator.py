@@ -189,3 +189,32 @@ def test_works_without_outcome_or_documents():
     assert body["generated_count"] == 2
     assert body["questions"][0]["validation"]["co_alignment_status"] is None
     assert body["questions"][0]["validation"]["similarity_status"] == "NOT_SIMILAR"
+
+
+def test_model_answer_must_be_supported_by_the_course_documents():
+    """A small model can write a confident but wrong expected answer; it is flagged for review, the question is kept."""
+    raw = json.dumps([
+        {"question_text": "Analyze which normal form removes transitive dependencies in a relational schema with normalization.",
+         "question_type": "descriptive", "marks": 10, "difficulty_level": "medium", "cognitive_level": "analyze", "topic": "Normalization",
+         "expected_answer": "Third normal form removes transitive dependencies."},
+        {"question_text": "Analyze which normalization form is stricter than third normal form and why it matters.",
+         "question_type": "descriptive", "marks": 10, "difficulty_level": "medium", "cognitive_level": "analyze", "topic": "Normalization",
+         "expected_answer": "First normal form with hashing indexes."},
+    ])
+    req = GenerateQuestionsRequest(**_payload(number_of_questions=2))
+    result = QuestionGenerator(generation_service=FakeGen(raw)).generate(req)
+    good, bad = result["questions"][0], result["questions"][1]
+
+    assert good["validation"]["constraints"]["answer_grounded"] is True
+    assert not any("not supported by the course documents" in w for w in good["validation"]["warnings"])
+    assert bad["validation"]["constraints"]["answer_grounded"] is False
+    assert any("not supported by the course documents" in w for w in bad["validation"]["warnings"])
+    assert bad["validation"]["overall_status"] != "PASSED"
+
+
+def test_answer_grounding_is_skipped_without_documents():
+    raw = json.dumps([{"question_text": "Analyze how normalization reduces redundancy in a relational schema.", "question_type": "descriptive",
+                       "marks": 10, "difficulty_level": "medium", "cognitive_level": "analyze", "topic": "Normalization", "expected_answer": "Anything."}])
+    req = GenerateQuestionsRequest(**_payload(number_of_questions=1, document_context=[]))
+    result = QuestionGenerator(generation_service=FakeGen(raw)).generate(req)
+    assert result["questions"][0]["validation"]["constraints"]["answer_grounded"] is None

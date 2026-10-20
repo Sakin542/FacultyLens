@@ -1,14 +1,27 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { User } from '@/types';
-import { authService, LoginPayload, RegisterPayload } from '@/services/authService';
-import { SESSION_EXPIRED_EVENT } from '@/services/api';
+import { authService, AuthResponse, LoginPayload, RegisterPayload } from '@/services/authService';
+import { ApiError, SESSION_EXPIRED_EVENT } from '@/services/api';
 import { disconnectRealtime } from '@/services/echo';
+
+/** Password (or Google) accepted, but a 6-digit authenticator code is still needed to finish signing in. */
+export interface TwoFactorPending {
+  twoFactorRequired: true;
+  challengeToken: string;
+}
+
+export const isTwoFactorPending = (value: unknown): value is TwoFactorPending =>
+  typeof value === 'object' && value !== null && (value as TwoFactorPending).twoFactorRequired === true;
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   loading: boolean;
-  login: (credentials: LoginPayload) => Promise<User>;
+  login: (credentials: LoginPayload) => Promise<User | TwoFactorPending>;
+  /** Admin panel sign-in (administrator account only). */
+  adminLogin: (credentials: LoginPayload) => Promise<User | TwoFactorPending>;
+  googleLogin: (credential: string) => Promise<User | TwoFactorPending>;
+  completeTwoFactor: (challengeToken: string, code: { code?: string; recovery_code?: string }) => Promise<User>;
   register: (data: RegisterPayload) => Promise<User>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<User | null>;
@@ -45,28 +58,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  // Initialize session from Laravel Sanctum on mount / refresh (F5)
+  // Initialize session from Laravel Sanctum on mount / refresh (F5).
+  // Only a real answer ("not signed in" or 401) signs the user out. A rate-limit reply, a server error or a network
+  // blip (e.g. the backend restarting) is retried briefly, so a refresh does not throw a signed-in user to /login.
+  // The page shows as soon as the session is known; there is no minimum splash time (it made every refresh ≥1.5 s).
   useEffect(() => {
     let isMounted = true;
-    // Keep the boot splash on screen long enough for its reveal sequence (skipped in tests)
-    const minSplashMs = import.meta.env.MODE === 'test' ? 0 : 1500;
-    const startedAt = Date.now();
+    const retryDelaysMs = import.meta.env.MODE === 'test' ? [] : [400, 1000, 2000, 3000];
+    const transient = (err: unknown) => !(err instanceof ApiError) || err.status === 429 || err.status >= 500;
 
     const initializeAuth = async () => {
       try {
-        const session = await authService.getSession();
-        if (isMounted) {
-          setUser(session.authenticated && session.user ? normalizeUser(session.user) : null);
+        for (let attempt = 0; ; attempt++) {
+          try {
+            const session = await authService.getSession();
+            if (isMounted) {
+              setUser(session.authenticated && session.user ? normalizeUser(session.user) : null);
+            }
+            return;
+          } catch (err) {
+            if (!transient(err) || attempt >= retryDelaysMs.length) throw err;
+            await new Promise((resolve) => setTimeout(resolve, retryDelaysMs[attempt]));
+            if (!isMounted) return;
+          }
         }
       } catch {
         if (isMounted) {
           setUser(null);
         }
       } finally {
-        const remaining = Math.max(0, minSplashMs - (Date.now() - startedAt));
-        if (remaining > 0) {
-          await new Promise((resolve) => setTimeout(resolve, remaining));
-        }
         if (isMounted) {
           setLoading(false);
         }
@@ -88,14 +108,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => window.removeEventListener(SESSION_EXPIRED_EVENT, onExpired);
   }, []);
 
-  const login = async (credentials: LoginPayload): Promise<User> => {
-    const response = await authService.login(credentials);
+  const finishSignIn = (response: AuthResponse): User | TwoFactorPending => {
+    if (response.status === 'two_factor_required' && response.challenge_token) {
+      return { twoFactorRequired: true, challengeToken: response.challenge_token };
+    }
     if (!response.user) {
       throw new Error(response.message || 'Authentication failed');
     }
     const normalized = normalizeUser(response.user);
     setUser(normalized);
     return normalized;
+  };
+
+  const login = async (credentials: LoginPayload): Promise<User | TwoFactorPending> =>
+    finishSignIn(await authService.login(credentials));
+
+  const adminLogin = async (credentials: LoginPayload): Promise<User | TwoFactorPending> =>
+    finishSignIn(await authService.adminLogin(credentials));
+
+  const googleLogin = async (credential: string): Promise<User | TwoFactorPending> =>
+    finishSignIn(await authService.googleLogin(credential));
+
+  const completeTwoFactor = async (challengeToken: string, code: { code?: string; recovery_code?: string }): Promise<User> => {
+    const result = finishSignIn(await authService.twoFactorChallenge({ challenge_token: challengeToken, ...code }));
+    if (isTwoFactorPending(result)) {
+      throw new Error('Verification did not complete. Please sign in again.');
+    }
+    return result;
   };
 
   const register = async (data: RegisterPayload): Promise<User> => {
@@ -134,6 +173,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAuthenticated: Boolean(user),
         loading,
         login,
+        adminLogin,
+        googleLogin,
+        completeTwoFactor,
         register,
         logout,
         refreshUser,

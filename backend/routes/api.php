@@ -1,7 +1,37 @@
 <?php
 
 use App\Http\Controllers\Api\AcademicChatController;
+use App\Http\Controllers\Api\Admin\AdminAccessController;
+use App\Http\Controllers\Api\Admin\AdminAiGovernanceController;
+use App\Http\Controllers\Api\Admin\AdminAiUsageController;
+use App\Http\Controllers\Api\Admin\AdminAlertController;
+use App\Http\Controllers\Api\Admin\AdminAuditLogController;
+use App\Http\Controllers\Api\Admin\AdminBackupController;
+use App\Http\Controllers\Api\Admin\AdminDashboardController;
+use App\Http\Controllers\Api\Admin\AdminDataQualityController;
+use App\Http\Controllers\Api\Admin\AdminEmailController;
+use App\Http\Controllers\Api\Admin\AdminIncidentController;
+use App\Http\Controllers\Api\Admin\AdminInstitutionController;
+use App\Http\Controllers\Api\Admin\AdminMaintenanceController;
+use App\Http\Controllers\Api\Admin\AdminOperationController;
+use App\Http\Controllers\Api\Admin\AdminQueueController;
+use App\Http\Controllers\Api\Admin\AdminSearchController;
+use App\Http\Controllers\Api\Admin\AdminSecurityController;
+use App\Http\Controllers\Api\Admin\AdminSettingsController;
+use App\Http\Controllers\Api\Admin\AdminSystemController;
+use App\Http\Controllers\Api\Admin\AdminUserController;
+use App\Http\Controllers\Api\AssessmentIntegrityController;
+use App\Http\Controllers\Api\CalendarController;
+use App\Http\Controllers\Api\CourseDesignController;
+use App\Http\Controllers\Api\GradingQueueController;
+use App\Http\Controllers\Api\ResearchController;
+use App\Http\Controllers\Api\PlanningController;
+use App\Http\Controllers\Api\ExamPaperController;
+use App\Http\Controllers\Api\FeedbackCommentController;
+use App\Http\Controllers\Api\PublicConfigController;
+use App\Http\Controllers\Api\TwoFactorController;
 use App\Http\Controllers\Api\AiEvaluationController;
+use App\Http\Controllers\Api\AiToolkitController;
 use App\Http\Controllers\Api\AiExplainabilityController;
 use App\Http\Controllers\Api\AcademicAnalyticsController;
 use App\Http\Controllers\Api\AssessmentBlueprintController;
@@ -17,6 +47,7 @@ use App\Http\Controllers\Api\AiGradingController;
 use App\Http\Controllers\Api\AnalysisHistoryController;
 use App\Http\Controllers\Api\AssessmentController;
 use App\Http\Controllers\Api\AssessmentQuestionPaperController;
+use App\Http\Controllers\Api\AssessmentQuestionController;
 use App\Http\Controllers\Api\AssessmentReportController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\EmailController;
@@ -56,8 +87,10 @@ Route::prefix('auth')->group(function () {
     Route::get('/session', [AuthController::class, 'session']);
 
     Route::middleware('throttle:auth')->group(function () {
-        Route::post('/register', [AuthController::class, 'register']);
+        Route::post('/register', [AuthController::class, 'register'])->middleware('feature:registration');
         Route::post('/login', [AuthController::class, 'login']);
+        Route::post('/two-factor/challenge', [AuthController::class, 'twoFactorChallenge']);
+        Route::post('/google', [AuthController::class, 'googleLogin'])->middleware('feature:google_sign_in');
     });
 
     // Password recovery (Laravel password broker → queued FacultyLens reset e-mail). Generic responses; per-IP + per-address limits.
@@ -74,7 +107,92 @@ Route::prefix('auth')->group(function () {
         Route::get('/user', [AuthController::class, 'user']);
         Route::patch('/user', [AuthController::class, 'updateProfile']);
         Route::post('/change-password', [AuthController::class, 'changePassword'])->middleware('throttle:auth');
+
+        // Self-service two-factor authentication (TOTP + recovery codes)
+        Route::prefix('two-factor')->middleware('throttle:auth')->group(function () {
+            Route::get('/', [TwoFactorController::class, 'status'])->withoutMiddleware('throttle:auth');
+            Route::post('/enable', [TwoFactorController::class, 'enable']);
+            Route::post('/confirm', [TwoFactorController::class, 'confirm']);
+            Route::post('/recovery-codes', [TwoFactorController::class, 'regenerateRecoveryCodes']);
+            Route::delete('/', [TwoFactorController::class, 'disable']);
+        });
     });
+});
+
+// Anonymous-safe client configuration (feature toggles, Google client id)
+Route::get('/config', PublicConfigController::class);
+
+/**
+ * Admin panel: only the configured administrator account (role ADMIN + ADMIN_EMAIL) gets past `admin`.
+ */
+Route::post('/admin/auth/login', [AuthController::class, 'adminLogin'])->middleware('throttle:auth');
+Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::get('/overview', [AdminDashboardController::class, 'overview']);
+    Route::get('/search', AdminSearchController::class)->middleware('throttle:60,1');
+
+    // People and access
+    Route::get('/users', [AdminUserController::class, 'index']);
+    Route::post('/users', [AdminUserController::class, 'store'])->middleware('throttle:30,1');
+    Route::post('/users/bulk', [AdminUserController::class, 'bulk'])->middleware('throttle:20,1');
+    Route::post('/users/import/preview', [AdminUserController::class, 'importPreview'])->middleware('throttle:20,1');
+    Route::post('/users/import', [AdminUserController::class, 'import'])->middleware('throttle:5,1');
+    Route::get('/users/{user}', [AdminUserController::class, 'show'])->whereNumber('user');
+    Route::patch('/users/{user}', [AdminUserController::class, 'update'])->whereNumber('user');
+    Route::post('/users/{user}/revoke-sessions', [AdminUserController::class, 'revokeSessions'])->whereNumber('user');
+    Route::post('/users/{user}/password-reset', [AdminUserController::class, 'sendPasswordReset'])->whereNumber('user')->middleware('throttle:password-reset');
+    Route::delete('/users/{user}/two-factor', [AdminUserController::class, 'resetTwoFactor'])->whereNumber('user');
+    Route::get('/access', [AdminAccessController::class, 'index']);
+    Route::get('/audit-logs', [AdminAuditLogController::class, 'index']);
+    Route::get('/audit-logs/facets', [AdminAuditLogController::class, 'facets']);
+    Route::get('/security', [AdminSecurityController::class, 'index']);
+
+    // Institution
+    Route::get('/institution', [AdminInstitutionController::class, 'overview']);
+    Route::get('/institution/courses', [AdminInstitutionController::class, 'courses']);
+
+    // Operations
+    Route::get('/system/health', [AdminSystemController::class, 'health']);
+    Route::post('/system/health/check', [AdminSystemController::class, 'runCheck'])->middleware('throttle:12,1');
+    Route::get('/system/environment', [AdminSystemController::class, 'environment']);
+    Route::get('/system/schedule', [AdminSystemController::class, 'schedule']);
+    Route::get('/queues', [AdminQueueController::class, 'summary']);
+    Route::get('/queues/failed', [AdminQueueController::class, 'failed']);
+    Route::post('/queues/failed/{uuid}/retry', [AdminQueueController::class, 'retry'])->whereUuid('uuid')->middleware('throttle:30,1');
+    Route::delete('/queues/failed/{uuid}', [AdminQueueController::class, 'forget'])->whereUuid('uuid');
+    Route::get('/email', [AdminEmailController::class, 'summary']);
+    Route::get('/email/deliveries', [AdminEmailController::class, 'deliveries']);
+    Route::get('/alerts', [AdminAlertController::class, 'index']);
+    Route::post('/alerts/{alert}/acknowledge', [AdminAlertController::class, 'acknowledge'])->whereNumber('alert');
+    Route::post('/alerts/{alert}/resolve', [AdminAlertController::class, 'resolve'])->whereNumber('alert');
+    Route::post('/alerts/{alert}/escalate', [AdminAlertController::class, 'escalate'])->whereNumber('alert');
+    Route::get('/incidents', [AdminIncidentController::class, 'index']);
+    Route::post('/incidents', [AdminIncidentController::class, 'store']);
+    Route::get('/incidents/{incident}', [AdminIncidentController::class, 'show'])->whereNumber('incident');
+    Route::patch('/incidents/{incident}', [AdminIncidentController::class, 'update'])->whereNumber('incident');
+    Route::post('/incidents/{incident}/notes', [AdminIncidentController::class, 'addNote'])->whereNumber('incident');
+    Route::get('/operations', [AdminOperationController::class, 'index']);
+    Route::get('/operations/{operation}', [AdminOperationController::class, 'show'])->whereNumber('operation');
+    Route::get('/operations/{operation}/download', [AdminOperationController::class, 'download'])->whereNumber('operation');
+    Route::post('/exports', [AdminOperationController::class, 'export'])->middleware('throttle:10,1');
+    Route::get('/maintenance', [AdminMaintenanceController::class, 'index']);
+    Route::post('/maintenance', [AdminMaintenanceController::class, 'store']);
+    Route::post('/maintenance/{window}/cancel', [AdminMaintenanceController::class, 'cancel'])->whereNumber('window');
+
+    // Data and AI governance
+    Route::get('/data-quality', [AdminDataQualityController::class, 'index']);
+    Route::post('/data-quality/scan', [AdminDataQualityController::class, 'scan'])->middleware('throttle:6,1');
+    Route::patch('/data-quality/{finding}', [AdminDataQualityController::class, 'update'])->whereNumber('finding');
+    Route::get('/ai', [AdminAiGovernanceController::class, 'index']);
+    Route::get('/ai-usage', [AdminAiUsageController::class, 'index']);
+
+    // Settings and recovery
+    Route::get('/settings', [AdminSettingsController::class, 'index']);
+    Route::put('/settings', [AdminSettingsController::class, 'update']);
+    Route::get('/backups', [AdminBackupController::class, 'index']);
+    Route::post('/backups', [AdminBackupController::class, 'store'])->middleware('throttle:10,1');
+    Route::post('/backups/{backup}/verify', [AdminBackupController::class, 'verify'])->whereNumber('backup')->middleware('throttle:10,1');
+    Route::get('/backups/{backup}/download', [AdminBackupController::class, 'download'])->whereNumber('backup');
+    Route::delete('/backups/{backup}', [AdminBackupController::class, 'destroy'])->whereNumber('backup');
 });
 
 Route::middleware('auth:sanctum')->patch('/users/me', [AuthController::class, 'updateProfile']);
@@ -128,6 +246,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/assessments/{assessment}/question-paper', [AssessmentQuestionPaperController::class, 'store'])->middleware('throttle:uploads');
     Route::delete('/assessments/{assessment}/question-paper', [AssessmentQuestionPaperController::class, 'destroy']);
 
+    // Faculty-authored assessment questions (add / edit / delete, or import from the uploaded paper after review)
+    Route::get('/assessments/{assessment}/questions', [AssessmentQuestionController::class, 'index']);
+    Route::post('/assessments/{assessment}/questions', [AssessmentQuestionController::class, 'store']);
+    Route::post('/assessments/{assessment}/questions/bulk', [AssessmentQuestionController::class, 'bulkStore']);
+    Route::post('/assessments/{assessment}/question-paper/extract', [AssessmentQuestionController::class, 'extract'])->middleware('throttle:uploads');
+    Route::put('/questions/{question}', [AssessmentQuestionController::class, 'update'])->whereNumber('question');
+    Route::delete('/questions/{question}', [AssessmentQuestionController::class, 'destroy'])->whereNumber('question');
+
     // Previous Questions / Question Bank
     Route::get('/courses/{course}/previous-questions', [PreviousQuestionController::class, 'index']);
     Route::post('/courses/{course}/previous-questions', [PreviousQuestionController::class, 'store']);
@@ -144,7 +270,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/documents/{document}', [DocumentController::class, 'destroy']);
 
     // Hugging Face AI Service Integration (STEP 09, STEP 10, STEP 11, STEP 12)
-    Route::prefix('ai')->middleware('throttle:ai-analysis')->group(function () {
+    Route::prefix('ai')->middleware(['throttle:ai-analysis', 'feature:ai_analysis'])->group(function () {
         Route::get('/health', [AiAnalysisController::class, 'health']);
         Route::post('/analyze', [AiAnalysisController::class, 'analyze']);
         Route::post('/analyze-document', [AiAnalysisController::class, 'analyzeDocument']);
@@ -198,13 +324,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/ai/improvement-signals', [FeedbackController::class, 'improvementSignals']);
 
     // STEP 25: AI Rubric Generator (draft -> faculty review -> approve)
-    Route::post('/questions/{question}/rubrics/generate', [RubricController::class, 'generate'])->middleware('throttle:ai-analysis');
+    Route::post('/questions/{question}/rubrics/generate', [RubricController::class, 'generate'])->middleware(['throttle:ai-analysis', 'feature:ai_grading']);
     Route::get('/questions/{question}/rubrics', [RubricController::class, 'index']);
     Route::get('/rubrics/{rubric}', [RubricController::class, 'show']);
     Route::put('/rubrics/{rubric}', [RubricController::class, 'update']);
     Route::delete('/rubrics/{rubric}', [RubricController::class, 'destroy']);
     Route::post('/rubrics/{rubric}/approve', [RubricController::class, 'approve']);
-    Route::post('/rubrics/{rubric}/regenerate', [RubricController::class, 'regenerate'])->middleware('throttle:ai-analysis');
+    Route::post('/rubrics/{rubric}/regenerate', [RubricController::class, 'regenerate'])->middleware(['throttle:ai-analysis', 'feature:ai_grading']);
 
     // STEP 26: Student Answer Management (faculty-side; private academic records)
     Route::get('/students', [StudentController::class, 'index']);
@@ -228,12 +354,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/student-answers/{answer}/download', [StudentAnswerController::class, 'download']);
 
     // STEP 27: AI Grading Assistance (suggestion -> faculty review -> faculty final marks)
-    Route::post('/student-answers/{answer}/ai-grade', [AiGradingController::class, 'request'])->middleware('throttle:ai-analysis');
+    Route::post('/student-answers/{answer}/ai-grade', [AiGradingController::class, 'request'])->middleware(['throttle:ai-analysis', 'feature:ai_grading']);
     Route::get('/student-answers/{answer}/ai-grading', [AiGradingController::class, 'show']);
     Route::get('/student-answers/{answer}/ai-grading/history', [AiGradingController::class, 'history']);
     Route::post('/student-answers/{answer}/finalize-grade', [AiGradingController::class, 'finalizeGrade']);
     Route::put('/student-answers/{answer}/final-grade', [AiGradingController::class, 'finalizeGrade']);
-    Route::post('/ai-grading/{result}/regenerate', [AiGradingController::class, 'regenerate'])->middleware('throttle:ai-analysis');
+    Route::post('/ai-grading/{result}/regenerate', [AiGradingController::class, 'regenerate'])->middleware(['throttle:ai-analysis', 'feature:ai_grading']);
     Route::post('/ai-grading/{result}/reject', [AiGradingController::class, 'reject']);
 
     // STEP 28: Answer <-> Rubric Alignment (coverage evidence; never a grade)
@@ -250,6 +376,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/assessments/{assessment}/performance/topics', [PerformanceController::class, 'topics']);
     Route::get('/assessments/{assessment}/performance/learning-outcomes', [PerformanceController::class, 'learningOutcomes']);
     Route::get('/assessments/{assessment}/performance/history', [PerformanceController::class, 'history']);
+    Route::post('/assessments/{assessment}/performance/class-summary', [PerformanceController::class, 'classSummary'])->middleware('feature:ai_class_summary');
     Route::get('/students/{student}/assessments/{assessment}/performance', [PerformanceController::class, 'student']);
 
     // STEP 31: CO/PO Mapping Validator (review signals; never an accreditation decision)
@@ -277,7 +404,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/questions/{question}/co-mappings/reject', [CoPoMappingController::class, 'rejectQuestionMapping']);
 
     // STEP 32: AI Chat with Academic Documents (RAG)
-    Route::prefix('academic-chat')->group(function () {
+    Route::prefix('academic-chat')->middleware('feature:academic_chat')->group(function () {
         Route::get('/sessions', [AcademicChatController::class, 'index']);
         Route::post('/sessions', [AcademicChatController::class, 'store']);
         Route::get('/sessions/{session}', [AcademicChatController::class, 'show']);
@@ -289,14 +416,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // STEP 33: Constrained Question Generator (drafts only; approval + explicit add-to-assessment required)
     Route::get('/question-generation', [QuestionGenerationController::class, 'index']);
-    Route::post('/question-generation', [QuestionGenerationController::class, 'store'])->middleware('throttle:question-generation');
+    Route::post('/question-generation', [QuestionGenerationController::class, 'store'])->middleware(['throttle:question-generation', 'feature:question_generation']);
     Route::get('/question-generation/{generation}', [QuestionGenerationController::class, 'show']);
     Route::get('/question-generation/{generation}/questions', [QuestionGenerationController::class, 'questions']);
-    Route::post('/question-generation/{generation}/regenerate', [QuestionGenerationController::class, 'regenerate'])->middleware('throttle:question-generation');
+    Route::post('/question-generation/{generation}/regenerate', [QuestionGenerationController::class, 'regenerate'])->middleware(['throttle:question-generation', 'feature:question_generation']);
     Route::put('/generated-questions/{generatedQuestion}', [QuestionGenerationController::class, 'update']);
     Route::post('/generated-questions/{generatedQuestion}/approve', [QuestionGenerationController::class, 'approve']);
     Route::post('/generated-questions/{generatedQuestion}/reject', [QuestionGenerationController::class, 'reject']);
-    Route::post('/generated-questions/{generatedQuestion}/regenerate', [QuestionGenerationController::class, 'regenerateQuestion'])->middleware('throttle:question-generation');
+    Route::post('/generated-questions/{generatedQuestion}/regenerate', [QuestionGenerationController::class, 'regenerateQuestion'])->middleware(['throttle:question-generation', 'feature:question_generation']);
     Route::post('/generated-questions/{generatedQuestion}/add-to-assessment', [QuestionGenerationController::class, 'addToAssessment']);
 
     // STEP 34: Faculty Collaboration (membership, invitations, comments, activity, notifications)
@@ -388,8 +515,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/events', [AiExplainabilityController::class, 'event']);
     });
 
-    // STEP 35: AI Evaluation & Model Performance (evaluation is separate from production AI)
-    Route::prefix('ai/evaluation')->group(function () {
+    // STEP 35: AI Evaluation & Model Performance (evaluation is separate from production AI).
+    // Administrator only: it lives in the admin control center, not the faculty workspace.
+    Route::prefix('ai/evaluation')->middleware('admin')->group(function () {
         Route::get('/', [AiEvaluationController::class, 'index']);
         Route::get('/models', [AiEvaluationController::class, 'models']);
         Route::get('/prompts', [AiEvaluationController::class, 'prompts']);
@@ -411,6 +539,86 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/runs/{run}/cancel', [AiEvaluationController::class, 'cancel']);
         Route::post('/ratings', [AiEvaluationController::class, 'rate']);
     });
+
+    // Exam paper builder: blueprint/target-driven papers from the course question pool, exam sets, variants, export
+    Route::get('/assessments/{assessment}/exam-papers', [ExamPaperController::class, 'index']);
+    Route::post('/assessments/{assessment}/exam-papers', [ExamPaperController::class, 'store']);
+    Route::get('/assessments/{assessment}/question-pool', [ExamPaperController::class, 'pool']);
+    Route::prefix('exam-papers/{paper}')->whereNumber('paper')->group(function () {
+        Route::get('/', [ExamPaperController::class, 'show']);
+        Route::patch('/', [ExamPaperController::class, 'update']);
+        Route::delete('/', [ExamPaperController::class, 'destroy']);
+        Route::post('/items', [ExamPaperController::class, 'addItem']);
+        Route::patch('/items/{item}', [ExamPaperController::class, 'updateItem'])->whereNumber('item');
+        Route::delete('/items/{item}', [ExamPaperController::class, 'destroyItem'])->whereNumber('item');
+        Route::put('/order', [ExamPaperController::class, 'reorder']);
+        Route::post('/items/{item}/variants', [ExamPaperController::class, 'variants'])->whereNumber('item')->middleware(['throttle:question-generation', 'feature:question_generation']);
+        Route::post('/sets', [ExamPaperController::class, 'createSets'])->middleware(['throttle:question-generation']);
+        Route::post('/apply', [ExamPaperController::class, 'apply']);
+        Route::get('/export', [ExamPaperController::class, 'export']);
+    });
+
+    // Post-exam integrity: item analysis (aggregate) and the answer plagiarism check (student data)
+    Route::get('/assessments/{assessment}/item-analysis', [AssessmentIntegrityController::class, 'itemAnalysis']);
+    Route::get('/assessments/{assessment}/plagiarism-checks/latest', [AssessmentIntegrityController::class, 'latestSimilarity']);
+    Route::post('/assessments/{assessment}/plagiarism-checks', [AssessmentIntegrityController::class, 'runSimilarity'])->middleware('throttle:ai-analysis');
+    Route::patch('/plagiarism-matches/{match}', [AssessmentIntegrityController::class, 'reviewMatch'])->whereNumber('match');
+
+    // Planning: course quality across semesters, workload, OBE accreditation pack, course file archive, department view
+    Route::get('/courses/{course}/quality-trend', [PlanningController::class, 'qualityTrend']);
+    Route::get('/courses/{course}/obe', [PlanningController::class, 'obe']);
+    Route::get('/courses/{course}/obe-pack', [PlanningController::class, 'obePack'])->middleware('throttle:20,1');
+    Route::get('/courses/{course}/archive', [PlanningController::class, 'archive'])->middleware('throttle:10,1');
+    Route::get('/workload', [PlanningController::class, 'workload']);
+    Route::get('/department/overview', [PlanningController::class, 'department']);
+
+    // AI course design: syllabus (COs + CO→PO), lesson plans; research paper summaries; mobile grading queue
+    Route::get('/courses/{course}/plans', [CourseDesignController::class, 'plans']);
+    Route::post('/courses/{course}/syllabus-draft', [CourseDesignController::class, 'draftSyllabus'])->middleware(['throttle:ai-analysis', 'feature:ai_analysis']);
+    Route::post('/courses/{course}/syllabus-draft/{plan}/apply', [CourseDesignController::class, 'applySyllabus'])->whereNumber('plan');
+    Route::post('/courses/{course}/lesson-plan', [CourseDesignController::class, 'lessonPlan'])->middleware(['throttle:ai-analysis', 'feature:ai_analysis']);
+    Route::post('/course-plans/{plan}/schedule', [CourseDesignController::class, 'scheduleLessonPlan'])->whereNumber('plan');
+    Route::get('/course-plans/{plan}/export', [CourseDesignController::class, 'export'])->whereNumber('plan');
+    Route::get('/research/summaries', [ResearchController::class, 'index']);
+    Route::post('/research/summaries', [ResearchController::class, 'store'])->middleware(['throttle:uploads', 'feature:ai_analysis']);
+    Route::get('/research/summaries/{summary}', [ResearchController::class, 'show'])->whereNumber('summary');
+    Route::delete('/research/summaries/{summary}', [ResearchController::class, 'destroy'])->whereNumber('summary');
+    Route::get('/assessments/{assessment}/grading-queue', GradingQueueController::class);
+
+    // AI toolkit: Bangla <-> English translation (sync), handwriting OCR and lecture transcription (queued, owner-only)
+    Route::prefix('ai-toolkit')->group(function () {
+        Route::get('/', [AiToolkitController::class, 'index']);
+        Route::post('/translate', [AiToolkitController::class, 'translate'])->middleware(['throttle:ai-analysis', 'feature:ai_translation']);
+        Route::post('/ocr', [AiToolkitController::class, 'ocr'])->middleware(['throttle:uploads', 'feature:ai_ocr']);
+        Route::post('/transcribe', [AiToolkitController::class, 'transcribe'])->middleware(['throttle:uploads', 'feature:ai_transcription']);
+        Route::post('/study-pack', [AiToolkitController::class, 'studyPack'])->middleware(['throttle:ai-analysis', 'feature:ai_study_pack']);
+        Route::post('/speak', [AiToolkitController::class, 'speak'])->middleware(['throttle:ai-analysis', 'feature:ai_speech']);
+        Route::post('/question-quality', [AiToolkitController::class, 'questionQuality'])->middleware(['throttle:ai-analysis', 'feature:ai_writing']);
+        Route::post('/simplify', [AiToolkitController::class, 'simplify'])->middleware(['throttle:ai-analysis', 'feature:ai_writing']);
+        Route::post('/bloom-rewrite', [AiToolkitController::class, 'bloomRewrite'])->middleware(['throttle:ai-analysis', 'feature:ai_writing']);
+        Route::post('/feedback-draft', [AiToolkitController::class, 'feedbackDraft'])->middleware(['throttle:ai-analysis', 'feature:ai_feedback']);
+        Route::post('/compare-answers', [AiToolkitController::class, 'compareAnswers'])->middleware(['throttle:ai-analysis', 'feature:ai_answer_compare']);
+        Route::post('/paper-review', [AiToolkitController::class, 'paperReview'])->middleware(['throttle:ai-analysis', 'feature:ai_paper_review']);
+        Route::post('/jobs/{job}/attach', [AiToolkitController::class, 'attachToSubmission'])->whereNumber('job');
+        Route::post('/jobs/{job}/question-bank', [AiToolkitController::class, 'saveToQuestionBank'])->whereNumber('job');
+        Route::get('/jobs/{job}', [AiToolkitController::class, 'show'])->whereNumber('job');
+        Route::get('/jobs/{job}/download', [AiToolkitController::class, 'download'])->whereNumber('job');
+        Route::delete('/jobs/{job}', [AiToolkitController::class, 'destroy'])->whereNumber('job');
+    });
+
+    // Academic calendar (own events + dated assessments; reminders via notifications; .ics export)
+    Route::get('/calendar/events', [CalendarController::class, 'index']);
+    Route::post('/calendar/events', [CalendarController::class, 'store']);
+    Route::patch('/calendar/events/{event}', [CalendarController::class, 'update'])->whereNumber('event');
+    Route::delete('/calendar/events/{event}', [CalendarController::class, 'destroy'])->whereNumber('event');
+    Route::get('/calendar/export.ics', [CalendarController::class, 'ics']);
+
+    // Personal feedback comment bank (grading)
+    Route::get('/feedback-comments', [FeedbackCommentController::class, 'index']);
+    Route::post('/feedback-comments', [FeedbackCommentController::class, 'store']);
+    Route::patch('/feedback-comments/{comment}', [FeedbackCommentController::class, 'update'])->whereNumber('comment');
+    Route::delete('/feedback-comments/{comment}', [FeedbackCommentController::class, 'destroy'])->whereNumber('comment');
+    Route::post('/feedback-comments/{comment}/use', [FeedbackCommentController::class, 'use'])->whereNumber('comment');
 
     // STEP 39: Institutional Export & Reporting (authorization + scoping resolved server-side; private downloads)
     Route::prefix('reports')->group(function () {

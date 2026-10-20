@@ -19,6 +19,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->throttleApi();
         $middleware->append(\App\Http\Middleware\SecurityHeadersMiddleware::class);
         $middleware->api(prepend: [\App\Http\Middleware\RequestLoggingMiddleware::class]);
+        $middleware->api(append: [\App\Http\Middleware\EnsureAccountActive::class]);
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\EnsureAdmin::class,
+            'feature' => \App\Http\Middleware\EnsureFeatureEnabled::class,
+        ]);
         $middleware->validateCsrfTokens(except: [
             'api/auth/logout',
         ]);

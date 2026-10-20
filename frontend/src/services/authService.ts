@@ -17,9 +17,18 @@ export interface LoginPayload {
 }
 
 export interface AuthResponse {
-  status: 'success' | 'error';
+  status: 'success' | 'error' | 'two_factor_required';
   message?: string;
   user?: User;
+  /** Present when the password was right but a 6-digit authenticator code is still needed. */
+  two_factor?: boolean;
+  challenge_token?: string;
+}
+
+export interface TwoFactorChallengePayload {
+  challenge_token: string;
+  code?: string;
+  recovery_code?: string;
 }
 
 export interface SessionResponse {
@@ -82,6 +91,33 @@ export const authService = {
     return apiClient<AuthResponse>('/auth/login', {
       method: 'POST',
       body: JSON.stringify(credentials),
+    });
+  },
+
+  /** Admin panel sign-in: only the FacultyLens administrator account is accepted. */
+  adminLogin: async (credentials: LoginPayload): Promise<AuthResponse> => {
+    await getCsrfCookie();
+    return apiClient<AuthResponse>('/admin/auth/login', {
+      method: 'POST',
+      body: JSON.stringify(credentials),
+    });
+  },
+
+  /** Second sign-in step when two-factor authentication is on. */
+  twoFactorChallenge: async (payload: TwoFactorChallengePayload): Promise<AuthResponse> => {
+    await getCsrfCookie();
+    return apiClient<AuthResponse>('/auth/two-factor/challenge', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+
+  /** Exchange a Google Identity Services ID token for a FacultyLens session. */
+  googleLogin: async (credential: string): Promise<AuthResponse> => {
+    await getCsrfCookie();
+    return apiClient<AuthResponse>('/auth/google', {
+      method: 'POST',
+      body: JSON.stringify({ credential }),
     });
   },
 

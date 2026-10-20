@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use App\Services\Auth\TwoFactorService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 
@@ -45,13 +47,146 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        $credentials = [
-            'email' => strtolower(trim($request->email)),
-            'password' => $request->password,
-        ];
+        return $this->attemptLogin($request, adminOnly: false);
+    }
 
-        if (! Auth::attempt($credentials, $request->boolean('remember', false))) {
-            $this->recordFailedLogin($credentials['email']);
+    /**
+     * Admin panel sign-in: identical credential handling, but only the configured administrator account is accepted.
+     * Any other valid account is refused without starting a session.
+     */
+    public function adminLogin(LoginRequest $request): JsonResponse
+    {
+        return $this->attemptLogin($request, adminOnly: true);
+    }
+
+    /**
+     * Complete a sign-in that was paused for two-factor verification (TOTP code or single-use recovery code).
+     */
+    public function twoFactorChallenge(Request $request, TwoFactorService $twoFactor): JsonResponse
+    {
+        $validated = $request->validate([
+            'challenge_token' => ['required', 'string', 'size:64'],
+            'code' => ['nullable', 'string', 'max:16', 'required_without:recovery_code'],
+            'recovery_code' => ['nullable', 'string', 'max:32'],
+        ]);
+
+        $key = $this->challengeKey($validated['challenge_token']);
+        $pending = Cache::get($key);
+        $user = is_array($pending) ? User::find($pending['user_id'] ?? 0) : null;
+        if (!$user || !$user->hasTwoFactorEnabled() || !$user->isActive()) {
+            Cache::forget($key);
+
+            return response()->json(['status' => 'error', 'message' => 'This sign-in attempt has expired. Please sign in again.'], 401);
+        }
+
+        $valid = !empty($validated['code'])
+            ? $twoFactor->verify((string) $user->two_factor_secret, (string) $validated['code'], $user)
+            : $twoFactor->useRecoveryCode($user, (string) $validated['recovery_code']);
+
+        if (!$valid) {
+            $pending['attempts'] = (int) ($pending['attempts'] ?? 0) + 1;
+            if ($pending['attempts'] >= 5) {
+                Cache::forget($key);
+                $this->recordFailedLogin($user->email);
+
+                return response()->json(['status' => 'error', 'message' => 'Too many incorrect codes. Please sign in again.'], 401);
+            }
+            Cache::put($key, $pending, now()->addMinutes((int) config('admin.two_factor.challenge_ttl_minutes', 5)));
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'The verification code is incorrect.',
+                'errors' => ['code' => ['The verification code is incorrect.']],
+            ], 422);
+        }
+
+        Cache::forget($key);
+        if (empty($validated['code'])) {
+            app(\App\Services\AuditLogService::class)->log('TWO_FACTOR_RECOVERY_CODE_USED', $user, $user->id, null, $user);
+        }
+
+        return $this->completeLogin($request, $user, (bool) ($pending['remember'] ?? false));
+    }
+
+    /**
+     * "Sign in with Google": verify the ID token, then sign in the matching account (linked by Google subject or by
+     * e-mail) or create a FACULTY account when self-registration is on. The administrator must use a password.
+     */
+    public function googleLogin(Request $request, \App\Services\Auth\GoogleIdTokenVerifier $google, \App\Services\Admin\FeatureFlagService $features): JsonResponse
+    {
+        $validated = $request->validate(['credential' => ['required', 'string', 'max:4096']]);
+
+        try {
+            $identity = $google->verify($validated['credential']);
+        } catch (\RuntimeException $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 401);
+        }
+
+        $user = User::query()->where('google_id', $identity['sub'])->first()
+            ?? User::query()->whereRaw('LOWER(email) = ?', [$identity['email']])->first();
+
+        if ($user && $user->isAdmin()) {
+            return response()->json(['status' => 'error', 'message' => 'The administrator account must sign in with its password.'], 403);
+        }
+
+        if (!$user) {
+            if (!$features->enabled('registration')) {
+                return response()->json(['status' => 'error', 'message' => 'No FacultyLens account uses this Google address, and new registrations are closed.'], 403);
+            }
+            $user = User::create([
+                'name' => $identity['name'],
+                'email' => $identity['email'],
+                // Unusable random password: the account signs in with Google (or after a password reset)
+                'password' => Hash::make(bin2hex(random_bytes(32))),
+            ]);
+            $user->forceFill(['google_id' => $identity['sub'], 'email_verified_at' => now()])->save();
+            app(\App\Services\AuditLogService::class)->log('GOOGLE_ACCOUNT_CREATED', $user, $user->id, null, $user);
+        } elseif (empty($user->google_id)) {
+            $user->forceFill(['google_id' => $identity['sub']])->save();
+            app(\App\Services\AuditLogService::class)->log('GOOGLE_ACCOUNT_LINKED', $user, $user->id, null, $user);
+        }
+
+        if (!$user->isActive()) {
+            return response()->json([
+                'status' => 'error',
+                'code' => 'ACCOUNT_DEACTIVATED',
+                'message' => 'This account has been deactivated. Contact your administrator.',
+            ], 403);
+        }
+
+        if ($user->hasTwoFactorEnabled()) {
+            return $this->twoFactorRequired($user, false);
+        }
+
+        return $this->completeLogin($request, $user, false);
+    }
+
+    protected function twoFactorRequired(User $user, bool $remember): JsonResponse
+    {
+        $token = bin2hex(random_bytes(32));
+        Cache::put($this->challengeKey($token), [
+            'user_id' => $user->id,
+            'remember' => $remember,
+            'attempts' => 0,
+        ], now()->addMinutes((int) config('admin.two_factor.challenge_ttl_minutes', 5)));
+
+        return response()->json([
+            'status' => 'two_factor_required',
+            'message' => 'Enter the 6-digit code from your authenticator app.',
+            'two_factor' => true,
+            'challenge_token' => $token,
+        ]);
+    }
+
+    protected function attemptLogin(LoginRequest $request, bool $adminOnly): JsonResponse
+    {
+        $email = strtolower(trim($request->email));
+        $user = User::query()->whereRaw('LOWER(email) = ?', [$email])->first();
+
+        if (!$user || !Hash::check((string) $request->password, (string) $user->password)) {
+            $this->recordFailedLogin($email);
+            // Security center fact: one row per failed attempt (never the submitted e-mail or password)
+            app(\App\Services\AuditLogService::class)->log('AUTH_LOGIN_FAILED', 'User', $user?->id, ['known_account' => $user !== null, 'admin_page' => $adminOnly], $user);
 
             return response()->json([
                 'status' => 'error',
@@ -59,17 +194,50 @@ class AuthController extends Controller
             ], 401);
         }
 
+        if ($adminOnly && !$user->isAdmin()) {
+            app(\App\Services\AuditLogService::class)->log('ADMIN_LOGIN_REFUSED', $user, $user->id, null, $user);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'This sign-in page is for the FacultyLens administrator only.',
+            ], 403);
+        }
+
+        if (!$user->isActive()) {
+            return response()->json([
+                'status' => 'error',
+                'code' => 'ACCOUNT_DEACTIVATED',
+                'message' => 'This account has been deactivated. Contact your administrator.',
+            ], 403);
+        }
+
+        if ($user->hasTwoFactorEnabled()) {
+            return $this->twoFactorRequired($user, $request->boolean('remember', false));
+        }
+
+        return $this->completeLogin($request, $user, $request->boolean('remember', false));
+    }
+
+    /** Start the session for a fully verified user (password, and 2FA when enabled, already checked). */
+    protected function completeLogin(Request $request, User $user, bool $remember): JsonResponse
+    {
+        Auth::guard('web')->login($user, $remember);
         if ($request->hasSession()) {
             $request->session()->regenerate();
         }
-        $user = Auth::user();
-        \Illuminate\Support\Facades\Cache::forget($this->failedLoginKey($credentials['email']));
+        $user->forceFill(['last_login_at' => now()])->saveQuietly();
+        Cache::forget($this->failedLoginKey($user->email));
 
         return response()->json([
             'status' => 'success',
             'message' => 'Login successful',
             'user' => $user->profilePayload(),
         ]);
+    }
+
+    protected function challengeKey(string $token): string
+    {
+        return '2fa:challenge:'.hash('sha256', $token);
     }
 
     /**
@@ -113,10 +281,7 @@ class AuthController extends Controller
             'designation' => ['sometimes', 'string', 'max:255'],
         ]);
 
-        // Explicit role escalation defense: only an existing ADMIN can alter roles
-        if ($request->has('role') && $user->isAdmin()) {
-            $user->role = strtoupper($request->input('role'));
-        }
+        // Roles are never editable from the profile (any `role` field is ignored); the admin panel manages them.
 
         // Email is the institutional identity and is never editable here (silently ignored if sent).
         $user->fill($validated);

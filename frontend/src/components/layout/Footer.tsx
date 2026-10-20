@@ -25,7 +25,6 @@ const CAPABILITIES: { to: string; label: string }[] = [
   { to: '/question-generator', label: 'Question generator' },
   { to: '/academic-chat', label: 'RAG assistant' },
   { to: '/history', label: 'Analysis history' },
-  { to: '/ai-evaluation', label: 'AI evaluation' },
 ];
 
 const linkClass = 'group inline-flex items-start gap-1 text-left text-sm leading-snug text-white/65 hover:text-white transition-colors';

@@ -122,7 +122,7 @@ export const Navbar: React.FC = () => {
           <div className="hidden md:flex items-center gap-3">
             {isAuthenticated ? (
               <Link
-                to="/dashboard"
+                to={user?.is_admin ? '/admin' : '/dashboard'}
                 className="flex items-center gap-2 pl-1 pr-3 py-1 rounded-full border border-sage-300 bg-white hover:bg-sage-100 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sage-700"
                 aria-label={`Open your profile, ${displayName}`}
                 data-testid="navbar-profile-link"
@@ -151,7 +151,7 @@ export const Navbar: React.FC = () => {
           ))}
           <div className="pt-4 border-t border-sage-200 flex flex-col gap-2">
             {isAuthenticated ? (
-              <button type="button" className="w-full text-sm text-white rounded-lg px-4 py-2 bg-sage-700 hover:bg-sage-800" onClick={() => { setMobileMenuOpen(false); navigate('/dashboard'); }} data-testid="navbar-mobile-dashboard">Go to dashboard</button>
+              <button type="button" className="w-full text-sm text-white rounded-lg px-4 py-2 bg-sage-700 hover:bg-sage-800" onClick={() => { setMobileMenuOpen(false); navigate(user?.is_admin ? '/admin' : '/dashboard'); }} data-testid="navbar-mobile-dashboard">Go to dashboard</button>
             ) : !loading && (
               <>
                 <button type="button" className="w-full text-sm text-sage-800 border border-sage-300 rounded-lg px-4 py-2 bg-white" onClick={() => { setMobileMenuOpen(false); navigate('/login'); }}>Sign In</button>

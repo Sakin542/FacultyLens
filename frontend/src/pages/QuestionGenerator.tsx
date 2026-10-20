@@ -47,6 +47,7 @@ export const QuestionGenerator: React.FC = () => {
   const [addTarget, setAddTarget] = useState<GeneratedQuestion | null>(null);
   const [busy, setBusy] = useState(false);
   const pollRef = useRef<number | null>(null);
+  const activeIdRef = useRef<number | null>(null);
 
   const outcomeOptions = useMemo(() => outcomes.map((o) => ({ id: o.id, code: o.code, description: o.description })), [outcomes]);
   // STEP 34: server-provided permissions for the active request's course (API remains authoritative)
@@ -88,6 +89,7 @@ export const QuestionGenerator: React.FC = () => {
 
   const refreshActive = useCallback(async (id: number) => {
     try {
+      activeIdRef.current = id;
       const res = await questionGenerationService.getGenerationRequest(id);
       setActive(res.data);
       setHistory((prev) => prev.map((h) => (h.id === id ? { ...h, ...res.data, questions: undefined } : h)));
@@ -99,17 +101,23 @@ export const QuestionGenerator: React.FC = () => {
     }
   }, []);
 
+  // Open the request named in the URL (?request=ID) on first load and on back/forward navigation
+  const requestParam = searchParams.get('request');
   useEffect(() => {
-    const id = searchParams.get('request');
-    if (id) void refreshActive(Number(id));
+    if (requestParam && Number(requestParam) !== activeIdRef.current) void refreshActive(Number(requestParam));
     return stopPolling;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams.get('request')]);
+  }, [requestParam]);
 
+  // Load the chosen request directly, then record it in the URL. The URL update builds a new params object:
+  // mutating the router's current one meant the effect above never saw a change, so clicking a past request in
+  // "Generation history" showed nothing.
   const selectRequest = (r: GenerationRequest) => {
     stopPolling();
     setError(null);
-    setSearchParams((p) => { p.set('request', String(r.id)); return p; }, { replace: true });
+    activeIdRef.current = r.id;
+    void refreshActive(r.id);
+    setSearchParams((p) => { const next = new URLSearchParams(p); next.set('request', String(r.id)); return next; }, { replace: true });
   };
 
   const submit = async (input: CreateGenerationInput) => {

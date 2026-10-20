@@ -1,4 +1,19 @@
 services:
+  # One-off: installs PHP dependencies into the backend_vendor volume (fast no-op when composer.lock is unchanged).
+  # The four PHP services below start only after it succeeds.
+  composer:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    working_dir: /var/www/html
+    command: ["composer", "install", "--no-interaction", "--no-progress", "--prefer-dist", "--optimize-autoloader"]
+    volumes:
+      - ./backend:/var/www/html
+      - backend_vendor:/var/www/html/vendor
+    restart: "no"
+    networks:
+      - facultylens-network
+
   app:
     build:
       context: ./backend
@@ -10,6 +25,10 @@ services:
     command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000", "--no-reload"]
     volumes:
       - ./backend:/var/www/html
+      - ./backend/docker/php-uploads.ini:/usr/local/etc/php/conf.d/zz-uploads.ini:ro
+      # vendor/ lives in a Docker volume: reading ~10,000 PHP files through the Windows bind mount made every
+      # request boot Laravel in ~5 s; from the volume it boots in ~0.3 s. Your own code stays live-mounted.
+      - backend_vendor:/var/www/html/vendor
     ports:
       - 8080:8000
     environment:
@@ -34,6 +53,8 @@ services:
       - AI_SERVICE_URL=http://ai-service:8001
       - AI_SERVICE_API_KEY=
     depends_on:
+      composer:
+        condition: service_completed_successfully
       mysql:
         condition: service_healthy
       redis:
@@ -53,6 +74,10 @@ services:
     command: ["php", "artisan", "horizon"]
     volumes:
       - ./backend:/var/www/html
+      - ./backend/docker/php-uploads.ini:/usr/local/etc/php/conf.d/zz-uploads.ini:ro
+      # vendor/ lives in a Docker volume: reading ~10,000 PHP files through the Windows bind mount made every
+      # request boot Laravel in ~5 s; from the volume it boots in ~0.3 s. Your own code stays live-mounted.
+      - backend_vendor:/var/www/html/vendor
     environment:
       - APP_ENV=local
       - APP_DEBUG=true
@@ -81,12 +106,52 @@ services:
       retries: 3
       start_period: 20s
     depends_on:
+      composer:
+        condition: service_completed_successfully
       mysql:
         condition: service_healthy
       redis:
         condition: service_healthy
       app:
         condition: service_started
+    networks:
+      - facultylens-network
+
+  # Laravel scheduler: daily database backup (02:00) and the retention purges in routes/console.php
+  scheduler:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: facultylens-scheduler
+    restart: unless-stopped
+    working_dir: /var/www/html
+    command: ["php", "artisan", "schedule:work"]
+    volumes:
+      - ./backend:/var/www/html
+      - ./backend/docker/php-uploads.ini:/usr/local/etc/php/conf.d/zz-uploads.ini:ro
+      # vendor/ lives in a Docker volume: reading ~10,000 PHP files through the Windows bind mount made every
+      # request boot Laravel in ~5 s; from the volume it boots in ~0.3 s. Your own code stays live-mounted.
+      - backend_vendor:/var/www/html/vendor
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=facultylens
+      - DB_USERNAME=root
+      - DB_PASSWORD=root123
+      - QUEUE_CONNECTION=redis
+      - REDIS_HOST=redis
+      - REDIS_CLIENT=predis
+      - AI_SERVICE_URL=http://ai-service:8001
+    depends_on:
+      composer:
+        condition: service_completed_successfully
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - facultylens-network
 
@@ -101,6 +166,10 @@ services:
     command: ["php", "artisan", "reverb:start", "--host=0.0.0.0", "--port=8080"]
     volumes:
       - ./backend:/var/www/html
+      - ./backend/docker/php-uploads.ini:/usr/local/etc/php/conf.d/zz-uploads.ini:ro
+      # vendor/ lives in a Docker volume: reading ~10,000 PHP files through the Windows bind mount made every
+      # request boot Laravel in ~5 s; from the volume it boots in ~0.3 s. Your own code stays live-mounted.
+      - backend_vendor:/var/www/html/vendor
     ports:
       - 8085:8080
     environment:
@@ -131,6 +200,8 @@ services:
       retries: 3
       start_period: 10s
     depends_on:
+      composer:
+        condition: service_completed_successfully
       redis:
         condition: service_healthy
       mysql:
@@ -233,9 +304,9 @@ services:
       - RUBRIC_ALIGNMENT_STRONG_THRESHOLD=0.75
       - RUBRIC_ALIGNMENT_PARTIAL_THRESHOLD=0.55
       - RUBRIC_ALIGNMENT_WEAK_THRESHOLD=0.35
-      # STEP 32 academic chat: MiniLM embeds only; leave HF_GENERATION_MODEL empty for the
-      # extractive engine or set e.g. google/flan-t5-base for generative answers.
-      - HF_GENERATION_MODEL=
+      # Local generation model (document chat, question generator, rubric drafts, syllabus drafts, variants).
+      # Qwen2.5-0.5B-Instruct is small enough for CPU (~1 GB download, ~2 GB RAM). Empty = template/extractive engines.
+      - HF_GENERATION_MODEL=${HF_GENERATION_MODEL:-Qwen/Qwen2.5-0.5B-Instruct}
       - HF_GENERATION_MAX_NEW_TOKENS=256
       - CHAT_TOP_K=5
       - CHAT_MIN_RELEVANCE_SCORE=0.15
@@ -244,6 +315,16 @@ services:
       # STEP 33 question generator (uses HF_GENERATION_MODEL; template engine fallback)
       - QUESTION_GENERATION_MAX_NEW_TOKENS=512
       - QUESTION_GENERATION_MAX_QUESTIONS=20
+      # Optional hosted provider (OpenAI-compatible chat completions), used when the admin selects "hosted".
+      # Hugging Face: LLM_HOSTED_BASE_URL=https://router.huggingface.co/v1 with an HF token as the key.
+      - LLM_HOSTED_BASE_URL=${LLM_HOSTED_BASE_URL:-}
+      - LLM_HOSTED_API_KEY=${LLM_HOSTED_API_KEY:-}
+      - LLM_HOSTED_MODEL=${LLM_HOSTED_MODEL:-}
+      # AI toolkit models (downloaded on first use into the ai_models_cache volume)
+      - OCR_MODEL=microsoft/trocr-base-handwritten
+      - ASR_MODEL=openai/whisper-base
+      - ASR_MAX_SECONDS=5400
+      - TRANSLATION_MODEL=facebook/nllb-200-distilled-600M
     volumes:
       - ./ai-service:/app
       - ai_models_cache:/app/cache/huggingface
@@ -251,6 +332,8 @@ services:
       - facultylens-network
 
 volumes:
+  backend_vendor:
+    driver: local
   mysql_data:
     driver: local
   redis_data:

@@ -9,8 +9,8 @@ return [
 
     // ability => roles allowed
     'matrix' => [
-        'view' => ['OWNER', 'EDITOR', 'REVIEWER', 'VIEWER'],
-        'view_documents' => ['OWNER', 'EDITOR', 'REVIEWER', 'VIEWER'],
+        'view' => ['OWNER', 'EDITOR', 'REVIEWER', 'VIEWER', 'DEPARTMENT_HEAD'],
+        'view_documents' => ['OWNER', 'EDITOR', 'REVIEWER', 'VIEWER', 'DEPARTMENT_HEAD'],
         'download_documents' => ['OWNER', 'EDITOR', 'REVIEWER'],
         'upload_documents' => ['OWNER', 'EDITOR'],
         'manage_documents' => ['OWNER', 'EDITOR'],
@@ -20,7 +20,7 @@ return [
         'edit_assessment' => ['OWNER', 'EDITOR'],
         'delete_assessment' => ['OWNER'],
         'edit_question' => ['OWNER', 'EDITOR'],
-        'view_analysis' => ['OWNER', 'EDITOR', 'REVIEWER', 'VIEWER'],
+        'view_analysis' => ['OWNER', 'EDITOR', 'REVIEWER', 'VIEWER', 'DEPARTMENT_HEAD'],
         'run_analysis' => ['OWNER', 'EDITOR'],
         'approve_recommendation' => ['OWNER', 'EDITOR'],
         'generate_questions' => ['OWNER', 'EDITOR'],

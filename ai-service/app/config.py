@@ -102,6 +102,23 @@ class Settings(BaseSettings):
     question_generation_alignment_strong: float = 0.70   # STEP 11 thresholds
     question_generation_alignment_weak: float = 0.50
 
+    # Generation provider. "local" runs hf_generation_model in this container; "hosted" calls an OpenAI-compatible
+    # chat-completions API (Hugging Face Inference Providers, Groq, Gemini, OpenRouter, ...). Laravel chooses the
+    # provider per request (X-AI-Provider header, set by the admin); the API key never leaves this service.
+    llm_hosted_base_url: Optional[str] = None       # e.g. https://router.huggingface.co/v1
+    llm_hosted_api_key: Optional[str] = None
+    llm_hosted_model: Optional[str] = None          # e.g. meta-llama/Llama-3.1-8B-Instruct
+    llm_hosted_timeout_seconds: int = 60
+
+    # AI toolkit (local Hugging Face models, loaded lazily on first use)
+    ocr_model: str = "microsoft/trocr-base-handwritten"
+    ocr_max_pages: int = 10
+    asr_model: str = "openai/whisper-base"
+    asr_max_seconds: int = 5400
+    translation_model: str = "facebook/nllb-200-distilled-600M"
+    translation_max_chars: int = 5000
+    tts_max_chars: int = 1500
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

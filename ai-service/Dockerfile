@@ -9,10 +9,11 @@ ENV PYTHONUNBUFFERED=1 \
     AI_SERVICE_HOST=0.0.0.0 \
     AI_SERVICE_PORT=8001
 
-# Install basic build tools and curl for healthchecks
+# Build tools, curl for healthchecks, ffmpeg for lecture transcription (Whisper audio decoding)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     build-essential \
+    ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
 # Install python dependencies with CPU-optimized PyTorch

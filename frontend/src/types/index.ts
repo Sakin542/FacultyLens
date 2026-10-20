@@ -1,4 +1,4 @@
-export type UserRole = 'faculty' | 'department_head' | 'dean' | 'admin';
+export type UserRole = 'faculty' | 'department_head' | 'dean' | 'admin' | 'FACULTY' | 'DEPARTMENT_HEAD' | 'ADMIN';
 
 export interface User {
   id: number | string;
@@ -8,6 +8,9 @@ export interface User {
   department: string;
   designation: string;
   role?: UserRole;
+  /** True only for the configured FacultyLens administrator account. */
+  is_admin?: boolean;
+  two_factor_enabled?: boolean;
   /** Authenticated, versioned avatar URL (relative to the backend); null when no picture is set. */
   profile_picture_url?: string | null;
   avatarUrl?: string;
@@ -63,6 +66,7 @@ export interface Course {
   semester: string;
   academic_year?: string;
   credits?: number;
+  contact_hours_per_week?: number | null;
   status?: 'active' | 'archived' | 'draft' | string;
   
   // Legacy / convenience mappings

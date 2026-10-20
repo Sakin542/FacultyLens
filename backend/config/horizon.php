@@ -224,6 +224,20 @@ return [
             'timeout' => (int) env('HORIZON_EMAIL_TIMEOUT', 120),
             'nice' => 5,
         ],
+        // AI toolkit (handwriting OCR, lecture transcription): CPU-heavy and slow, so one at a time with a long timeout.
+        // The timeout must stay below queue.redis.retry_after (1900 s).
+        'supervisor-ai-tools' => [
+            'connection' => 'redis',
+            'queue' => ['ai-tools'],
+            'balance' => 'simple',
+            'maxProcesses' => 1,
+            'maxTime' => 7200,
+            'maxJobs' => 100,
+            'memory' => 256,
+            'tries' => 1,
+            'timeout' => (int) env('HORIZON_AI_TOOLS_TIMEOUT', 1850),
+            'nice' => 10,
+        ],
     ],
 
     'environments' => [
@@ -236,6 +250,9 @@ return [
             'supervisor-emails' => [
                 'maxProcesses' => (int) env('HORIZON_EMAIL_PROCESSES', 2),
             ],
+            'supervisor-ai-tools' => [
+                'maxProcesses' => 1,
+            ],
         ],
 
         'local' => [
@@ -243,6 +260,9 @@ return [
                 'maxProcesses' => 2,
             ],
             'supervisor-emails' => [
+                'maxProcesses' => 1,
+            ],
+            'supervisor-ai-tools' => [
                 'maxProcesses' => 1,
             ],
         ],

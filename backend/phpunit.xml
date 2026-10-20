@@ -29,6 +29,10 @@
         <env name="DB_DATABASE" value=":memory:" force="true"/>
         <env name="DB_URL" value="" force="true"/>
         <env name="MAIL_MAILER" value="array" force="true"/>
+        <!-- Role alone decides isAdmin() in tests; admin-lock tests set config('admin.email') explicitly -->
+        <env name="ADMIN_EMAIL" value="" force="true"/>
+        <env name="ADMIN_PASSWORD" value="" force="true"/>
+        <env name="GOOGLE_CLIENT_ID" value="" force="true"/>
         <env name="QUEUE_CONNECTION" value="sync" force="true"/>
         <env name="SESSION_DRIVER" value="array" force="true"/>
         <env name="PULSE_ENABLED" value="false"/>

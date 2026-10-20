@@ -10,6 +10,7 @@ import { ApiError } from '@/services/api';
 import { ConfirmSignOutDialog } from '@/components/common/ConfirmSignOutDialog';
 import { ProfilePictureUploader } from '@/components/profile/ProfilePictureUploader';
 import { NotificationPreferences } from '@/components/notifications/NotificationPreferences';
+import { TwoFactorSettings } from '@/components/profile/TwoFactorSettings';
 import {
   User,
   LogOut,
@@ -179,10 +180,10 @@ export const Settings: React.FC = () => {
         <CardHeader>
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <CardTitle>Faculty Profile</CardTitle>
-              <CardDescription>Manage your institutional identification and department details</CardDescription>
+              <CardTitle>{user?.is_admin ? 'Administrator profile' : 'Faculty Profile'}</CardTitle>
+              <CardDescription>{user?.is_admin ? 'Your name, department and designation as shown in the audit log' : 'Manage your institutional identification and department details'}</CardDescription>
             </div>
-            <Badge variant="outline" className="font-mono">Faculty ID: {user?.id ?? '—'}</Badge>
+            <Badge variant="outline" className="font-mono">{user?.is_admin ? 'Admin' : 'Faculty'} ID: {user?.id ?? '—'}</Badge>
           </div>
         </CardHeader>
         <CardContent>
@@ -346,6 +347,8 @@ export const Settings: React.FC = () => {
           </form>
         </CardContent>
       </Card>
+
+      <TwoFactorSettings />
 
       {/* Notifications & Email Preferences (in-app + e-mail channels; security e-mails are mandatory) */}
       <Card id="notifications" data-testid="settings-notifications">

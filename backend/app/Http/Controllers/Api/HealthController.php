@@ -58,40 +58,7 @@ class HealthController extends Controller
     /** @return array<string, array{ok: bool, detail: mixed}> */
     protected function runChecks(): array
     {
-        return [
-            'database' => $this->probe(fn () => DB::select('select 1')),
-            'cache' => $this->probe(function () {
-                $key = 'health:ready:'.bin2hex(random_bytes(4));
-                // String token: Redis/predis returns numerics as strings, so a strict int compare would always fail (STEP 43).
-                $token = bin2hex(random_bytes(8));
-                Cache::put($key, $token, 10);
-                if (Cache::get($key) !== $token) {
-                    throw new \RuntimeException('cache read-back failed');
-                }
-                Cache::forget($key);
-            }),
-            'storage' => $this->probe(function () {
-                $disk = Storage::disk(config('institutional_reports.disk', 'local'));
-                $disk->put('health/.probe', (string) time());
-                $disk->delete('health/.probe');
-            }),
-            'queue' => $this->probe(function () {
-                $failed = DB::table('failed_jobs')->where('failed_at', '>=', now()->subDay())->count();
-
-                return ['pending' => config('queue.default') === 'database' ? DB::table('jobs')->count() : null, 'failed_24h' => $failed];
-            }),
-            'ai_service' => $this->probe(function () {
-                $res = Http::withOptions(['force_ip_resolve' => 'v4'])->connectTimeout(2)->timeout(4)->get(rtrim((string) config('services.ai.url'), '/').'/health');
-                if (! $res->ok()) {
-                    throw new \RuntimeException('ai health '.$res->status());
-                }
-                if (($res->json('model_loaded') ?? null) === false) {
-                    throw new \RuntimeException('model not loaded');
-                }
-
-                return ['model_loaded' => (bool) $res->json('model_loaded')];
-            }),
-        ];
+        return app(\App\Services\Admin\SystemHealthService::class)->checks();
     }
 
     /** @return array{ok: bool, detail: mixed} */

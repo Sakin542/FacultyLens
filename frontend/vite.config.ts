@@ -12,7 +12,17 @@ export default defineConfig({
   },
   server: {
     port: 3000,
-    open: true,
+    // Listen on IPv4 loopback so http://127.0.0.1:3000 works as well as http://localhost:3000 (Vite's default bound
+    // only to localhost's IPv6 address). Browsers fall back from ::1 to 127.0.0.1 for "localhost". Not exposed to
+    // the network.
+    host: '127.0.0.1',
+    open: 'http://localhost:3000/',
+    // Vite only transforms a file when the browser first asks for it. Pre-transform what every visit needs (the entry,
+    // which pulls in the public pages and layouts, plus both dashboards) as soon as the server starts. Warming every
+    // page competed with the first request and made the first load slower.
+    warmup: {
+      clientFiles: ['./src/main.tsx', './src/pages/Dashboard.tsx', './src/features/admin/pages/DashboardPage.tsx'],
+    },
     proxy: {
       '/api': {
         target: 'http://127.0.0.1:8080',

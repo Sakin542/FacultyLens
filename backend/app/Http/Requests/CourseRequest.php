@@ -32,6 +32,7 @@ class CourseRequest extends FormRequest
             'semester' => array_merge($rule, ['string', 'max:50']),
             'academic_year' => array_merge($rule, ['string', 'max:20']),
             'credits' => array_merge($rule, ['integer', 'min:1', 'max:30']),
+            'contact_hours_per_week' => ['sometimes', 'nullable', 'numeric', 'min:0', 'max:60'],
             'status' => array_merge($isUpdate ? ['sometimes'] : ['required'], [Rule::in(['active', 'archived'])]),
             // STEP 31: program must belong to the requesting faculty (or be admin-visible).
             'program_id' => ['nullable', 'integer', Rule::exists('programs', 'id')->where(function ($q) {

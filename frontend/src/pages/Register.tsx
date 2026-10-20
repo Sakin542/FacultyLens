@@ -6,11 +6,13 @@ import { useAuth } from '@/context/AuthContext';
 import { ApiError } from '@/services/api';
 import { isValidEmail } from '@/utils/validation';
 import { AuthAlert, AuthShell, AuthSuccess, authButtonClass, authInputClass, authLinkClass } from '@/components/landing/AuthShell';
+import { usePublicConfig } from '@/hooks/usePublicConfig';
 import { Mail, Lock, User as UserIcon, Building, Award, ArrowRight, Eye, EyeOff } from 'lucide-react';
 
 export const Register: React.FC = () => {
   const navigate = useNavigate();
   const { register, isAuthenticated, loading } = useAuth();
+  const config = usePublicConfig();
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -137,6 +139,8 @@ export const Register: React.FC = () => {
 
       {registerSuccess ? (
         <AuthSuccess message="Account created. Setting up your dashboard…" />
+      ) : !config.features.registration ? (
+        <AuthAlert title="Registration is closed" message="New faculty accounts are currently disabled by the administrator. Please contact your administrator for access." />
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">

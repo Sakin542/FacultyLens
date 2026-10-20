@@ -65,6 +65,7 @@ class NotificationRecipientResolver
      */
     public function admins(): Collection
     {
-        return User::query()->whereRaw('UPPER(role) = ?', ['ADMIN'])->get();
+        // Only the configured administrator counts (an ADMIN role on any other row grants nothing)
+        return User::query()->whereRaw('UPPER(role) = ?', ['ADMIN'])->get()->filter(fn (User $u) => $u->isAdmin())->values();
     }
 }

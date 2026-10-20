@@ -21,6 +21,7 @@ class Course extends Model
         'semester',
         'academic_year',
         'credits',
+        'contact_hours_per_week',
         'status',
     ];
 

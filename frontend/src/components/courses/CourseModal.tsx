@@ -42,6 +42,7 @@ export const CourseModal: React.FC<CourseModalProps> = ({
         semester: course.semester || 'Spring',
         academic_year: course.academic_year || (course.year ? `${course.year}-${course.year + 1}` : '2025-2026'),
         credits: course.credits || course.creditHours || 3,
+        contact_hours_per_week: course.contact_hours_per_week ?? null,
         status: course.status || 'active',
       });
     } else {
@@ -149,6 +150,19 @@ export const CourseModal: React.FC<CourseModalProps> = ({
               </select>
             </div>
           </div>
+
+          <Input
+            label="Contact hours per week (optional)"
+            type="number"
+            min={0}
+            max={60}
+            step={0.5}
+            placeholder="Defaults to the credits"
+            helperText="Used by the workload dashboard."
+            value={formData.contact_hours_per_week ?? ''}
+            onChange={(e) => setFormData({ ...formData, contact_hours_per_week: e.target.value === '' ? null : Number(e.target.value) })}
+            disabled={isSubmitting}
+          />
 
           <Input
             label="Course Title / Name"

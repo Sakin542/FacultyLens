@@ -8,6 +8,8 @@ from fastapi.responses import JSONResponse
 from app.config import get_settings
 from app.services.huggingface_service import get_hf_service
 from app.api.routes import router
+from app.api.toolkit_routes import router as toolkit_router
+from app.services.provider_context import ProviderHeaderMiddleware
 
 # Configure logging
 logging.basicConfig(
@@ -97,6 +99,9 @@ async def general_exception_handler(request: Request, exc: Exception):
 
 # Include API Router
 app.include_router(router)
+app.include_router(toolkit_router)
+# Per-request generation provider chosen by the administrator (X-AI-Provider: local|hosted)
+app.add_middleware(ProviderHeaderMiddleware)
 
 
 if __name__ == "__main__":
