@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 276" width="1200" height="276" role="img" aria-labelledby="t d">
+  <title id="t">AI model fallback chain</title>
+  <desc id="d">Each request goes through LangChain to Claude Opus 5.5 first; if it fails, Gemini 3.8 Flash, then DeepSeek V4.1 Flash, then Claude Haiku 5.5, and finally the local Qwen model, so an answer always arrives.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0B2F27"/>
+      <stop offset="1" stop-color="#16503F"/>
+    </linearGradient>
+    <style>
+      .flow { stroke-dasharray: 5 9; animation: flow 1.2s linear infinite; }
+      @keyframes flow { to { stroke-dashoffset: -28; } }
+
+      .packet { offset-path: path("M60 172 H1140"); animation: travel 10s cubic-bezier(.45,.05,.55,.95) infinite; }
+      @keyframes travel {
+        0% { offset-distance: 0%; opacity: 0; } 3% { opacity: 1; }
+        16%, 24% { offset-distance: 11.1%; }
+        36%, 44% { offset-distance: 32%; }
+        56%, 64% { offset-distance: 52.9%; }
+        76%, 84% { offset-distance: 73.9%; }
+        93% { offset-distance: 92.8%; opacity: 1; } 100% { offset-distance: 92.8%; opacity: 0; }
+      }
+
+      .card { animation: lit 10s ease-in-out infinite; }
+      .k1 { animation-delay: 1.6s; } .k2 { animation-delay: 3.6s; } .k3 { animation-delay: 5.6s; } .k4 { animation-delay: 7.6s; } .k5 { animation-delay: 9.6s; }
+      @keyframes lit { 0%,100% { stroke: #FFFFFF; stroke-opacity: .18; } 4%,10% { stroke: #F2C14E; stroke-opacity: 1; } 18% { stroke: #FFFFFF; stroke-opacity: .18; } }
+
+      @media (prefers-reduced-motion: reduce) { * { animation: none !important; } .packet { display: none; } }
+    </style>
+  </defs>
+
+  <rect width="1200" height="276" rx="20" fill="url(#bg)"/>
+
+  <g font-family="'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif">
+    <text x="60" y="44" font-size="17" font-weight="700" fill="#FFFFFF">One request, five chances to answer</text>
+    <text x="60" y="68" font-size="13" fill="#B8D9CE">LangChain <tspan font-family="Consolas, 'Courier New', monospace" fill="#F2C14E">with_fallbacks</tspan> through OpenRouter — if a model errors, times out or answers empty, the next one takes over</text>
+
+    <path d="M60 172 H1140" stroke="#FFFFFF" stroke-opacity="0.12" stroke-width="4"/>
+    <path class="flow" d="M60 172 H1140" stroke="#7DD3B8" stroke-width="2.5" fill="none"/>
+    <g stroke="#FFFFFF" stroke-opacity="0.25" stroke-width="2">
+      <path d="M180 148 V172M406 148 V172M632 148 V172M858 148 V172M1062 148 V172"/>
+    </g>
+    <g font-size="10.5" fill="#9CC9BB" text-anchor="middle">
+      <text x="293" y="190">if it fails</text><text x="519" y="190">if it fails</text><text x="745" y="190">if it fails</text><text x="960" y="190">if it fails</text>
+    </g>
+
+    <g text-anchor="middle">
+      <g><rect class="card k1" x="80" y="92" width="200" height="56" rx="14" fill="#123F34" stroke-width="2"/>
+        <text x="180" y="116" font-size="15" font-weight="700" fill="#FFFFFF">Claude Opus 5.5</text>
+        <text x="180" y="136" font-size="11.5" fill="#9CC9BB">primary · strongest</text></g>
+      <g><rect class="card k2" x="306" y="92" width="200" height="56" rx="14" fill="#123F34" stroke-width="2"/>
+        <text x="406" y="116" font-size="15" font-weight="700" fill="#FFFFFF">Gemini 3.8 Flash</text>
+        <text x="406" y="136" font-size="11.5" fill="#9CC9BB">also reads handwriting</text></g>
+      <g><rect class="card k3" x="532" y="92" width="200" height="56" rx="14" fill="#123F34" stroke-width="2"/>
+        <text x="632" y="116" font-size="15" font-weight="700" fill="#FFFFFF">DeepSeek V4.1 Flash</text>
+        <text x="632" y="136" font-size="11.5" fill="#9CC9BB">fast · low cost</text></g>
+      <g><rect class="card k4" x="758" y="92" width="200" height="56" rx="14" fill="#123F34" stroke-width="2"/>
+        <text x="858" y="116" font-size="15" font-weight="700" fill="#FFFFFF">Claude Haiku 5.5</text>
+        <text x="858" y="136" font-size="11.5" fill="#9CC9BB">checks every claim</text></g>
+      <g><rect class="card k5" x="984" y="92" width="156" height="56" rx="14" fill="#F2C14E" stroke-width="2"/>
+        <text x="1062" y="116" font-size="15" font-weight="700" fill="#0B2F27">Local Qwen</text>
+        <text x="1062" y="136" font-size="11.5" fill="#3D3207">offline last resort</text></g>
+    </g>
+
+    <circle class="packet" r="8" fill="#F2C14E" stroke="#FFFFFF" stroke-width="2"/>
+
+    <g font-size="13" fill="#D7F2E9">
+      <circle cx="64" cy="222" r="4" fill="#7DD3B8"/><text x="76" y="226">The API key stays in the AI service</text>
+      <circle cx="424" cy="222" r="4" fill="#7DD3B8"/><text x="436" y="226">Idle local models unload to stay in memory budget</text>
+      <circle cx="874" cy="222" r="4" fill="#7DD3B8"/><text x="886" y="226">Every answer records which model wrote it</text>
+      <text x="60" y="254" fill="#9CC9BB" font-size="12">Local models for privacy-first work: MiniLM · bge-m3 · NLI DeBERTa · faster-whisper · Kokoro · NLLB · TrOCR — admin picks local or hosted</text>
+    </g>
+  </g>
+</svg>

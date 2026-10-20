@@ -80,6 +80,24 @@ describe('AI Toolkit page', () => {
     expect(screen.getByText('Draft transcription of handwriting.')).toBeInTheDocument();
   });
 
+  it('sends lecture key terms with a transcription and reports corrected words', async () => {
+    svc.overview.mockResolvedValue(overview({ jobs: [jobRow({ id: 9, tool: 'transcription', status: 'completed', input_filename: 'lecture.mp3' })] }));
+    svc.transcribe.mockResolvedValue({ status: 'success', message: 'Transcription started.', data: {} });
+    svc.job.mockResolvedValue(detail({ id: 9, tool: 'transcription', status: 'completed', input_filename: 'lecture.mp3', text: 'BFS uses a queue.',
+      model: 'openai/whisper-large-v3-turbo', duration_seconds: 3, corrected_lines: 1 }));
+    renderPage();
+
+    fireEvent.click(await screen.findByRole('tab', { name: /Lecture transcription/ }));
+    const file = new File(['a'], 'lecture.mp3', { type: 'audio/mpeg' });
+    fireEvent.change(screen.getByTestId('transcribe-file'), { target: { files: [file] } });
+    fireEvent.change(screen.getByTestId('transcribe-terms'), { target: { value: 'queue, BFS' } });
+    fireEvent.click(screen.getByRole('button', { name: /Transcribe recording/ }));
+    await waitFor(() => expect(svc.transcribe).toHaveBeenCalledWith(file, undefined, 'queue, BFS'));
+
+    fireEvent.click(await screen.findByText('lecture.mp3'));
+    expect(await screen.findByTestId('job-result')).toHaveTextContent('1 misheard word(s) corrected');
+  });
+
   it('says which model read the file and why the local model was used', async () => {
     svc.overview.mockResolvedValue(overview({ jobs: [jobRow({ id: 8, tool: 'ocr', status: 'completed', input_filename: 'page.jpg', line_count: 1 })] }));
     svc.job.mockResolvedValueOnce(detail({ id: 8, tool: 'ocr', status: 'completed', input_filename: 'page.jpg', line_count: 1, text: 'x',

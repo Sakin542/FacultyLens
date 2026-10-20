@@ -19,6 +19,7 @@ Generation strategy
 The output is a suggestion for faculty review. It is never marked final.
 """
 
+import json
 import logging
 import math
 import re
@@ -511,6 +512,10 @@ class RubricGenerator:
             return []
         lo = request.learning_outcome
         lo_text = f"Learning outcome: {lo.code or ''} {lo.description or ''}\n" if lo else ""
+        if getattr(self.text_generation_service, "hosted_only", False):
+            structured = self._structured_candidates(request, question_text, lo_text)
+            if len(structured) >= 2:
+                return structured
         prompt = (
             "Draft grading criteria for a university exam question. "
             "List between 3 and 6 short criteria, one per line, without marks.\n"
@@ -545,6 +550,46 @@ class RubricGenerator:
             if len(candidates) >= self.settings.rubric_max_criteria:
                 break
         return candidates
+
+    def _structured_candidates(self, request: GenerateRubricRequest, question_text: str, lo_text: str) -> List[Dict[str, Any]]:
+        """Hosted models: full criteria (name, what a full-marks answer shows, observable indicators, relative weight)
+        as JSON. Marks are not asked for: they are distributed exactly afterwards."""
+        prompt = (
+            "Draft a grading rubric for this university exam question. Reply with JSON only, no prose:\n"
+            '{"criteria": [{"criterion": "short name, at most 8 words", "description": "one sentence: what a full-marks '
+            'answer shows for this criterion", "indicators": ["2 to 4 short, observable points a grader can check"], '
+            '"weight": 1-5 relative importance}]}\n'
+            f"Use 3 to {self.settings.rubric_max_criteria} criteria that cover the question and do not overlap. "
+            "Base them only on the question (and learning outcome); do not add marks.\n"
+            f"Question type: {request.question_type.value}\n{lo_text}Question: {question_text}"
+        )
+        text = self.text_generation_service.generate_text(prompt, max_new_tokens=1200)
+        match = re.search(r"\{.*\}", text or "", re.S)
+        if not match:
+            return []
+        try:
+            items = json.loads(match.group(0)).get("criteria") or []
+        except (ValueError, AttributeError):
+            return []
+        out: List[Dict[str, Any]] = []
+        seen = set()
+        for item in items if isinstance(items, list) else []:
+            if not isinstance(item, dict):
+                continue
+            name = re.sub(r"\s+", " ", str(item.get("criterion") or "")).strip(" .:-")
+            if not (4 <= len(name) <= 120) or not re.search(r"[A-Za-z]", name) or name.lower() in seen:
+                continue
+            seen.add(name.lower())
+            description = re.sub(r"\s+", " ", str(item.get("description") or "")).strip() or f"The response addresses: {name}."
+            indicators = [re.sub(r"\s+", " ", str(i)).strip()[:200] for i in (item.get("indicators") or []) if str(i).strip()][:6]
+            try:
+                weight = min(5.0, max(1.0, float(item.get("weight") or 2)))
+            except (TypeError, ValueError):
+                weight = 2.0
+            out.append(self._cand(name[:1].upper() + name[1:], description[:2000], weight, indicators or [f"{name} is covered"]))
+            if len(out) >= self.settings.rubric_max_criteria:
+                break
+        return out
 
     # ---------------------------------------------------------------- ranking
 

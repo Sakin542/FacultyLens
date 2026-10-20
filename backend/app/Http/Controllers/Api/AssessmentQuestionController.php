@@ -7,6 +7,7 @@ use App\Models\Assessment;
 use App\Models\LearningOutcome;
 use App\Models\Question;
 use App\Models\StudentAnswer;
+use App\Services\AiService;
 use App\Services\AuditLogService;
 use App\Services\CourseAccessService;
 use App\Services\DocumentTextExtractor;
@@ -27,6 +28,11 @@ class AssessmentQuestionController extends Controller
     public const TYPES = ['descriptive', 'short_answer', 'mcq', 'true_false', 'problem_solving', 'other'];
     public const LEVELS = ['Remember', 'Understand', 'Apply', 'Analyze', 'Evaluate', 'Create'];
     public const DIFFICULTIES = ['easy', 'medium', 'hard'];
+    /** Paper formats read as text; scanned PDFs (no text layer) and photos of a paper go through OCR instead */
+    public const TEXT_FORMATS = ['pdf', 'docx', 'txt'];
+    public const IMAGE_FORMATS = ['jpg', 'jpeg', 'png', 'webp'];
+    /** Fewer letters than this in a PDF means it is a scan with no text layer */
+    public const SCANNED_PDF_MIN_LETTERS = 40;
 
     public function __construct(protected CourseAccessService $access, protected AuditLogService $audit) {}
 
@@ -90,7 +96,7 @@ class AssessmentQuestionController extends Controller
     }
 
     /** Read the uploaded question paper and return the questions found in it. Saves nothing. */
-    public function extract(Request $request, Assessment $assessment, DocumentTextExtractor $extractor, QuestionPaperParser $parser): JsonResponse
+    public function extract(Request $request, Assessment $assessment, DocumentTextExtractor $extractor, QuestionPaperParser $parser, AiService $ai): JsonResponse
     {
         if ($denied = $this->deny($request, $assessment)) {
             return $denied;
@@ -100,21 +106,45 @@ class AssessmentQuestionController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Upload the question paper first.'], 422);
         }
         $extension = strtolower((string) $paper->file_type);
-        if (!in_array($extension, ['pdf', 'docx', 'txt'], true)) {
-            return response()->json(['status' => 'error', 'message' => "Questions can be read from PDF, DOCX or TXT papers; this paper is .{$extension}. Add the questions by hand or upload one of those formats."], 422);
+        $isImage = in_array($extension, self::IMAGE_FORMATS, true);
+        if (!$isImage && !in_array($extension, self::TEXT_FORMATS, true)) {
+            return response()->json(['status' => 'error', 'message' => "Questions can be read from PDF, DOCX or TXT papers, or a photo or scan of the paper; this paper is .{$extension}. Add the questions by hand or upload one of those formats."], 422);
         }
-        try {
-            $result = $extractor->extract(Storage::disk('local')->path($paper->file_path), $extension);
-        } catch (Throwable $e) {
-            return response()->json(['status' => 'error', 'message' => 'The question paper could not be read. If it is a scanned PDF, add the questions by hand.'], 422);
-        }
-        $text = (string) ($result['raw_text'] ?? '') ?: (string) ($result['cleaned_text'] ?? '');
-        $parsed = $parser->parse($text, $assessment->total_marks !== null ? (float) $assessment->total_marks : null);
-        if (trim($text) === '') {
-            $parsed['warnings'] = ['No text was found in the question paper. If it is a scanned PDF, add the questions by hand.'];
+        $path = Storage::disk('local')->path($paper->file_path);
+
+        $text = '';
+        if (!$isImage) {
+            try {
+                $result = $extractor->extract($path, $extension);
+                $text = (string) ($result['raw_text'] ?? '') ?: (string) ($result['cleaned_text'] ?? '');
+            } catch (Throwable $e) {
+                if ($extension !== 'pdf') {
+                    return response()->json(['status' => 'error', 'message' => 'The question paper could not be read.'], 422);
+                }
+            }
         }
 
-        return response()->json(['status' => 'success', 'data' => $parsed + ['file_name' => $paper->file_name, 'existing_questions' => $assessment->questions()->count()]]);
+        // Photos, and PDFs without a text layer (scans), are read with OCR: the hosted vision model when the
+        // administrator selected the hosted provider, else the local OCR model
+        $ocr = null;
+        if ($isImage || ($extension === 'pdf' && preg_match_all('/\pL/u', $text) < self::SCANNED_PDF_MIN_LETTERS)) {
+            try {
+                $read = $ai->ocr($path, (string) ($paper->file_name ?: basename($path)));
+                $text = (string) ($read['text'] ?? '');
+                $ocr = ['model' => $read['model'] ?? null, 'provider' => $read['provider'] ?? null];
+            } catch (Throwable $e) {
+                return response()->json(['status' => 'error', 'message' => 'This looks like a scanned paper, and it could not be read with OCR right now. Try again later or add the questions by hand.'], 422);
+            }
+        }
+
+        $parsed = $parser->parse($text, $assessment->total_marks !== null ? (float) $assessment->total_marks : null);
+        if (trim($text) === '') {
+            $parsed['warnings'] = ['No text was found in the question paper. Add the questions by hand.'];
+        } elseif ($ocr) {
+            array_unshift($parsed['warnings'], 'This paper was read from an image with OCR. Check every question and its marks against the paper before saving.');
+        }
+
+        return response()->json(['status' => 'success', 'data' => $parsed + ['file_name' => $paper->file_name, 'existing_questions' => $assessment->questions()->count(), 'ocr' => $ocr]]);
     }
 
     /** Save several reviewed questions at once (e.g. from the paper preview); numbering continues after existing ones. */

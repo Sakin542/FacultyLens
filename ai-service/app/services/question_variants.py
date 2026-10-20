@@ -276,7 +276,7 @@ class QuestionVariantGenerator:
         for i in range(count * 3):
             if len(variants) >= count:
                 break
-            rng = random.Random(base_seed * 7919 + i)
+            rng = random.Random(base_seed * 7919 + i)  # noqa: S311 - reproducible question variants, not security
             text, answer, warnings, methods = question, expected_answer, [], []
             number_info: Dict[str, Any] = {"number_changes": [], "answer_needs_review": False, "derived_numbers": []}
 

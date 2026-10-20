@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Services\QuestionPaperParser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
@@ -113,6 +114,47 @@ class AssessmentQuestionTest extends TestCase
         $this->postJson("/api/assessments/{$this->assessment->id}/questions/bulk", ['questions' => [['question_text' => 'Fine question', 'marks' => 2], ['question_text' => 'No marks']]])
             ->assertStatus(422)->assertJsonPath('message', fn ($m) => str_starts_with($m, 'Question 2:'));
         $this->assertSame(4, Question::query()->where('assessment_id', $this->assessment->id)->count());
+    }
+
+    public function test_a_photo_of_the_paper_is_read_with_ocr_and_flagged_for_checking(): void
+    {
+        Sanctum::actingAs($this->faculty);
+        Http::fake(['*/api/v1/toolkit/ocr' => Http::response(['status' => 'success', 'text' => "1. Define a graph. [5]\n2. Explain how BFS works. [10]",
+            'pages' => [], 'model' => 'hosted:google/gemini-3.8-flash', 'provider' => 'hosted'])]);
+        $this->post("/api/assessments/{$this->assessment->id}/question-paper", ['file' => UploadedFile::fake()->image('midterm-photo.jpg', 800, 1000)], ['Accept' => 'application/json'])->assertCreated();
+
+        $data = $this->postJson("/api/assessments/{$this->assessment->id}/question-paper/extract")->assertOk()->json('data');
+        $this->assertSame(['Define a graph.', 'Explain how BFS works.'], array_column($data['questions'], 'text'));
+        $this->assertSame(['model' => 'hosted:google/gemini-3.8-flash', 'provider' => 'hosted'], $data['ocr']);
+        $this->assertStringContainsString('read from an image with OCR', $data['warnings'][0]);
+        Http::assertSent(fn ($r) => str_ends_with($r->url(), '/api/v1/toolkit/ocr'));
+    }
+
+    public function test_a_scanned_pdf_without_text_goes_to_ocr_but_a_typed_paper_does_not(): void
+    {
+        Sanctum::actingAs($this->faculty);
+        Http::fake(['*/api/v1/toolkit/ocr' => Http::response(['status' => 'success', 'text' => 'Q1. Insert 12, 22, 32 using linear probing. [10]', 'pages' => [], 'model' => 'microsoft/trocr-base-handwritten', 'provider' => 'local'])]);
+        $this->mock(\App\Services\DocumentTextExtractor::class, fn ($m) => $m->shouldReceive('extract')->andReturn(['raw_text' => "  \n 3 \n", 'cleaned_text' => '']));
+        $this->post("/api/assessments/{$this->assessment->id}/question-paper", ['file' => UploadedFile::fake()->create('scan.pdf', 50, 'application/pdf')], ['Accept' => 'application/json'])->assertCreated();
+        $data = $this->postJson("/api/assessments/{$this->assessment->id}/question-paper/extract")->assertOk()->json('data');
+        $this->assertSame('Insert 12, 22, 32 using linear probing.', $data['questions'][0]['text']);
+        $this->assertSame('local', $data['ocr']['provider']);
+
+        // A typed paper never calls OCR
+        Http::fake();
+        $this->post("/api/assessments/{$this->assessment->id}/question-paper", ['file' => UploadedFile::fake()->createWithContent('typed.txt', "1. Define a graph. [5]\n")], ['Accept' => 'application/json'])->assertCreated();
+        $data = $this->postJson("/api/assessments/{$this->assessment->id}/question-paper/extract")->assertOk()->json('data');
+        $this->assertNull($data['ocr']);
+        Http::assertNotSent(fn ($r) => str_contains($r->url(), '/toolkit/ocr'));
+    }
+
+    public function test_ocr_failure_on_a_scanned_paper_explains_what_to_do(): void
+    {
+        Sanctum::actingAs($this->faculty);
+        Http::fake(['*/api/v1/toolkit/ocr' => Http::response(['detail' => 'down'], 503)]);
+        $this->post("/api/assessments/{$this->assessment->id}/question-paper", ['file' => UploadedFile::fake()->image('paper.png')], ['Accept' => 'application/json'])->assertCreated();
+        $this->postJson("/api/assessments/{$this->assessment->id}/question-paper/extract")->assertStatus(422)
+            ->assertJsonPath('message', fn ($m) => str_contains($m, 'could not be read with OCR'));
     }
 
     public function test_extract_needs_a_paper_in_a_readable_format(): void

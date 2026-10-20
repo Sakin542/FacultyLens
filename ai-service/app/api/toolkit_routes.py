@@ -123,7 +123,8 @@ def toolkit_status(generation: GenerationService = Depends(get_generation_servic
         "tools": {
             **{k: {"model": shown(t), "loaded": t.loaded, "dependencies": t.dependencies(), "ready": all(t.dependencies().values())} for k, t in tools.items()},
             "speech": {"model": f"{speaker.model_name('en')} (English), {speaker.model_name('bn')} (Bangla)", "loaded": bool(speaker.loaded_languages),
-                       "dependencies": {"kokoro": speaker.kokoro_enabled}, "ready": True},
+                       "dependencies": {"kokoro": speaker.kokoro_enabled, "edge_tts": speaker.edge_enabled}, "ready": True,
+                       "online_voice": speaker.online_voice_status()},
             "similarity": {"model": embedder.model_name, "loaded": embedder.loaded, "dependencies": {}, "ready": True},
             # Generation-based tools reuse the shared generator; they need no model of their own
             "writing": {"model": generation.model_name or "template / rule engines", "loaded": generation.is_loaded, "dependencies": {}, "ready": True},
@@ -142,10 +143,11 @@ async def ocr(file: UploadFile = File(...)):
 
 
 @router.post("/transcribe")
-async def transcribe(file: UploadFile = File(...), language: Optional[str] = Form(None)):
+async def transcribe(file: UploadFile = File(...), language: Optional[str] = Form(None), terms: Optional[str] = Form(None, max_length=1000),
+                     generation: GenerationService = Depends(get_generation_service)):
     data = await _read(file)
     try:
-        result = await run_in_threadpool(get_transcriber().run, data, language if language in ("en", "bn") else None)
+        result = await run_in_threadpool(get_transcriber().run, data, language if language in ("en", "bn") else None, terms, generation)
     except Exception as e:
         raise _fail(e)
     return {"status": "success", **result}

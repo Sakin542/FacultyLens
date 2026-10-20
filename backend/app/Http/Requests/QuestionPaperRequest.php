@@ -23,7 +23,7 @@ class QuestionPaperRequest extends FormRequest
             'file' => [
                 'required',
                 'file',
-                'mimes:pdf,doc,docx,ppt,pptx,txt',
+                'mimes:pdf,doc,docx,ppt,pptx,txt,jpg,jpeg,png,webp', // images: photos or scans of the paper (read with OCR)
                 'max:20480', // Max 20MB
             ],
         ];

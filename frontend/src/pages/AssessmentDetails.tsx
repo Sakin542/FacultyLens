@@ -592,7 +592,7 @@ export const AssessmentDetails: React.FC = () => {
               <div className="space-y-1">
                 <p className="text-sm font-bold text-sage-800 dark:text-white">No Question Paper Attached</p>
                 <p className="text-xs text-sage-500">
-                  Upload the official question paper (PDF, DOCX, TXT) for this assessment.
+                  Upload the official question paper (PDF, DOCX, TXT, or a photo or scan) for this assessment.
                 </p>
               </div>
               <Button

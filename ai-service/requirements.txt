@@ -19,3 +19,7 @@ sentencepiece>=0.2.0
 numpy>=1.26
 # Natural English text to speech (Kokoro-82M). Needs Python < 3.13; elsewhere the speaker falls back to MMS-TTS.
 kokoro>=0.9.4,<1; python_version < "3.13"
+# Natural Bangla text to speech: Microsoft's neural voices through the (unofficial) Edge read-aloud service
+edge-tts>=7.0,<8
+# Fast local transcription (CTranslate2, 8-bit Whisper on all CPU cores, skips silence)
+faster-whisper>=1.1,<2

@@ -50,14 +50,14 @@ class RunAiToolJob implements ShouldQueue
             $path = $disk->path($job->input_path);
             $result = match ($job->tool) {
                 'ocr' => $ai->ocr($path, $job->input_filename),
-                'transcription' => $ai->transcribe($path, $job->input_filename, $job->language),
+                'transcription' => $ai->transcribe($path, $job->input_filename, $job->language, $job->result['terms'] ?? null),
                 'study_pack' => $ai->studyPack((string) $disk->get($job->input_path), $job->input_filename, (int) ($job->result['num_questions'] ?? 5)),
             };
 
             $job->forceFill([
                 'status' => 'completed',
                 'result_text' => $job->tool === 'study_pack' ? self::studyPackText($result) : (string) ($result['text'] ?? ''),
-                'result' => collect($result)->only(['segments', 'pages', 'model', 'provider', 'fallback_reason', 'duration_seconds', 'line_count', 'note', 'language',
+                'result' => collect($result + ['terms' => $job->result['terms'] ?? null])->only(['segments', 'pages', 'model', 'provider', 'fallback_reason', 'corrected_lines', 'proofread_model', 'terms', 'duration_seconds', 'line_count', 'note', 'language',
                     'title', 'summary', 'summary_method', 'key_points', 'keywords', 'quiz', 'quiz_method', 'quiz_rejected'])->all(),
                 'completed_at' => now(),
             ])->save();
