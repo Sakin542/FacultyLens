@@ -36,6 +36,35 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* File pickers: one app-styled "Choose file" button everywhere instead of the browser's grey default */
+  input[type='file'] {
+    font-size: 0.8125rem;
+    color: #4C6B62; /* sage-500: the "No file chosen" / file name text */
+    cursor: pointer;
+  }
+  input[type='file']::file-selector-button {
+    margin-right: 0.75rem;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid #BFD9CF;
+    border-radius: 0.5rem;
+    background-color: #E8F3EF; /* sage tint */
+    color: #1E6F5C;           /* sage-700 */
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 180ms var(--ease-out-soft), border-color 180ms var(--ease-out-soft), color 180ms var(--ease-out-soft);
+  }
+  input[type='file']:hover::file-selector-button {
+    background-color: #1E6F5C;
+    border-color: #1E6F5C;
+    color: #fff;
+  }
+  input[type='file']:disabled,
+  input[type='file']:disabled::file-selector-button {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
   /* Accessible focus outline */
   :focus-visible {
     outline: 2px solid #1E6F5C;

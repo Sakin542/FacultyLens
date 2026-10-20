@@ -606,7 +606,7 @@ export const CompareAnswersPanel: React.FC = () => {
       </div>
       <div className={cn(card, 'space-y-3 bg-sage-50')} data-testid="compare-result">
         {!result ? <p className="py-10 text-center text-sm text-sage-500">Pairs that look unusually alike appear here.</p> : <>
-          <p className="text-sm text-sage-800"><strong>{result.pairs_flagged}</strong> of {result.pairs_compared} pairs flagged · {result.answers_compared} answers · {result.method === 'lexical' ? 'wording only' : 'wording + meaning'}</p>
+          <p className="text-sm text-sage-800"><strong>{result.pairs_flagged}</strong> of {result.pairs_compared} pairs flagged · {result.answers_compared} answers · {result.method === 'lexical' ? 'wording only' : 'wording + meaning'}{result.embedding_model && <span className="font-mono text-[11px] text-sage-500"> ({result.embedding_model})</span>}</p>
           {result.semantic_unavailable && <WarnNote>The meaning model was unavailable, so only shared wording was compared.</WarnNote>}
           {result.too_short.length > 0 && <WarnNote>Skipped (under {result.min_words} words): {result.too_short.join(', ')}</WarnNote>}
           {shown.length === 0 ? <OkNote text="No pair looks unusually similar." /> : (

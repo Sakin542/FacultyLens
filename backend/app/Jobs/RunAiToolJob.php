@@ -57,7 +57,7 @@ class RunAiToolJob implements ShouldQueue
             $job->forceFill([
                 'status' => 'completed',
                 'result_text' => $job->tool === 'study_pack' ? self::studyPackText($result) : (string) ($result['text'] ?? ''),
-                'result' => collect($result)->only(['segments', 'pages', 'model', 'provider', 'duration_seconds', 'line_count', 'note', 'language',
+                'result' => collect($result)->only(['segments', 'pages', 'model', 'provider', 'fallback_reason', 'duration_seconds', 'line_count', 'note', 'language',
                     'title', 'summary', 'summary_method', 'key_points', 'keywords', 'quiz', 'quiz_method', 'quiz_rejected'])->all(),
                 'completed_at' => now(),
             ])->save();

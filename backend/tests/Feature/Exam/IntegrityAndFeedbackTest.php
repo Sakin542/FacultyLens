@@ -92,7 +92,7 @@ class IntegrityAndFeedbackTest extends TestCase
 
     public function test_plagiarism_check_flags_copied_answers_and_ignores_quoted_question(): void
     {
-        Http::fake(['*/api/v1/embeddings/batch' => Http::response(['detail' => 'down'], 503)]);
+        Http::fake(['*/api/v1/toolkit/answer-embeddings' => Http::response(['detail' => 'down'], 503), '*/api/v1/embeddings/batch' => Http::response(['detail' => 'down'], 503)]);
         $copied = 'An index keeps a sorted structure such as a B+ tree so the database jumps to matching rows instead of scanning the entire table from start to finish.';
         $this->submission(1, [8, 5], [$copied]);
         $this->submission(2, [8, 5], ['My view: '.$copied]);

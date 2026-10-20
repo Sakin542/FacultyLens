@@ -9,14 +9,15 @@ FacultyLens uses open Hugging Face models running inside the `ai-service` contai
 | Capability | Default model | Where it runs | Used by |
 | --- | --- | --- | --- |
 | Embeddings / similarity | `sentence-transformers/all-MiniLM-L6-v2` | local | analysis, similarity, retrieval |
+| Answer similarity / plagiarism | `BAAI/bge-m3` (`ANSWER_SIMILARITY_MODEL`; MiniLM if it cannot load) | local | assessment plagiarism check, Compare answers |
 | Text generation | `Qwen/Qwen2.5-0.5B-Instruct` (`HF_GENERATION_MODEL`) | local, or hosted when selected | document chat, question generator, rubric drafts, syllabus drafts, question variants |
-| Handwriting OCR | `microsoft/trocr-base-handwritten` (`OCR_MODEL`) | local | AI Toolkit |
-| Lecture transcription | `openai/whisper-base` (`ASR_MODEL`) | local | AI Toolkit |
+| Handwriting OCR | `google/gemini-3.8-flash` → `anthropic/claude-haiku-5.5` (`LLM_VISION_MODELS`), then `microsoft/trocr-base-handwritten` (`OCR_MODEL`) | hosted when selected, local fallback | AI Toolkit |
+| Lecture transcription | `openai/whisper-large-v3-turbo` (`ASR_MODEL`); optionally a hosted audio model first (`LLM_AUDIO_MODELS`, empty by default) | local | AI Toolkit |
 | Bangla ↔ English translation | `facebook/nllb-200-distilled-600M` (`TRANSLATION_MODEL`) | local, or the hosted model when selected | AI Toolkit |
-| Read aloud (text to speech) | `facebook/mms-tts-eng`, `facebook/mms-tts-ben` | local | AI Toolkit |
+| Read aloud (text to speech) | English `hexgrad/Kokoro-82M` (voice `af_heart`, MMS-TTS if unavailable); Bangla `facebook/mms-tts-ben` | local | AI Toolkit |
 | Notes & quiz, question checker, simplify, Bloom rewriter | the text-generation model above + MiniLM | local, or hosted when selected | AI Toolkit |
 
-Models download into the `ai_models_cache` volume the first time they are used and stay in memory afterwards. Approximate sizes: Qwen 0.5B ≈ 1 GB, NLLB ≈ 2.4 GB, TrOCR ≈ 1.3 GB, Whisper base ≈ 0.3 GB. With every tool in use the AI service needs roughly 6–7 GB of RAM.
+Models download into the `ai_models_cache` volume the first time they are used and stay in memory afterwards. Approximate sizes: Qwen 0.5B ≈ 1 GB, NLLB ≈ 2.4 GB, bge-m3 ≈ 2.3 GB, TrOCR ≈ 1.3 GB, Whisper large-v3-turbo ≈ 1.6 GB, Kokoro ≈ 0.3 GB. Loaded all at once they would need roughly 9–10 GB, so the AI service manages them (`app/services/model_memory.py`): a model unused for 15 minutes is unloaded (`MODEL_IDLE_UNLOAD_SECONDS`), and before a model loads, the least recently used idle models are unloaded so the service stays within `MODEL_MEMORY_BUDGET_MB` (5,000 MB, which fits Docker Desktop's default ~7.5 GB with the rest of the stack). A model is never unloaded while it is working, and reloads from the local cache in seconds. **AI governance → Providers & tools** (toolkit status) shows the memory in use and which models are loaded. With the hosted provider selected, TrOCR only loads when a hosted OCR call fails.
 
 Leaving `HF_GENERATION_MODEL` empty disables local generation; the features then use their template or extractive engines and say so.
 
@@ -28,12 +29,19 @@ Leaving `HF_GENERATION_MODEL` empty disables local generation; the features then
 - **Hosted API provider**: calls an OpenAI-compatible `/chat/completions` API. Configure it in the AI service environment (the key is never sent to Laravel or the browser):
 
 ```bash
-LLM_HOSTED_BASE_URL=https://router.huggingface.co/v1   # Hugging Face Inference Providers (HF token as key)
+# In the git-ignored root .env (docker compose passes these to the AI service)
+LLM_HOSTED_BASE_URL=https://openrouter.ai/api/v1
 LLM_HOSTED_API_KEY=...
-LLM_HOSTED_MODEL=meta-llama/Llama-3.1-8B-Instruct
+LLM_HOSTED_MODEL=anthropic/claude-opus-5.5
+# Tried in order if the model above errors, times out or answers empty; the local model is the last resort
+LLM_HOSTED_FALLBACK_MODELS=google/gemini-3.8-flash,deepseek/deepseek-v4.1-flash-1017,anthropic/claude-haiku-5.5
+LLM_HOSTED_REASONING=low      # OpenRouter thinking effort low|medium|high ("off" is rejected by Opus/Gemini); empty for other providers
+LLM_HOSTED_MAX_RETRIES=1      # retries on 429/5xx before falling back to the local model
 ```
 
-Other compatible endpoints: Groq `https://api.groq.com/openai/v1`, Google Gemini `https://generativelanguage.googleapis.com/v1beta/openai`, OpenRouter `https://openrouter.ai/api/v1`.
+Other compatible endpoints: Hugging Face Inference Providers `https://router.huggingface.co/v1` (HF token as key), Groq `https://api.groq.com/openai/v1`, Google Gemini `https://generativelanguage.googleapis.com/v1beta/openai`.
+
+Hosted calls run through **LangChain** (`ai-service/app/services/llm_chain.py`): a `ChatPromptTemplate → ChatOpenAI` chain with LangChain `with_fallbacks` over the configured models, cached per settings. The answer records which model produced it, and **AI governance → Providers & tools** shows the whole chain. Every AI feature (document chat, question generator, rubric/syllabus drafts, feedback drafter, paper review, translation, writing tools) reaches it through `GenerationService.generate()`, which keeps the local-model fallback.
 
 When Hosted is selected, academic text (questions, document excerpts, answers) is sent to that provider. If the hosted call fails or isn't configured, FacultyLens uses the local model and records the reason.
 
@@ -47,8 +55,10 @@ When Hosted is selected, academic text (questions, document excerpts, answers) i
 | Handwriting OCR | JPG/PNG/WEBP or PDF | queued job | 20 MB, 10 PDF pages |
 | Lecture transcription | MP3/WAV/M4A/OGG/WEBM/MP4/AAC/FLAC | queued job | 100 MB, 90 minutes |
 
-- OCR splits each page into text lines, then reads each line. Results are labelled as drafts to check against the original script.
-- Transcription returns timestamped segments. Choose English or Bangla, or let Whisper detect the language.
+- **Hosted provider selected:** each page image goes to Gemini 3.8 Flash (then Claude Haiku 5.5) through LangChain, which reads whole handwritten pages in English or Bangla. If every vision model fails, TrOCR runs locally and the job says why. Answer sheets are sent to the provider in this mode.
+- **Transcription** runs on local Whisper large-v3-turbo by default, so recordings stay on your server. To use a hosted audio model instead, set `LLM_AUDIO_MODELS=google/gemini-3.8-flash` (OpenRouter only accepts audio when the account balance is at least $0.50); recordings are then re-encoded to 48 kbit/s MP3 and sent in 10-minute pieces (`ASR_HOSTED_CHUNK_SECONDS`), four at a time, with Whisper as the fallback.
+- **Local:** OCR splits each page into text lines, then TrOCR reads each line. Whisper returns timestamped segments; choose English or Bangla, or let it detect the language.
+- Results are labelled as drafts to check against the original script, and show which model produced them.
 - Queued jobs run one at a time on the `ai-tools` Horizon queue (`supervisor-ai-tools`, 1850 s timeout), because they are CPU-heavy.
 - The uploaded file is deleted as soon as the job finishes; only the text is kept. Jobs are visible only to their owner.
 - Each tool can be switched off in Platform settings (`ai_translation`, `ai_ocr`, `ai_transcription`). The server then refuses new work.
@@ -74,7 +84,7 @@ Admin switches: `ai_study_pack`, `ai_speech`, `ai_writing` (checker, simplify, B
 | Tool | Where | What it does | Safeguards |
 | --- | --- | --- | --- |
 | Feedback drafter | AI Toolkit tab (paste question, criteria, answer) and **Draft feedback (AI)** in the grading form (uses the question's approved rubric) | Short feedback addressed to the student: what they did well (quoting their own sentence), what is missing, one next step. Tones: encouraging, neutral, concise. | Never produces or changes marks. Built from the grading engine's per-criterion evidence, then re-checked word by word, so it does not praise a point the student did not make. In the grading form it only fills the feedback box; nothing is saved until you submit. Needs an approved rubric and edit access to the answer. |
-| Compare answers | AI Toolkit tab | Similarity check for answers that are not stored in FacultyLens (pasted text, OCR of handwritten scripts): flagged pairs, scores and the longest shared passage | Same scoring as the assessment plagiarism check (wording 3-grams with question text removed, plus MiniLM meaning similarity against the group baseline). Nothing is stored. A flag means "look closer", never an automatic penalty. |
+| Compare answers | AI Toolkit tab | Similarity check for answers that are not stored in FacultyLens (pasted text, OCR of handwritten scripts): flagged pairs, scores and the longest shared passage | Same scoring as the assessment plagiarism check (wording 3-grams with question text removed, plus bge-m3 meaning similarity against the group baseline; the result names the embedding model). Nothing is stored. A flag means "look closer", never an automatic penalty. |
 
 With the hosted provider selected, the feedback drafter also rewords its draft into a natural paragraph. The rewrite is discarded if it mentions marks or scores, drops a missing point, adds numbers or copies the prompt's example. The small local model failed these checks in testing, so with local models you get the rubric-built draft (about 1 s).
 
@@ -101,13 +111,14 @@ Admin switches: `ai_paper_review`, `ai_class_summary`.
 
 ## Known limitations
 
-- TrOCR reads handwriting line by line; messy layouts, diagrams and maths notation are not transcribed reliably.
-- Whisper base is fast on CPU but makes more mistakes than larger Whisper models, especially for Bangla. Set `ASR_MODEL=openai/whisper-small` for better accuracy at roughly 3× the time.
+- TrOCR (the local OCR fallback) reads handwriting line by line; messy layouts, diagrams and maths notation are not transcribed reliably. Gemini handles layouts and Bangla far better but can still misread; always check drafts.
+- Hosted transcription timestamps come from the model and are approximate; the local Whisper timestamps are exact.
+- Whisper large-v3-turbo is accurate, including for Bangla, but slow on CPU: a 1-hour lecture can take 30–60 minutes (it runs as a queued job). For speed over accuracy set `ASR_MODEL=openai/whisper-small` (or `openai/whisper-base`).
 - Qwen2.5-0.5B is small: fine for short drafts, weaker at long reasoning. Use the hosted provider for higher quality.
-- Hosted mode covers text generation and translation; OCR, transcription and read-aloud always run locally.
+- Hosted mode covers text generation, translation and OCR (and transcription when `LLM_AUDIO_MODELS` is set); read-aloud and answer similarity always run locally.
 - The quiz grounding check is lexical: it reliably rejects swapped or invented facts, but it can also reject a correct answer that paraphrases the material heavily. Fill-in-the-blank items fill the gap.
 - The Bloom rewriter's level check uses verb patterns, so a well-phrased rewrite can still be classified at a neighbouring level. Treat the label as a hint.
-- Read-aloud voices are clear but robotic; numbers and symbols are spoken as written.
+- The English Kokoro voice sounds natural; the Bangla MMS-TTS voice is clear but robotic. Numbers and symbols are spoken as written. Kokoro needs Python < 3.13 (the Docker image uses 3.11); elsewhere English uses MMS-TTS.
 - The feedback drafter is only as good as the rubric: criteria with specific indicators ("mentions that BFS uses a queue") give specific feedback; vague criteria give generic feedback.
 - Paper review: MiniLM does not know course abbreviations (it rates "BFS" and "breadth-first search" as only loosely related), so reworded duplicates show as "may test the same thing" rather than "duplicate". Coverage lists the closest questions per topic; a broad topic such as "Graph traversal" can also match a general question such as "Define a graph".
-- Answer comparison reliably catches copied or lightly edited text. Heavily reworded copies often score low, because every on-topic answer is semantically similar and only unusually close pairs stand out. With fewer than three answers there is no baseline, so only wording counts.
+- Answer comparison reliably catches copied or lightly edited text, and with bge-m3 also the same answer written in English and Bangla. Heavily reworded copies can still score low, because every on-topic answer is semantically similar and only unusually close pairs stand out. With fewer than three answers there is no baseline, so only wording counts.

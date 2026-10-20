@@ -201,7 +201,7 @@ export const AiGovernancePage: React.FC = () => {
 
 const TOOL_LABELS: Record<string, string> = {
   ocr: 'Handwriting OCR', transcription: 'Lecture transcription', translation: 'Bangla ↔ English translation',
-  speech: 'Read aloud (text to speech)', writing: 'Notes & quiz, question checker, simplify, Bloom rewriter',
+  speech: 'Read aloud (text to speech)', writing: 'Notes & quiz, question checker, simplify, Bloom rewriter', similarity: 'Answer similarity (plagiarism check)',
 };
 
 /** Which generation provider is selected, whether each provider is set up, and toolkit model readiness (live from the AI service). */
@@ -215,13 +215,13 @@ const ProvidersPanel: React.FC<{ p: AiGovernanceData['provider'] }> = ({ p }) =>
           <KeyValue columns={1} items={[
             { label: 'Selected', value: <Pill tone={p.selected === 'hosted' ? 'amber' : 'sage'}>{p.selected === 'hosted' ? 'Hosted API' : 'Local (private)'}</Pill> },
             { label: 'Local model', value: gen ? (gen.local.configured ? <span className="font-mono text-xs">{gen.local.model} {gen.local.loaded ? '· loaded' : '· loads on first use'}</span> : <Pill>Not configured — template engines are used</Pill>) : '—' },
-            { label: 'Hosted provider', value: gen ? (gen.hosted.configured ? <span className="font-mono text-xs">{gen.hosted.model}</span> : <Pill>Not configured (LLM_HOSTED_* in the AI service)</Pill>) : '—' },
+            { label: 'Hosted provider', value: gen ? (gen.hosted.configured ? <span className="font-mono text-xs" data-testid="hosted-model-chain">{[gen.hosted.model, ...(gen.hosted.fallback_models ?? [])].join(' → ')}</span> : <Pill>Not configured (LLM_HOSTED_* in the AI service)</Pill>) : '—' },
           ]} />
           {p.selected === 'hosted' && gen && !gen.hosted.configured && <Notice tone="warning" className="mt-3">Hosted is selected but not configured, so the local model is used for every request.</Notice>}
         </Card>
         <Card title="AI toolkit models" description="Local Hugging Face models, downloaded and loaded on first use">
           <ul className="divide-y divide-adm-line text-sm">
-            {(['translation', 'speech', 'writing', 'ocr', 'transcription'] as const).map((key) => {
+            {(['translation', 'speech', 'writing', 'ocr', 'transcription', 'similarity'] as const).map((key) => {
               const t = p.toolkit.tools[key];
               const jobs = p.tool_jobs_30d[key];
               return (
@@ -236,11 +236,23 @@ const ProvidersPanel: React.FC<{ p: AiGovernanceData['provider'] }> = ({ p }) =>
               );
             })}
           </ul>
+          {p.toolkit.memory && <MemoryLine m={p.toolkit.memory} />}
         </Card>
       </div>
     </div>
   );
 };
+
+/** How much memory the AI service's local models use, against the budget, and which are loaded right now. */
+const MemoryLine: React.FC<{ m: NonNullable<AiGovernanceData['provider']['toolkit']['memory']> }> = ({ m }) => (
+  <div className="mt-3 border-t border-adm-line pt-3 text-[11px] text-adm-muted" data-testid="ai-memory">
+    <p>
+      <span className="font-medium text-adm-ink">Memory:</span> {m.budget_mb > 0 ? `${(m.process_mb / 1024).toFixed(1)} of ${(m.budget_mb / 1024).toFixed(1)} GB` : `${(m.process_mb / 1024).toFixed(1)} GB (no budget)`}
+      {m.idle_unload_seconds > 0 && ` · models unload after ${Math.round(m.idle_unload_seconds / 60)} min idle`}
+    </p>
+    <p>Loaded now: {m.loaded.length ? m.loaded.map((x) => (x.in_use ? `${x.name} (working)` : x.name)).join(', ') : 'none — each model loads on first use'}</p>
+  </div>
+);
 
 // ======================================================================================== AI usage
 

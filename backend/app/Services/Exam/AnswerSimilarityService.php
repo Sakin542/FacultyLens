@@ -30,6 +30,9 @@ class AnswerSimilarityService
     public const MIN_WORDS = 8;
     public const MAX_ANSWERS_PER_QUESTION = 300;
 
+    /** Model that produced the most recent embeddings (bge-m3, or MiniLM when the AI service fell back). */
+    protected ?string $embeddingModel = null;
+
     public function __construct(protected AiService $ai) {}
 
     public function run(Assessment $assessment, User $by, float $threshold = self::DEFAULT_THRESHOLD, bool $useSemantic = true): AnswerSimilarityRun
@@ -100,6 +103,7 @@ class AnswerSimilarityService
                 'summary' => [
                     'per_question' => $perQuestion,
                     'semantic_unavailable' => $semanticFailed,
+                    'embedding_model' => $semanticUsed ? $this->embeddingModel : null,
                     'min_words' => self::MIN_WORDS,
                 ],
             ]);
@@ -149,6 +153,7 @@ class AnswerSimilarityService
         return [
             'method' => $vectors !== null ? 'lexical+semantic' : 'lexical',
             'semantic_unavailable' => $useSemantic && count($texts) >= 2 && $vectors === null,
+            'embedding_model' => $vectors !== null ? $this->embeddingModel : null,
             'threshold' => $threshold,
             'answers_compared' => count($texts),
             'too_short' => $short,
@@ -163,7 +168,7 @@ class AnswerSimilarityService
      * Score every pair of answers to one question.
      *
      * @param  array<int, string>  $texts
-     * @param  array<int, array<int, float>>|null  $vectors  MiniLM embeddings, same order as $texts
+     * @param  array<int, array<int, float>>|null  $vectors  answer embeddings, same order as $texts
      * @return array<int, array{a: int, b: int, lexical: float, semantic: ?float, combined: float}>
      */
     public function scorePairs(array $texts, string $questionText, ?array $vectors): array
@@ -204,16 +209,26 @@ class AnswerSimilarityService
         return $out;
     }
 
-    /** MiniLM embeddings, or null when the AI service is unavailable (the check then runs on wording alone). */
+    /**
+     * Multilingual answer embeddings (bge-m3) from the AI toolkit, else the shared MiniLM embeddings, else null (the
+     * check then runs on wording alone). Scores are relative to the median pair, so either model works.
+     */
     protected function embed(array $texts): ?array
     {
-        try {
-            return $this->ai->generateEmbeddings(array_values($texts))['embeddings'];
-        } catch (Throwable $e) {
-            Log::info('Plagiarism check: embeddings unavailable, lexical only ('.class_basename($e).')');
+        $texts = array_values($texts);
+        foreach (['answerEmbeddings', 'generateEmbeddings'] as $method) {
+            try {
+                $result = $this->ai->{$method}($texts);
+                $this->embeddingModel = $result['model'] ?: null;
 
-            return null;
+                return $result['embeddings'];
+            } catch (Throwable $e) {
+                Log::info("Plagiarism check: {$method} unavailable (".class_basename($e).')');
+            }
         }
+        $this->embeddingModel = null;
+
+        return null;
     }
 
     public function normalize(string $text): string

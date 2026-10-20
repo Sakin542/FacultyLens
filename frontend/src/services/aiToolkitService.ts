@@ -12,6 +12,9 @@ export interface ToolkitJob {
   language: ToolkitLanguage | null;
   error: string | null;
   model: string | null;
+  /** 'hosted' when a hosted model (e.g. Gemini) read the file; fallback_reason says why the local model was used */
+  provider?: 'local' | 'hosted' | null;
+  fallback_reason?: string | null;
   duration_seconds: number | null;
   line_count: number | null;
   preview: string | null;
@@ -65,7 +68,7 @@ export interface ComparePair {
   a: string; b: string; lexical_score: number; semantic_score: number | null; combined_score: number; flagged: boolean; shared_excerpt: string | null;
 }
 export interface CompareResult {
-  method: 'lexical' | 'lexical+semantic'; semantic_unavailable: boolean; threshold: number; answers_compared: number;
+  method: 'lexical' | 'lexical+semantic'; semantic_unavailable: boolean; embedding_model?: string | null; threshold: number; answers_compared: number;
   too_short: string[]; min_words: number; pairs_compared: number; pairs_flagged: number; pairs: ComparePair[]; note: string;
 }
 

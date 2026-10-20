@@ -1009,6 +1009,32 @@ class AiService
     }
 
     /**
+     * Embeddings for the answer similarity / plagiarism check: multilingual bge-m3 in the AI toolkit (the AI service
+     * itself falls back to MiniLM and names the model it used). First use loads a ~2.3 GB model, hence the timeout.
+     *
+     * @param  array<int, string>  $texts
+     * @return array{embeddings: array<int, array<int, float>>, model: string}
+     */
+    public function answerEmbeddings(array $texts): array
+    {
+        $texts = array_values(array_map(fn ($t) => trim((string) $t), $texts));
+        if ($texts === []) {
+            return ['embeddings' => [], 'model' => ''];
+        }
+        try {
+            $response = $this->client()->timeout(300)->post("{$this->baseUrl}/api/v1/toolkit/answer-embeddings", ['texts' => $texts]);
+            $vectors = $response->successful() ? $response->json('vectors') : null;
+            if (!is_array($vectors) || count($vectors) !== count($texts)) {
+                throw new Exception('AI Service could not embed the answers.');
+            }
+
+            return ['embeddings' => array_values($vectors), 'model' => (string) $response->json('model', '')];
+        } catch (ConnectionException|RequestException $e) {
+            $this->handleHttpException($e, 'comparing answers');
+        }
+    }
+
+    /**
      * STEP 32: Generate a grounded answer from already-retrieved, already-authorized chunks
      * via POST /api/v1/chat/academic. Retrieval and authorization happen in Laravel; the AI
      * service only reasons over the context it is given.

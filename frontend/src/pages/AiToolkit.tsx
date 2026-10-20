@@ -84,9 +84,7 @@ const TranslatePanel: React.FC<{ limit: number }> = ({ limit }) => {
             : <p className="py-8 text-sm text-sage-500">The translation appears here.</p>}
         {result && (
           <p className="text-[11px] text-sage-500">
-            <span className="mr-2 inline-block align-middle"><ListenButton text={result.text} language={target} /></span>
-            {result.provider === 'hosted' ? 'Hosted model' : 'Local model'} · <span className="font-mono">{result.model}</span>
-            {result.fallback_reason && <> · fell back to local ({result.fallback_reason})</>} · Machine translation — review academic terms before use.
+            <span className="inline-block align-middle"><ListenButton text={result.text} language={target} /></span>
           </p>
         )}
       </div>
@@ -133,7 +131,7 @@ const UploadPanel: React.FC<{ tool: 'ocr' | 'transcribe'; maxMb: number; onQueue
       <label className="block text-xs font-medium text-sage-700">
         {isOcr ? `Image (JPG, PNG, WEBP) or PDF up to 10 pages · max ${maxMb} MB` : `Audio or video (MP3, WAV, M4A, OGG, WEBM, MP4) · max ${maxMb} MB, up to 90 minutes`}
         <input ref={input} type="file" accept={isOcr ? '.jpg,.jpeg,.png,.webp,.pdf' : '.mp3,.wav,.m4a,.ogg,.oga,.webm,.mp4,.aac,.flac'} onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-          className="mt-1 block w-full text-sm text-sage-700 file:mr-3 file:rounded-lg file:border file:border-sage-200 file:bg-white file:px-3 file:py-1.5 file:text-sm file:text-sage-800 hover:file:bg-sage-50" data-testid={`${tool}-file`} />
+          className="mt-1 block w-full" data-testid={`${tool}-file`} />
       </label>
       {!isOcr && (
         <label className="block text-xs font-medium text-sage-700">Spoken language
@@ -155,7 +153,8 @@ const JobResult: React.FC<{ job: ToolkitJobDetail; onMakeNotes?: () => void; onA
     <div className="flex flex-wrap items-center justify-between gap-2">
       <div className="min-w-0">
         <p className="truncate text-sm font-semibold text-sage-800">{job.input_filename}</p>
-        <p className="text-[11px] text-sage-500"><span className="font-mono">{job.model}</span>{job.duration_seconds ? ` · ${fmtTime(job.duration_seconds)} of audio` : ''}{job.line_count !== null ? ` · ${job.line_count} line(s)` : ''}</p>
+        <p className="text-[11px] text-sage-500">{job.provider === 'hosted' ? 'Hosted model · ' : ''}<span className="font-mono">{job.model}</span>{job.duration_seconds ? ` · ${fmtTime(job.duration_seconds)} of audio` : ''}{job.line_count !== null ? ` · ${job.line_count} line(s)` : ''}</p>
+        {job.fallback_reason && <p className="text-[11px] text-sage-500" data-testid="job-fallback">Read with the local model ({job.fallback_reason}).</p>}
       </div>
       <div className="flex flex-wrap items-center gap-1.5">
         {job.text && <CopyButton text={job.text} label="text" />}
@@ -293,7 +292,7 @@ export const AiToolkit: React.FC = () => {
         <span className="w-10 h-10 rounded-xl bg-white border border-sage-200 flex items-center justify-center text-sage-800"><Wand2 className="w-5 h-5" aria-hidden="true" strokeWidth={1.8} /></span>
         <div>
           <h2 className="text-xl font-semibold tracking-tight text-sage-800">AI Toolkit</h2>
-          <p className="text-sm text-sage-500">Open Hugging Face models for everyday teaching work: translate, listen, turn lectures into notes and quizzes, improve questions, review whole papers, draft feedback, compare answers, read handwriting and transcribe recordings. Everything here is a draft for you to check — AI assists, you decide.</p>
+          <p className="text-sm text-sage-500">Translate, listen, turn lectures into notes and quizzes, improve questions, review whole papers, draft feedback, compare answers, read handwriting and transcribe recordings. Everything here is a draft for you to check — AI assists, you decide.</p>
         </div>
       </div>
 

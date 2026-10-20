@@ -16,10 +16,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
-# Install python dependencies with CPU-optimized PyTorch
+# Install python dependencies: CPU-only PyTorch in its own layer, so editing requirements.txt does not re-download it
+RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
+
 COPY requirements.txt .
-RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu \
-    && pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt \
+    # Kokoro's English phonemizer (misaki) needs this spaCy model; installing it here avoids a download at first use
+    && python -m spacy download en_core_web_sm
 
 # Create cache directory
 RUN mkdir -p /app/cache/huggingface
