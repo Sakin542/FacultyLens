@@ -65,7 +65,9 @@ class ReportAuthorizationService
             'semesters' => $options['semesters'], 'academic_years' => $options['academic_years'], 'assessment_types' => $options['assessment_types'],
             'statuses' => ['draft', 'published', 'completed'], 'departments' => [], 'programs' => []];
         if (in_array('DEPARTMENT', $this->allowedScopes($user), true)) {
-            $out['departments'] = User::query()->whereNotNull('department')->where('department', '!=', '')->distinct()->orderBy('department')->pluck('department')->values();
+            $out['departments'] = (! $user->isAdmin() && $user->isDepartmentHead())
+                ? collect([$user->department])->filter()->values()
+                : User::query()->whereNotNull('department')->where('department', '!=', '')->distinct()->orderBy('department')->pluck('department')->values();
         }
         if (in_array('INSTITUTION', $this->allowedScopes($user), true)) {
             $out['programs'] = Program::query()->orderBy('code')->get(['id', 'code', 'name'])->map(fn ($p) => ['id' => $p->id, 'code' => $p->code, 'name' => $p->name])->values();
@@ -140,6 +142,14 @@ class ReportAuthorizationService
 
             case 'DEPARTMENT':
                 $department = trim((string) ($filters['department'] ?? ''));
+                // Department heads report on their own department only
+                if (! $user->isAdmin() && $user->isDepartmentHead()) {
+                    if ($department !== '' && CourseAccessService::normalizeDepartment($department) !== CourseAccessService::normalizeDepartment($user->department)) {
+                        throw new AuthorizationException('You can only report on your own department.');
+                    }
+                    $department = (string) $user->department;
+                    $filters['department'] = $department;
+                }
                 if ($department === '') {
                     throw new ReportValidationException('Select a department for a department-scoped report.', ['department' => ['Department is required.']]);
                 }
@@ -230,6 +240,10 @@ class ReportAuthorizationService
     protected function hasRole(User $user, string $configKey): bool
     {
         $role = strtoupper((string) ($user->role ?? 'FACULTY'));
+        // An ADMIN role on any account other than the configured administrator grants nothing
+        if ($role === 'ADMIN' && ! $user->isAdmin()) {
+            return false;
+        }
 
         return in_array($role, array_map('strtoupper', (array) config('institutional_reports.'.$configKey, [])), true);
     }

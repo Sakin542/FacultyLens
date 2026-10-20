@@ -28,7 +28,8 @@ class AiEvaluationTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->faculty = User::factory()->create(['email' => 'faculty@university.edu']);
+        // AI evaluation is an administrator tool: the evaluator runs as an ADMIN account (no ADMIN_EMAIL lock in tests)
+        $this->faculty = User::factory()->create(['email' => 'evaluator@university.edu', 'role' => 'ADMIN']);
         $this->other = User::factory()->create(['email' => 'other@university.edu']);
         $this->admin = User::factory()->create(['email' => 'admin@university.edu', 'role' => 'ADMIN']);
     }
@@ -326,24 +327,23 @@ class AiEvaluationTest extends TestCase
         $this->getJson('/api/ai/evaluation')->assertOk()->assertJsonPath('data.tasks.1.evaluated', false);
     }
 
-    public function test_datasets_and_runs_are_private_to_owner_but_visible_to_admin(): void
+    public function test_faculty_cannot_use_ai_evaluation_but_admins_can(): void
     {
         $this->fakeClassification(['EASY', 'EASY', 'HARD', 'HARD']);
         $ds = $this->difficultyDataset($this->faculty);
         $runId = $this->postJson("/api/ai/evaluation/datasets/{$ds->id}/run")->json('data.id');
 
+        // Faculty accounts are refused on every evaluation endpoint, including lists and the overview
         Sanctum::actingAs($this->other);
+        $this->getJson('/api/ai/evaluation')->assertStatus(403);
+        $this->getJson('/api/ai/evaluation/datasets')->assertStatus(403);
+        $this->getJson('/api/ai/evaluation/runs')->assertStatus(403);
+        $this->postJson('/api/ai/evaluation/datasets', ['name' => 'x', 'task' => 'DIFFICULTY_CLASSIFICATION'])->assertStatus(403);
         $this->getJson("/api/ai/evaluation/datasets/{$ds->id}")->assertStatus(403);
-        $this->putJson("/api/ai/evaluation/datasets/{$ds->id}", ['name' => 'x'])->assertStatus(403);
         $this->deleteJson("/api/ai/evaluation/datasets/{$ds->id}")->assertStatus(403);
         $this->postJson("/api/ai/evaluation/datasets/{$ds->id}/run")->assertStatus(403);
         $this->getJson("/api/ai/evaluation/runs/{$runId}")->assertStatus(403);
-        $this->getJson("/api/ai/evaluation/runs/{$runId}/errors")->assertStatus(403);
         $this->getJson("/api/ai/evaluation/runs/{$runId}/export?format=csv")->assertStatus(403);
-        $this->getJson("/api/ai/evaluation/compare?run_a={$runId}&run_b={$runId}")->assertStatus(403);
-        $this->getJson('/api/ai/evaluation/datasets')->assertOk()->assertJsonCount(0, 'data');
-        $this->getJson('/api/ai/evaluation/runs')->assertOk()->assertJsonCount(0, 'data');
-        $this->getJson('/api/ai/evaluation')->assertOk()->assertJsonPath('data.overall_status', 'NOT_EVALUATED');
 
         Sanctum::actingAs($this->admin);
         $this->getJson("/api/ai/evaluation/runs/{$runId}")->assertOk();

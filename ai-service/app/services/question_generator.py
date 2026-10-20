@@ -36,6 +36,7 @@ from app.services.question_classifier import QuestionClassifier
 from app.services.question_generation_prompt import PROMPT_VERSION, build_prompt
 from app.services.retrieval import best_sentences, cosine_similarity, key_terms
 from app.services.topic_detector import TopicDetector
+from app.services.writing_tools import StudyPackBuilder, split_sentences
 
 logger = logging.getLogger("facultylens.ai")
 
@@ -507,6 +508,19 @@ class QuestionGenerator:
             warnings.append("MCQ draft has fewer than two options; add options before use.")
         if draft["question_type"] == "MCQ" and draft.get("options") and self.generation_method_is_template():
             warnings.append("MCQ distractors were drafted by the template engine and need faculty review.")
+
+        # A model-written expected answer must be backed by the course documents: small models state wrong "facts"
+        # confidently (e.g. "linear probing causes O(1)"). Lexical check, so a heavily reworded correct answer can
+        # also be flagged; it is a warning for faculty review, never a silent rewrite.
+        expected = str(draft.get("expected_answer") or "").strip()
+        if expected and request.document_context and not self.generation_method_is_template():
+            sentences = split_sentences(" ".join(c.content for c in request.document_context))
+            evidence = StudyPackBuilder(None, None).support(text, expected, sentences) if sentences else None
+            checks["answer_grounded"] = evidence is not None
+            if evidence is None:
+                warnings.append("The model answer is not supported by the course documents; check it before use.")
+        else:
+            checks["answer_grounded"] = None
 
         # STEP 45: a model-written explanation must not contradict the draft's own metadata.
         if draft.get("explanation") and not self.generation_method_is_template():

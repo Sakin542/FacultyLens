@@ -78,6 +78,18 @@ class PerformanceController extends Controller
         ], $queued ? 202 : 200);
     }
 
+    /** POST /api/assessments/{assessment}/performance/class-summary — plain-language note on what the class struggled with */
+    public function classSummary(Request $request, Assessment $assessment, \App\Services\ClassPerformanceSummaryService $summary): JsonResponse
+    {
+        if (!$this->owns($request, $assessment)) {
+            return $this->forbidden();
+        }
+        $data = $summary->summarize($assessment);
+        $this->auditLogService->log('CLASS_SUMMARY_GENERATED', $assessment, $assessment->id, ['status' => $data['status'], 'answers' => $data['stats']['answers'] ?? 0], $request->user());
+
+        return response()->json(['status' => 'success', 'data' => $data]);
+    }
+
     /** GET /api/assessments/{assessment}/performance/questions */
     public function questions(Request $request, Assessment $assessment): JsonResponse
     {

@@ -19,6 +19,7 @@ from app.config import get_settings
 from app.schemas.chat import AcademicChatRequest
 from app.services import safety
 from app.services.prompt_builder import INSUFFICIENT_EVIDENCE_TEXT, PROMPT_VERSION, PromptBuilder
+from app.services.feedback_drafter import _stems
 from app.services.retrieval import best_sentences, is_overview_question, overview_subject_supported, select_context
 
 logger = logging.getLogger("facultylens.ai")
@@ -102,6 +103,16 @@ class AcademicChatService:
                 safety_info["citation_validation"] = "failed" if rejection == safety.EVENT_CITATION_VALIDATION_FAILED else "not_applicable"
                 return self._extractive(request.question, context) | base
 
+            # Every claim must be backed by one passage of the documents. Small models fill gaps with plausible
+            # invented detail ("linear probing keeps a list of free slots"); such an answer is replaced by the
+            # evidence-only answer, which quotes the documents instead of paraphrasing them.
+            # Overview questions ("what does this document cover?") are answered by description and paraphrase,
+            # which a word-level check cannot judge fairly, so the check applies to specific questions.
+            unsupported = [] if not self.has_specific_subject(request.question) else self.unsupported_claims(answer, context)
+            if unsupported:
+                safety.log_safety_event(safety.EVENT_HALLUCINATION_DETECTED, surface="academic_chat", generation_method="generative", reason="unsupported_claim", claims=len(unsupported))
+                return self._extractive(request.question, context) | base
+
             citations = safety.validate_citations(answer, len(context))
             used = [c for i, c in enumerate(context, start=1) if i in citations["valid"]] if citations["cited"] else context
             safety_info["citation_validation"] = "passed" if citations["cited"] else "uncited"
@@ -155,6 +166,52 @@ class AcademicChatService:
             "used_count": len(used),
         }
 
+    # Words that only point at the material ("what does this document say?") and give a question no subject of its own
+    META_WORDS = {"document", "documents", "doc", "file", "files", "paper", "papers", "say", "says", "tell", "tells", "describe",
+                  "summary", "summarize", "summarise", "overview", "mention", "mentions", "cover", "covers", "covered", "content",
+                  "contents", "chapter", "chapters", "material", "materials", "note", "notes", "lecture", "lectures", "slide", "slides",
+                  "course", "main", "key", "point", "points", "topic", "topics", "about"}
+
+    @classmethod
+    def has_specific_subject(cls, question: str) -> bool:
+        if is_overview_question(question):
+            return False
+        words = {w.lower() for w in re.findall(r"[A-Za-z][A-Za-z\-]{2,}", question)}
+        return bool(_stems(" ".join(w for w in words if w not in cls.META_WORDS)))
+
+    CLAIM_SUPPORT = 0.65
+    CLAIM_MIN_WORDS = 4
+
+    @classmethod
+    def unsupported_claims(cls, answer: str, context: List[Dict[str, Any]]) -> List[str]:
+        """Answer sentences whose key words are not mostly found in one passage (1-2 adjacent sentences) of the context.
+
+        Compared against single passages, not the whole document, because course documents share vocabulary:
+        an invented sentence can reuse words scattered across a syllabus but not the words of one statement.
+        """
+        passages: List[set] = []
+        for c in context:
+            sents = [s.strip() for s in re.split(r"(?<=[.!?;:])\s+|\n+", str(c.get("content") or "")) if s.strip()]
+            stems = [_stems(s) for s in sents]
+            passages.extend(stems)
+            passages.extend(stems[i] | stems[i + 1] for i in range(len(stems) - 1))
+            passages.extend(stems[i] | stems[i + 1] | stems[i + 2] for i in range(len(stems) - 2))
+            # The whole passage too: a summary of a list ("three outcomes: SQL, schemas, isolation") spans its lines
+            passages.append(set().union(*stems) if stems else set())
+        if not passages:
+            return []
+        text = re.sub(r"\[S\d+\]", " ", answer)
+        out: List[str] = []
+        for sentence in re.split(r"(?<=[.!?])\s+|\n+", text):
+            sentence = sentence.strip(" •*-\t")
+            words = _stems(sentence)
+            if len(words) < cls.CLAIM_MIN_WORDS:
+                continue  # headings, short connectives
+            best = max(len(words & p) / len(words) for p in passages)
+            if best < cls.CLAIM_SUPPORT:
+                out.append(sentence)
+        return out
+
     @staticmethod
     def _reject_reason(answer: str, context_size: int) -> str | None:
         """Why a generated answer must not be shown as-is (None → acceptable)."""
@@ -183,8 +240,13 @@ class AcademicChatService:
         index = {c["chunk_id"]: i for i, c in enumerate(context, start=1)}
         lines = []
         used_ids: List[int] = []
+        top_overlap = max((s["overlap"] for s in sentences), default=0)
         for s in sentences:
             if not is_overview and s["overlap"] == 0 and any(item["overlap"] > 0 for item in sentences):
+                continue
+            # A line matching far fewer question words than the best one is usually an unrelated line of the same
+            # document (e.g. the sorting week under a hashing question)
+            if not is_overview and top_overlap >= 3 and s["overlap"] * 2 < top_overlap:
                 continue
             n = index.get(s["chunk_id"])
             cleaned_s = self._strip_leaks(s["sentence"])

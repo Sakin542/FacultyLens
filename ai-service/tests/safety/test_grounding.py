@@ -50,8 +50,10 @@ def test_partially_fabricated_citations_only_keep_the_real_ones():
         {"chunk_id": 34, "document_id": 5, "document_name": "Notes.docx", "content": "Normalization reduces redundancy.", "similarity_score": 0.71},
     ])
     result = AcademicChatService(generation_service=gen).answer(req)
-    assert [s["chunk_id"] for s in result["sources"]] == [21]
-    assert result["safety"]["citation_validation"] == "passed"
+    # "quantum gates" is in no document, so the generated answer is never shown; only real chunks can be sources
+    assert "quantum" not in result["answer"].lower()
+    assert {s["chunk_id"] for s in result["sources"]} <= {21}
+    assert result["generation_method"] != "generative"
 
 
 def test_sources_are_always_a_subset_of_the_authorized_chunks():

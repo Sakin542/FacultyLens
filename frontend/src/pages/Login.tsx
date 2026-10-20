@@ -2,15 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Input';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth, isTwoFactorPending } from '@/context/AuthContext';
 import { ApiError } from '@/services/api';
 import { isValidEmail } from '@/utils/validation';
 import { AuthAlert, AuthShell, AuthSuccess, authButtonClass, authInputClass, authLinkClass } from '@/components/landing/AuthShell';
+import { TwoFactorCodeForm } from '@/components/auth/TwoFactorCodeForm';
+import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton';
+import { usePublicConfig } from '@/hooks/usePublicConfig';
+import type { User } from '@/types';
 import { Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react';
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
-  const { login, isAuthenticated, loading } = useAuth();
+  const { login, googleLogin, completeTwoFactor, isAuthenticated, loading, user } = useAuth();
+  const config = usePublicConfig();
+  const [challengeToken, setChallengeToken] = useState<string | null>(null);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,12 +27,33 @@ export const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
 
-  // If already authenticated, redirect to dashboard
+  // If already authenticated, redirect to the right home (the administrator lands on the admin panel)
   useEffect(() => {
-    if (!loading && isAuthenticated) {
-      navigate('/dashboard', { replace: true });
+    if (!loading && isAuthenticated && !loginSuccess) {
+      navigate(user?.is_admin ? '/admin' : '/dashboard', { replace: true });
     }
-  }, [isAuthenticated, loading, navigate]);
+  }, [isAuthenticated, loading, navigate, user?.is_admin, loginSuccess]);
+
+  const signedIn = (u: User) => {
+    setLoginSuccess(true);
+    setTimeout(() => {
+      navigate(u.is_admin ? '/admin' : '/dashboard');
+    }, 400);
+  };
+
+  const handleGoogle = async (credential: string) => {
+    setAuthError(null);
+    try {
+      const result = await googleLogin(credential);
+      if (isTwoFactorPending(result)) {
+        setChallengeToken(result.challengeToken);
+        return;
+      }
+      signedIn(result);
+    } catch (err) {
+      setAuthError(err instanceof Error ? err.message : 'Google sign-in failed.');
+    }
+  };
 
   const validate = () => {
     const newErrors: { email?: string; password?: string } = {};
@@ -52,16 +79,18 @@ export const Login: React.FC = () => {
     setIsLoading(true);
 
     try {
-      await login({
+      const result = await login({
         email: email.trim(),
         password,
         remember: rememberMe,
       });
 
-      setLoginSuccess(true);
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 400);
+      if (isTwoFactorPending(result)) {
+        setChallengeToken(result.challengeToken);
+        setIsLoading(false);
+        return;
+      }
+      signedIn(result);
     } catch (err: unknown) {
       setIsLoading(false);
       // 422: show the server's field messages on the inputs instead of a generic banner
@@ -79,12 +108,19 @@ export const Login: React.FC = () => {
       eyebrow="Institutional access · Welcome back"
       title="Sign In"
       subtitle="Sign in with your registered university email to open your faculty workspace."
-      footer={<>Don&apos;t have an account? <Link to="/register" className={authLinkClass}>Create a faculty account</Link></>}
+      footer={config.features.registration
+        ? <>Don&apos;t have an account? <Link to="/register" className={authLinkClass}>Create a faculty account</Link></>
+        : <>New faculty registrations are currently closed. Contact your administrator.</>}
     >
       {authError && <AuthAlert title="Authentication failed" message={authError} />}
 
       {loginSuccess ? (
         <AuthSuccess message="Signed in. Taking you to your dashboard…" />
+      ) : challengeToken ? (
+        <TwoFactorCodeForm
+          onSubmit={async (code) => { signedIn(await completeTwoFactor(challengeToken, code)); }}
+          onCancel={() => { setChallengeToken(null); setPassword(''); }}
+        />
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           <Input
@@ -136,6 +172,9 @@ export const Login: React.FC = () => {
             {isLoading ? 'Signing in…' : 'Sign In'}
           </Button>
 
+          {config.google_client_id && (
+            <GoogleSignInButton clientId={config.google_client_id} onCredential={handleGoogle} onError={setAuthError} />
+          )}
         </form>
       )}
     </AuthShell>

@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { LensLogo } from '@/components/layout/Navbar';
 
@@ -46,7 +46,8 @@ export const SessionSplash: React.FC = () => {
 };
 
 export const ProtectedRoute: React.FC = () => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, user } = useAuth();
+  const { pathname } = useLocation();
 
   if (loading) {
     return <SessionSplash />;
@@ -54,6 +55,12 @@ export const ProtectedRoute: React.FC = () => {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  // The administrator works only in the admin control center; faculty pages are not part of that workspace
+  if (user?.is_admin) {
+    const target = pathname.startsWith('/settings') ? '/admin/account' : pathname.startsWith('/ai-evaluation') ? '/admin/ai-evaluation' : '/admin';
+    return <Navigate to={target} replace />;
   }
 
   return <Outlet />;

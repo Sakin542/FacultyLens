@@ -8,6 +8,7 @@ export interface CoursePayload {
   semester: string;
   academic_year: string;
   credits: number;
+  contact_hours_per_week?: number | null;
   status?: string;
 }
 

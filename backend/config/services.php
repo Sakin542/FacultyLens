@@ -40,6 +40,9 @@ return [
         'api_key' => env('AI_SERVICE_API_KEY'),
         'connect_timeout' => (int) env('AI_SERVICE_CONNECT_TIMEOUT', 10),
         'timeout' => (int) env('AI_SERVICE_TIMEOUT', 120),
+        // OCR and lecture transcription run on CPU and can take many minutes (queued jobs, never a web request)
+        'toolkit_timeout' => (int) env('AI_TOOLKIT_TIMEOUT', 1800),
+        'toolkit_max_upload_mb' => (int) env('AI_TOOLKIT_MAX_UPLOAD_MB', 100),
     ],
 
 ];

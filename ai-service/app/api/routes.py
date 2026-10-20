@@ -19,6 +19,11 @@ from app.services.rubric_alignment_analyzer import RubricAlignmentAnalyzer
 from app.services.rubric_alignment_validator import RubricAlignmentValidationError
 from app.services.academic_chat import AcademicChatService
 from app.services.question_generator import QuestionGenerator
+from app.services.question_variants import QuestionVariantGenerator
+from app.schemas.variants import QuestionVariantsRequest, QuestionVariantsResponse
+from app.services.course_design import LessonPlanner, SyllabusDrafter
+from app.services.paper_summarizer import PaperSummarizer
+from app.schemas.course_design import GenericResponse, LessonPlanRequest, PaperSummaryRequest, SyllabusDraftRequest
 from app.services.evaluation_inventory import model_inventory
 from app.services.explainability import deterministic_fallback, explain_question, validate_explanation
 from app.schemas.explainability import (
@@ -650,6 +655,76 @@ def generate_questions(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="The question generator could not produce drafts.",
         )
+
+
+@router.post(
+    "/api/v1/question-variants",
+    response_model=QuestionVariantsResponse,
+    dependencies=[Depends(verify_api_key)],
+)
+def question_variants(
+    payload: QuestionVariantsRequest,
+    hf_service: HuggingFaceService = Depends(get_hf_service),
+    generation_service: GenerationService = Depends(get_generation_service),
+) -> QuestionVariantsResponse:
+    """Exam-set variants of one question (changed numbers and/or wording). Drafts only: faculty review the key."""
+    try:
+        result = QuestionVariantGenerator(generation_service=generation_service, hf_service=hf_service).generate(
+            payload.question_text, payload.expected_answer, payload.count, payload.mode, payload.seed
+        )
+        return QuestionVariantsResponse(**result)
+    except Exception as e:
+        logger.error(f"Error generating question variants: {type(e).__name__}", exc_info=False)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="The variant generator could not produce variants.",
+        )
+
+
+@router.post("/api/v1/syllabus/draft", response_model=GenericResponse, dependencies=[Depends(verify_api_key)])
+def syllabus_draft(
+    payload: SyllabusDraftRequest,
+    hf_service: HuggingFaceService = Depends(get_hf_service),
+    generation_service: GenerationService = Depends(get_generation_service),
+) -> GenericResponse:
+    """Draft course outcomes (Bloom progression), CO->PO links with evidence, a weekly outline and an assessment plan."""
+    try:
+        data = SyllabusDrafter(generation_service=generation_service, hf_service=hf_service).draft(
+            payload.course_code, payload.course_name, payload.description, payload.credits, payload.weeks,
+            [p.model_dump() for p in payload.program_outcomes], payload.topics, payload.outcome_count,
+        )
+        return GenericResponse(data=data)
+    except Exception as e:
+        logger.error(f"Error drafting syllabus: {type(e).__name__}", exc_info=False)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="The syllabus could not be drafted.")
+
+
+@router.post("/api/v1/lesson-plan", response_model=GenericResponse, dependencies=[Depends(verify_api_key)])
+def lesson_plan(payload: LessonPlanRequest, hf_service: HuggingFaceService = Depends(get_hf_service)) -> GenericResponse:
+    """Week-by-week lesson plan: topics matched to COs, Bloom-appropriate activities and assessment touchpoints."""
+    try:
+        data = LessonPlanner(hf_service=hf_service).plan(
+            payload.course_name, [o.model_dump() for o in payload.outcomes], payload.weeks,
+            payload.sessions_per_week, payload.session_minutes, payload.topics,
+        )
+        return GenericResponse(data=data)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e))
+    except Exception as e:
+        logger.error(f"Error planning lessons: {type(e).__name__}", exc_info=False)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="The lesson plan could not be generated.")
+
+
+@router.post("/api/v1/summarize-paper", response_model=GenericResponse, dependencies=[Depends(verify_api_key)])
+def summarize_paper(payload: PaperSummaryRequest, hf_service: HuggingFaceService = Depends(get_hf_service)) -> GenericResponse:
+    """Extractive research-paper summary with findings, methods, limitations, citation and ranked references."""
+    try:
+        return GenericResponse(data=PaperSummarizer(hf_service=hf_service).summarize(payload.text, payload.title, payload.summary_sentences))
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e))
+    except Exception as e:
+        logger.error(f"Error summarizing paper: {type(e).__name__}", exc_info=False)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="The paper could not be summarized.")
 
 
 @router.get("/api/v1/evaluation/models", dependencies=[Depends(verify_api_key)])

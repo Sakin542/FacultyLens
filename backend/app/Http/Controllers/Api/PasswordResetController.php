@@ -79,13 +79,16 @@ class PasswordResetController extends Controller
                 event(new PasswordReset($user));
 
                 $this->audit->log('PASSWORD_RESET_COMPLETED', 'User', $user->id, ['email_domain' => $this->domain($user->email)], $user);
-                event(new SecurityAlertRaised(
+                // The security alert (stored notification + e-mail + live broadcast) takes about a second; send it after
+                // the response so the reset page answers immediately. The password change above is already saved.
+                $dedupe = 'SECURITY_ALERT:user:' . $user->id . ':password_reset:' . now()->timestamp;
+                defer(fn () => event(new SecurityAlertRaised(
                     $user,
                     'Your password was reset',
                     'The password for your FacultyLens account was reset using a password-reset link. If you did not do this, contact your administrator immediately.',
                     ['event' => 'PASSWORD_RESET'],
-                    'SECURITY_ALERT:user:' . $user->id . ':password_reset:' . now()->timestamp,
-                ));
+                    $dedupe,
+                )));
             }
         );
 

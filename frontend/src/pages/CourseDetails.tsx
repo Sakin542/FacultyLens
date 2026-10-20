@@ -30,6 +30,9 @@ import {
   Loader2,
   CheckCircle2,
   Grid3X3,
+  Award,
+  LineChart,
+  Wand2,
   MessageSquareText,
   Users,
 } from 'lucide-react';
@@ -350,6 +353,17 @@ export const CourseDetails: React.FC = () => {
           </Link>
           <Link to={`/courses/${course.id}/co-po-mapping`} data-testid="co-po-link">
             <Button variant="outline" size="sm" leftIcon={<Grid3X3 className="w-3.5 h-3.5" />}>CO / PO Mapping</Button>
+          </Link>
+          {can('edit_course') && (
+            <Link to={`/courses/${course.id}/design`} data-testid="course-design-link">
+              <Button variant="outline" size="sm" leftIcon={<Wand2 className="w-3.5 h-3.5" />}>Syllabus &amp; Lesson Plan (AI)</Button>
+            </Link>
+          )}
+          <Link to={`/courses/${course.id}/obe`} data-testid="obe-link">
+            <Button variant="outline" size="sm" leftIcon={<Award className="w-3.5 h-3.5" />}>OBE &amp; Course File</Button>
+          </Link>
+          <Link to={`/courses/${course.id}/quality`} data-testid="quality-trend-link">
+            <Button variant="outline" size="sm" leftIcon={<LineChart className="w-3.5 h-3.5" />}>Quality Across Semesters</Button>
           </Link>
           {can('edit_course') && (
             <Button

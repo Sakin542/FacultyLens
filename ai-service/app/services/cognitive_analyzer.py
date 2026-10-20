@@ -26,7 +26,7 @@ class CognitiveAnalyzer:
         ),
         "APPLY": re.compile(
             r"\b(?:apply|calculate|compute|solve|demonstrate|implement|execute|use|operate|"
-            r"show\s+how|write\s+(?:a\s+)?(?:sql|query|program|code)|determine\s+the\s+output)\b",
+            r"show\s+how|write\s+(?:an?\s+)?(?:sql|query|program|code)|determine\s+the\s+output)\b",
             re.IGNORECASE,
         ),
         "UNDERSTAND": re.compile(
@@ -44,7 +44,7 @@ class CognitiveAnalyzer:
     LEADING_VERB_PATTERNS = [
         ("REMEMBER", re.compile(r"^\s*(?:(?:Q\d+[\.:\)]?|\d+[\.:\)])\s*)?(?:define|state|list|name|mention|identify|recall|enumerate|what\s+is|give\s+the\s+definition)\b", re.I)),
         ("UNDERSTAND", re.compile(r"^\s*(?:(?:Q\d+[\.:\)]?|\d+[\.:\)])\s*)?(?:explain|describe|discuss|summarize|interpret|clarify|paraphrase|illustrate|outline|why\s+is|why\s+does|how\s+does)\b", re.I)),
-        ("APPLY", re.compile(r"^\s*(?:(?:Q\d+[\.:\)]?|\d+[\.:\)])\s*)?(?:apply|calculate|compute|solve|demonstrate|implement|execute|use|operate|show\s+how|write\s+(?:a\s+)?(?:sql|query|program|code))\b", re.I)),
+        ("APPLY", re.compile(r"^\s*(?:(?:Q\d+[\.:\)]?|\d+[\.:\)])\s*)?(?:apply|calculate|compute|solve|demonstrate|implement|execute|use|operate|show\s+how|write\s+(?:an?\s+)?(?:sql|query|program|code))\b", re.I)),
         ("ANALYZE", re.compile(r"^\s*(?:(?:Q\d+[\.:\)]?|\d+[\.:\)])\s*)?(?:analyze|compare|contrast|differentiate|distinguish|examine|investigate|break\s*down|diagnose|categorize)\b", re.I)),
         ("EVALUATE", re.compile(r"^\s*(?:(?:Q\d+[\.:\)]?|\d+[\.:\)])\s*)?(?:evaluate|critique|judge|justify|assess|defend|appraise|rate|validate|recommend|prioritize)\b", re.I)),
         ("CREATE", re.compile(r"^\s*(?:(?:Q\d+[\.:\)]?|\d+[\.:\)])\s*)?(?:design|create|construct|compose|develop|formulate|synthesize|plan|generate|architect|devise|propose)\b", re.I)),

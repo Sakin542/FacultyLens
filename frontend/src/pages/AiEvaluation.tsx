@@ -11,7 +11,7 @@ import { DatasetManager, EvaluationRunComparison, EvaluationRunHistory } from '@
 const POLL_MS = 3000;
 
 /**
- * STEP 35: AI Evaluation & Model Performance dashboard at /ai-evaluation.
+ * STEP 35: AI Evaluation & Model Performance dashboard (admin control center, /admin/ai-evaluation).
  * All metrics come from persisted evaluation runs; tasks without a run show "Not evaluated yet".
  */
 export const AiEvaluation: React.FC = () => {

@@ -170,6 +170,18 @@ class AcademicDocumentRetrievalService
         }
 
         usort($scored, fn ($a, $b) => $b[0] <=> $a[0] ?: $a[1]->id <=> $b[1]->id);
+        // The same passage can exist several times (a file uploaded twice, a syllabus repeated in two documents).
+        // Keep the best-scoring copy so the answer is built from different passages, not repeats of one.
+        $seen = [];
+        $scored = array_values(array_filter($scored, function ($pair) use (&$seen) {
+            $key = sha1(mb_strtolower(preg_replace('/\s+/u', ' ', trim((string) $pair[1]->content))));
+            if (isset($seen[$key])) {
+                return false;
+            }
+            $seen[$key] = true;
+
+            return true;
+        }));
         $scored = array_slice($scored, 0, $topK);
 
         $chunks = [];

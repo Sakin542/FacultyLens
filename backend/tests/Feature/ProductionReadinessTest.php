@@ -236,11 +236,13 @@ class ProductionReadinessTest extends TestCase
         $this->assertDatabaseHas('users', ['email' => 'faculty@example.com']);
         $this->assertGreaterThanOrEqual(2, Course::count());
         $this->assertGreaterThanOrEqual(1, AssessmentBlueprint::count());
-        $this->assertSame(1, AssessmentVersion::where('status', 'FINALIZED')->count());
+        // Midterm (DevelopmentSeeder) + the earlier Fall offering's final (FacultyToolsDemoSeeder), same six students
+        $this->assertSame(2, AssessmentVersion::where('status', 'FINALIZED')->count());
         $this->assertSame(6, Student::count());
-        $this->assertSame(6, StudentSubmission::where('grading_status', 'FINALIZED')->count());
+        $this->assertSame(12, StudentSubmission::where('grading_status', 'FINALIZED')->count());
         $this->assertGreaterThan(0, StudentAnswer::whereNotNull('awarded_marks')->count());
-        $this->assertSame(1, DB::table('performance_analysis_runs')->count());
+        // DevelopmentSeeder's run, re-analysed by FacultyToolsDemoSeeder, plus the earlier (Fall) offering: one current run per assessment
+        $this->assertSame(2, DB::table('performance_analysis_runs')->where('is_current', true)->count());
         $this->assertSame(1, Rubric::count());
         $this->assertSame(1, InstitutionalReport::where('status', 'COMPLETED')->count());
         $this->assertTrue(Str::startsWith(Student::first()->student_identifier, 'DEV-STU-'), 'Seed students are clearly synthetic');

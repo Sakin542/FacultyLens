@@ -6,7 +6,7 @@ import { BrandMark } from './Navbar';
 import { ConfirmSignOutDialog } from '@/components/common/ConfirmSignOutDialog';
 import { ProfilePicture } from '@/components/profile/ProfilePicture';
 import {
-  LayoutDashboard, BookOpen, FileCheck2, HelpCircle, BrainCircuit, History, MessageSquare, MessageSquareText, Sparkles, Gauge, BarChart3, Users, Settings, LogOut, X, ExternalLink, Leaf, FileBarChart2, Bell,
+  LayoutDashboard, BookOpen, FileCheck2, HelpCircle, BrainCircuit, History, MessageSquare, MessageSquareText, Sparkles, BarChart3, Users, Settings, LogOut, X, ExternalLink, Leaf, FileBarChart2, Bell, MessageSquareQuote, CalendarDays, BriefcaseBusiness, Building2, FileSearch, Wand2,
 } from 'lucide-react';
 
 export interface SidebarProps {
@@ -21,18 +21,22 @@ export const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, end: true },
     { name: 'Analytics', path: '/analytics', icon: BarChart3 },
     { name: 'Reports', path: '/reports', icon: FileBarChart2 },
+    { name: 'Calendar', path: '/calendar', icon: CalendarDays },
+    { name: 'Workload', path: '/workload', icon: BriefcaseBusiness },
   ] },
   { title: 'Teaching', items: [
     { name: 'Courses', path: '/courses', icon: BookOpen },
     { name: 'Assessments', path: '/assessments', icon: FileCheck2 },
     { name: 'Question Bank', path: '/question-bank', icon: HelpCircle },
+    { name: 'Comment Bank', path: '/feedback-bank', icon: MessageSquareQuote },
     { name: 'History', path: '/history', icon: History },
   ] },
   { title: 'AI tools', items: [
     { name: 'Analysis', path: '/analysis', icon: BrainCircuit, badge: 'AI' },
     { name: 'Question Generator', path: '/question-generator', icon: Sparkles, badge: 'AI' },
     { name: 'Document Chat', path: '/academic-chat', icon: MessageSquareText, badge: 'AI' },
-    { name: 'AI Evaluation', path: '/ai-evaluation', icon: Gauge, badge: 'AI' },
+    { name: 'Research Papers', path: '/research', icon: FileSearch, badge: 'AI' },
+    { name: 'AI Toolkit', path: '/ai-toolkit', icon: Wand2, badge: 'AI' },
   ] },
   { title: 'Workspace', items: [
     { name: 'Collaboration', path: '/collaboration', icon: Users },
@@ -41,6 +45,11 @@ export const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
     { name: 'Settings', path: '/settings', icon: Settings },
   ] },
 ];
+
+/** Department heads (and the administrator) get the read-only department overview. */
+export const DEPARTMENT_SECTION: { title: string; items: NavItem[] } = { title: 'Department', items: [
+  { name: 'Department', path: '/department', icon: Building2 },
+] };
 
 /** Sage-gradient app sidebar: fixed on md+, slide-in drawer (ESC / backdrop to close, scroll-locked) on mobile. */
 export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) => {
@@ -86,7 +95,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
       </div>
 
       <nav className="relative flex-1 py-4 px-3 overflow-y-auto scrollbar-subtle space-y-5" aria-label="Main">
-        {NAV_SECTIONS.map((section) => (
+        {[
+          ...NAV_SECTIONS,
+          // The admin control center has its own layout and sidebar at /admin; it is not linked from the faculty workspace
+          ...(user?.is_admin || user?.role === 'DEPARTMENT_HEAD' ? [DEPARTMENT_SECTION] : []),
+        ].map((section) => (
           <div key={section.title}>
             <p className="px-3 pb-1.5 text-[10px] uppercase tracking-[0.18em] text-sage-200/80">{section.title}</p>
             <ul className="space-y-0.5">

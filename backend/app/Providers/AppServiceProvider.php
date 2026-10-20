@@ -28,8 +28,13 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(\App\Models\DocumentProcessing::class, \App\Policies\DocumentPolicy::class);
 
         // Standard API Rate Limiter
+        // One dashboard load is ~8-10 API calls plus background polling, so a user with a few tabs or browsers open hit
+        // 120/min and got 429s. Default 300/min per user (1000 in local development, where several browsers share
+        // 127.0.0.1); set API_RATE_LIMIT_PER_MINUTE to override. Auth and AI endpoints keep their own stricter limits.
         RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
+            $perMinute = (int) env('API_RATE_LIMIT_PER_MINUTE', app()->environment('local') ? 1000 : 300);
+
+            return Limit::perMinute(max(60, $perMinute))->by($request->user()?->id ?: $request->ip());
         });
 
         // Strict Rate Limiter for Authentication Attempts

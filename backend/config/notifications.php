@@ -33,6 +33,8 @@ return [
         'ASSESSMENT_VERSION_FINALIZED' => ['ASSESSMENT', 'SUCCESS', 'Assessment version finalized'],
         'ASSESSMENT_VERSION_ARCHIVED' => ['ASSESSMENT', 'INFO', 'Assessment version archived'],
         'ASSESSMENT_VERSION_RESTORED' => ['ASSESSMENT', 'INFO', 'Assessment version restored'],
+        // Academic calendar: exam, deadline and grading reminders (in-app + e-mail per the ASSESSMENT preference)
+        'DEADLINE_REMINDER' => ['ASSESSMENT', 'INFO', 'Upcoming deadline'],
 
         'COLLABORATION_INVITATION' => ['COLLABORATION', 'INFO', 'Collaboration invitation'],
         'COLLABORATION_ACCEPTED' => ['COLLABORATION', 'SUCCESS', 'Collaboration invitation accepted'],

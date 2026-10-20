@@ -1,8 +1,9 @@
 import React, { lazy, Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { ProtectedRoute } from '@/components/common/ProtectedRoute';
+import { adminRoutes } from '@/features/admin/routes';
 import { ScrollToTop } from '@/components/common/PageTransition';
 
 // Eagerly loaded — small, frequently visited
@@ -11,16 +12,18 @@ import { Login } from '@/pages/Login';
 import { Register } from '@/pages/Register';
 import { ForgotPassword } from '@/pages/ForgotPassword';
 import { ResetPassword } from '@/pages/ResetPassword';
-import { Dashboard } from '@/pages/Dashboard';
-import { Courses } from '@/pages/Courses';
-import { CourseDetails } from '@/pages/CourseDetails';
-import { CoPoMapping } from '@/pages/CoPoMapping';
-import { Assessments } from '@/pages/Assessments';
-import { AssessmentDetails } from '@/pages/AssessmentDetails';
-import { Settings } from '@/pages/Settings';
 import { NotFound } from '@/pages/NotFound';
 
 // Lazily loaded — large feature bundles only needed on specific routes
+// The signed-in workspace pages are lazy too: imported eagerly, they (and everything they use) loaded on every
+// first visit, including the public login page.
+const Dashboard          = lazy(() => import('@/pages/Dashboard').then(m => ({ default: m.Dashboard })));
+const Courses            = lazy(() => import('@/pages/Courses').then(m => ({ default: m.Courses })));
+const CourseDetails      = lazy(() => import('@/pages/CourseDetails').then(m => ({ default: m.CourseDetails })));
+const CoPoMapping        = lazy(() => import('@/pages/CoPoMapping').then(m => ({ default: m.CoPoMapping })));
+const Assessments        = lazy(() => import('@/pages/Assessments').then(m => ({ default: m.Assessments })));
+const AssessmentDetails  = lazy(() => import('@/pages/AssessmentDetails').then(m => ({ default: m.AssessmentDetails })));
+const Settings           = lazy(() => import('@/pages/Settings').then(m => ({ default: m.Settings })));
 const QuestionBank       = lazy(() => import('@/pages/QuestionBank').then(m => ({ default: m.QuestionBank })));
 const Analysis           = lazy(() => import('@/pages/Analysis').then(m => ({ default: m.Analysis })));
 const DocumentDetails    = lazy(() => import('@/pages/DocumentDetails').then(m => ({ default: m.DocumentDetails })));
@@ -39,7 +42,6 @@ const CourseCollaboration = lazy(() => import('@/pages/CourseCollaboration').the
 const CollaborationHub   = lazy(() => import('@/pages/CollaborationHub').then(m => ({ default: m.CollaborationHub })));
 const PendingInvitations = lazy(() => import('@/pages/Invitations').then(m => ({ default: m.PendingInvitations })));
 const InvitationLanding  = lazy(() => import('@/pages/Invitations').then(m => ({ default: m.InvitationLanding })));
-const AiEvaluation       = lazy(() => import('@/pages/AiEvaluation').then(m => ({ default: m.AiEvaluation })));
 const AcademicAnalytics  = lazy(() => import('@/pages/AcademicAnalytics').then(m => ({ default: m.AcademicAnalytics })));
 const AssessmentBlueprintPage = lazy(() => import('@/pages/AssessmentBlueprint').then(m => ({ default: m.AssessmentBlueprintPage })));
 const AssessmentVersions = lazy(() => import('@/pages/AssessmentVersions').then(m => ({ default: m.AssessmentVersions })));
@@ -50,6 +52,20 @@ const ReportBuilder      = lazy(() => import('@/pages/ReportBuilder').then(m => 
 const ReportDetails      = lazy(() => import('@/pages/ReportDetails').then(m => ({ default: m.ReportDetails })));
 const Notifications      = lazy(() => import('@/pages/Notifications').then(m => ({ default: m.Notifications })));
 const NewsletterLanding  = lazy(() => import('@/pages/NewsletterLanding').then(m => ({ default: m.NewsletterLanding })));
+const ExamPapers         = lazy(() => import('@/pages/ExamPapers').then(m => ({ default: m.ExamPapers })));
+const ExamPaperEditor    = lazy(() => import('@/pages/ExamPaperEditor').then(m => ({ default: m.ExamPaperEditor })));
+const AssessmentIntegrity = lazy(() => import('@/pages/AssessmentIntegrity').then(m => ({ default: m.AssessmentIntegrity })));
+const FeedbackBank       = lazy(() => import('@/pages/FeedbackBank').then(m => ({ default: m.FeedbackBank })));
+const CourseQualityTrend = lazy(() => import('@/pages/CourseQualityTrend').then(m => ({ default: m.CourseQualityTrend })));
+const CourseObe          = lazy(() => import('@/pages/CourseObe').then(m => ({ default: m.CourseObe })));
+const CalendarPage       = lazy(() => import('@/pages/Calendar').then(m => ({ default: m.Calendar })));
+const WorkloadPage       = lazy(() => import('@/pages/Workload').then(m => ({ default: m.Workload })));
+const DepartmentPage     = lazy(() => import('@/pages/Department').then(m => ({ default: m.Department })));
+const CourseDesign       = lazy(() => import('@/pages/CourseDesign').then(m => ({ default: m.CourseDesign })));
+const AiToolkit          = lazy(() => import('@/pages/AiToolkit').then(m => ({ default: m.AiToolkit })));
+const Research           = lazy(() => import('@/pages/Research').then(m => ({ default: m.Research })));
+const MobileGrading      = lazy(() => import('@/pages/MobileGrading').then(m => ({ default: m.MobileGrading })));
+const AdminLogin         = lazy(() => import('@/pages/admin/AdminLogin').then(m => ({ default: m.AdminLogin })));
 
 /**
  * Lightweight fallback shown while a lazy page chunk loads.
@@ -74,7 +90,11 @@ export const AppRoutes: React.FC = () => {
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/newsletter/confirm/:token" element={<NewsletterLanding mode="confirm" />} />
           <Route path="/newsletter/unsubscribe/:token" element={<NewsletterLanding mode="unsubscribe" />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
         </Route>
+
+        {/* Admin control center: separate shell, configured administrator account only */}
+        {adminRoutes}
 
         {/* Public Shared Report Access (STEP 18) */}
         <Route path="/shared/reports/:token" element={<SharedReport />} />
@@ -92,13 +112,27 @@ export const AppRoutes: React.FC = () => {
             <Route path="/academic-chat" element={<AcademicChat />} />
             <Route path="/courses/:courseId/question-generator" element={<QuestionGenerator />} />
             <Route path="/question-generator" element={<QuestionGenerator />} />
-            <Route path="/ai-evaluation" element={<AiEvaluation />} />
+            {/* AI Evaluation moved to the admin control center (/admin/ai-evaluation) */}
+            <Route path="/ai-evaluation" element={<Navigate to="/dashboard" replace />} />
             <Route path="/analytics" element={<AcademicAnalytics />} />
             {/* STEP 39: Institutional Export & Reporting */}
             <Route path="/reports" element={<InstitutionalReports />} />
             <Route path="/reports/create" element={<ReportBuilder />} />
             <Route path="/reports/:reportId" element={<ReportDetails />} />
             <Route path="/assessments/:assessmentId/blueprint" element={<AssessmentBlueprintPage />} />
+            <Route path="/assessments/:assessmentId/exam-papers" element={<ExamPapers />} />
+            <Route path="/exam-papers/:paperId" element={<ExamPaperEditor />} />
+            <Route path="/assessments/:assessmentId/integrity" element={<AssessmentIntegrity />} />
+            <Route path="/feedback-bank" element={<FeedbackBank />} />
+            <Route path="/courses/:courseId/quality" element={<CourseQualityTrend />} />
+            <Route path="/courses/:courseId/obe" element={<CourseObe />} />
+            <Route path="/calendar" element={<CalendarPage />} />
+            <Route path="/workload" element={<WorkloadPage />} />
+            <Route path="/department" element={<DepartmentPage />} />
+            <Route path="/courses/:courseId/design" element={<CourseDesign />} />
+            <Route path="/research" element={<Research />} />
+            <Route path="/ai-toolkit" element={<AiToolkit />} />
+            <Route path="/assessments/:assessmentId/grade" element={<MobileGrading />} />
             <Route path="/assessments/:assessmentId/versions" element={<AssessmentVersions />} />
             <Route path="/assessments/:assessmentId/versions/:versionId" element={<AssessmentVersionDetail />} />
             <Route path="/assessments/:assessmentId/versions/:versionId/compare" element={<AssessmentVersionCompare />} />

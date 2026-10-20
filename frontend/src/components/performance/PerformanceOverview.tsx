@@ -15,6 +15,7 @@ import { PerformanceLoading } from './PerformanceLoading';
 import { PerformanceEmptyState } from './PerformanceEmptyState';
 import { PerformanceError } from './PerformanceError';
 import { PerformanceDisclaimer } from './PerformanceDisclaimer';
+import { ClassSummaryCard } from './ClassSummaryCard';
 
 interface PerformanceOverviewProps {
   assessmentId: number | string;
@@ -138,6 +139,7 @@ export const PerformanceOverview: React.FC<PerformanceOverviewProps> = ({ assess
             <p className="text-xs text-sage-500 italic" data-testid="no-finalized">No finalized grades were available when this analysis ran. Finalize faculty marks and regenerate.</p>
           ) : (
             <>
+              <ClassSummaryCard assessmentId={assessmentId} />
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                 <GapAreas areas={analysis.summary.gap_areas} minResponses={analysis.minimum_responses} />
                 <StrongAreas areas={analysis.summary.strong_areas} />

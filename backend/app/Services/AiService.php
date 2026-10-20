@@ -26,21 +26,24 @@ class AiService
     /**
      * Build HTTP client with base configuration, timeouts and optional authentication headers.
      */
-    protected function client()
+    protected function client(bool $json = true)
     {
-        $headers = [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-        ];
+        $headers = ['Accept' => 'application/json'];
+        if ($json) {
+            $headers['Content-Type'] = 'application/json';
+        }
 
         if (!empty($this->apiKey)) {
             $headers['X-AI-Service-Key'] = $this->apiKey;
             $headers['Authorization'] = 'Bearer ' . $this->apiKey;
         }
+        // Generation provider chosen by the administrator (local Hugging Face model or hosted API)
+        $headers['X-AI-Provider'] = $this->provider();
 
         return Http::connectTimeout($this->connectTimeout)
             ->timeout($this->timeout)
-            ->withHeaders($headers);
+            ->withHeaders($headers)
+            ->withMiddleware(app(\App\Services\Admin\AiUsageRecorder::class)->middleware());
     }
 
     /**
@@ -1081,6 +1084,72 @@ class AiService
     }
 
     /**
+     * Exam-set variants of one question (numbers and/or wording). Drafts for faculty review.
+     *
+     * @param  array{question_text: string, expected_answer?: ?string, count?: int, mode?: string, seed?: ?int}  $payload
+     *
+     * @throws Exception
+     */
+    public function generateQuestionVariants(array $payload): array
+    {
+        try {
+            $response = $this->client()->timeout(120)->post("{$this->baseUrl}/api/v1/question-variants", $payload);
+            if ($response->successful() && is_array($response->json('variants'))) {
+                return $response->json();
+            }
+            Log::error('AI Service question-variants error: '.$response->status());
+            throw new Exception('AI Service failed to generate question variants.');
+        } catch (ConnectionException $e) {
+            $this->handleHttpException($e, 'generating question variants');
+        } catch (RequestException $e) {
+            $this->handleHttpException($e, 'generating question variants');
+        }
+    }
+
+    /** Syllabus draft: COs, CO→PO suggestions, weekly outline, assessment plan. @throws Exception */
+    public function draftSyllabus(array $payload): array
+    {
+        return $this->postData('/api/v1/syllabus/draft', $payload, 'drafting the syllabus', 120);
+    }
+
+    /** Week-by-week lesson plan from course outcomes. @throws Exception */
+    public function lessonPlan(array $payload): array
+    {
+        return $this->postData('/api/v1/lesson-plan', $payload, 'planning lessons', 120);
+    }
+
+    /** Extractive research-paper summary. @throws Exception */
+    public function summarizePaper(array $payload): array
+    {
+        return $this->postData('/api/v1/summarize-paper', $payload, 'summarizing the paper', 180);
+    }
+
+    /**
+     * POST to an endpoint that answers {status, data}; 422 detail is passed through as a user-facing message.
+     *
+     * @throws Exception
+     */
+    protected function postData(string $path, array $payload, string $action, int $timeout): array
+    {
+        try {
+            $response = $this->client()->timeout($timeout)->post($this->baseUrl.$path, $payload);
+            if ($response->successful() && is_array($response->json('data'))) {
+                return $response->json('data');
+            }
+            if ($response->status() === 422) {
+                $detail = $response->json('detail');
+                throw new Exception(is_string($detail) ? $detail : 'The AI service could not process this input.');
+            }
+            Log::error("AI Service {$path} error: ".$response->status());
+            throw new Exception("AI Service failed while {$action}.");
+        } catch (ConnectionException $e) {
+            $this->handleHttpException($e, $action);
+        } catch (RequestException $e) {
+            $this->handleHttpException($e, $action);
+        }
+    }
+
+    /**
      * STEP 35: inventory of configured models/engines/prompt versions for the evaluation model registry.
      *
      * @throws Exception
@@ -1127,6 +1196,143 @@ class AiService
      * @return void
      * @throws Exception
      */
+    /** "local" or "hosted", as set by the administrator in Platform settings. */
+    public function provider(): string
+    {
+        try {
+            return (string) app(\App\Services\Admin\FeatureFlagService::class)->get('ai_provider') === 'hosted' ? 'hosted' : 'local';
+        } catch (\Throwable) {
+            return 'local';
+        }
+    }
+
+    // ------------------------------------------------------------------------------------------ AI toolkit
+
+    /** Models, readiness and provider status of the AI toolkit (no secrets). */
+    public function toolkitStatus(): array
+    {
+        try {
+            $response = $this->client()->timeout(10)->get("{$this->baseUrl}/api/v1/toolkit/status");
+            if ($response->successful() && is_array($response->json())) {
+                return $response->json();
+            }
+            throw new Exception('AI Service toolkit status unavailable.');
+        } catch (ConnectionException|RequestException $e) {
+            $this->handleHttpException($e, 'reading toolkit status');
+        }
+    }
+
+    /** Synchronous Bangla <-> English translation. */
+    public function translate(string $text, string $source, string $target): array
+    {
+        return $this->toolkitRequest(fn ($client) => $client->post("{$this->baseUrl}/api/v1/toolkit/translate", ['text' => $text, 'source' => $source, 'target' => $target]), 'translating text', 180, false);
+    }
+
+    /** Handwriting OCR of an image or PDF (local path). */
+    public function ocr(string $absolutePath, string $filename): array
+    {
+        return $this->toolkitRequest(fn ($client) => $client->attach('file', fopen($absolutePath, 'r'), $filename)->post("{$this->baseUrl}/api/v1/toolkit/ocr"),
+            'reading handwriting', (int) config('services.ai.toolkit_timeout', 1800), true);
+    }
+
+    /** Lecture transcription of an audio/video file (local path). */
+    public function transcribe(string $absolutePath, string $filename, ?string $language = null): array
+    {
+        return $this->toolkitRequest(function ($client) use ($absolutePath, $filename, $language) {
+            $client = $client->attach('file', fopen($absolutePath, 'r'), $filename);
+
+            return $client->post("{$this->baseUrl}/api/v1/toolkit/transcribe", $language ? ['language' => $language] : []);
+        }, 'transcribing audio', (int) config('services.ai.toolkit_timeout', 1800), true);
+    }
+
+    /** Text to speech: returns ['audio' => WAV bytes, 'seconds' => float, 'model' => string]. */
+    public function speak(string $text, string $language): array
+    {
+        try {
+            $response = $this->client()->timeout(180)->post("{$this->baseUrl}/api/v1/toolkit/speak", ['text' => $text, 'language' => $language]);
+            if ($response->successful() && str_starts_with((string) $response->header('Content-Type'), 'audio/')) {
+                return ['audio' => $response->body(), 'seconds' => (float) $response->header('X-Audio-Seconds'), 'model' => (string) $response->header('X-Model')];
+            }
+            if ($response->status() === 422) {
+                $detail = $response->json('detail');
+                throw new Exception(is_string($detail) ? $detail : 'The text could not be read aloud.');
+            }
+            throw new Exception('AI Service failed while reading text aloud.');
+        } catch (ConnectionException|RequestException $e) {
+            $this->handleHttpException($e, 'reading text aloud');
+        }
+    }
+
+    /** Lecture/material → summary, key points and a grounded draft quiz. */
+    public function studyPack(string $text, ?string $title, int $numQuestions): array
+    {
+        return $this->toolkitRequest(fn ($c) => $c->post("{$this->baseUrl}/api/v1/toolkit/study-pack", ['text' => $text, 'title' => $title, 'num_questions' => $numQuestions]),
+            'building study notes', (int) config('services.ai.toolkit_timeout', 1800), false);
+    }
+
+    /** Rule-based question checks plus AI rewrite suggestions. */
+    public function questionQuality(array $questions, bool $suggestRewrites): array
+    {
+        return $this->toolkitRequest(fn ($c) => $c->post("{$this->baseUrl}/api/v1/toolkit/question-quality", ['questions' => array_values($questions), 'suggest_rewrites' => $suggestRewrites]),
+            'checking questions', 300, false);
+    }
+
+    public function simplify(string $text, string $level): array
+    {
+        return $this->toolkitRequest(fn ($c) => $c->post("{$this->baseUrl}/api/v1/toolkit/simplify", ['text' => $text, 'level' => $level]), 'simplifying text', 240, false);
+    }
+
+    public function bloomRewrite(string $question, string $targetLevel): array
+    {
+        return $this->toolkitRequest(fn ($c) => $c->post("{$this->baseUrl}/api/v1/toolkit/bloom-rewrite", ['question' => $question, 'target_level' => $targetLevel]), 'rewriting the question', 240, false);
+    }
+
+    /**
+     * Rubric-based feedback for one answer, addressed to the student. The AI service never returns marks.
+     *
+     * @param  array{question: string, answer: string, criteria: array, expected_answer?: ?string, tone: string}  $payload
+     */
+    public function feedbackDraft(array $payload): array
+    {
+        return $this->toolkitRequest(fn ($c) => $c->post("{$this->baseUrl}/api/v1/toolkit/feedback-draft", $payload), 'drafting feedback', 180, false);
+    }
+
+    /**
+     * Whole-paper review: Bloom balance, topic coverage, duplicate questions, wording problems.
+     *
+     * @param  array{questions: array, topics: array, targets?: ?array}  $payload
+     */
+    public function paperReview(array $payload): array
+    {
+        return $this->toolkitRequest(fn ($c) => $c->post("{$this->baseUrl}/api/v1/toolkit/paper-review", $payload), 'reviewing the paper', 120, false);
+    }
+
+    /**
+     * Toolkit endpoints answer flat JSON ({status, text, ...}); a 422 detail is a safe, user-facing message.
+     *
+     * @param  callable(\Illuminate\Http\Client\PendingRequest): \Illuminate\Http\Client\Response  $send
+     */
+    protected function toolkitRequest(callable $send, string $action, int $timeout, bool $multipart): array
+    {
+        try {
+            // Uploads must not carry the JSON content type: attach() sets the multipart boundary itself
+            $response = $send($this->client(!$multipart)->timeout($timeout));
+            if ($response->successful() && is_array($response->json())) {
+                return $response->json();
+            }
+            if (in_array($response->status(), [413, 422], true)) {
+                $detail = $response->json('detail');
+                throw new Exception(is_string($detail) ? $detail : 'The AI service could not process this file.');
+            }
+            Log::error("AI Service toolkit error while {$action}: ".$response->status());
+            throw new Exception("AI Service failed while {$action}.");
+        } catch (ConnectionException $e) {
+            $this->handleHttpException($e, $action);
+        } catch (RequestException $e) {
+            $this->handleHttpException($e, $action);
+        }
+    }
+
     protected function handleHttpException(Exception $e, string $action): void
     {
         $msg = $e->getMessage();

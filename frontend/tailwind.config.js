@@ -51,6 +51,27 @@ export default {
           700: "#1E6F5C",
           800: "#1B2A27",
         },
+        // Admin control center tokens, aliased to the app's sage palette and semantic colors so the admin area
+        // matches the faculty workspace. Text tokens meet WCAG AA on white and sage-50.
+        adm: {
+          bg: "#FAFAF7",          // sage-50
+          surface: "#FFFFFF",
+          warm: "#FAFAF7",        // sage-50
+          cream: "#F1F2EE",       // sage-100
+          line: "#E2E6E1",        // sage-200
+          ink: "#1B2A27",         // sage-800
+          muted: "#4C6B62",       // sage-500
+          sage: "#1E6F5C",        // sage-700
+          "sage-dark": "#185A4B",
+          "sage-tint": "#E8F3EF",
+          amber: "#D97706",       // semantic amber
+          "amber-text": "#92400E",
+          "amber-tint": "#FFFBEB",
+          red: "#B91C1C",
+          "red-tint": "#FEF2F2",
+          blue: "#3F5F7A",
+          "blue-tint": "#EEF3F7",
+        },
         accent: {
           DEFAULT: "#C2410C",
           hover: "#9A3412",

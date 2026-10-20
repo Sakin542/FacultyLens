@@ -11,11 +11,11 @@ RUN apk add --no-cache bash curl mariadb-client libzip-dev libpng-dev libjpeg-tu
     && docker-php-ext-install -j"$(nproc)" pdo_mysql mbstring bcmath xml zip gd exif intl opcache pcntl \
     && rm -rf /tmp/*
 
-# Production PHP settings: opcache on, no error display, sane upload limits (documents up to 20 MB)
+# Production PHP settings: opcache on, no error display, upload limits (documents up to 20 MB, lecture recordings up to 100 MB)
 RUN { \
       echo "opcache.enable=1"; echo "opcache.validate_timestamps=0"; echo "opcache.memory_consumption=192"; echo "opcache.max_accelerated_files=20000"; \
       echo "display_errors=Off"; echo "expose_php=Off"; echo "log_errors=On"; \
-      echo "upload_max_filesize=25M"; echo "post_max_size=26M"; echo "memory_limit=512M"; echo "max_execution_time=120"; \
+      echo "upload_max_filesize=110M"; echo "post_max_size=112M"; echo "memory_limit=512M"; echo "max_execution_time=120"; \
     } > /usr/local/etc/php/conf.d/facultylens.ini
 
 WORKDIR /var/www/html

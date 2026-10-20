@@ -38,6 +38,9 @@ class User extends Authenticatable
         'password',
         'remember_token',
         'profile_picture_path',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
+        'google_id',
     ];
 
     /**
@@ -63,7 +66,23 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'profile_picture_updated_at' => 'datetime',
+            'is_active' => 'boolean',
+            'last_login_at' => 'datetime',
+            'two_factor_secret' => 'encrypted',
+            'two_factor_recovery_codes' => 'encrypted:array',
+            'two_factor_confirmed_at' => 'datetime',
         ];
+    }
+
+    /** Deactivated accounts cannot sign in; an inactive flag of null (pre-migration rows) counts as active. */
+    public function isActive(): bool
+    {
+        return $this->is_active !== false;
+    }
+
+    public function hasTwoFactorEnabled(): bool
+    {
+        return $this->two_factor_confirmed_at !== null && !empty($this->two_factor_secret);
     }
 
     public function hasProfilePicture(): bool
@@ -106,9 +125,11 @@ class User extends Authenticatable
             'name' => $this->name,
             'email' => $this->email,
             'role' => $this->role ?? 'FACULTY',
+            'is_admin' => $this->isAdmin(),
             'department' => $this->department,
             'designation' => $this->designation,
             'profile_picture_url' => $this->profile_picture_url,
+            'two_factor_enabled' => $this->hasTwoFactorEnabled(),
         ];
     }
 
@@ -216,11 +237,23 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if user is an administrator.
+     * Check if user is the administrator. When config('admin.email') is set, only that account qualifies,
+     * so an ADMIN role written onto any other row grants nothing.
      */
     public function isAdmin(): bool
     {
-        return strtoupper($this->role ?? 'FACULTY') === 'ADMIN';
+        if (strtoupper($this->role ?? 'FACULTY') !== 'ADMIN') {
+            return false;
+        }
+        $adminEmail = (string) config('admin.email', '');
+
+        return $adminEmail === '' || strtolower((string) $this->email) === $adminEmail;
+    }
+
+    /** Department head: read-only oversight of every course in the user's department. */
+    public function isDepartmentHead(): bool
+    {
+        return strtoupper($this->role ?? 'FACULTY') === 'DEPARTMENT_HEAD';
     }
 
     /**

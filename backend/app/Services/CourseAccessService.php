@@ -41,7 +41,39 @@ class CourseAccessService
             ->where('status', CourseCollaborator::STATUS_ACTIVE)
             ->value('role');
 
+        if (!$role && $this->headsDepartmentOf($user, $course)) {
+            return $this->roleCache[$key] = self::ROLE_DEPARTMENT_HEAD;
+        }
+
         return $this->roleCache[$key] = ($role ? strtoupper($role) : null);
+    }
+
+    /** Read-only oversight role: see config('collaboration.matrix') for the abilities it carries. */
+    public const ROLE_DEPARTMENT_HEAD = 'DEPARTMENT_HEAD';
+
+    /** A department head oversees courses whose owner belongs to the same department. */
+    public function headsDepartmentOf(User $user, Course $course): bool
+    {
+        $department = self::normalizeDepartment($user->department);
+        if (!$user->isDepartmentHead() || $department === '') {
+            return false;
+        }
+
+        return self::normalizeDepartment(User::query()->whereKey($course->user_id)->value('department')) === $department;
+    }
+
+    public static function normalizeDepartment(?string $department): string
+    {
+        return mb_strtolower(trim(preg_replace('/\s+/', ' ', (string) $department)));
+    }
+
+    /** Courses owned by faculty in the head's department. */
+    public function departmentCourses(User $user): Builder
+    {
+        $department = self::normalizeDepartment($user->department);
+
+        return Course::query()->whereIn('user_id', User::query()
+            ->whereRaw('LOWER(TRIM(department)) = ?', [$department])->select('id'));
     }
 
     public function isOwner(User $user, Course $course): bool

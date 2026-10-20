@@ -46,7 +46,7 @@ return [
 
     // The project has FACULTY and ADMIN roles (User::role). Broader scopes are limited to these roles;
     // the server decides — scope claims from the client are never trusted.
-    'department_roles' => ['ADMIN'],
+    'department_roles' => ['ADMIN', 'DEPARTMENT_HEAD'],
     'institution_roles' => ['ADMIN'],
 
     // Filters that may be sent, and which are course-level vs assessment-level

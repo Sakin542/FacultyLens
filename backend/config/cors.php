@@ -33,9 +33,12 @@ return [
 
     'allowed_headers' => ['*'],
 
-    'exposed_headers' => [],
+    // Lets the SPA read download filenames (exam papers, reports) on cross-origin file responses
+    'exposed_headers' => ['Content-Disposition'],
 
-    'max_age' => 0,
+    // Let browsers cache the preflight answer (Chrome caps it at 2 h) instead of sending an extra OPTIONS
+    // request before almost every API call. Only the permission check is cached, not any data.
+    'max_age' => (int) env('CORS_MAX_AGE', 7200),
 
     'supports_credentials' => true,
 
