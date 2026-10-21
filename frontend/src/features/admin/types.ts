@@ -248,12 +248,12 @@ export interface SettingsData {
   history: { id: number; actor: UserRef | null; changed: Record<string, unknown>; previous: Record<string, unknown> | null; reason: string | null; created_at: string | null }[];
 }
 export interface BackupRecord {
-  id: number; filename: string; size_bytes: number; checksum_sha256: string | null; verification_status: 'verified' | 'failed' | null; verified_at: string | null;
+  id: number; filename: string; size_bytes: number; has_files?: boolean; files_size_bytes?: number; files_count?: number; checksum_sha256: string | null; verification_status: 'verified' | 'failed' | null; verified_at: string | null;
   status: 'running' | 'completed' | 'failed'; trigger: 'manual' | 'scheduled'; driver: string | null; error: string | null;
   triggered_by: UserRef | null; started_at: string | null; completed_at: string | null;
 }
 export interface BackupMeta {
-  keep: number; schedule_time: string; last_completed: BackupRecord | null; disk: string; driver: string; failed_30d: number;
+  keep: number; schedule_time: string; interval_hours?: number; include_files?: boolean; last_completed: BackupRecord | null; disk: string; driver: string; failed_30d: number;
   restore: { available_in_panel: boolean; command: string; reason: string };
 }
 export interface SearchGroup { group: string; items: { id: number | string; title: string; subtitle: string; url: string }[] }

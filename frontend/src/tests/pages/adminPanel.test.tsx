@@ -29,7 +29,7 @@ vi.mock('@/services/notificationService', () => ({
 import { adminApi } from '@/features/admin/api';
 const api = adminApi as unknown as Record<string, ReturnType<typeof vi.fn>>;
 
-const admin: User = { id: 1, name: 'Rashid', email: 'rashid.cse.20230104102@aust.edu', department: 'Administration', designation: 'System Administrator', role: 'ADMIN', is_admin: true };
+const admin: User = { id: 1, name: 'FacultyLens Administrator', email: 'admin@facultylens.edu', department: 'Administration', designation: 'System Administrator', role: 'ADMIN', is_admin: true };
 const faculty: User = { id: 2, name: 'Dr. Doe', email: 'faculty@example.com', department: 'CSE', designation: 'Lecturer', role: 'FACULTY', is_admin: false };
 
 const authValue = (user: User | null, extra: Record<string, unknown> = {}) => ({
@@ -55,7 +55,7 @@ const dashboard: DashboardData = {
   account_status: [{ role: 'FACULTY', active: 10, deactivated: 1 }],
   services: [],
   critical_alerts: [{ id: 9, rule: 'service_unavailable', severity: 'critical', service: 'ai_service', title: 'AI service (FastAPI) unavailable', message: 'Health endpoint returned HTTP 503.', status: 'open', occurrences: 2, last_value: null, suppressed: false, notified: true, first_seen_at: null, last_seen_at: null, acknowledged_by: null, acknowledged_at: null, resolved_by: null, resolved_at: null, resolution_note: null, incident_id: null }],
-  recent_activity: [{ id: 1, action: 'ADMIN_USER_SUSPENDED', entity_type: 'User', entity_id: 5, user: { id: 1, name: 'Rashid' }, created_at: new Date().toISOString() }],
+  recent_activity: [{ id: 1, action: 'ADMIN_USER_SUSPENDED', entity_type: 'User', entity_id: 5, user: { id: 1, name: 'FacultyLens Administrator' }, created_at: new Date().toISOString() }],
   freshness: { generated_at: new Date().toISOString(), health_snapshot_at: null, data_quality_scan_at: null, scheduler_heartbeat_at: null },
 };
 
@@ -248,11 +248,11 @@ describe('Admin control center', () => {
     const adminLogin = vi.fn().mockResolvedValue({ twoFactorRequired: true, challengeToken: 'tok' });
     renderAt('/admin/login', null, { adminLogin });
 
-    fireEvent.change(screen.getByLabelText(/Administrator email/i), { target: { value: 'rashid.cse.20230104102@aust.edu' } });
+    fireEvent.change(screen.getByLabelText(/Administrator email/i), { target: { value: 'admin@facultylens.edu' } });
     fireEvent.change(screen.getByLabelText(/^Password/i), { target: { value: 'Admin123!' } });
     fireEvent.click(screen.getByRole('button', { name: /Sign in to admin panel/i }));
 
     expect(await screen.findByTestId('two-factor-form')).toBeInTheDocument();
-    expect(adminLogin).toHaveBeenCalledWith({ email: 'rashid.cse.20230104102@aust.edu', password: 'Admin123!' });
+    expect(adminLogin).toHaveBeenCalledWith({ email: 'admin@facultylens.edu', password: 'Admin123!' });
   });
 });

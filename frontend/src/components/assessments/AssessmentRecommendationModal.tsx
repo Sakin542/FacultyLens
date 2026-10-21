@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useDialog } from '@/hooks/useDialog';
 import { Assessment, EvidenceBasedRecommendation, RecommendationStatus } from '@/types';
 import { aiService } from '@/services/aiService';
 import { Button } from '@/components/common/Button';
@@ -82,10 +83,12 @@ export const AssessmentRecommendationModal: React.FC<AssessmentRecommendationMod
     }
   };
 
+  const dialog = useDialog(isOpen, onClose);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" {...dialog}>
       <div className="bg-sage-100 border border-sage-200 w-full max-w-5xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
         {/* Modal Header */}
         <div className="p-6 bg-white border-b border-sage-200 flex items-center justify-between shrink-0">
@@ -117,7 +120,7 @@ export const AssessmentRecommendationModal: React.FC<AssessmentRecommendationMod
             >
               {isGenerating ? 'Analyzing...' : recommendations.length > 0 ? 'Regenerate' : 'Generate Recommendations'}
             </Button>
-            <button
+            <button aria-label="Close"
               onClick={onClose}
               className="p-2 text-sage-500 hover:text-sage-800 hover:bg-sage-100 rounded-lg transition-colors"
             >

@@ -1248,6 +1248,17 @@ class AiService
         }
     }
 
+    /** Hosted provider outcomes (last 30 minutes) and balance, for the admin monitor. Never includes the key. */
+    public function providerHealth(): array
+    {
+        $response = $this->client()->timeout(15)->get("{$this->baseUrl}/api/v1/toolkit/provider-health");
+        if (!$response->successful() || !is_array($response->json())) {
+            throw new Exception('AI Service provider health unavailable.');
+        }
+
+        return $response->json();
+    }
+
     /** Synchronous Bangla <-> English translation. */
     public function translate(string $text, string $source, string $target): array
     {

@@ -127,19 +127,30 @@ Artisan::command('admin:ensure {--reset-password : also reset the password to AD
 })->purpose('Create or repair the single FacultyLens administrator account');
 
 // Admin panel: gzipped database backup into private storage (also available as "Back up now" in the admin panel)
-Artisan::command('backup:database {--scheduled : record the run as scheduled}', function (\App\Services\Admin\DatabaseBackupService $backups) {
+Artisan::command('backup:database {--scheduled : record the run as scheduled} {--if-due : only run when no successful backup is newer than BACKUP_INTERVAL_HOURS}', function (\App\Services\Admin\DatabaseBackupService $backups) {
+    if ($this->option('if-due') && !$backups->isDue()) {
+        $this->info('A recent backup exists; nothing to do.');
+
+        return 0;
+    }
     $backup = $backups->run($this->option('scheduled') ? 'scheduled' : 'manual');
     if ($backup->status !== \App\Models\DatabaseBackup::STATUS_COMPLETED) {
         $this->error("Backup failed: {$backup->error}");
 
         return 1;
     }
-    $this->info(sprintf('Backup %s created (%s KB).', $backup->filename, number_format($backup->size_bytes / 1024, 1)));
+    $this->info(sprintf('Backup %s created (%s KB)%s.', $backup->filename, number_format($backup->size_bytes / 1024, 1),
+        $backup->files_count ? sprintf(' with %d uploaded files (%s KB)', $backup->files_count, number_format($backup->files_size_bytes / 1024, 1)) : ''));
+    if ($backup->error) {
+        $this->warn($backup->error);
+    }
 
     return 0;
 })->purpose('Create a gzipped database backup in storage/app/private/backups');
 
-Schedule::command('backup:database --scheduled')->dailyAt((string) config('admin.backups.schedule_time', '02:00'))->withoutOverlapping();
+// Checked hourly rather than once at a fixed time: Laravel never runs a missed schedule, so a PC that was off or asleep
+// at 02:00 would skip that day's backup. The backup runs as soon as the newest one is BACKUP_INTERVAL_HOURS old.
+Schedule::command('backup:database --scheduled --if-due')->hourly()->withoutOverlapping();
 
 // Academic calendar reminders (in-app + e-mail through the notification system)
 Artisan::command('calendar:send-reminders', function (\App\Services\Planning\CalendarService $calendar) {

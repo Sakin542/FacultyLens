@@ -93,5 +93,5 @@ export const adminApi = {
   createBackup: () => send<BackupRecord>('POST', '/backups'),
   verifyBackup: (id: number) => send<BackupRecord>('POST', `/backups/${id}/verify`),
   deleteBackup: (id: number) => send<null>('DELETE', `/backups/${id}`),
-  backupDownloadUrl: (id: number) => `${API_BASE_URL}/admin/backups/${id}/download`,
+  backupDownloadUrl: (id: number, part: 'database' | 'files' = 'database') => `${API_BASE_URL}/admin/backups/${id}/download${part === 'files' ? '?part=files' : ''}`,
 };

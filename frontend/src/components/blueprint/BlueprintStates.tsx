@@ -63,7 +63,7 @@ export const BlueprintSummary: React.FC<{ blueprint: AssessmentBlueprint; valida
       <div key={l} className="rounded-lg border border-sage-200 dark:border-[#2A2A2A] bg-white dark:bg-[#161616] px-4 py-3">
         <dt className="text-xs uppercase tracking-wide text-sage-500">{l}</dt>
         <dd className="text-xl font-semibold text-sage-800 dark:text-white mt-1 tabular-nums">{v}</dd>
-        {l === 'Blueprint Completeness' && <p className="text-[10px] text-sage-400">Planning indicator, not assessment quality</p>}
+        {l === 'Blueprint Completeness' && <dd className="text-[10px] text-sage-400">Planning indicator, not assessment quality</dd>}
       </div>
     ))}
   </dl>

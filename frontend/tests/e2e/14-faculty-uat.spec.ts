@@ -99,6 +99,9 @@ const writeObservations = () => {
 };
 
 test.describe('Faculty UAT walkthrough', () => {
+  // axe measures settled pages: with motion on, cards caught mid fade-in read as low contrast
+  test.use({ reducedMotion: 'reduce' });
+
   test.use({ actionTimeout: 20_000, navigationTimeout: 60_000 });
   test('faculty persona completes the 20 UAT scenarios through the UI', async ({ page, browser }) => {
     test.setTimeout(3_600_000);
@@ -508,7 +511,8 @@ test.describe('Faculty UAT walkthrough', () => {
             const d = list.find((x: any) => x.original_file_name === 'corrupt-paper.pdf');
             throw new Error(`corrupt PDF did not reach failed; status=${d?.processing_status}`);
           }
-          await expect(page.getByText(/Failed/).first()).toBeVisible();
+          // The reload can take a while when the machine is busy with the rest of the suite (seen once: 35 s)
+          await expect(page.getByText(/Failed/).first()).toBeVisible({ timeout: 60_000 });
           await expect(page.locator('button[title="Reprocess Extraction"]').first()).toBeVisible();
           return 'status Failed + Reprocess Extraction visible in list';
         }, page, 'S06-corrupt-failed');

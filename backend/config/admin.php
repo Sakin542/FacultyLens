@@ -22,6 +22,12 @@ return [
         // Oldest completed backups beyond this count are deleted after each successful run
         'keep' => (int) env('BACKUP_KEEP', 14),
         'schedule_time' => env('BACKUP_SCHEDULE_TIME', '02:00'),
+        // The scheduler checks every hour and backs up once the newest successful backup is this old, so a machine that
+        // was off or asleep at the usual time still gets its backup as soon as it is running again
+        'interval_hours' => (int) env('BACKUP_INTERVAL_HOURS', 24),
+        // Uploaded files (folders on the local disk) archived as a ZIP next to every database dump
+        'include_files' => (bool) env('BACKUP_INCLUDE_FILES', true),
+        'file_folders' => ['documents', 'materials', 'question_papers', 'previous_questions', 'institutional-reports', 'profile-pictures'],
         'mysqldump_binary' => env('BACKUP_MYSQLDUMP_BINARY', 'mysqldump'),
         'timeout_seconds' => (int) env('BACKUP_TIMEOUT_SECONDS', 600),
     ],
@@ -41,6 +47,10 @@ return [
         'failed_jobs_per_hour' => (int) env('ADMIN_ALERT_FAILED_JOBS_PER_HOUR', 5),
         'email_failures_per_day' => (int) env('ADMIN_ALERT_EMAIL_FAILURES_PER_DAY', 5),
         'backup_max_age_hours' => (int) env('ADMIN_ALERT_BACKUP_MAX_AGE_HOURS', 26),
+        // Hosted AI provider: alert when at least this many calls failed in 30 minutes (and half or more of all calls),
+        // and warn when the OpenRouter balance is at or below this many dollars
+        'ai_provider_failures' => (int) env('ADMIN_ALERT_AI_PROVIDER_FAILURES', 3),
+        'ai_provider_min_balance' => (float) env('ADMIN_ALERT_AI_PROVIDER_MIN_BALANCE', 0.5),
         'failed_logins_per_hour' => (int) env('ADMIN_ALERT_FAILED_LOGINS_PER_HOUR', 20),
     ],
 

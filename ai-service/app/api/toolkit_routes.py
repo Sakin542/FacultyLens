@@ -9,7 +9,7 @@ from fastapi.concurrency import run_in_threadpool
 from pydantic import BaseModel, Field
 
 from app.api.routes import verify_api_key
-from app.services import model_memory, provider_context
+from app.services import model_memory, provider_context, provider_health
 from app.services.answer_embedder import get_answer_embedder
 from app.services.feedback_drafter import FeedbackDrafter
 from app.services.paper_review import PaperReviewer
@@ -130,6 +130,13 @@ def toolkit_status(generation: GenerationService = Depends(get_generation_servic
             "writing": {"model": generation.model_name or "template / rule engines", "loaded": generation.is_loaded, "dependencies": {}, "ready": True},
         },
     }
+
+
+@router.get("/provider-health")
+def hosted_provider_health():
+    """Hosted provider outcomes in the last 30 minutes and (OpenRouter) the account balance, for the admin monitor.
+    Never includes the API key, the base URL or any prompt or answer."""
+    return {"status": "success", **provider_health.snapshot()}
 
 
 @router.post("/ocr")

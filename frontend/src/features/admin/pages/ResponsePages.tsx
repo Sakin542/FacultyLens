@@ -376,14 +376,15 @@ export const BackupsPage: React.FC = () => {
 
   const columns: Column<BackupRecord>[] = [
     { key: 'file', header: 'Backup', render: (b) => <div><p className="break-all font-mono text-xs">{b.filename}</p><p className="text-xs text-adm-muted">{humanize(b.trigger)}{b.triggered_by ? ` by ${b.triggered_by.name}` : ''} · {fmtDateTime(b.completed_at ?? b.started_at)}</p>{b.error && <p className="text-xs text-adm-red">{b.error}</p>}</div> },
-    { key: 'size', header: 'Size', className: 'tabular-nums whitespace-nowrap', render: (b) => formatBytes(b.size_bytes) },
+    { key: 'size', header: 'Size', className: 'tabular-nums whitespace-nowrap', render: (b) => <div>{formatBytes(b.size_bytes)}{b.has_files && <p className="text-[11px] text-adm-muted">+ {fmt(b.files_count ?? 0)} files · {formatBytes(b.files_size_bytes ?? 0)}</p>}</div> },
     { key: 'status', header: 'Status', render: (b) => <StatusBadge status={b.status} /> },
     { key: 'integrity', header: 'Integrity', render: (b) => b.verification_status ? <span><StatusBadge status={b.verification_status === 'verified' ? 'verified' : 'failed'} label={b.verification_status === 'verified' ? 'Verified' : 'Verification failed'} /><span className="block text-[11px] text-adm-muted">{timeAgo(b.verified_at)}</span></span> : <Pill>Not verified</Pill> },
     {
       key: 'actions', header: 'Actions', render: (b) => b.status === 'completed' ? (
         <div className="flex flex-wrap gap-1">
           <Btn size="sm" icon={ShieldCheck} loading={action.busy === `verify-${b.id}`} onClick={() => { void run(`verify-${b.id}`, () => adminApi.verifyBackup(b.id)); }}>Verify</Btn>
-          <a href={adminApi.backupDownloadUrl(b.id)} className="inline-flex h-8 items-center gap-1 rounded-lg border border-adm-line px-2.5 text-xs font-medium hover:bg-adm-warm" target="_blank" rel="noopener noreferrer"><Download className="h-3.5 w-3.5" aria-hidden="true" />Download</a>
+          <a href={adminApi.backupDownloadUrl(b.id)} className="inline-flex h-8 items-center gap-1 rounded-lg border border-adm-line px-2.5 text-xs font-medium hover:bg-adm-warm" target="_blank" rel="noopener noreferrer"><Download className="h-3.5 w-3.5" aria-hidden="true" />Database</a>
+          {b.has_files && <a href={adminApi.backupDownloadUrl(b.id, 'files')} className="inline-flex h-8 items-center gap-1 rounded-lg border border-adm-line px-2.5 text-xs font-medium hover:bg-adm-warm" target="_blank" rel="noopener noreferrer" data-testid="backup-files-download"><Download className="h-3.5 w-3.5" aria-hidden="true" />Files</a>}
           <Btn size="sm" variant="ghost" icon={Trash2} onClick={() => setDeleting(b)} aria-label="Delete backup" />
         </div>
       ) : null,
@@ -392,7 +393,7 @@ export const BackupsPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Backup & recovery" description="Gzipped database snapshots in private storage with a SHA-256 checksum. Verification re-hashes and fully decompresses the archive; it proves the file is intact, not that a restore has been rehearsed."
+      <PageHeader title="Backup & recovery" description="Gzipped database snapshots with a SHA-256 checksum, plus a ZIP of the uploaded files. Verification re-hashes and fully decompresses the database archive and checks the files ZIP; it proves the files are intact, not that a restore has been rehearsed."
         actions={<Btn variant="primary" icon={Database} loading={action.busy === 'create'} onClick={() => { void run('create', () => adminApi.createBackup()); }}>Back up now</Btn>} />
       {action.notice && <Notice tone={action.notice.tone} onClose={() => action.setNotice(null)}>{action.notice.text}</Notice>}
       <Async state={state} rows={6}>
@@ -400,7 +401,7 @@ export const BackupsPage: React.FC = () => {
           <>
             <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
               <Kpi label="Last successful" value={res.meta.last_completed ? timeAgo(res.meta.last_completed.completed_at) : 'None'} tone={res.meta.last_completed ? undefined : 'red'} />
-              <Kpi label="Schedule" value={`Daily ${res.meta.schedule_time}`} hint={`keeps newest ${res.meta.keep}`} />
+              <Kpi label="Schedule" value={`Every ${res.meta.interval_hours ?? 24} h`} hint={`checked hourly, catches up after downtime · keeps newest ${res.meta.keep}`} />
               <Kpi label="Failed (30 d)" value={fmt(res.meta.failed_30d)} tone={res.meta.failed_30d ? 'amber' : undefined} />
               <Kpi label="Storage" value={res.meta.disk} hint={`${res.meta.driver} database`} />
             </div>
@@ -417,7 +418,9 @@ export const BackupsPage: React.FC = () => {
                   <li>On the server run <code className="rounded bg-adm-cream px-1">{res.meta.restore.command}</code> and type the confirmation.</li>
                   <li>Restart workers, run a health check and a data-quality scan, then record the outcome in the incident.</li>
                 </ol>
-                <p className="mt-3 text-xs text-adm-muted">Uploaded files (documents, profile pictures, reports) live in storage/app and are not part of database backups; back that directory up separately.</p>
+                <p className="mt-3 text-xs text-adm-muted">{res.meta.include_files === false
+                  ? 'Uploaded files (documents, profile pictures, reports) live in storage/app and are not part of these backups (BACKUP_INCLUDE_FILES is off); back that directory up separately.'
+                  : 'Uploaded files (documents, papers, materials, reports, profile pictures) are in the Files ZIP of each backup. To restore them, unzip it into storage/app/private on the server. Keep a copy of important backups off this machine too.'}</p>
               </Card>
             )}
           </>

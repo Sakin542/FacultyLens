@@ -26,6 +26,7 @@ from langchain_core.runnables import Runnable, RunnableLambda
 from langchain_openai import ChatOpenAI
 
 from app.config import get_settings
+from app.services import provider_health
 
 logger = logging.getLogger("facultylens.ai")
 
@@ -173,9 +174,13 @@ def run_hosted(prompt: str, max_tokens: int) -> tuple[str, str]:
     if not models:
         raise HostedCallError("no hosted model is configured")
     try:
-        return hosted_chain(max_tokens).invoke({"prompt": prompt})
+        result = hosted_chain(max_tokens).invoke({"prompt": prompt})
     except Exception as e:
-        raise _all_failed(models, e) from e
+        failure = _all_failed(models, e)
+        provider_health.record(False, failure.reason)
+        raise failure from e
+    provider_health.record(True)
+    return result
 
 
 def run_media(models: List[str], parts: List[Dict[str, Any]], max_tokens: int) -> tuple[str, str]:
@@ -189,9 +194,13 @@ def run_media(models: List[str], parts: List[Dict[str, Any]], max_tokens: int) -
         raise HostedCallError("hosted provider is not configured in the AI service")
     chain = _media_chain(*_connection(models, max_tokens, get_settings().llm_media_timeout_seconds))
     try:
-        return chain.invoke([HumanMessage(content=parts)])
+        result = chain.invoke([HumanMessage(content=parts)])
     except Exception as e:
-        raise _all_failed(models, e) from e
+        failure = _all_failed(models, e)
+        provider_health.record(False, failure.reason)
+        raise failure from e
+    provider_health.record(True)
+    return result
 
 
 def reset_cache() -> None:

@@ -35,6 +35,7 @@ class ServiceMonitor
         'workers' => ['label' => 'Queue workers (Horizon)', 'group' => 'Background processing'],
         'scheduler' => ['label' => 'Task scheduler', 'group' => 'Background processing'],
         'ai_service' => ['label' => 'AI service (FastAPI)', 'group' => 'AI'],
+        'ai_provider' => ['label' => 'Hosted AI provider', 'group' => 'AI'],
         'mail' => ['label' => 'E-mail delivery', 'group' => 'Messaging'],
         'broadcasting' => ['label' => 'Real-time broadcasting', 'group' => 'Messaging'],
     ];
@@ -62,6 +63,7 @@ class ServiceMonitor
                 'workers' => $this->workers(),
                 'scheduler' => $this->scheduler(),
                 'ai_service' => $this->aiService(),
+                'ai_provider' => $this->aiProvider(),
                 'mail' => $this->mail(),
                 'broadcasting' => $this->broadcasting(),
                 default => [self::UNKNOWN, [], 'No probe defined.'],
@@ -296,6 +298,40 @@ class ServiceMonitor
         }
 
         return [self::HEALTHY, $detail, 'Service up, model loaded.'];
+    }
+
+    /**
+     * The hosted provider (OpenRouter etc.) when the administrator selected it. Its failures are otherwise invisible:
+     * every tool falls back to a local model and keeps working, with weaker results.
+     */
+    protected function aiProvider(): array
+    {
+        if ((string) app(FeatureFlagService::class)->get('ai_provider') !== 'hosted') {
+            return [self::UNCONFIGURED, [], 'Local models are selected; the hosted provider is not in use.'];
+        }
+        $h = app(\App\Services\AiService::class)->providerHealth();
+        $detail = [
+            'calls_30m' => (int) ($h['calls'] ?? 0), 'failures_30m' => (int) ($h['failures'] ?? 0),
+            'last_error' => is_string($h['last_error'] ?? null) ? mb_substr($h['last_error'], 0, 160) : null,
+            'balance_remaining' => isset($h['credit']['remaining']) ? (float) $h['credit']['remaining'] : null,
+        ];
+        if (!($h['configured'] ?? false)) {
+            return [self::UNAVAILABLE, $detail, 'Hosted is selected, but the AI service has no provider key or model (LLM_HOSTED_*). Every request uses the local models.'];
+        }
+        $calls = $detail['calls_30m'];
+        $failures = $detail['failures_30m'];
+        $threshold = max(1, (int) config('admin.alerts.ai_provider_failures', 3));
+        if ($failures >= $threshold && $failures * 2 >= $calls) {
+            return [self::UNAVAILABLE, $detail, "{$failures} of {$calls} hosted AI calls failed in the last 30 minutes ({$detail['last_error']}). Tools are falling back to the local models."];
+        }
+        if ($detail['balance_remaining'] !== null && $detail['balance_remaining'] <= (float) config('admin.alerts.ai_provider_min_balance', 0.5)) {
+            return [self::DEGRADED, $detail, sprintf('Provider balance is $%.2f. Audio is refused below $0.50, and other requests may start failing; add credit.', $detail['balance_remaining'])];
+        }
+        if ($failures > 0) {
+            return [self::DEGRADED, $detail, "{$failures} of {$calls} hosted AI calls failed in the last 30 minutes ({$detail['last_error']})."];
+        }
+
+        return [self::HEALTHY, $detail, $calls > 0 ? "{$calls} hosted AI calls in the last 30 minutes, none failed." : 'Configured; no hosted calls in the last 30 minutes.'];
     }
 
     protected function mail(): array

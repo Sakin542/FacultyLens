@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 use RuntimeException;
 use Throwable;
+use ZipArchive;
 
 /**
  * Gzipped database snapshots in private storage: mysqldump for MySQL/MariaDB, a file copy for SQLite.
@@ -53,6 +54,7 @@ class DatabaseBackupService
                 'checksum_sha256' => hash_file('sha256', $absolute) ?: null,
                 'completed_at' => now(),
             ])->save();
+            $this->archiveFiles($backup, $relative);
             $this->prune();
         } catch (Throwable $e) {
             @unlink($absolute);
@@ -65,6 +67,67 @@ class DatabaseBackupService
         }
 
         return $backup->refresh();
+    }
+
+    /**
+     * ZIP the uploaded files next to the dump (<name>.files.zip). The database dump is the part that must not fail, so
+     * a problem here is recorded on the backup and logged, and the backup stays usable for the database.
+     */
+    protected function archiveFiles(DatabaseBackup $backup, string $dumpRelative): void
+    {
+        if (!config('admin.backups.include_files', true) || !class_exists(ZipArchive::class)) {
+            return;
+        }
+        $source = Storage::disk('local');
+        $files = [];
+        foreach ((array) config('admin.backups.file_folders', []) as $folder) {
+            if ($source->exists($folder)) {
+                foreach ($source->allFiles($folder) as $file) {
+                    $files[] = $file;
+                }
+            }
+        }
+        if ($files === []) {
+            return;
+        }
+        $relative = preg_replace('/\.sql\.gz$/', '', $dumpRelative).'.files.zip';
+        $absolute = $this->disk()->path($relative);
+        try {
+            $zip = new ZipArchive();
+            if ($zip->open($absolute, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+                throw new RuntimeException('cannot create the ZIP archive');
+            }
+            foreach ($files as $file) {
+                $zip->addFile($source->path($file), $file);
+            }
+            if (!$zip->close()) {
+                throw new RuntimeException('cannot write the ZIP archive');
+            }
+            $backup->forceFill(['files_path' => $relative, 'files_size_bytes' => (int) @filesize($absolute), 'files_count' => count($files)])->save();
+        } catch (Throwable $e) {
+            @unlink($absolute);
+            Log::error('Backup files archive failed: '.$e->getMessage());
+            $backup->forceFill(['error' => mb_substr('Database saved; the files archive failed ('.class_basename($e).').', 0, 255)])->save();
+        }
+    }
+
+    /** Due when no successful backup is newer than the interval (half an hour of slack so hourly checks do not drift). */
+    public function isDue(): bool
+    {
+        $latest = $this->latestCompleted();
+        $hours = max(1, (int) config('admin.backups.interval_hours', 24));
+
+        return !$latest || $latest->completed_at === null || $latest->completed_at->lte(now()->subHours($hours)->addMinutes(30));
+    }
+
+    public function filesPath(DatabaseBackup $backup): ?string
+    {
+        if (!$backup->files_path) {
+            return null;
+        }
+        $disk = Storage::disk($backup->disk);
+
+        return $disk->exists($backup->files_path) ? $disk->path($backup->files_path) : null;
     }
 
     public function latestCompleted(): ?DatabaseBackup
@@ -107,6 +170,22 @@ class DatabaseBackupService
             }
         }
 
+        if ($reason === null && $backup->files_path) {
+            $files = $this->filesPath($backup);
+            $zip = new ZipArchive();
+            if (!$files) {
+                $reason = 'The uploaded-files archive is missing from storage.';
+            } elseif ($zip->open($files, ZipArchive::CHECKCONS) !== true) {
+                $reason = 'The uploaded-files archive is damaged.';
+            } else {
+                $count = $zip->numFiles;
+                $zip->close();
+                if ($count !== (int) $backup->files_count) {
+                    $reason = "The uploaded-files archive holds {$count} files; {$backup->files_count} were recorded.";
+                }
+            }
+        }
+
         $backup->forceFill([
             'verification_status' => $reason === null ? 'verified' : 'failed',
             'verified_at' => now(),
@@ -125,7 +204,7 @@ class DatabaseBackupService
 
     public function delete(DatabaseBackup $backup): void
     {
-        Storage::disk($backup->disk)->delete($backup->path);
+        Storage::disk($backup->disk)->delete(array_filter([$backup->path, $backup->files_path]));
         $backup->delete();
     }
 

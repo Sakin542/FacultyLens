@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDialog } from '@/hooks/useDialog';
 import { X, Copy, Check, Link, Globe, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { GeneratedPdfReportInfo } from '@/types/report';
@@ -24,6 +25,8 @@ export const ReportShareModal: React.FC<ReportShareModalProps> = ({
 }) => {
   const [copied, setCopied] = useState(false);
 
+  const dialog = useDialog(isOpen, onClose);
+
   if (!isOpen) return null;
 
   const isShareActive = Boolean(reportInfo?.is_shareable && reportInfo?.share_token);
@@ -43,7 +46,7 @@ export const ReportShareModal: React.FC<ReportShareModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in duration-150" {...dialog}>
       <div className="bg-white rounded-xl max-w-lg w-full p-6 shadow-xl border border-sage-200">
         <div className="flex items-center justify-between pb-4 border-b border-sage-100">
           <div className="flex items-center gap-2">
@@ -52,7 +55,7 @@ export const ReportShareModal: React.FC<ReportShareModalProps> = ({
               Share Academic Assessment Report
             </h3>
           </div>
-          <button
+          <button aria-label="Close"
             onClick={onClose}
             className="text-sage-500 hover:text-sage-800 p-1 rounded-md transition-colors"
           >

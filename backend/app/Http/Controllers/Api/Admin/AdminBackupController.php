@@ -24,6 +24,8 @@ class AdminBackupController extends Controller
             'meta' => [
                 'keep' => (int) config('admin.backups.keep', 14),
                 'schedule_time' => (string) config('admin.backups.schedule_time', '02:00'),
+                'interval_hours' => max(1, (int) config('admin.backups.interval_hours', 24)),
+                'include_files' => (bool) config('admin.backups.include_files', true),
                 'last_completed' => $this->backups->latestCompleted()?->toPayload(),
                 'disk' => (string) config('admin.backups.disk', 'local'),
                 'driver' => \Illuminate\Support\Facades\DB::connection()->getDriverName(),
@@ -75,15 +77,20 @@ class AdminBackupController extends Controller
         ], $result['ok'] ? 200 : 422);
     }
 
+    /** ?part=files downloads the uploaded-files ZIP; otherwise the database dump. */
     public function download(Request $request, DatabaseBackup $backup): BinaryFileResponse|JsonResponse
     {
-        $path = $backup->status === DatabaseBackup::STATUS_COMPLETED ? $this->backups->absolutePath($backup) : null;
+        $files = $request->query('part') === 'files';
+        $path = $backup->status !== DatabaseBackup::STATUS_COMPLETED ? null
+            : ($files ? $this->backups->filesPath($backup) : $this->backups->absolutePath($backup));
         if (!$path) {
             return response()->json(['status' => 'error', 'message' => 'This backup file is no longer available.'], 404);
         }
-        $this->audit->log('ADMIN_BACKUP_DOWNLOADED', $backup, $backup->id, null, $request->user());
+        $this->audit->log('ADMIN_BACKUP_DOWNLOADED', $backup, $backup->id, ['part' => $files ? 'files' : 'database'], $request->user());
 
-        return response()->download($path, $backup->filename, ['Content-Type' => 'application/gzip']);
+        return $files
+            ? response()->download($path, preg_replace('/\.sql\.gz$/', '', $backup->filename).'.files.zip', ['Content-Type' => 'application/zip'])
+            : response()->download($path, $backup->filename, ['Content-Type' => 'application/gzip']);
     }
 
     public function destroy(Request $request, DatabaseBackup $backup): JsonResponse

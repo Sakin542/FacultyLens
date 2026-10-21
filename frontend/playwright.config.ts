@@ -11,6 +11,8 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './tests/e2e',
+  // The AI course walkthrough reads real lecture PDFs from AI_PDF_DIR (default: ~/Downloads), which CI does not have
+  testIgnore: process.env.CI && !process.env.AI_PDF_DIR ? ['**/15-ai-course-walkthrough.spec.ts'] : [],
   timeout: 120_000,
   expect: { timeout: 15_000 },
   fullyParallel: false,

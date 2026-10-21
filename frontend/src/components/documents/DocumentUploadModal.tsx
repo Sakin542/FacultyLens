@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useDialog } from '@/hooks/useDialog';
 import { Button } from '@/components/common/Button';
 import { X, UploadCloud, FileText, AlertCircle, Loader2, CheckCircle2 } from 'lucide-react';
 import { DocumentProcessingType } from '@/types';
@@ -26,6 +27,8 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const dialog = useDialog(isOpen, onClose);
 
   if (!isOpen) return null;
 
@@ -100,7 +103,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4 overflow-y-auto" {...dialog}>
       <div className="relative w-full max-w-lg rounded-xl bg-white shadow-xl dark:bg-slate-800 border border-slate-200 dark:border-slate-700 overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-700/60 px-6 py-4">
@@ -112,7 +115,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
               Extract text from syllabus, question papers, or exam archives
             </p>
           </div>
-          <button
+          <button aria-label="Close"
             type="button"
             onClick={onClose}
             disabled={isSubmitting}
