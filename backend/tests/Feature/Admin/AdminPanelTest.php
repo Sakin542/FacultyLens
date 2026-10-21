@@ -16,7 +16,7 @@ class AdminPanelTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected const ADMIN_EMAIL = 'rashid.cse.20230104102@aust.edu';
+    protected const ADMIN_EMAIL = 'admin@facultylens.edu';
 
     protected User $admin;
 
@@ -225,6 +225,85 @@ class AdminPanelTest extends TestCase
 
         $this->actingAs($this->admin, 'sanctum')->deleteJson("/api/admin/backups/{$latest->id}")->assertOk();
         Storage::disk('local')->assertMissing('backups/b3.sql.gz');
+    }
+
+    /** The in-memory test database cannot be dumped, so the dump step writes a small gzip file instead. */
+    protected function backupServiceWithFakeDump(): \App\Services\Admin\DatabaseBackupService
+    {
+        $service = new class extends \App\Services\Admin\DatabaseBackupService {
+            protected function copySqlite(array $config, string $absolute): void
+            {
+                file_put_contents($absolute, gzencode('-- test dump'));
+            }
+        };
+        $this->app->instance(\App\Services\Admin\DatabaseBackupService::class, $service);
+
+        return $service;
+    }
+
+    public function test_backups_include_the_uploaded_files_and_verify_both_archives(): void
+    {
+        if (!class_exists(\ZipArchive::class)) {
+            $this->markTestSkipped('PHP zip extension not installed here (the Docker image and CI have it).');
+        }
+        Storage::fake('local');
+        $this->backupServiceWithFakeDump();
+        Storage::disk('local')->put('documents/syllabus.pdf', '%PDF-1.4 syllabus');
+        Storage::disk('local')->put('question_papers/midterm.txt', '1. Define a graph. [5]');
+        Storage::disk('local')->put('ai-toolkit/1/temp.mp3', 'temporary upload');   // not application data: left out
+        Storage::disk('local')->put('backups/old.sql.gz', gzencode('older backup'));  // never back up the backups
+
+        $data = $this->actingAs($this->admin, 'sanctum')->postJson('/api/admin/backups')->assertCreated()->json('data');
+        $this->assertTrue($data['has_files']);
+        $this->assertSame(2, $data['files_count']);
+
+        $backup = DatabaseBackup::query()->findOrFail($data['id']);
+        $zip = new \ZipArchive();
+        $this->assertTrue($zip->open(Storage::disk('local')->path($backup->files_path)) === true);
+        $names = [];
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $names[] = $zip->getNameIndex($i);
+        }
+        $zip->close();
+        sort($names);
+        $this->assertSame(['documents/syllabus.pdf', 'question_papers/midterm.txt'], $names);
+
+        $files = preg_replace('/\.sql\.gz$/', '', $backup->filename).'.files.zip';
+        $this->actingAs($this->admin, 'sanctum')->get("/api/admin/backups/{$backup->id}/download?part=files")->assertOk()->assertDownload($files);
+        $this->actingAs($this->admin, 'sanctum')->postJson("/api/admin/backups/{$backup->id}/verify")->assertOk();
+
+        Storage::disk('local')->delete($backup->files_path);
+        $this->actingAs($this->admin, 'sanctum')->postJson("/api/admin/backups/{$backup->id}/verify")->assertStatus(422)
+            ->assertJsonPath('message', 'Verification failed: The uploaded-files archive is missing from storage.');
+
+        $this->actingAs($this->admin, 'sanctum')->deleteJson("/api/admin/backups/{$backup->id}")->assertOk();
+        Storage::disk('local')->assertMissing($backup->path);
+    }
+
+    public function test_scheduled_backups_catch_up_after_the_machine_was_off(): void
+    {
+        Storage::fake('local');
+        $this->backupServiceWithFakeDump();
+        config(['admin.backups.interval_hours' => 24, 'admin.backups.include_files' => false]);
+
+        // Checked hourly, not once at 02:00: Laravel never runs a schedule that was missed
+        $event = collect(app(\Illuminate\Console\Scheduling\Schedule::class)->events())
+            ->first(fn ($e) => str_contains((string) $e->command, 'backup:database --scheduled --if-due'));
+        $this->assertNotNull($event);
+        $this->assertSame('0 * * * *', $event->expression);
+
+        DatabaseBackup::query()->create(['filename' => 'recent.sql.gz', 'disk' => 'local', 'path' => 'backups/recent.sql.gz', 'size_bytes' => 10,
+            'status' => 'completed', 'trigger' => 'scheduled', 'started_at' => now()->subHours(3), 'completed_at' => now()->subHours(3)]);
+        $this->artisan('backup:database --scheduled --if-due')->expectsOutput('A recent backup exists; nothing to do.')->assertSuccessful();
+        $this->assertSame(1, DatabaseBackup::query()->count());
+
+        $this->travel(22)->hours();   // newest backup is now 25 h old: the next hourly check backs up
+        $this->artisan('backup:database --scheduled --if-due')->assertSuccessful();
+        $this->assertSame(2, DatabaseBackup::query()->count());
+        $this->assertSame('scheduled', DatabaseBackup::query()->latest('id')->first()->trigger);
+
+        $this->actingAs($this->admin, 'sanctum')->getJson('/api/admin/backups')->assertOk()
+            ->assertJsonPath('meta.interval_hours', 24)->assertJsonPath('meta.include_files', false);
     }
 
     // ------------------------------------------------------------------ AI usage

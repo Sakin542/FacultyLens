@@ -75,6 +75,23 @@ IMAGE_TAG=… docker compose -f docker-compose.prod.yml up -d               # 6.
 curl -fsS https://<host>/api/health && curl -fsS https://<host>/api/health/ready   # 7. health
 ```
 
+### Update checklist (every time you pull new code)
+
+Use `docker compose` for the development stack, or add `-f docker-compose.prod.yml` in production.
+
+| # | Step | Command | Needed when |
+|---|---|---|---|
+| 1 | Back up first | `docker compose exec app php artisan backup:database` | always (database + uploaded files ZIP) |
+| 2 | Get the code | `git pull` | always |
+| 3 | Compare settings | `git diff HEAD@{1} -- '*.env.example' '*.env.production.example'` and copy new keys into your `.env` files | a `.env.example` changed |
+| 4 | Rebuild the AI image | `docker compose build ai-service` | `ai-service/requirements.txt` or `ai-service/Dockerfile` changed |
+| 5 | Start / recreate services | `docker compose up -d` | always (recreates changed services; `.env` changes need a recreate, not a restart) |
+| 6 | Migrate | `docker compose exec app php artisan migrate --force` | always (no-op when nothing is new) |
+| 7 | Reload queue workers | `docker compose exec app php artisan horizon:terminate` | always: workers keep the old job code in memory until restarted |
+| 8 | Download new models | `docker compose exec ai-service python -m app.download_models` | model settings changed, or a fresh install (several GB the first time) |
+| 9 | Check health | Admin → **System health** and **Alerts**, or `curl /api/health/ready` | always |
+| 10 | Smoke test | the table below | production |
+
 ### Smoke test (after every deployment)
 
 | Check | Expect |
@@ -98,6 +115,7 @@ curl -fsS https://<host>/api/health && curl -fsS https://<host>/api/health/ready
 
 ## 6. Backup & restore
 
+- **Built-in (default).** The scheduler checks every hour and runs `backup:database` once the newest successful backup is `BACKUP_INTERVAL_HOURS` old (24 h), so a machine that was off or asleep catches up as soon as it runs again. Each backup is a gzipped MySQL dump plus a ZIP of the uploaded files (documents, materials, question papers, previous questions, reports, profile pictures; `BACKUP_INCLUDE_FILES`), kept 14 deep (`BACKUP_KEEP`) in `storage/app/private/backups`. Admin → **Backups** lists, verifies (checksum, decompression, ZIP check) and downloads them; an alert is raised when no successful backup is newer than 26 h. Restore the database with `php artisan backup:restore {id}`, and the files by unzipping into `storage/app/private`. These backups live on the same machine: copy important ones elsewhere.
 - `scripts/backup.sh [compose-file] [dir]` — `mysqldump --single-transaction` (gzip), `storage/app` tarball (documents, reports), `manifest.json` (counts, git commit, SHA-256). Retention `BACKUP_RETENTION_DAYS` (default 14). Schedule daily (cron/systemd timer) and copy to off-host storage.
 - `scripts/restore.sh <backup-dir>` — **restore test** into a scratch database: checksum → import → table/row counts vs manifest → orphan checks → `migrate:status` → drop scratch. Add `--target-db facultylens --yes [--with-storage]` for a real restore, then run `php artisan migrate --force` and `php artisan facultylens:integrity-check`.
 - Verified on 2026-09-11 against the development stack: 72 tables, counts identical to the manifest, 0 orphans, 0 pending migrations (see `docs/PRODUCTION_READINESS.md`).
@@ -126,7 +144,8 @@ curl -fsS https://<host>/api/health && curl -fsS https://<host>/api/health/ready
 
 - **Health**: `/api/health` (liveness), `/api/health/ready` (readiness), `ai-service /ready`; compose healthchecks on every service.
 - **Logs**: JSON via Docker `json-file` (20 MB × 5); Laravel `LOG_CHANNEL=stderr`. Every API request logs `api.request` with `request_id`, `user_id`, `route`, `status`, `duration_ms` (warnings for 4xx and requests slower than `LOG_SLOW_REQUEST_MS`). Correlate with the `X-Request-Id` response header. Bodies, cookies, tokens and documents are never logged.
-- **Suggested alerts**: HTTP 5xx rate > 1 %/5 min; readiness ≠ `ready`; `failed_jobs` growth (`php artisan queue:monitor redis:default --max=1000` powers the worker healthcheck); AI `/ready` 503 > 5 min; report `FAILED` count; disk > 80 % (uploads, reports, MySQL, HF cache); MySQL/Redis unavailable.
+- **Built-in monitor**: `admin:monitor` (scheduler, every 5 minutes) probes the database, cache, storage, queue, workers, scheduler, AI service, **hosted AI provider**, mail and broadcasting, and raises deduplicated admin alerts (in-app + e-mail to the administrator; they resolve themselves when the condition clears). The hosted-provider check reports failing hosted calls (tools quietly fall back to local models, so without it nobody would know) and, for OpenRouter, a balance at or below `ADMIN_ALERT_AI_PROVIDER_MIN_BALANCE` ($0.50). Maintenance windows with *suppress alerts* silence notifications while they are active.
+- **Suggested external alerts**: HTTP 5xx rate > 1 %/5 min; readiness ≠ `ready`; `failed_jobs` growth (`php artisan queue:monitor redis:default --max=1000` powers the worker healthcheck); AI `/ready` 503 > 5 min; report `FAILED` count; disk > 80 % (uploads, reports, MySQL, HF cache); MySQL/Redis unavailable.
 - **AI monitoring**: request count/latency/error rate from `api.request` lines for `/api/ai/*`; model + prompt + generation versions are stored on every AI artifact; STEP 35 evaluation status is exposed in analytics and reports (“Not evaluated” when absent).
 - **Integrity**: `php artisan facultylens:integrity-check --fail-on-issues` (read-only) — run nightly and after restores.
 

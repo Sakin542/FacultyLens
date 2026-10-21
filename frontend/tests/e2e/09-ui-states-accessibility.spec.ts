@@ -94,6 +94,10 @@ test.describe('UI states and accessibility', () => {
   });
 
   test.describe('accessibility (axe-core, WCAG 2.1 A/AA)', () => {
+    // Measure the settled page: with motion on, cards caught mid fade-in were measured at ~87% opacity
+    // (#4C6B62 read as #617C74, 4.48:1) although the real colour passes at 5.9:1
+    test.use({ reducedMotion: 'reduce' });
+
     const scan = async (page: import('@playwright/test').Page, label: string) => {
       const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
       const serious = results.violations.filter((v) => v.impact === 'critical' || v.impact === 'serious');

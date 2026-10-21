@@ -166,7 +166,9 @@ export const GeneratedQuestionCard: React.FC<GeneratedQuestionCardProps> = ({
   const { explain, modal: explanationModal } = useExplanationModal();
 
   return (
-    <article data-testid={`generated-question-${q.id}`} className={cn('rounded-xl border bg-white dark:bg-[#161616] p-4 space-y-3', q.review_status === 'REJECTED' ? 'border-sage-200 dark:border-[#2A2A2A] opacity-70' : 'border-sage-200 dark:border-[#2A2A2A]')}>
+    // Rejected drafts are set apart by a dashed border and muted background (plus their "Rejected" badge), not by
+    // fading: opacity pulled every line of text below the WCAG contrast minimum
+    <article data-testid={`generated-question-${q.id}`} className={cn('rounded-xl border p-4 space-y-3', q.review_status === 'REJECTED' ? 'border-dashed border-sage-300 bg-sage-50 dark:border-[#3A3A3A] dark:bg-[#121212]' : 'border-sage-200 bg-white dark:border-[#2A2A2A] dark:bg-[#161616]')}>
       <header className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold text-sage-800 dark:text-white">Question {q.sequence}</span>

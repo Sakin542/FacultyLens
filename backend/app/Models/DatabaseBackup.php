@@ -12,7 +12,7 @@ class DatabaseBackup extends Model
     public const STATUS_FAILED = 'failed';
 
     protected $fillable = [
-        'filename', 'disk', 'path', 'size_bytes', 'checksum_sha256', 'verification_status', 'verified_at', 'status', 'trigger',
+        'filename', 'disk', 'path', 'files_path', 'size_bytes', 'files_size_bytes', 'files_count', 'checksum_sha256', 'verification_status', 'verified_at', 'status', 'trigger',
         'driver', 'triggered_by', 'error', 'started_at', 'completed_at',
     ];
 
@@ -20,6 +20,8 @@ class DatabaseBackup extends Model
     {
         return [
             'size_bytes' => 'integer',
+            'files_size_bytes' => 'integer',
+            'files_count' => 'integer',
             'started_at' => 'datetime',
             'completed_at' => 'datetime',
             'verified_at' => 'datetime',
@@ -38,6 +40,9 @@ class DatabaseBackup extends Model
             'id' => $this->id,
             'filename' => $this->filename,
             'size_bytes' => $this->size_bytes,
+            'has_files' => $this->files_path !== null,
+            'files_size_bytes' => $this->files_size_bytes,
+            'files_count' => $this->files_count,
             'checksum_sha256' => $this->checksum_sha256,
             'verification_status' => $this->verification_status,
             'verified_at' => $this->verified_at?->toIso8601String(),

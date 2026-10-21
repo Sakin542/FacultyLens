@@ -10,10 +10,10 @@ in PHP, JavaScript, Python, Docker files or documentation. The real Gmail App Pa
 MAIL_MAILER=smtp
 MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
-MAIL_USERNAME=saomiorashid542@gmail.com
+MAIL_USERNAME=your-address@gmail.com
 MAIL_PASSWORD=                      # Gmail App Password — local .env only, never committed
 MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=saomiorashid542@gmail.com
+MAIL_FROM_ADDRESS=your-address@gmail.com
 MAIL_FROM_NAME="FacultyLens"
 ```
 

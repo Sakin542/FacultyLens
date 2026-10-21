@@ -31,7 +31,7 @@ class AdminControlCenterTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected const ADMIN_EMAIL = 'rashid.cse.20230104102@aust.edu';
+    protected const ADMIN_EMAIL = 'admin@facultylens.edu';
 
     protected User $admin;
 
@@ -225,6 +225,47 @@ class AdminControlCenterTest extends TestCase
         $this->fakeAi(200, 200);
         $this->artisan('admin:monitor')->assertSuccessful();
         $this->assertSame('healthy', app(ServiceMonitor::class)->check('scheduler')['status']);
+    }
+
+    public function test_hosted_ai_provider_failures_and_low_balance_raise_alerts(): void
+    {
+        Event::fake([\App\Events\SystemAlertRaised::class]);
+        $monitor = app(ServiceMonitor::class);
+        $state = [];
+        Http::fake(['*/api/v1/toolkit/provider-health' => function () use (&$state) {
+            return Http::response($state + ['status' => 'success', 'configured' => true, 'models' => ['anthropic/claude-opus-5.5'],
+                'calls' => 0, 'failures' => 0, 'last_error' => null, 'credit' => null]);
+        }]);
+        $health = function (array $h) use (&$state) { $state = $h; };
+
+        // Local models selected: nothing to monitor
+        $this->assertSame('unconfigured', $monitor->check('ai_provider')['status']);
+
+        app(\App\Services\Admin\FeatureFlagService::class)->update(['ai_provider' => 'hosted']);
+        $health(['calls' => 10, 'failures' => 0, 'credit' => ['total' => 5, 'used' => 1, 'remaining' => 4]]);
+        $this->assertSame('healthy', $monitor->check('ai_provider')['status']);
+
+        // Most hosted calls failing: unavailable, alert raised (tools are silently on local models)
+        $health(['calls' => 6, 'failures' => 5, 'last_error' => 'hosted provider returned HTTP 402']);
+        $check = $monitor->check('ai_provider');
+        $this->assertSame('unavailable', $check['status']);
+        $this->assertStringContainsString('5 of 6 hosted AI calls failed', $check['summary']);
+        $this->assertStringContainsString('HTTP 402', $check['summary']);
+        app(AlertEvaluator::class)->evaluate(['ai_provider' => $check]);
+        $this->assertDatabaseHas('admin_alerts', ['dedupe_key' => 'service_unavailable:ai_provider', 'severity' => 'warning', 'status' => 'open']);
+
+        // Calls fine but the balance is (nearly) empty: degraded, warning alert
+        $health(['calls' => 4, 'failures' => 0, 'credit' => ['total' => 0, 'used' => 0.02, 'remaining' => -0.02]]);
+        $check = $monitor->check('ai_provider');
+        $this->assertSame('degraded', $check['status']);
+        $this->assertStringContainsString('balance is $-0.02', $check['summary']);
+        app(AlertEvaluator::class)->evaluate(['ai_provider' => $check]);
+        $this->assertDatabaseHas('admin_alerts', ['dedupe_key' => 'ai_provider_degraded', 'status' => 'open']);
+        $this->assertDatabaseHas('admin_alerts', ['dedupe_key' => 'service_unavailable:ai_provider', 'status' => 'resolved']);
+
+        // Hosted selected but no key in the AI service
+        $health(['configured' => false]);
+        $this->assertSame('unavailable', $monitor->check('ai_provider')['status']);
     }
 
     public function test_unreachable_ai_service_is_unavailable_and_raises_one_deduplicated_alert(): void

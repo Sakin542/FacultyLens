@@ -56,7 +56,7 @@ Configuration: `backend/.env` with `MAIL_MAILER=smtp`, Gmail App Password entere
 
 | Step | Evidence |
 |---|---|
-| `php artisan email:test saomiorashid542@gmail.com` | delivery #6 `PENDING` → Horizon `RUNNING … 5s DONE` → **`SENT`**, `attempts=1`, `provider=smtp`, `error_code=null` |
+| `php artisan email:test you@example.com` | delivery #6 `PENDING` → Horizon `RUNNING … 5s DONE` → **`SENT`**, `attempts=1`, `provider=smtp`, `error_code=null` |
 | Gmail accepted the message; recipient inbox | Subject `FacultyLens — Test Email`, HTML renders (header/tagline/footer), plain-text alternative present, no password in the body (user-confirmed) |
 | Forgot password from the UI (account `…@aust.edu`, user 78) | `PASSWORD_RESET_REQUESTED{outcome:LINK_SENT, email_domain:aust.edu}` → deliveries #7/#8 `PASSWORD_RESET` **`SENT`** through Gmail (2 s each) |
 | Reset link opened `http://localhost:5173/reset-password?…`, new password set | `PASSWORD_RESET_COMPLETED` 15:22:25; `password_reset_tokens` rows for the account = **0** (token consumed) |

@@ -37,9 +37,18 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(max(60, $perMinute))->by($request->user()?->id ?: $request->ip());
         });
 
-        // Strict Rate Limiter for Authentication Attempts
+        // Authentication attempts. Tight per account (password guessing against one person), generous per address: a
+        // campus usually reaches the server through one public IP, and a per-IP-only limit let colleagues signing in at
+        // the same time lock each other out.
         RateLimiter::for('auth', function (Request $request) {
-            return Limit::perMinute(20)->by($request->ip());
+            $email = strtolower(trim((string) $request->input('email', '')));
+            $who = $email !== '' ? sha1($email) : (string) ($request->user()?->id ?? 'anonymous');
+            $perIp = (int) env('AUTH_RATE_LIMIT_PER_IP', app()->environment('local') ? 300 : 120);
+
+            return [
+                Limit::perMinute(10)->by('auth:account:'.$who.'|'.$request->ip()),
+                Limit::perMinute(max(20, $perIp))->by('auth:ip:'.$request->ip()),
+            ];
         });
 
         // Dedicated Rate Limiter for Computationally Intensive AI Endpoints

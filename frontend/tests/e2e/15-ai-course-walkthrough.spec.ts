@@ -99,6 +99,9 @@ const writeObservations = () => {
 };
 
 test.describe('Artificial Intelligence course walkthrough', () => {
+  // axe measures settled pages: with motion on, cards caught mid fade-in read as low contrast
+  test.use({ reducedMotion: 'reduce' });
+
   test.use({ actionTimeout: 20_000, navigationTimeout: 60_000 });
   test('faculty persona completes the 20 UAT scenarios through the UI', async ({ page, browser }) => {
     test.setTimeout(3_600_000);

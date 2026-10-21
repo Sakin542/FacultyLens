@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useDialog } from '@/hooks/useDialog';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Input';
 import { X, UploadCloud, FileText, AlertCircle, Loader2 } from 'lucide-react';
@@ -20,6 +21,8 @@ export const MaterialUploadModal: React.FC<MaterialUploadModalProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const dialog = useDialog(isOpen, onClose);
 
   if (!isOpen) return null;
 
@@ -105,7 +108,7 @@ export const MaterialUploadModal: React.FC<MaterialUploadModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs" {...dialog}>
       <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-sage-200 dark:border-[#2C2C2E] shadow-xl max-w-lg w-full p-6 space-y-5 animate-in fade-in zoom-in duration-150">
         <div className="flex items-center justify-between pb-3 border-b border-sage-200 dark:border-[#2C2C2E]">
           <div className="flex items-center gap-2">
@@ -114,7 +117,7 @@ export const MaterialUploadModal: React.FC<MaterialUploadModalProps> = ({
             </div>
             <h3 className="text-lg font-bold text-sage-800 dark:text-white">Upload Course Material</h3>
           </div>
-          <button
+          <button aria-label="Close"
             type="button"
             onClick={onClose}
             className="p-1 rounded-lg text-sage-500 hover:text-sage-800 dark:hover:text-white hover:bg-sage-100 dark:hover:bg-[#2C2C2E] transition-colors"

@@ -26,14 +26,14 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({ assessmentId, st
 
   return (
     <Card variant="default" className="p-5 space-y-4" data-testid="submission-card-summary">
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-sage-100 dark:bg-[#2C2C2E] flex items-center justify-center text-sage-800 dark:text-white">
             <Users className="w-4 h-4" />
           </div>
           <h2 className="text-base font-bold text-sage-800 dark:text-white">Student Submissions</h2>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {onImport && (
             <Button variant="outline" size="sm" leftIcon={<UploadCloud className="w-3.5 h-3.5" />} onClick={onImport}>
               Import Answers

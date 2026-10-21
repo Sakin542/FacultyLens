@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowUp, CheckCircle2, Github, Leaf, Linkedin, Loader2, Mail, Twitter } from 'lucide-react';
+import { ArrowRight, ArrowUp, CheckCircle2, Leaf, Loader2, Mail } from 'lucide-react';
 import { BrandMark, useScrollToSection } from './Navbar';
 import { newsletterService } from '@/services/newsletterService';
 import { ApiError } from '@/services/api';
@@ -65,9 +65,6 @@ export const Footer: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-5 pb-10 border-b border-white/10">
           <div className="space-y-3 max-w-xl">
             <Link to="/" aria-label="FacultyLens home" className="inline-block"><BrandMark light subtitle="Academic Intelligence Platform" /></Link>
-            <p className="text-sm text-white/65 leading-relaxed">
-              AI-powered decision support for university faculty: analyze assessments, align them with learning outcomes, detect similar questions, grade with rubrics and keep an immutable record of every version — while every decision stays yours.
-            </p>
           </div>
         </div>
 
@@ -114,12 +111,6 @@ export const Footer: React.FC = () => {
                 <p className="text-[10px] text-white/40">Double opt-in — we only send after you confirm. Unsubscribe any time from any issue.</p>
               </form>
             )}
-            <div className="flex items-center gap-3 pt-1 text-white/60">
-              <a href="https://www.linkedin.com" target="_blank" rel="noreferrer" aria-label="FacultyLens on LinkedIn" className="rounded-md border border-white/10 p-1.5 hover:bg-white/10 hover:text-white transition-colors"><Linkedin className="w-4 h-4" /></a>
-              <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="FacultyLens on Twitter" className="rounded-md border border-white/10 p-1.5 hover:bg-white/10 hover:text-white transition-colors"><Twitter className="w-4 h-4" /></a>
-              <a href="https://github.com/Sakin542/FacultyLens" target="_blank" rel="noreferrer" aria-label="FacultyLens on GitHub" className="rounded-md border border-white/10 p-1.5 hover:bg-white/10 hover:text-white transition-colors"><Github className="w-4 h-4" /></a>
-              <a href="mailto:hello@facultylens.edu" aria-label="Email FacultyLens" className="rounded-md border border-white/10 p-1.5 hover:bg-white/10 hover:text-white transition-colors"><Mail className="w-4 h-4" /></a>
-            </div>
           </div>
         </div>
 

@@ -95,6 +95,12 @@ class AlertEvaluator
             }
         }
 
+        // A failing or nearly-out-of-credit hosted provider is easy to miss: the tools keep working on local models
+        if (($health['ai_provider']['status'] ?? null) === ServiceMonitor::DEGRADED) {
+            $out['ai_provider_degraded'] = $this->condition('ai_provider_degraded', 'warning', 'ai_provider', 'Hosted AI provider needs attention',
+                (string) ($health['ai_provider']['summary'] ?? 'The hosted provider reported problems.'), (array) ($health['ai_provider']['detail'] ?? []));
+        }
+
         $t = (array) config('admin.alerts');
 
         if (($limit = (int) ($t['queue_backlog'] ?? 0)) > 0 && isset($health['queue']['detail']['pending']) && $health['queue']['detail']['pending'] > $limit) {

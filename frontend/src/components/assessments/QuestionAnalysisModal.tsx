@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDialog } from '@/hooks/useDialog';
 import { Button } from '@/components/common/Button';
 import { Badge } from '@/components/common/Badge';
 import {
@@ -49,6 +50,8 @@ export const QuestionAnalysisModal: React.FC<QuestionAnalysisModalProps> = ({
   const [isAnalyzingBatch, setIsAnalyzingBatch] = useState(false);
   const [batchResult, setBatchResult] = useState<AiBatchAnalysisResponseData | null>(null);
   const [batchError, setBatchError] = useState<string | null>(null);
+
+  const dialog = useDialog(isOpen, onClose);
 
   if (!isOpen) return null;
 
@@ -139,7 +142,7 @@ export const QuestionAnalysisModal: React.FC<QuestionAnalysisModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in" {...dialog}>
       <div className="bg-white dark:bg-[#1C1C1E] border border-sage-200 dark:border-[#2C2C2E] rounded-2xl shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-sage-200 dark:border-[#2C2C2E]">
@@ -154,7 +157,7 @@ export const QuestionAnalysisModal: React.FC<QuestionAnalysisModalProps> = ({
               {assessmentTitle && <p className="text-xs text-sage-500">Evaluating: {assessmentTitle}</p>}
             </div>
           </div>
-          <button
+          <button aria-label="Close"
             type="button"
             onClick={onClose}
             className="p-1.5 rounded-lg text-sage-500 hover:text-sage-800 dark:hover:text-white hover:bg-sage-100 dark:hover:bg-[#2C2C2E] transition-colors"

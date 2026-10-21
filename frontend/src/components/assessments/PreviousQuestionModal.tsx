@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useDialog } from '@/hooks/useDialog';
 import { PreviousQuestion, CognitiveLevel } from '@/types';
 import { PreviousQuestionPayload } from '@/services/previousQuestionService';
 import { Button } from '@/components/common/Button';
@@ -90,6 +91,8 @@ export const PreviousQuestionModal: React.FC<PreviousQuestionModalProps> = ({
     setError(null);
   }, [question, isOpen]);
 
+  const dialog = useDialog(isOpen, onClose);
+
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -123,7 +126,7 @@ export const PreviousQuestionModal: React.FC<PreviousQuestionModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs" {...dialog}>
       <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-sage-200 dark:border-[#2C2C2E] shadow-xl max-w-xl w-full p-6 space-y-5 animate-in fade-in zoom-in duration-150">
         <div className="flex items-center justify-between pb-3 border-b border-sage-200 dark:border-[#2C2C2E]">
           <div className="flex items-center gap-2">
@@ -134,7 +137,7 @@ export const PreviousQuestionModal: React.FC<PreviousQuestionModalProps> = ({
               {question ? 'Edit Historical Question' : 'Add Historical / Previous Question'}
             </h3>
           </div>
-          <button
+          <button aria-label="Close"
             type="button"
             onClick={onClose}
             className="p-1 rounded-lg text-sage-500 hover:text-sage-800 dark:hover:text-white hover:bg-sage-100 dark:hover:bg-[#2C2C2E] transition-colors"
