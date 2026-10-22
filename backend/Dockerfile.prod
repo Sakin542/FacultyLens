@@ -1,35 +1,152 @@
-# FacultyLens backend — production image (php-fpm, no dev dependencies, no artisan serve)
+
+# ============================================================
+# FacultyLens Backend — Production Docker Image
+# Laravel + Apache + PHP 8.2
+# Deployment target: Render
+# ============================================================
+
+# Stage 1: Install production Composer dependencies
 FROM composer:2 AS vendor
+
 WORKDIR /app
+
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-interaction --no-progress --prefer-dist --optimize-autoloader --no-scripts --ignore-platform-reqs
 
-FROM php:8.2-fpm-alpine
+RUN composer install \
+    --no-dev \
+    --no-interaction \
+    --no-progress \
+    --prefer-dist \
+    --optimize-autoloader \
+    --no-scripts \
+    --ignore-platform-reqs
 
-RUN apk add --no-cache bash curl mariadb-client libzip-dev libpng-dev libjpeg-turbo-dev libwebp-dev freetype-dev libxml2-dev oniguruma-dev icu-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
-    && docker-php-ext-install -j"$(nproc)" pdo_mysql mbstring bcmath xml zip gd exif intl opcache pcntl \
-    && rm -rf /tmp/*
 
-# Production PHP settings: opcache on, no error display, upload limits (documents up to 20 MB, lecture recordings up to 100 MB)
+# ============================================================
+# Stage 2: Apache + PHP runtime
+# ============================================================
+FROM php:8.2-apache
+
+# Install system dependencies and PHP extensions
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        bash \
+        curl \
+        default-mysql-client \
+        libzip-dev \
+        libpng-dev \
+        libjpeg62-turbo-dev \
+        libwebp-dev \
+        libfreetype6-dev \
+        libxml2-dev \
+        libonig-dev \
+        libicu-dev \
+    && docker-php-ext-configure gd \
+        --with-freetype \
+        --with-jpeg \
+        --with-webp \
+    && docker-php-ext-install -j"$(nproc)" \
+        pdo_mysql \
+        mbstring \
+        bcmath \
+        xml \
+        zip \
+        gd \
+        exif \
+        intl \
+        opcache \
+        pcntl \
+    && a2enmod rewrite headers \
+    && rm -rf /var/lib/apt/lists/*
+
+
+# ============================================================
+# Configure Apache for Render
+# Listen on port 10000 and serve Laravel's public directory
+# ============================================================
+RUN sed -i 's/^Listen 80$/Listen 10000/' /etc/apache2/ports.conf \
+    && sed -i 's/<VirtualHost \*:80>/<VirtualHost *:10000>/' \
+        /etc/apache2/sites-available/000-default.conf \
+    && sed -i 's!/var/www/html!/var/www/html/public!g' \
+        /etc/apache2/sites-available/000-default.conf \
+    && printf '%s\n' \
+        '<Directory /var/www/html/public>' \
+        '    Options FollowSymLinks' \
+        '    AllowOverride All' \
+        '    Require all granted' \
+        '</Directory>' \
+        > /etc/apache2/conf-available/facultylens.conf \
+    && a2enconf facultylens
+
+
+# ============================================================
+# Production PHP configuration
+# ============================================================
 RUN { \
-      echo "opcache.enable=1"; echo "opcache.validate_timestamps=0"; echo "opcache.memory_consumption=192"; echo "opcache.max_accelerated_files=20000"; \
-      echo "display_errors=Off"; echo "expose_php=Off"; echo "log_errors=On"; \
-      echo "upload_max_filesize=110M"; echo "post_max_size=112M"; echo "memory_limit=512M"; echo "max_execution_time=120"; \
+        echo "opcache.enable=1"; \
+        echo "opcache.enable_cli=0"; \
+        echo "opcache.validate_timestamps=0"; \
+        echo "opcache.memory_consumption=192"; \
+        echo "opcache.max_accelerated_files=20000"; \
+        echo "display_errors=Off"; \
+        echo "expose_php=Off"; \
+        echo "log_errors=On"; \
+        echo "upload_max_filesize=110M"; \
+        echo "post_max_size=112M"; \
+        echo "memory_limit=512M"; \
+        echo "max_execution_time=120"; \
     } > /usr/local/etc/php/conf.d/facultylens.ini
 
-WORKDIR /var/www/html
-COPY --chown=www-data:www-data . /var/www/html
-COPY --from=vendor --chown=www-data:www-data /app/vendor /var/www/html/vendor
-COPY deploy/docker/entrypoint.sh /usr/local/bin/facultylens-entrypoint
-RUN chmod +x /usr/local/bin/facultylens-entrypoint \
-    && mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs storage/app/private bootstrap/cache \
-    && chown -R www-data:www-data storage bootstrap/cache \
-    && chown -R www-data:www-data /usr/local/etc/php-fpm.d \
-    && composer --version >/dev/null 2>&1 || true
 
-USER www-data
-EXPOSE 9000
-HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 CMD php -r 'exit(@fsockopen("127.0.0.1", 9000) ? 0 : 1);'
+# ============================================================
+# Copy Laravel application
+# ============================================================
+WORKDIR /var/www/html
+
+COPY --chown=www-data:www-data . /var/www/html
+
+COPY --from=vendor \
+    --chown=www-data:www-data \
+    /app/vendor /var/www/html/vendor
+
+COPY deploy/docker/entrypoint.sh \
+    /usr/local/bin/facultylens-entrypoint
+
+
+# Create required Laravel directories and permissions
+RUN chmod +x /usr/local/bin/facultylens-entrypoint \
+    && mkdir -p \
+        storage/framework/cache \
+        storage/framework/sessions \
+        storage/framework/views \
+        storage/logs \
+        storage/app/private \
+        bootstrap/cache \
+    && chown -R www-data:www-data \
+        storage \
+        bootstrap/cache
+
+
+# ============================================================
+# Render HTTP port
+# ============================================================
+EXPOSE 10000
+
+
+# ============================================================
+# Container health check
+# ============================================================
+HEALTHCHECK \
+    --interval=30s \
+    --timeout=5s \
+    --start-period=60s \
+    --retries=3 \
+    CMD curl -fsS http://127.0.0.1:10000/ || exit 1
+
+
+# ============================================================
+# Start Laravel initialization and Apache
+# ============================================================
 ENTRYPOINT ["facultylens-entrypoint"]
-CMD ["php-fpm"]
+
+CMD ["apache2-foreground"]
