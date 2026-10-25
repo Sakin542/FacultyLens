@@ -27,8 +27,10 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt \
     && python -m spacy download en_core_web_sm
 
-# Create Hugging Face cache directory
-RUN mkdir -p /app/cache/huggingface
+# Create Hugging Face cache directory and bake in the MiniLM embedding model, so startup loads it from disk
+# instead of downloading it (the download's memory spike can exceed a 512 MB host, and cold starts are faster)
+RUN mkdir -p /app/cache/huggingface \
+    && python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')"
 
 # Copy AI service source code
 COPY . .
