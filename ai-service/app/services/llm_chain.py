@@ -16,6 +16,7 @@ The API key is read from settings here and is never logged or returned.
 """
 
 import logging
+import re
 from functools import lru_cache
 from typing import Any, Dict, List, Optional
 
@@ -62,6 +63,20 @@ def _extra_body(max_tokens: int, reasoning: str) -> dict:
     elif reasoning in ("low", "medium", "high"):
         extra["reasoning"] = {"effort": reasoning, "exclude": True}
     return extra
+
+
+_THINK_BLOCK = re.compile(r"<(think|thinking|reasoning)>.*?</\1>", re.IGNORECASE | re.DOTALL)
+_THINK_OPEN = re.compile(r"<(think|thinking|reasoning)>", re.IGNORECASE)
+
+
+def _strip_thinking(text: str) -> str:
+    """Drop reasoning some models put in the answer despite reasoning.exclude. An unclosed block means the answer
+    was cut off mid-thought, so nothing usable is left (an empty answer moves the chain on to the next model)."""
+    text = _THINK_BLOCK.sub("", text or "")
+    opened = _THINK_OPEN.search(text)
+    if opened:
+        text = text[: opened.start()]
+    return text.strip()
 
 
 def _failure(e: BaseException) -> str:
@@ -121,7 +136,7 @@ def _candidate(name: str, base_url: str, api_key: str, max_tokens: int, timeout:
         # Tags the answer with the model that produced it, and logs a failure before with_fallbacks moves on
         try:
             message: AIMessage = llm.invoke(prompt_value)
-            text = (message.content if isinstance(message.content, str) else message.text).strip()
+            text = _strip_thinking(message.content if isinstance(message.content, str) else message.text)
             if not text:
                 raise _EmptyAnswer()
             return name, text

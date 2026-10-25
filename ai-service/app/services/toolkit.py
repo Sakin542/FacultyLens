@@ -667,15 +667,25 @@ class Speaker:
         return get_settings().tts_max_chars
 
     def model_name(self, language: str) -> str:
+        if language == "en" and self.english_edge_enabled:
+            return f"edge-tts ({get_settings().tts_english_voice})"
         if language == "en" and self.kokoro_enabled:
             return f"{KOKORO_REPO} ({get_settings().tts_kokoro_voice})"
         if language == "bn" and self.edge_enabled:
             return f"edge-tts ({get_settings().tts_bangla_voice})"
         return TTS_MODELS[language]
 
+    @staticmethod
+    def _edge_available() -> bool:
+        return _module_available("edge_tts") and shutil.which("ffmpeg") is not None
+
     @property
     def edge_enabled(self) -> bool:
-        return get_settings().tts_bangla_engine.strip().lower() == "edge" and _module_available("edge_tts") and shutil.which("ffmpeg") is not None
+        return get_settings().tts_bangla_engine.strip().lower() == "edge" and self._edge_available()
+
+    @property
+    def english_edge_enabled(self) -> bool:
+        return get_settings().tts_english_engine.strip().lower() == "edge" and self._edge_available()
 
     @staticmethod
     def _edge_mp3(text: str, voice: str) -> bytes:
@@ -745,14 +755,15 @@ class Speaker:
         return {"voice": get_settings().tts_bangla_voice, "state": "failing" if failing else ("ok" if Speaker.edge_last_ok else "unused"),
                 "last_error": Speaker.edge_last_error if failing else None}
 
-    def _speak_edge(self, text: str) -> Dict[str, Any]:
+    def _speak_edge(self, text: str, language: str = "bn") -> Dict[str, Any]:
         import numpy as np
 
-        mp3 = self._online_mp3(text, get_settings().tts_bangla_voice)
+        s = get_settings()
+        mp3 = self._online_mp3(text, s.tts_english_voice if language == "en" else s.tts_bangla_voice)
         rate = 24000
         pcm = subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-i", "pipe:0", "-f", "f32le", "-ac", "1", "-ar", str(rate), "pipe:1"],  # noqa: S603,S607 - fixed ffmpeg arguments, audio on stdin, no shell
                              input=mp3, capture_output=True, timeout=120, check=True).stdout
-        return self._wav(np.frombuffer(pcm, dtype="<f4"), rate, self.model_name("bn"))
+        return self._wav(np.frombuffer(pcm, dtype="<f4"), rate, self.model_name(language))
 
     @property
     def kokoro_enabled(self) -> bool:
@@ -822,7 +833,12 @@ class Speaker:
             raise ToolkitError("Enter some text to read aloud.")
         if len(text) > self.max_chars:
             raise ToolkitError(f"The text is {len(text)} characters; the limit is {self.max_chars}.")
-        if language == "en" and self.kokoro_enabled:
+        if language == "en" and self.english_edge_enabled:
+            try:
+                return self._speak_edge(text, "en")
+            except Exception as e:  # offline, service change or rate limit: fall back to the local voice
+                logger.warning(f"Online English voice failed ({type(e).__name__}); using {TTS_MODELS['en']}")
+        elif language == "en" and self.kokoro_enabled:
             try:
                 return self._wav(self._speak_kokoro(text), KOKORO_RATE, self.model_name("en"))
             except ToolkitError:

@@ -149,10 +149,11 @@ class Settings(BaseSettings):
     translation_model: str = "facebook/nllb-200-distilled-600M"
     translation_max_chars: int = 5000
     tts_max_chars: int = 1500
-    # English speech: "kokoro" (hexgrad/Kokoro-82M, natural voice) or "mms" (facebook/mms-tts-eng). Bangla always uses
-    # MMS-TTS; English falls back to MMS when Kokoro is not installed or fails.
+    # English speech: "kokoro" (hexgrad/Kokoro-82M, natural voice), "edge" (Microsoft online voice, no local model:
+    # for small hosts) or "mms" (facebook/mms-tts-eng). English falls back to MMS when the chosen engine fails.
     tts_english_engine: str = "kokoro"
     tts_kokoro_voice: str = "af_heart"
+    tts_english_voice: str = "en-US-AriaNeural"   # edge-tts voice used when tts_english_engine is "edge"
     # Bangla speech: "edge" (Microsoft neural voice through the edge-tts package: natural, but the text is sent to
     # Microsoft's online read-aloud service and needs internet) or "mms" (facebook/mms-tts-ben, local). Falls back to
     # MMS-TTS when the online voice fails.
