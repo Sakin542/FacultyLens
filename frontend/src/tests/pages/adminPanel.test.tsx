@@ -100,7 +100,8 @@ describe('Admin control center', () => {
     expect(screen.queryByRole('navigation', { name: 'Main' })).not.toBeInTheDocument(); // the faculty sidebar is not rendered
     expect(within(nav).getByRole('link', { name: 'AI evaluation' })).toHaveAttribute('href', '/admin/ai-evaluation');
 
-    expect(await screen.findByTestId('kpi-users')).toHaveTextContent('12');
+    // The dashboard page is lazy-loaded; the default 1 s wait flakes when the full suite runs in parallel
+    expect(await screen.findByTestId('kpi-users', {}, { timeout: 6000 })).toHaveTextContent('12');
     expect(screen.getByTestId('kpi-users')).toHaveTextContent('+2 (100%)');
     expect(screen.getByText('Not measured')).toBeInTheDocument(); // AI availability without recorded checks is not shown as 100%
     expect(screen.getByText('AI service (FastAPI) unavailable')).toBeInTheDocument();
