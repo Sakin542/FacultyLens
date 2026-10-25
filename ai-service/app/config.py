@@ -130,6 +130,11 @@ class Settings(BaseSettings):
     llm_vision_models: str = "google/gemini-3.8-flash,anthropic/claude-haiku-5.5"
     llm_audio_models: str = ""                      # e.g. google/gemini-3.8-flash (OpenRouter needs a $0.50+ balance for audio)
     llm_media_timeout_seconds: int = 300
+    # Optional speech-to-text API (OpenAI-compatible /audio/transcriptions, e.g. Groq's free Whisper at
+    # https://api.groq.com/openai/v1). Tried first for lecture transcription when a key is set.
+    asr_api_base_url: Optional[str] = None
+    asr_api_key: Optional[str] = None
+    asr_api_model: str = "whisper-large-v3-turbo"
     asr_hosted_chunk_seconds: int = 60              # pieces of about this length, cut at quiet moments (timestamps stay accurate)
 
     # AI toolkit (local Hugging Face models, loaded lazily on first use)

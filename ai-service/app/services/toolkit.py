@@ -427,6 +427,38 @@ class LectureTranscriber:
             seg["end"] = segments[i + 1]["start"] if i + 1 < len(segments) else round(end, 1)
         return [{"start": s["start"], "end": s["end"], "text": s["text"]} for s in segments]
 
+    @staticmethod
+    def api_configured() -> bool:
+        s = get_settings()
+        return bool((s.asr_api_base_url or "").strip() and (s.asr_api_key or "").strip())
+
+    def _run_api(self, audio: Any, language: Optional[str]) -> List[Dict[str, Any]]:
+        """Whisper through an OpenAI-compatible /audio/transcriptions endpoint, a piece at a time (timestamps kept)."""
+        import httpx
+
+        s = get_settings()
+        url = s.asr_api_base_url.rstrip("/") + "/audio/transcriptions"
+        rate = 16000
+        cuts = self.split_points(audio, rate, s.asr_hosted_chunk_seconds)
+        segments: List[Dict[str, Any]] = []
+        with httpx.Client(timeout=s.llm_media_timeout_seconds) as client:
+            for a, b in zip(cuts, cuts[1:]):
+                offset = a / rate
+                data = {"model": s.asr_api_model, "response_format": "verbose_json", "temperature": "0"}
+                if language:
+                    data["language"] = language
+                response = client.post(url, headers={"Authorization": f"Bearer {s.asr_api_key}"}, data=data,
+                                       files={"file": ("audio.mp3", self._encode_mp3(audio[a:b]), "audio/mpeg")})
+                response.raise_for_status()
+                body = response.json()
+                parts = body.get("segments") or [{"start": 0.0, "end": (b - a) / rate, "text": body.get("text", "")}]
+                for seg in parts:
+                    text = str(seg.get("text", "")).strip()
+                    if text:
+                        segments.append({"start": round(offset + float(seg.get("start", 0)), 2),
+                                         "end": round(offset + float(seg.get("end", 0)), 2), "text": text})
+        return segments
+
     def _run_hosted(self, audio: Any, language: Optional[str]) -> Tuple[List[Dict[str, Any]], List[str]]:
         models = llm_chain.audio_models()
         rate = 16000
@@ -503,6 +535,17 @@ class LectureTranscriber:
             raise ToolkitError("The recording is empty.")
         if seconds > limit:
             raise ToolkitError(f"The recording is {int(seconds // 60)} minutes long; the limit is {limit // 60} minutes.")
+
+        if self.api_configured():
+            try:
+                segments = self._run_api(audio, language)
+                return {
+                    "text": " ".join(s["text"] for s in segments).strip(), "segments": segments, "duration_seconds": round(seconds, 1),
+                    "language": language or "auto", "model": f"api:{get_settings().asr_api_model}", "provider": "hosted",
+                    "fallback_reason": None,
+                }
+            except Exception as e:  # network, quota or bad key: the hosted chat models and the local model remain
+                logger.warning(f"Speech-to-text API failed ({type(e).__name__}); trying the next transcription option")
 
         use_hosted, fallback = _hosted_media(llm_chain.audio_models())
         if use_hosted:
