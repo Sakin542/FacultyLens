@@ -62,6 +62,10 @@ def _extra_body(max_tokens: int, reasoning: str) -> dict:
         extra["reasoning"] = {"enabled": reasoning == "on", "exclude": True}
     elif reasoning in ("low", "medium", "high"):
         extra["reasoning"] = {"effort": reasoning, "exclude": True}
+    elif reasoning.startswith("effort:"):
+        # OpenAI-standard field, also understood by Gemini's OpenAI endpoint. Gemini 3 models think by default and
+        # that thinking counts against max_tokens, cutting answers short; "effort:none" turns it off.
+        extra["reasoning_effort"] = reasoning.split(":", 1)[1].strip()
     return extra
 
 

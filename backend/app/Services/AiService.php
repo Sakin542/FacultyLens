@@ -40,10 +40,37 @@ class AiService
         // Generation provider chosen by the administrator (local Hugging Face model or hosted API)
         $headers['X-AI-Provider'] = $this->provider();
 
-        return Http::connectTimeout($this->connectTimeout)
+        $request = Http::connectTimeout($this->connectTimeout)
             ->timeout($this->timeout)
             ->withHeaders($headers)
             ->withMiddleware(app(\App\Services\Admin\AiUsageRecorder::class)->middleware());
+
+        // Hosts that put an idle AI service to sleep (Render free) answer 502/503 while it wakes; wait and retry
+        $retries = (int) config('services.ai.wake_retries', 0);
+        if ($retries > 0) {
+            $request = $request->retry($retries + 1, (int) config('services.ai.wake_retry_sleep_ms', 5000),
+                fn (Exception $e) => $e instanceof ConnectionException
+                    || ($e instanceof RequestException && in_array($e->response->status(), [502, 503, 504], true)),
+                throw: false);
+        }
+
+        return $request;
+    }
+
+    /**
+     * Nudge a sleeping AI service awake ahead of the user's first AI request (at most every two minutes). The
+     * request is fire-and-forget: reaching the host starts the wake-up even though this call gives up after a second.
+     */
+    public function wake(): void
+    {
+        if (!config('services.ai.wake_on_activity') || !\Illuminate\Support\Facades\Cache::add('ai-service:wake-ping', true, 120)) {
+            return;
+        }
+        try {
+            Http::connectTimeout(1)->timeout(1)->get("{$this->baseUrl}/health");
+        } catch (\Throwable) {
+            // Expected while the service is still starting
+        }
     }
 
     /**

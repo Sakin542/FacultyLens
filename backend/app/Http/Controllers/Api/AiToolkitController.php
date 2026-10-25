@@ -26,6 +26,7 @@ class AiToolkitController extends Controller
 
     public function index(Request $request): JsonResponse
     {
+        app()->terminating(fn () => $this->ai->wake());
         $jobs = AiToolJob::query()->where('user_id', $request->user()->id)->latest('id')->limit(30)->get();
 
         return response()->json([

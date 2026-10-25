@@ -260,6 +260,10 @@ class AuthController extends Controller
     public function session(Request $request): JsonResponse
     {
         $user = $request->user('sanctum');
+        if ($user !== null) {
+            // A signed-in user is likely to use an AI tool soon: start waking the AI service after this response
+            app()->terminating(fn () => app(\App\Services\AiService::class)->wake());
+        }
 
         return response()->json([
             'status' => 'success',

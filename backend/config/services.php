@@ -44,6 +44,10 @@ return [
         'url' => env('AI_SERVICE_URL', 'http://127.0.0.1:8001'),
         'api_key' => env('AI_SERVICE_API_KEY'),
         'connect_timeout' => (int) env('AI_SERVICE_CONNECT_TIMEOUT', 10),
+        // Sleeping hosts (Render free): ping the AI service when users are active, and retry 502/503 while it wakes
+        'wake_on_activity' => (bool) env('AI_SERVICE_WAKE_ON_ACTIVITY', false),
+        'wake_retries' => (int) env('AI_SERVICE_WAKE_RETRIES', 0),
+        'wake_retry_sleep_ms' => (int) env('AI_SERVICE_WAKE_RETRY_SLEEP_MS', 5000),
         'timeout' => (int) env('AI_SERVICE_TIMEOUT', 120),
         // OCR and lecture transcription run on CPU and can take many minutes (queued jobs, never a web request)
         'toolkit_timeout' => (int) env('AI_TOOLKIT_TIMEOUT', 1800),

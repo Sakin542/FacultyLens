@@ -123,7 +123,8 @@ class Settings(BaseSettings):
     llm_hosted_max_retries: int = 1                 # LangChain/OpenAI SDK retries on 429/5xx before falling back
     # OpenRouter-style reasoning control: "low" / "medium" / "high" set the thinking effort (works for every model),
     # "off" asks for a direct answer (models that must reason reject it), "on" enables it, empty sends nothing (for
-    # providers that reject the field).
+    # providers that reject the field). "effort:<level>" sends the OpenAI-standard reasoning_effort instead
+    # (Gemini's OpenAI endpoint: "effort:none" stops thinking from using up the answer's token budget).
     llm_hosted_reasoning: str = ""
     # Hosted models for the toolkit's image and audio tools (same base URL and key), tried in order; when all fail,
     # or the admin selected "local", TrOCR / Whisper run locally instead. Images/recordings are sent to the provider.

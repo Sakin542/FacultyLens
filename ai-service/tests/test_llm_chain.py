@@ -44,6 +44,21 @@ def test_prompt_with_braces_is_sent_verbatim(monkeypatch, hosted):
     assert seen["headers"]["x-title"] == "FacultyLens"
 
 
+def test_reasoning_settings_map_to_the_provider_fields(monkeypatch, hosted):
+    seen = {}
+    _route(monkeypatch, lambda r: (seen.update(body=json.loads(r.content)), _ok("ok"))[1])
+
+    monkeypatch.setattr(hosted, "llm_hosted_reasoning", "effort:none")  # Gemini OpenAI endpoint
+    llm_chain.reset_cache()
+    llm_chain.run_hosted("hi", 64)
+    assert seen["body"]["reasoning_effort"] == "none" and "reasoning" not in seen["body"]
+
+    monkeypatch.setattr(hosted, "llm_hosted_reasoning", "off")  # OpenRouter
+    llm_chain.reset_cache()
+    llm_chain.run_hosted("hi", 64)
+    assert seen["body"]["reasoning"] == {"enabled": False, "exclude": True} and "reasoning_effort" not in seen["body"]
+
+
 def test_http_error_and_empty_answer_raise_a_safe_reason(monkeypatch, hosted):
     _route(monkeypatch, lambda r: httpx.Response(401, json={"error": {"message": "bad key secret-key-123"}}))
     with pytest.raises(llm_chain.HostedCallError) as e:
