@@ -229,6 +229,39 @@ class AdminUserController extends Controller
         return response()->json(['status' => 'success', 'message' => 'All sessions for this account were ended.', 'data' => $ended]);
     }
 
+    /**
+     * Permanently delete an account. Refused while the user still owns courses: deleting them would cascade to
+     * assessments and student records, so such accounts are suspended instead (or their courses removed first).
+     */
+    public function destroy(Request $request, User $user): JsonResponse
+    {
+        $validated = $request->validate([
+            'confirm_email' => ['required', 'string'],
+            'reason' => ['required', 'string', 'max:500'],
+        ]);
+
+        if ($this->isProtected($user) || $user->is($request->user())) {
+            return response()->json(['status' => 'error', 'message' => 'The administrator account cannot be deleted.'], 422);
+        }
+        if (strtolower(trim($validated['confirm_email'])) !== strtolower((string) $user->email)) {
+            return response()->json(['status' => 'error', 'message' => 'Type the account\'s e-mail address exactly to confirm.',
+                'errors' => ['confirm_email' => ['The e-mail address does not match this account.']]], 422);
+        }
+        $courses = $user->courses()->count();
+        if ($courses > 0) {
+            return response()->json(['status' => 'error', 'message' => "This account owns {$courses} course(s). Deleting it would also delete their assessments and student records, so suspend the account instead."], 409);
+        }
+
+        $snapshot = ['email' => $user->email, 'name' => $user->name, 'role' => $user->role, 'reason' => $validated['reason']];
+        DB::transaction(function () use ($user, $snapshot, $request) {
+            $this->audit->log('ADMIN_USER_DELETED', $user, $user->id, $snapshot, $request->user());
+            $this->endSessions($user);
+            $user->delete();
+        });
+
+        return response()->json(['status' => 'success', 'message' => "The account {$snapshot['email']} was deleted."]);
+    }
+
     /** E-mail the user a standard password-reset link (the admin never sees or sets passwords). */
     public function sendPasswordReset(Request $request, User $user): JsonResponse
     {

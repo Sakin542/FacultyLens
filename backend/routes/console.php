@@ -15,7 +15,9 @@ Artisan::command('reports:purge-expired', function (InstitutionalReportService $
     $this->info("Purged {$n} expired report file(s).");
 })->purpose('Delete expired institutional report files');
 
-Schedule::command('reports:purge-expired')->dailyAt('02:30');
+// Daily jobs sit on whole hours: on hosts where an external cron triggers schedule:run hourly (Render free), a
+// job set for e.g. 02:30 would never be due at the moment the scheduler runs.
+Schedule::command('reports:purge-expired')->dailyAt('05:00');
 
 // STEP 47: notification retention (expired + stale read/dismissed rows; audit rows are never touched)
 Artisan::command('notifications:purge', function (\App\Services\Notification\NotificationService $notifications) {
@@ -61,7 +63,7 @@ Artisan::command('newsletter:purge-unconfirmed', function (\App\Services\Newslet
     $this->info("Purged {$n} unconfirmed subscription(s).");
 })->purpose('Delete newsletter sign-ups that were never confirmed');
 
-Schedule::command('newsletter:purge-unconfirmed')->dailyAt('03:15');
+Schedule::command('newsletter:purge-unconfirmed')->dailyAt('06:00');
 
 // E-mail delivery log retention (metadata rows only; audit rows are never touched)
 Artisan::command('email:purge-deliveries', function () {
@@ -77,7 +79,7 @@ Artisan::command('email:purge-deliveries', function () {
     return 0;
 })->purpose('Delete old email_deliveries rows according to config/email.php retention');
 
-Schedule::command('email:purge-deliveries')->dailyAt('03:30');
+Schedule::command('email:purge-deliveries')->dailyAt('07:00');
 
 // Admin panel: create/repair the single administrator account from ADMIN_EMAIL / ADMIN_PASSWORD (idempotent).
 // Any other account holding the ADMIN role is demoted to FACULTY so the panel stays restricted to one login.
@@ -247,4 +249,4 @@ Artisan::command('admin:prune', function (\App\Services\Admin\ServiceMonitor $mo
     $this->info(sprintf('Pruned %d health check row(s) and %d expired export file(s).', $monitor->prune(), $operations->purgeExpiredResults()));
 })->purpose('Prune admin health history and expired export files');
 
-Schedule::command('admin:prune')->dailyAt('04:30');
+Schedule::command('admin:prune')->dailyAt('08:00');

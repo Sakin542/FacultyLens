@@ -155,6 +155,35 @@ describe('Admin control center', () => {
     expect(await screen.findByText('2 account(s) updated.')).toBeInTheDocument();
   });
 
+  it('deletes an account without courses only after typing its e-mail and a reason', async () => {
+    const detail = (over: Record<string, unknown>) => ({ ...user(over), collaborations_count: 0, email_verified_at: null, history: [],
+      sessions: { tracked: true, driver: 'database', active: 0, last_activity_at: null, api_tokens: 0 } });
+    api.user.mockResolvedValue(detail({ courses_count: 0 }));
+    api.deleteUser.mockResolvedValue({ status: 'success', message: 'The account karim@aust.edu was deleted.', data: null });
+    api.users.mockResolvedValue({ status: 'success', data: [], meta: { current_page: 1, last_page: 1, per_page: 25, total: 0 } });
+    renderAt('/admin/users/5', admin);
+
+    fireEvent.click(await screen.findByRole('button', { name: /^Delete$/ }));
+    const confirm = screen.getByTestId('confirm-action');
+    expect(confirm).toBeDisabled();
+    const dialog = screen.getByRole('dialog');
+    const [reason, typed] = within(dialog).getAllByRole('textbox');
+    fireEvent.change(reason, { target: { value: 'Duplicate test account' } });
+    fireEvent.change(typed, { target: { value: 'karim@aust.edu' } });
+    expect(confirm).toBeEnabled();
+    fireEvent.click(confirm);
+
+    await waitFor(() => expect(api.deleteUser).toHaveBeenCalledWith(5, { confirm_email: 'karim@aust.edu', reason: 'Duplicate test account' }));
+  });
+
+  it('hides delete for accounts that own courses', async () => {
+    api.user.mockResolvedValue({ ...user({ courses_count: 2 }), collaborations_count: 0, email_verified_at: null, history: [],
+      sessions: { tracked: true, driver: 'database', active: 0, last_activity_at: null, api_tokens: 0 } });
+    renderAt('/admin/users/5', admin);
+    expect(await screen.findByRole('button', { name: /Suspend/ })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^Delete$/ })).not.toBeInTheDocument();
+  });
+
   it('previews a CSV import before creating accounts', async () => {
     api.users.mockResolvedValue({ data: [], meta: { current_page: 1, last_page: 1, per_page: 20, total: 0 } });
     api.importPreview.mockResolvedValue({ status: 'success', data: { columns: ['name', 'email'], missing_columns: [], valid: 1, invalid: 1, truncated: false, rows: [

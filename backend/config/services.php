@@ -35,6 +35,11 @@ return [
         ],
     ],
 
+    // External cron trigger for hosts without a scheduler process (POST /api/internal/scheduler/run); empty = disabled
+    'scheduler' => [
+        'token' => env('SCHEDULER_TOKEN', ''),
+    ],
+
     'ai' => [
         'url' => env('AI_SERVICE_URL', 'http://127.0.0.1:8001'),
         'api_key' => env('AI_SERVICE_API_KEY'),

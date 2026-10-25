@@ -46,6 +46,8 @@ async function invitationTokenFromMail(page: Page, recipient: string, timeoutMs 
 }
 
 test.describe('STEP 47: notification system', () => {
+  // axe must measure the settled page: mid fade-in, sage-700 (#1E6F5C, ~6:1 on white) read as #3F8473 (4.37:1)
+  test.use({ reducedMotion: 'reduce' });
   test('E2E 1 — AI analysis completion produces a notification that opens the analysis page', async ({ page }) => {
     test.setTimeout(300_000);
     const api = new Api(page);

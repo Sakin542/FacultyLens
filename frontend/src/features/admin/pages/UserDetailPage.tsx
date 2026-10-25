@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, KeyRound, LogOut, ShieldOff, UserCheck, UserX } from 'lucide-react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { ArrowLeft, KeyRound, LogOut, ShieldOff, Trash2, UserCheck, UserX } from 'lucide-react';
 import { adminApi } from '../api';
 import { useAction, useAdminData } from '../hooks';
 import type { AssignableRole } from '../types';
 import { Async, Btn, Card, ConfirmDialog, Field, KeyValue, Notice, PageHeader, Pill, Select, StatusBadge, fmt, fmtDateTime, humanize, inputCls, timeAgo } from '../components/ui';
 
-type Pending = 'suspend' | 'reinstate' | 'revoke' | 'reset' | '2fa' | 'role' | null;
+type Pending = 'suspend' | 'reinstate' | 'revoke' | 'reset' | '2fa' | 'role' | 'delete' | null;
 
 export const UserDetailPage: React.FC = () => {
   const id = Number(useParams().userId);
+  const navigate = useNavigate();
   const state = useAdminData(() => adminApi.user(id), [id]);
   const action = useAction();
   const [pending, setPending] = useState<Pending>(null);
@@ -41,6 +42,7 @@ export const UserDetailPage: React.FC = () => {
                   <Btn icon={LogOut} onClick={() => setPending('revoke')}>End sessions</Btn>
                   {u.two_factor_enabled && <Btn icon={ShieldOff} onClick={() => setPending('2fa')}>Reset 2FA</Btn>}
                   {u.is_active ? <Btn icon={UserX} variant="danger" onClick={() => setPending('suspend')}>Suspend</Btn> : <Btn icon={UserCheck} variant="primary" onClick={() => setPending('reinstate')}>Reinstate</Btn>}
+                  {u.courses_count === 0 && <Btn icon={Trash2} variant="danger" onClick={() => setPending('delete')}>Delete</Btn>}
                 </>} />
 
               <div className="grid gap-6 lg:grid-cols-3">
@@ -99,6 +101,11 @@ export const UserDetailPage: React.FC = () => {
                 reason={{ label: 'Reason for suspension', required: true }}
                 body="They are signed out everywhere and cannot sign in until reinstated. Courses, assessments and grades they own are kept unchanged."
                 onCancel={() => setPending(null)} onConfirm={(reason) => { void done(() => adminApi.updateUser(u.id, { is_active: false, reason })); }} />
+              <ConfirmDialog open={pending === 'delete'} tone="danger" title={`Delete ${u.name}?`} confirmLabel="Delete account" busy={action.busy === 'delete'}
+                typeToConfirm={u.email} reason={{ label: 'Reason for deletion', required: true }}
+                body="The account, its sessions, notifications and preferences are removed permanently. This cannot be undone; the audit log keeps a record of the deletion. Accounts that own courses cannot be deleted — suspend them instead."
+                onCancel={() => setPending(null)}
+                onConfirm={(reason) => { void action.run('delete', () => adminApi.deleteUser(u.id, { confirm_email: u.email, reason })).then((r) => { setPending(null); if (r) navigate('/admin/users'); }); }} />
               <ConfirmDialog open={pending === 'reinstate'} title={`Reinstate ${u.name}?`} confirmLabel="Reinstate" busy={action.busy === 'reinstate'} reason={{ label: 'Reason', required: false }}
                 body="The account can sign in again immediately." onCancel={() => setPending(null)} onConfirm={(reason) => { void done(() => adminApi.updateUser(u.id, { is_active: true, reason: reason || undefined })); }} />
               <ConfirmDialog open={pending === 'revoke'} title="End all sessions?" confirmLabel="End sessions" busy={action.busy === 'revoke'}

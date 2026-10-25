@@ -60,6 +60,7 @@ use App\Http\Controllers\Api\CourseMaterialController;
 use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\FeedbackController;
 use App\Http\Controllers\Api\HealthController;
+use App\Http\Controllers\Api\SchedulerTriggerController;
 use App\Http\Controllers\Api\LearningOutcomeController;
 use App\Http\Controllers\Api\PerformanceController;
 use App\Http\Controllers\Api\ProgramController;
@@ -78,6 +79,9 @@ use Illuminate\Support\Facades\Route;
  */
 Route::get('/health', [HealthController::class, 'check']);
 Route::get('/health/ready', [HealthController::class, 'ready']);
+
+// External cron (cron-job.org) runs the Laravel scheduler where no scheduler process exists; token-guarded, 404 otherwise
+Route::post('/internal/scheduler/run', SchedulerTriggerController::class)->middleware('throttle:10,1');
 
 /**
  * Faculty Authentication Endpoints
@@ -138,6 +142,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function ()
     Route::post('/users/import', [AdminUserController::class, 'import'])->middleware('throttle:5,1');
     Route::get('/users/{user}', [AdminUserController::class, 'show'])->whereNumber('user');
     Route::patch('/users/{user}', [AdminUserController::class, 'update'])->whereNumber('user');
+    Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])->whereNumber('user')->middleware('throttle:20,1');
     Route::post('/users/{user}/revoke-sessions', [AdminUserController::class, 'revokeSessions'])->whereNumber('user');
     Route::post('/users/{user}/password-reset', [AdminUserController::class, 'sendPasswordReset'])->whereNumber('user')->middleware('throttle:password-reset');
     Route::delete('/users/{user}/two-factor', [AdminUserController::class, 'resetTwoFactor'])->whereNumber('user');

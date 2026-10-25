@@ -30,6 +30,7 @@ export const adminApi = {
   updateUser: (id: number, body: Partial<{ role: AssignableRole; is_active: boolean; name: string; department: string | null; designation: string | null; reason: string }>) => send<AdminUser>('PATCH', `/users/${id}`, body),
   bulkUsers: (body: { ids: number[]; action: 'activate' | 'deactivate' | 'set_role' | 'set_department'; role?: AssignableRole; department?: string; reason?: string; confirm: true }) =>
     send<{ updated: number; unchanged: number; skipped: number[]; not_found: number[] }>('POST', '/users/bulk', body),
+  deleteUser: (id: number, body: { confirm_email: string; reason: string }) => send<null>('DELETE', `/users/${id}`, body),
   revokeSessions: (id: number) => send<{ tokens: number; sessions: number }>('POST', `/users/${id}/revoke-sessions`),
   sendPasswordReset: (id: number) => send<null>('POST', `/users/${id}/password-reset`),
   resetTwoFactor: (id: number) => send<AdminUser>('DELETE', `/users/${id}/two-factor`),

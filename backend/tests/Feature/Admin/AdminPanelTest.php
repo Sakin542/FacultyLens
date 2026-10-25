@@ -148,6 +148,41 @@ class AdminPanelTest extends TestCase
         $this->assertTrue($this->admin->fresh()->isActive());
     }
 
+    public function test_admin_can_delete_an_account_after_confirming_its_email(): void
+    {
+        $faculty = User::factory()->create(['email' => 'temp.account@aust.edu']);
+        $faculty->createToken('device');
+
+        $this->actingAs($this->admin, 'sanctum')->deleteJson("/api/admin/users/{$faculty->id}", ['confirm_email' => 'wrong@aust.edu', 'reason' => 'Test account'])
+            ->assertStatus(422)->assertJsonValidationErrors('confirm_email');
+        $this->actingAs($this->admin, 'sanctum')->deleteJson("/api/admin/users/{$faculty->id}", ['confirm_email' => 'temp.account@aust.edu'])
+            ->assertStatus(422)->assertJsonValidationErrors('reason');
+        $this->assertDatabaseHas('users', ['id' => $faculty->id]);
+
+        $this->actingAs($this->admin, 'sanctum')->deleteJson("/api/admin/users/{$faculty->id}", ['confirm_email' => 'Temp.Account@aust.edu', 'reason' => 'Test account'])
+            ->assertOk();
+
+        $this->assertDatabaseMissing('users', ['id' => $faculty->id]);
+        $this->assertDatabaseMissing('personal_access_tokens', ['tokenable_id' => $faculty->id]);
+        $this->assertDatabaseHas('audit_logs', ['action' => 'ADMIN_USER_DELETED', 'user_id' => $this->admin->id]);
+    }
+
+    public function test_admin_account_and_course_owners_cannot_be_deleted(): void
+    {
+        $this->actingAs($this->admin, 'sanctum')->deleteJson("/api/admin/users/{$this->admin->id}", ['confirm_email' => self::ADMIN_EMAIL, 'reason' => 'x'])
+            ->assertStatus(422);
+
+        $owner = User::factory()->create(['email' => 'owner@aust.edu']);
+        \App\Models\Course::create(['user_id' => $owner->id, 'course_code' => 'CSE101', 'course_name' => 'Database Systems', 'semester' => 'Fall', 'academic_year' => '2026', 'credits' => 3, 'status' => 'active']);
+        $this->actingAs($this->admin, 'sanctum')->deleteJson("/api/admin/users/{$owner->id}", ['confirm_email' => 'owner@aust.edu', 'reason' => 'Left'])
+            ->assertStatus(409);
+        $this->assertDatabaseHas('users', ['id' => $owner->id]);
+
+        $faculty = User::factory()->create();
+        $this->actingAs($faculty, 'sanctum')->deleteJson("/api/admin/users/{$owner->id}", ['confirm_email' => 'owner@aust.edu', 'reason' => 'x'])
+            ->assertStatus(403);
+    }
+
     public function test_user_list_supports_search_and_filters(): void
     {
         User::factory()->create(['name' => 'Dr. Nusrat Jahan', 'department' => 'EEE']);
