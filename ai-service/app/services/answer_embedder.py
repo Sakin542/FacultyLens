@@ -65,8 +65,13 @@ class AnswerEmbedder:
 
     def embed(self, texts: List[str]) -> Tuple[List[List[float]], str]:
         """Return (unit-length vectors, model that produced them)."""
-        with model_memory.use("answer-embeddings", self._unload, estimate_mb=2300):
-            return self._embed(texts)
+        try:
+            with model_memory.use("answer-embeddings", self._unload, estimate_mb=2300):
+                return self._embed(texts)
+        except model_memory.ModelTooLargeError:
+            # Strict memory budget: the multilingual model cannot load here, so use the shared embedding model
+            hf = get_hf_service()
+            return hf.generate_batch_embeddings([t.strip() if t and t.strip() else " " for t in texts]), hf.model_name
 
     def _embed(self, texts: List[str]) -> Tuple[List[List[float]], str]:
         cleaned = [t.strip() if t and t.strip() else " " for t in texts]

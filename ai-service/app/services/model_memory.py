@@ -71,14 +71,24 @@ def _unload(slot: _Slot, why: str) -> None:
     logger.info(f"Unloaded model '{slot.name}' ({why}); process now {rss_mb():.0f} MB")
 
 
+class ModelTooLargeError(RuntimeError):
+    """Raised in strict mode when a model cannot fit the memory budget even after unloading idle models."""
+
+
 def _make_room(needed_mb: int, exclude: str) -> None:
-    budget = get_settings().model_memory_budget_mb
+    settings = get_settings()
+    budget = settings.model_memory_budget_mb
     if budget <= 0:
         return
     with _lock:
         while rss_mb() + needed_mb > budget:
             idle = [s for s in _slots.values() if s.loaded and s.in_use == 0 and s.name != exclude]
             if not idle:
+                if settings.model_memory_strict:
+                    raise ModelTooLargeError(
+                        f"The local '{exclude}' model (~{needed_mb} MB) does not fit this server's {budget} MB memory budget. "
+                        "Use the hosted AI provider for this tool."
+                    )
                 logger.warning(f"Loading '{exclude}' (~{needed_mb} MB) may exceed the {budget} MB model budget: no idle model to unload")
                 return
             _unload(min(idle, key=lambda s: s.last_used), f"making room for '{exclude}'")

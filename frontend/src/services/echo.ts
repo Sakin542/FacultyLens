@@ -24,6 +24,8 @@ let currentSubscribedUserId: number | null = null;
  */
 export function getEcho(): Echo<'reverb'> | null {
   if (typeof window === 'undefined') return null;
+  // Hosts without a Reverb server (e.g. Vercel + Render free) set this so no WebSocket is attempted; polling still runs
+  if (import.meta.env.VITE_REVERB_ENABLED === 'false') return null;
   if (echoInstance) return echoInstance;
 
   const currentHost = window.location ? window.location.hostname : 'localhost';
@@ -123,7 +125,11 @@ export function subscribeToUserNotifications(
   onConnectionChange?: (status: ConnectionStatus) => void,
 ): () => void {
   const echo = getEcho();
-  if (!echo || userId <= 0) return () => {};
+  if (!echo) {
+    onConnectionChange?.('unavailable');
+    return () => {};
+  }
+  if (userId <= 0) return () => {};
 
   // If already subscribed to a different user, leave the old channel
   if (currentSubscribedUserId && currentSubscribedUserId !== userId) {

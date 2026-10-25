@@ -166,6 +166,9 @@ class Settings(BaseSettings):
     # for the rest of the stack inside Docker Desktop's default ~7.5 GB.
     model_idle_unload_seconds: int = 900
     model_memory_budget_mb: int = 5000
+    # Strict: refuse to load a model that cannot fit the budget (the request fails cleanly) instead of loading it
+    # anyway. For small hosts (e.g. 512 MB) where an oversized load would get the whole service OOM-killed.
+    model_memory_strict: bool = False
     # Answer similarity / plagiarism check: multilingual embeddings (falls back to hf_model_name if unavailable)
     answer_similarity_model: str = "BAAI/bge-m3"
 
