@@ -32,6 +32,10 @@ jobs:
           php-version: "8.2"
           extensions: mbstring, pdo_sqlite, sqlite3, gd, fileinfo, intl, zip, bcmath
           coverage: none
+          # setup-php enables the opcache JIT by default; PHP 8.2's JIT mis-checks `self`
+          # params in trait static methods once a path gets hot (Carbon rawAddUnit ->
+          # "must be of type CarbonImmutable, CarbonImmutable given"), failing queue dispatch mid-run.
+          ini-values: opcache.jit=disable, opcache.jit_buffer_size=0
       - uses: ramsey/composer-install@v3
         with:
           working-directory: backend
